@@ -1,0 +1,14 @@
+root: ./
+out: ./
+
+package: clay
+
+predef: |
+  #define __STDC__ 1
+  #define __STDC_VERSION__ 199901L
+  
+  #define CLAY_IMPLEMENTATION
+  
+
+files:
+  - name: clay.h
