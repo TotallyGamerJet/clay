@@ -8,6 +8,7 @@ predef: |
   #define __STDC_VERSION__ 199901L
   
   #define CLAY_IMPLEMENTATION
+  #define CLAY_DISABLE_SIMD
   
 
 files:
