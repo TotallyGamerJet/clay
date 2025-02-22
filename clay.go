@@ -1,36 +1,35 @@
 package clay
 
 import (
+	"github.com/gotranspile/cxgo/runtime/libc"
 	"math"
 	"unsafe"
-
-	"github.com/gotranspile/cxgo/runtime/libc"
 )
 
-const CLAY__NULL = 0
-const CLAY__MAXFLOAT = 3.4028234663852886e+38
+const __NULL = 0
+const __MAXFLOAT = 3.4028234663852886e+38
 
-var CLAY__ELEMENT_DEFINITION_LATCH uint8
+var __ELEMENT_DEFINITION_LATCH uint8
 
-type Clay_String struct {
+type String struct {
 	Length int32
 	Chars  *byte
 }
-type Clay_StringSlice struct {
+type StringSlice struct {
 	Length    int32
 	Chars     *byte
 	BaseChars *byte
 }
-type Clay_Context struct {
+type Context struct {
 	MaxElementCount                    int32
 	MaxMeasureTextCacheWordCount       int32
 	WarningsEnabled                    bool
-	ErrorHandler                       Clay_ErrorHandler
-	BooleanWarnings                    Clay_BooleanWarnings
-	Warnings                           Clay__WarningArray
-	PointerInfo                        Clay_PointerData
-	LayoutDimensions                   Clay_Dimensions
-	DynamicElementIndexBaseHash        Clay_ElementId
+	ErrorHandler                       ErrorHandler
+	BooleanWarnings                    BooleanWarnings
+	Warnings                           __WarningArray
+	PointerInfo                        PointerData
+	LayoutDimensions                   Dimensions
+	DynamicElementIndexBaseHash        ElementId
 	DynamicElementIndex                uint32
 	DebugModeEnabled                   bool
 	DisableCulling                     bool
@@ -40,459 +39,459 @@ type Clay_Context struct {
 	ArenaResetOffset                   uint64
 	MeasureTextUserData                unsafe.Pointer
 	QueryScrollOffsetUserData          unsafe.Pointer
-	InternalArena                      Clay_Arena
-	LayoutElements                     Clay_LayoutElementArray
-	RenderCommands                     Clay_RenderCommandArray
-	OpenLayoutElementStack             Clay__int32_tArray
-	LayoutElementChildren              Clay__int32_tArray
-	LayoutElementChildrenBuffer        Clay__int32_tArray
-	TextElementData                    Clay__TextElementDataArray
-	ImageElementPointers               Clay__int32_tArray
-	ReusableElementIndexBuffer         Clay__int32_tArray
-	LayoutElementClipElementIds        Clay__int32_tArray
-	LayoutConfigs                      Clay__LayoutConfigArray
-	ElementConfigs                     Clay__ElementConfigArray
-	TextElementConfigs                 Clay__TextElementConfigArray
-	ImageElementConfigs                Clay__ImageElementConfigArray
-	FloatingElementConfigs             Clay__FloatingElementConfigArray
-	ScrollElementConfigs               Clay__ScrollElementConfigArray
-	CustomElementConfigs               Clay__CustomElementConfigArray
-	BorderElementConfigs               Clay__BorderElementConfigArray
-	SharedElementConfigs               Clay__SharedElementConfigArray
-	LayoutElementIdStrings             Clay__StringArray
-	WrappedTextLines                   Clay__WrappedTextLineArray
-	LayoutElementTreeNodeArray1        Clay__LayoutElementTreeNodeArray
-	LayoutElementTreeRoots             Clay__LayoutElementTreeRootArray
-	LayoutElementsHashMapInternal      Clay__LayoutElementHashMapItemArray
-	LayoutElementsHashMap              Clay__int32_tArray
-	MeasureTextHashMapInternal         Clay__MeasureTextCacheItemArray
-	MeasureTextHashMapInternalFreeList Clay__int32_tArray
-	MeasureTextHashMap                 Clay__int32_tArray
-	MeasuredWords                      Clay__MeasuredWordArray
-	MeasuredWordsFreeList              Clay__int32_tArray
-	OpenClipElementStack               Clay__int32_tArray
-	PointerOverIds                     Clay__ElementIdArray
-	ScrollContainerDatas               Clay__ScrollContainerDataInternalArray
-	TreeNodeVisited                    Clay__boolArray
-	DynamicStringData                  Clay__charArray
-	DebugElementData                   Clay__DebugElementDataArray
+	InternalArena                      Arena
+	LayoutElements                     LayoutElementArray
+	RenderCommands                     RenderCommandArray
+	OpenLayoutElementStack             __int32_tArray
+	LayoutElementChildren              __int32_tArray
+	LayoutElementChildrenBuffer        __int32_tArray
+	TextElementData                    __TextElementDataArray
+	ImageElementPointers               __int32_tArray
+	ReusableElementIndexBuffer         __int32_tArray
+	LayoutElementClipElementIds        __int32_tArray
+	LayoutConfigs                      __LayoutConfigArray
+	ElementConfigs                     __ElementConfigArray
+	TextElementConfigs                 __TextElementConfigArray
+	ImageElementConfigs                __ImageElementConfigArray
+	FloatingElementConfigs             __FloatingElementConfigArray
+	ScrollElementConfigs               __ScrollElementConfigArray
+	CustomElementConfigs               __CustomElementConfigArray
+	BorderElementConfigs               __BorderElementConfigArray
+	SharedElementConfigs               __SharedElementConfigArray
+	LayoutElementIdStrings             __StringArray
+	WrappedTextLines                   __WrappedTextLineArray
+	LayoutElementTreeNodeArray1        __LayoutElementTreeNodeArray
+	LayoutElementTreeRoots             __LayoutElementTreeRootArray
+	LayoutElementsHashMapInternal      __LayoutElementHashMapItemArray
+	LayoutElementsHashMap              __int32_tArray
+	MeasureTextHashMapInternal         __MeasureTextCacheItemArray
+	MeasureTextHashMapInternalFreeList __int32_tArray
+	MeasureTextHashMap                 __int32_tArray
+	MeasuredWords                      __MeasuredWordArray
+	MeasuredWordsFreeList              __int32_tArray
+	OpenClipElementStack               __int32_tArray
+	PointerOverIds                     __ElementIdArray
+	ScrollContainerDatas               __ScrollContainerDataInternalArray
+	TreeNodeVisited                    __boolArray
+	DynamicStringData                  __charArray
+	DebugElementData                   __DebugElementDataArray
 }
-type Clay_Arena struct {
+type Arena struct {
 	NextAllocation uint64
 	Capacity       uint64
 	Memory         *byte
 }
-type Clay_Dimensions struct {
+type Dimensions struct {
 	Width  float32
 	Height float32
 }
-type Clay_Vector2 struct {
+type Vector2 struct {
 	X float32
 	Y float32
 }
-type Clay_Color struct {
+type Color struct {
 	R float32
 	G float32
 	B float32
 	A float32
 }
-type Clay_BoundingBox struct {
+type BoundingBox struct {
 	X      float32
 	Y      float32
 	Width  float32
 	Height float32
 }
-type Clay_ElementId struct {
+type ElementId struct {
 	Id       uint32
 	Offset   uint32
 	BaseId   uint32
-	StringId Clay_String
+	StringId String
 }
-type Clay_CornerRadius struct {
+type CornerRadius struct {
 	TopLeft     float32
 	TopRight    float32
 	BottomLeft  float32
 	BottomRight float32
 }
-type Clay_LayoutDirection int64
+type LayoutDirection int64
 
 const (
-	CLAY_LEFT_TO_RIGHT = Clay_LayoutDirection(iota)
-	CLAY_TOP_TO_BOTTOM
+	LEFT_TO_RIGHT = LayoutDirection(iota)
+	TOP_TO_BOTTOM
 )
 
-type Clay_LayoutAlignmentX int64
+type LayoutAlignmentX int64
 
 const (
-	CLAY_ALIGN_X_LEFT = Clay_LayoutAlignmentX(iota)
-	CLAY_ALIGN_X_RIGHT
-	CLAY_ALIGN_X_CENTER
+	ALIGN_X_LEFT = LayoutAlignmentX(iota)
+	ALIGN_X_RIGHT
+	ALIGN_X_CENTER
 )
 
-type Clay_LayoutAlignmentY int64
+type LayoutAlignmentY int64
 
 const (
-	CLAY_ALIGN_Y_TOP = Clay_LayoutAlignmentY(iota)
-	CLAY_ALIGN_Y_BOTTOM
-	CLAY_ALIGN_Y_CENTER
+	ALIGN_Y_TOP = LayoutAlignmentY(iota)
+	ALIGN_Y_BOTTOM
+	ALIGN_Y_CENTER
 )
 
-type Clay__SizingType int64
+type __SizingType int64
 
 const (
-	CLAY__SIZING_TYPE_FIT = Clay__SizingType(iota)
-	CLAY__SIZING_TYPE_GROW
-	CLAY__SIZING_TYPE_PERCENT
-	CLAY__SIZING_TYPE_FIXED
+	__SIZING_TYPE_FIT = __SizingType(iota)
+	__SIZING_TYPE_GROW
+	__SIZING_TYPE_PERCENT
+	__SIZING_TYPE_FIXED
 )
 
-type Clay_ChildAlignment struct {
-	X Clay_LayoutAlignmentX
-	Y Clay_LayoutAlignmentY
+type ChildAlignment struct {
+	X LayoutAlignmentX
+	Y LayoutAlignmentY
 }
-type Clay_SizingMinMax struct {
+type SizingMinMax struct {
 	Min float32
 	Max float32
 }
-type Clay_SizingAxis struct {
+type SizingAxis struct {
 	Size struct {
 		// union
-		MinMax  Clay_SizingMinMax
+		MinMax  SizingMinMax
 		Percent float32
 	}
-	Type Clay__SizingType
+	Type __SizingType
 }
-type Clay_Sizing struct {
-	Width  Clay_SizingAxis
-	Height Clay_SizingAxis
+type Sizing struct {
+	Width  SizingAxis
+	Height SizingAxis
 }
-type Clay_Padding struct {
+type Padding struct {
 	Left   uint16
 	Right  uint16
 	Top    uint16
 	Bottom uint16
 }
-type Clay__Clay_PaddingWrapper struct {
-	Wrapped Clay_Padding
+type __PaddingWrapper struct {
+	Wrapped Padding
 }
-type Clay_LayoutConfig struct {
-	Sizing          Clay_Sizing
-	Padding         Clay_Padding
+type LayoutConfig struct {
+	Sizing          Sizing
+	Padding         Padding
 	ChildGap        uint16
-	ChildAlignment  Clay_ChildAlignment
-	LayoutDirection Clay_LayoutDirection
+	ChildAlignment  ChildAlignment
+	LayoutDirection LayoutDirection
 }
-type Clay__Clay_LayoutConfigWrapper struct {
-	Wrapped Clay_LayoutConfig
+type __LayoutConfigWrapper struct {
+	Wrapped LayoutConfig
 }
-type Clay_TextElementConfigWrapMode int64
+type TextElementConfigWrapMode int64
 
 const (
-	CLAY_TEXT_WRAP_WORDS = Clay_TextElementConfigWrapMode(iota)
-	CLAY_TEXT_WRAP_NEWLINES
-	CLAY_TEXT_WRAP_NONE
+	TEXT_WRAP_WORDS = TextElementConfigWrapMode(iota)
+	TEXT_WRAP_NEWLINES
+	TEXT_WRAP_NONE
 )
 
-type Clay_TextAlignment int64
+type TextAlignment int64
 
 const (
-	CLAY_TEXT_ALIGN_LEFT = Clay_TextAlignment(iota)
-	CLAY_TEXT_ALIGN_CENTER
-	CLAY_TEXT_ALIGN_RIGHT
+	TEXT_ALIGN_LEFT = TextAlignment(iota)
+	TEXT_ALIGN_CENTER
+	TEXT_ALIGN_RIGHT
 )
 
-type Clay_TextElementConfig struct {
-	TextColor          Clay_Color
+type TextElementConfig struct {
+	TextColor          Color
 	FontId             uint16
 	FontSize           uint16
 	LetterSpacing      uint16
 	LineHeight         uint16
-	WrapMode           Clay_TextElementConfigWrapMode
-	TextAlignment      Clay_TextAlignment
+	WrapMode           TextElementConfigWrapMode
+	TextAlignment      TextAlignment
 	HashStringContents bool
 }
-type Clay__Clay_TextElementConfigWrapper struct {
-	Wrapped Clay_TextElementConfig
+type __TextElementConfigWrapper struct {
+	Wrapped TextElementConfig
 }
-type Clay_ImageElementConfig struct {
+type ImageElementConfig struct {
 	ImageData        unsafe.Pointer
-	SourceDimensions Clay_Dimensions
+	SourceDimensions Dimensions
 }
-type Clay__Clay_ImageElementConfigWrapper struct {
-	Wrapped Clay_ImageElementConfig
+type __ImageElementConfigWrapper struct {
+	Wrapped ImageElementConfig
 }
-type Clay_FloatingAttachPointType int64
+type FloatingAttachPointType int64
 
 const (
-	CLAY_ATTACH_POINT_LEFT_TOP = Clay_FloatingAttachPointType(iota)
-	CLAY_ATTACH_POINT_LEFT_CENTER
-	CLAY_ATTACH_POINT_LEFT_BOTTOM
-	CLAY_ATTACH_POINT_CENTER_TOP
-	CLAY_ATTACH_POINT_CENTER_CENTER
-	CLAY_ATTACH_POINT_CENTER_BOTTOM
-	CLAY_ATTACH_POINT_RIGHT_TOP
-	CLAY_ATTACH_POINT_RIGHT_CENTER
-	CLAY_ATTACH_POINT_RIGHT_BOTTOM
+	ATTACH_POINT_LEFT_TOP = FloatingAttachPointType(iota)
+	ATTACH_POINT_LEFT_CENTER
+	ATTACH_POINT_LEFT_BOTTOM
+	ATTACH_POINT_CENTER_TOP
+	ATTACH_POINT_CENTER_CENTER
+	ATTACH_POINT_CENTER_BOTTOM
+	ATTACH_POINT_RIGHT_TOP
+	ATTACH_POINT_RIGHT_CENTER
+	ATTACH_POINT_RIGHT_BOTTOM
 )
 
-type Clay_FloatingAttachPoints struct {
-	Element Clay_FloatingAttachPointType
-	Parent  Clay_FloatingAttachPointType
+type FloatingAttachPoints struct {
+	Element FloatingAttachPointType
+	Parent  FloatingAttachPointType
 }
-type Clay_PointerCaptureMode int64
+type PointerCaptureMode int64
 
 const (
-	CLAY_POINTER_CAPTURE_MODE_CAPTURE = Clay_PointerCaptureMode(iota)
-	CLAY_POINTER_CAPTURE_MODE_PASSTHROUGH
+	POINTER_CAPTURE_MODE_CAPTURE = PointerCaptureMode(iota)
+	POINTER_CAPTURE_MODE_PASSTHROUGH
 )
 
-type Clay_FloatingAttachToElement int64
+type FloatingAttachToElement int64
 
 const (
-	CLAY_ATTACH_TO_NONE = Clay_FloatingAttachToElement(iota)
-	CLAY_ATTACH_TO_PARENT
-	CLAY_ATTACH_TO_ELEMENT_WITH_ID
-	CLAY_ATTACH_TO_ROOT
+	ATTACH_TO_NONE = FloatingAttachToElement(iota)
+	ATTACH_TO_PARENT
+	ATTACH_TO_ELEMENT_WITH_ID
+	ATTACH_TO_ROOT
 )
 
-type Clay_FloatingElementConfig struct {
-	Offset             Clay_Vector2
-	Expand             Clay_Dimensions
+type FloatingElementConfig struct {
+	Offset             Vector2
+	Expand             Dimensions
 	ParentId           uint32
 	ZIndex             int16
-	AttachPoints       Clay_FloatingAttachPoints
-	PointerCaptureMode Clay_PointerCaptureMode
-	AttachTo           Clay_FloatingAttachToElement
+	AttachPoints       FloatingAttachPoints
+	PointerCaptureMode PointerCaptureMode
+	AttachTo           FloatingAttachToElement
 }
-type Clay__Clay_FloatingElementConfigWrapper struct {
-	Wrapped Clay_FloatingElementConfig
+type __FloatingElementConfigWrapper struct {
+	Wrapped FloatingElementConfig
 }
-type Clay_CustomElementConfig struct {
+type CustomElementConfig struct {
 	CustomData unsafe.Pointer
 }
-type Clay__Clay_CustomElementConfigWrapper struct {
-	Wrapped Clay_CustomElementConfig
+type __CustomElementConfigWrapper struct {
+	Wrapped CustomElementConfig
 }
-type Clay_ScrollElementConfig struct {
+type ScrollElementConfig struct {
 	Horizontal bool
 	Vertical   bool
 }
-type Clay__Clay_ScrollElementConfigWrapper struct {
-	Wrapped Clay_ScrollElementConfig
+type __ScrollElementConfigWrapper struct {
+	Wrapped ScrollElementConfig
 }
-type Clay_BorderWidth struct {
+type BorderWidth struct {
 	Left            uint16
 	Right           uint16
 	Top             uint16
 	Bottom          uint16
 	BetweenChildren uint16
 }
-type Clay_BorderElementConfig struct {
-	Color Clay_Color
-	Width Clay_BorderWidth
+type BorderElementConfig struct {
+	Color Color
+	Width BorderWidth
 }
-type Clay__Clay_BorderElementConfigWrapper struct {
-	Wrapped Clay_BorderElementConfig
+type __BorderElementConfigWrapper struct {
+	Wrapped BorderElementConfig
 }
-type Clay_TextRenderData struct {
-	StringContents Clay_StringSlice
-	TextColor      Clay_Color
+type TextRenderData struct {
+	StringContents StringSlice
+	TextColor      Color
 	FontId         uint16
 	FontSize       uint16
 	LetterSpacing  uint16
 	LineHeight     uint16
 }
-type Clay_RectangleRenderData struct {
-	BackgroundColor Clay_Color
-	CornerRadius    Clay_CornerRadius
+type RectangleRenderData struct {
+	BackgroundColor Color
+	CornerRadius    CornerRadius
 }
-type Clay_ImageRenderData struct {
-	BackgroundColor  Clay_Color
-	CornerRadius     Clay_CornerRadius
-	SourceDimensions Clay_Dimensions
+type ImageRenderData struct {
+	BackgroundColor  Color
+	CornerRadius     CornerRadius
+	SourceDimensions Dimensions
 	ImageData        unsafe.Pointer
 }
-type Clay_CustomRenderData struct {
-	BackgroundColor Clay_Color
-	CornerRadius    Clay_CornerRadius
+type CustomRenderData struct {
+	BackgroundColor Color
+	CornerRadius    CornerRadius
 	CustomData      unsafe.Pointer
 }
-type Clay_ScrollRenderData struct {
+type ScrollRenderData struct {
 	Horizontal bool
 	Vertical   bool
 }
-type Clay_BorderRenderData struct {
-	Color        Clay_Color
-	CornerRadius Clay_CornerRadius
-	Width        Clay_BorderWidth
+type BorderRenderData struct {
+	Color        Color
+	CornerRadius CornerRadius
+	Width        BorderWidth
 }
-type Clay_RenderData struct {
+type RenderData struct {
 	// union
-	Rectangle Clay_RectangleRenderData
-	Text      Clay_TextRenderData
-	Image     Clay_ImageRenderData
-	Custom    Clay_CustomRenderData
-	Border    Clay_BorderRenderData
-	Scroll    Clay_ScrollRenderData
+	Rectangle RectangleRenderData
+	Text      TextRenderData
+	Image     ImageRenderData
+	Custom    CustomRenderData
+	Border    BorderRenderData
+	Scroll    ScrollRenderData
 }
-type Clay_ScrollContainerData struct {
-	ScrollPosition            *Clay_Vector2
-	ScrollContainerDimensions Clay_Dimensions
-	ContentDimensions         Clay_Dimensions
-	Config                    Clay_ScrollElementConfig
+type ScrollContainerData struct {
+	ScrollPosition            *Vector2
+	ScrollContainerDimensions Dimensions
+	ContentDimensions         Dimensions
+	Config                    ScrollElementConfig
 	Found                     bool
 }
-type Clay_ElementData struct {
-	BoundingBox Clay_BoundingBox
+type ElementData struct {
+	BoundingBox BoundingBox
 	Found       bool
 }
-type Clay_RenderCommandType int64
+type RenderCommandType int64
 
 const (
-	CLAY_RENDER_COMMAND_TYPE_NONE = Clay_RenderCommandType(iota)
-	CLAY_RENDER_COMMAND_TYPE_RECTANGLE
-	CLAY_RENDER_COMMAND_TYPE_BORDER
-	CLAY_RENDER_COMMAND_TYPE_TEXT
-	CLAY_RENDER_COMMAND_TYPE_IMAGE
-	CLAY_RENDER_COMMAND_TYPE_SCISSOR_START
-	CLAY_RENDER_COMMAND_TYPE_SCISSOR_END
-	CLAY_RENDER_COMMAND_TYPE_CUSTOM
+	RENDER_COMMAND_TYPE_NONE = RenderCommandType(iota)
+	RENDER_COMMAND_TYPE_RECTANGLE
+	RENDER_COMMAND_TYPE_BORDER
+	RENDER_COMMAND_TYPE_TEXT
+	RENDER_COMMAND_TYPE_IMAGE
+	RENDER_COMMAND_TYPE_SCISSOR_START
+	RENDER_COMMAND_TYPE_SCISSOR_END
+	RENDER_COMMAND_TYPE_CUSTOM
 )
 
-type Clay_RenderCommand struct {
-	BoundingBox Clay_BoundingBox
-	RenderData  Clay_RenderData
+type RenderCommand struct {
+	BoundingBox BoundingBox
+	RenderData  RenderData
 	UserData    unsafe.Pointer
 	Id          uint32
 	ZIndex      int16
-	CommandType Clay_RenderCommandType
+	CommandType RenderCommandType
 }
-type Clay_RenderCommandArray struct {
+type RenderCommandArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_RenderCommand
+	InternalArray *RenderCommand
 }
-type Clay_PointerDataInteractionState int64
+type PointerDataInteractionState int64
 
 const (
-	CLAY_POINTER_DATA_PRESSED_THIS_FRAME = Clay_PointerDataInteractionState(iota)
-	CLAY_POINTER_DATA_PRESSED
-	CLAY_POINTER_DATA_RELEASED_THIS_FRAME
-	CLAY_POINTER_DATA_RELEASED
+	POINTER_DATA_PRESSED_THIS_FRAME = PointerDataInteractionState(iota)
+	POINTER_DATA_PRESSED
+	POINTER_DATA_RELEASED_THIS_FRAME
+	POINTER_DATA_RELEASED
 )
 
-type Clay_PointerData struct {
-	Position Clay_Vector2
-	State    Clay_PointerDataInteractionState
+type PointerData struct {
+	Position Vector2
+	State    PointerDataInteractionState
 }
-type Clay_ElementDeclaration struct {
-	Id              Clay_ElementId
-	Layout          Clay_LayoutConfig
-	BackgroundColor Clay_Color
-	CornerRadius    Clay_CornerRadius
-	Image           Clay_ImageElementConfig
-	Floating        Clay_FloatingElementConfig
-	Custom          Clay_CustomElementConfig
-	Scroll          Clay_ScrollElementConfig
-	Border          Clay_BorderElementConfig
+type ElementDeclaration struct {
+	Id              ElementId
+	Layout          LayoutConfig
+	BackgroundColor Color
+	CornerRadius    CornerRadius
+	Image           ImageElementConfig
+	Floating        FloatingElementConfig
+	Custom          CustomElementConfig
+	Scroll          ScrollElementConfig
+	Border          BorderElementConfig
 	UserData        unsafe.Pointer
 }
-type Clay__Clay_ElementDeclarationWrapper struct {
-	Wrapped Clay_ElementDeclaration
+type __ElementDeclarationWrapper struct {
+	Wrapped ElementDeclaration
 }
-type Clay_ErrorType int64
+type ErrorType int64
 
 const (
-	CLAY_ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED = Clay_ErrorType(iota)
-	CLAY_ERROR_TYPE_ARENA_CAPACITY_EXCEEDED
-	CLAY_ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED
-	CLAY_ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED
-	CLAY_ERROR_TYPE_DUPLICATE_ID
-	CLAY_ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND
-	CLAY_ERROR_TYPE_PERCENTAGE_OVER_1
-	CLAY_ERROR_TYPE_INTERNAL_ERROR
+	ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED = ErrorType(iota)
+	ERROR_TYPE_ARENA_CAPACITY_EXCEEDED
+	ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED
+	ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED
+	ERROR_TYPE_DUPLICATE_ID
+	ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND
+	ERROR_TYPE_PERCENTAGE_OVER_1
+	ERROR_TYPE_INTERNAL_ERROR
 )
 
-type Clay_ErrorData struct {
-	ErrorType Clay_ErrorType
-	ErrorText Clay_String
+type ErrorData struct {
+	ErrorType ErrorType
+	ErrorText String
 	UserData  unsafe.Pointer
 }
-type Clay_ErrorHandler struct {
-	ErrorHandlerFunction func(errorText Clay_ErrorData)
+type ErrorHandler struct {
+	ErrorHandlerFunction func(errorText ErrorData)
 	UserData             unsafe.Pointer
 }
 
-var CLAY_LAYOUT_DEFAULT Clay_LayoutConfig = Clay_LayoutConfig{}
-var Clay__Color_DEFAULT Clay_Color = Clay_Color{}
-var Clay__CornerRadius_DEFAULT Clay_CornerRadius = Clay_CornerRadius{}
-var Clay__BorderWidth_DEFAULT Clay_BorderWidth = Clay_BorderWidth{}
-var Clay__currentContext *Clay_Context
-var Clay__defaultMaxElementCount int32 = 8192
-var Clay__defaultMaxMeasureTextWordCacheCount int32 = 16384
+var LAYOUT_DEFAULT LayoutConfig = LayoutConfig{}
+var __Color_DEFAULT Color = Color{}
+var __CornerRadius_DEFAULT CornerRadius = CornerRadius{}
+var __BorderWidth_DEFAULT BorderWidth = BorderWidth{}
+var __currentContext *Context
+var __defaultMaxElementCount int32 = 8192
+var __defaultMaxMeasureTextWordCacheCount int32 = 16384
 
-func Clay__ErrorHandlerFunctionDefault(errorText Clay_ErrorData) {
+func __ErrorHandlerFunctionDefault(errorText ErrorData) {
 	_ = errorText
 }
 
-var CLAY__SPACECHAR Clay_String = Clay_String{Length: 1, Chars: libc.CString(" ")}
-var CLAY__STRING_DEFAULT Clay_String = Clay_String{}
+var __SPACECHAR String = String{Length: 1, Chars: libc.CString(" ")}
+var __STRING_DEFAULT String = String{}
 
-type Clay_BooleanWarnings struct {
+type BooleanWarnings struct {
 	MaxElementsExceeded           bool
 	MaxRenderCommandsExceeded     bool
 	MaxTextMeasureCacheExceeded   bool
 	TextMeasurementFunctionNotSet bool
 }
-type Clay__Warning struct {
-	BaseMessage    Clay_String
-	DynamicMessage Clay_String
+type __Warning struct {
+	BaseMessage    String
+	DynamicMessage String
 }
 
-var CLAY__WARNING_DEFAULT Clay__Warning = Clay__Warning{}
+var __WARNING_DEFAULT __Warning = __Warning{}
 
-type Clay__WarningArray struct {
+type __WarningArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__Warning
+	InternalArray *__Warning
 }
-type Clay_SharedElementConfig struct {
-	BackgroundColor Clay_Color
-	CornerRadius    Clay_CornerRadius
+type SharedElementConfig struct {
+	BackgroundColor Color
+	CornerRadius    CornerRadius
 	UserData        unsafe.Pointer
 }
-type Clay__Clay_SharedElementConfigWrapper struct {
-	Wrapped Clay_SharedElementConfig
+type __SharedElementConfigWrapper struct {
+	Wrapped SharedElementConfig
 }
-type Clay__boolArray struct {
+type __boolArray struct {
 	Capacity      int32
 	Length        int32
 	InternalArray *bool
 }
-type Clay__boolArraySlice struct {
+type __boolArraySlice struct {
 	Length        int32
 	InternalArray *bool
 }
 
 var _Bool_DEFAULT bool = false
 
-func Clay__boolArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__boolArray {
-	return Clay__boolArray{Capacity: capacity, Length: 0, InternalArray: (*bool)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(bool(false))), arena))}
+func __boolArray_Allocate_Arena(capacity int32, arena *Arena) __boolArray {
+	return __boolArray{Capacity: capacity, Length: 0, InternalArray: (*bool)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(bool(false))), arena))}
 }
-func Clay__boolArray_Get(array *Clay__boolArray, index int32) *bool {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __boolArray_Get(array *__boolArray, index int32) *bool {
+	if __Array_RangeCheck(index, array.Length) {
 		return (*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index))
 	}
 	return &_Bool_DEFAULT
 }
-func Clay__boolArray_GetValue(array *Clay__boolArray, index int32) bool {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __boolArray_GetValue(array *__boolArray, index int32) bool {
+	if __Array_RangeCheck(index, array.Length) {
 		return *(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index))
 	}
 	return _Bool_DEFAULT
 }
-func Clay__boolArray_Add(array *Clay__boolArray, item bool) *bool {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
+func __boolArray_Add(array *__boolArray, item bool) *bool {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), func() int32 {
 			p := &array.Length
 			x := *p
@@ -503,14 +502,14 @@ func Clay__boolArray_Add(array *Clay__boolArray, item bool) *bool {
 	}
 	return &_Bool_DEFAULT
 }
-func Clay__boolArraySlice_Get(slice *Clay__boolArraySlice, index int32) *bool {
-	if Clay__Array_RangeCheck(index, slice.Length) {
+func __boolArraySlice_Get(slice *__boolArraySlice, index int32) *bool {
+	if __Array_RangeCheck(index, slice.Length) {
 		return (*bool)(unsafe.Add(unsafe.Pointer(slice.InternalArray), index))
 	}
 	return &_Bool_DEFAULT
 }
-func Clay__boolArray_RemoveSwapback(array *Clay__boolArray, index int32) bool {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __boolArray_RemoveSwapback(array *__boolArray, index int32) bool {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
 		var removed bool = *(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index))
 		*(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)) = *(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), array.Length))
@@ -518,8 +517,8 @@ func Clay__boolArray_RemoveSwapback(array *Clay__boolArray, index int32) bool {
 	}
 	return _Bool_DEFAULT
 }
-func Clay__boolArray_Set(array *Clay__boolArray, index int32, value bool) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
+func __boolArray_Set(array *__boolArray, index int32, value bool) {
+	if __Array_RangeCheck(index, array.Capacity) {
 		*(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
@@ -529,35 +528,35 @@ func Clay__boolArray_Set(array *Clay__boolArray, index int32, value bool) {
 	}
 }
 
-type Clay__int32_tArray struct {
+type __int32_tArray struct {
 	Capacity      int32
 	Length        int32
 	InternalArray *int32
 }
-type Clay__int32_tArraySlice struct {
+type __int32_tArraySlice struct {
 	Length        int32
 	InternalArray *int32
 }
 
 var int32_t_DEFAULT int32 = 0
 
-func Clay__int32_tArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__int32_tArray {
-	return Clay__int32_tArray{Capacity: capacity, Length: 0, InternalArray: (*int32)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(int32(0))), arena))}
+func __int32_tArray_Allocate_Arena(capacity int32, arena *Arena) __int32_tArray {
+	return __int32_tArray{Capacity: capacity, Length: 0, InternalArray: (*int32)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(int32(0))), arena))}
 }
-func Clay__int32_tArray_Get(array *Clay__int32_tArray, index int32) *int32 {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __int32_tArray_Get(array *__int32_tArray, index int32) *int32 {
+	if __Array_RangeCheck(index, array.Length) {
 		return (*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index)))
 	}
 	return &int32_t_DEFAULT
 }
-func Clay__int32_tArray_GetValue(array *Clay__int32_tArray, index int32) int32 {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __int32_tArray_GetValue(array *__int32_tArray, index int32) int32 {
+	if __Array_RangeCheck(index, array.Length) {
 		return *(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index)))
 	}
 	return int32_t_DEFAULT
 }
-func Clay__int32_tArray_Add(array *Clay__int32_tArray, item int32) *int32 {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
+func __int32_tArray_Add(array *__int32_tArray, item int32) *int32 {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
@@ -568,14 +567,14 @@ func Clay__int32_tArray_Add(array *Clay__int32_tArray, item int32) *int32 {
 	}
 	return &int32_t_DEFAULT
 }
-func Clay__int32_tArraySlice_Get(slice *Clay__int32_tArraySlice, index int32) *int32 {
-	if Clay__Array_RangeCheck(index, slice.Length) {
+func __int32_tArraySlice_Get(slice *__int32_tArraySlice, index int32) *int32 {
+	if __Array_RangeCheck(index, slice.Length) {
 		return (*int32)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index)))
 	}
 	return &int32_t_DEFAULT
 }
-func Clay__int32_tArray_RemoveSwapback(array *Clay__int32_tArray, index int32) int32 {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __int32_tArray_RemoveSwapback(array *__int32_tArray, index int32) int32 {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
 		var removed int32 = *(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index)))
 		*(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index))) = *(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(array.Length)))
@@ -583,8 +582,8 @@ func Clay__int32_tArray_RemoveSwapback(array *Clay__int32_tArray, index int32) i
 	}
 	return int32_t_DEFAULT
 }
-func Clay__int32_tArray_Set(array *Clay__int32_tArray, index int32, value int32) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
+func __int32_tArray_Set(array *__int32_tArray, index int32, value int32) {
+	if __Array_RangeCheck(index, array.Capacity) {
 		*(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
@@ -594,35 +593,35 @@ func Clay__int32_tArray_Set(array *Clay__int32_tArray, index int32, value int32)
 	}
 }
 
-type Clay__charArray struct {
+type __charArray struct {
 	Capacity      int32
 	Length        int32
 	InternalArray *byte
 }
-type Clay__charArraySlice struct {
+type __charArraySlice struct {
 	Length        int32
 	InternalArray *byte
 }
 
 var char_DEFAULT int8 = 0
 
-func Clay__charArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__charArray {
-	return Clay__charArray{Capacity: capacity, Length: 0, InternalArray: (*byte)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(int8(0))), arena))}
+func __charArray_Allocate_Arena(capacity int32, arena *Arena) __charArray {
+	return __charArray{Capacity: capacity, Length: 0, InternalArray: (*byte)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(int8(0))), arena))}
 }
-func Clay__charArray_Get(array *Clay__charArray, index int32) *byte {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __charArray_Get(array *__charArray, index int32) *byte {
+	if __Array_RangeCheck(index, array.Length) {
 		return (*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index))
 	}
 	return (*byte)(unsafe.Pointer(&char_DEFAULT))
 }
-func Clay__charArray_GetValue(array *Clay__charArray, index int32) int8 {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __charArray_GetValue(array *__charArray, index int32) int8 {
+	if __Array_RangeCheck(index, array.Length) {
 		return int8(*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)))
 	}
 	return char_DEFAULT
 }
-func Clay__charArray_Add(array *Clay__charArray, item int8) *byte {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
+func __charArray_Add(array *__charArray, item int8) *byte {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), func() int32 {
 			p := &array.Length
 			x := *p
@@ -633,14 +632,14 @@ func Clay__charArray_Add(array *Clay__charArray, item int8) *byte {
 	}
 	return (*byte)(unsafe.Pointer(&char_DEFAULT))
 }
-func Clay__charArraySlice_Get(slice *Clay__charArraySlice, index int32) *byte {
-	if Clay__Array_RangeCheck(index, slice.Length) {
+func __charArraySlice_Get(slice *__charArraySlice, index int32) *byte {
+	if __Array_RangeCheck(index, slice.Length) {
 		return (*byte)(unsafe.Add(unsafe.Pointer(slice.InternalArray), index))
 	}
 	return (*byte)(unsafe.Pointer(&char_DEFAULT))
 }
-func Clay__charArray_RemoveSwapback(array *Clay__charArray, index int32) int8 {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __charArray_RemoveSwapback(array *__charArray, index int32) int8 {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
 		var removed int8 = int8(*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)))
 		*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)) = *(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), array.Length))
@@ -648,8 +647,8 @@ func Clay__charArray_RemoveSwapback(array *Clay__charArray, index int32) int8 {
 	}
 	return char_DEFAULT
 }
-func Clay__charArray_Set(array *Clay__charArray, index int32, value int8) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
+func __charArray_Set(array *__charArray, index int32, value int8) {
+	if __Array_RangeCheck(index, array.Capacity) {
 		*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)) = byte(value)
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
@@ -659,63 +658,63 @@ func Clay__charArray_Set(array *Clay__charArray, index int32, value int8) {
 	}
 }
 
-type Clay__ElementIdArray struct {
+type __ElementIdArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_ElementId
+	InternalArray *ElementId
 }
-type Clay__ElementIdArraySlice struct {
+type __ElementIdArraySlice struct {
 	Length        int32
-	InternalArray *Clay_ElementId
+	InternalArray *ElementId
 }
 
-var Clay_ElementId_DEFAULT Clay_ElementId = Clay_ElementId{}
+var ElementId_DEFAULT ElementId = ElementId{}
 
-func Clay__ElementIdArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__ElementIdArray {
-	return Clay__ElementIdArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_ElementId)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_ElementId{})), arena))}
+func __ElementIdArray_Allocate_Arena(capacity int32, arena *Arena) __ElementIdArray {
+	return __ElementIdArray{Capacity: capacity, Length: 0, InternalArray: (*ElementId)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ElementId{})), arena))}
 }
-func Clay__ElementIdArray_Get(array *Clay__ElementIdArray, index int32) *Clay_ElementId {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(index)))
+func __ElementIdArray_Get(array *__ElementIdArray, index int32) *ElementId {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
-	return &Clay_ElementId_DEFAULT
+	return &ElementId_DEFAULT
 }
-func Clay__ElementIdArray_GetValue(array *Clay__ElementIdArray, index int32) Clay_ElementId {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(index)))
+func __ElementIdArray_GetValue(array *__ElementIdArray, index int32) ElementId {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
-	return Clay_ElementId_DEFAULT
+	return ElementId_DEFAULT
 }
-func Clay__ElementIdArray_Add(array *Clay__ElementIdArray, item Clay_ElementId) *Clay_ElementId {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(func() int32 {
+func __ElementIdArray_Add(array *__ElementIdArray, item ElementId) *ElementId {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(int64(array.Length)-1)))
+		return (*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_ElementId_DEFAULT
+	return &ElementId_DEFAULT
 }
-func Clay__ElementIdArraySlice_Get(slice *Clay__ElementIdArraySlice, index int32) *Clay_ElementId {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_ElementId)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(index)))
+func __ElementIdArraySlice_Get(slice *__ElementIdArraySlice, index int32) *ElementId {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*ElementId)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
-	return &Clay_ElementId_DEFAULT
+	return &ElementId_DEFAULT
 }
-func Clay__ElementIdArray_RemoveSwapback(array *Clay__ElementIdArray, index int32) Clay_ElementId {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __ElementIdArray_RemoveSwapback(array *__ElementIdArray, index int32) ElementId {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_ElementId = *(*Clay_ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(index)))
-		*(*Clay_ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(index))) = *(*Clay_ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(array.Length)))
+		var removed ElementId = *(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
+		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index))) = *(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_ElementId_DEFAULT
+	return ElementId_DEFAULT
 }
-func Clay__ElementIdArray_Set(array *Clay__ElementIdArray, index int32, value Clay_ElementId) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementId{})*uintptr(index))) = value
+func __ElementIdArray_Set(array *__ElementIdArray, index int32, value ElementId) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -724,63 +723,63 @@ func Clay__ElementIdArray_Set(array *Clay__ElementIdArray, index int32, value Cl
 	}
 }
 
-type Clay__LayoutConfigArray struct {
+type __LayoutConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_LayoutConfig
+	InternalArray *LayoutConfig
 }
-type Clay__LayoutConfigArraySlice struct {
+type __LayoutConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_LayoutConfig
+	InternalArray *LayoutConfig
 }
 
-var Clay_LayoutConfig_DEFAULT Clay_LayoutConfig = Clay_LayoutConfig{}
+var LayoutConfig_DEFAULT LayoutConfig = LayoutConfig{}
 
-func Clay__LayoutConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__LayoutConfigArray {
-	return Clay__LayoutConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_LayoutConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_LayoutConfig{})), arena))}
+func __LayoutConfigArray_Allocate_Arena(capacity int32, arena *Arena) __LayoutConfigArray {
+	return __LayoutConfigArray{Capacity: capacity, Length: 0, InternalArray: (*LayoutConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(LayoutConfig{})), arena))}
 }
-func Clay__LayoutConfigArray_Get(array *Clay__LayoutConfigArray, index int32) *Clay_LayoutConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(index)))
+func __LayoutConfigArray_Get(array *__LayoutConfigArray, index int32) *LayoutConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index)))
 	}
-	return &Clay_LayoutConfig_DEFAULT
+	return &LayoutConfig_DEFAULT
 }
-func Clay__LayoutConfigArray_GetValue(array *Clay__LayoutConfigArray, index int32) Clay_LayoutConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(index)))
+func __LayoutConfigArray_GetValue(array *__LayoutConfigArray, index int32) LayoutConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index)))
 	}
-	return Clay_LayoutConfig_DEFAULT
+	return LayoutConfig_DEFAULT
 }
-func Clay__LayoutConfigArray_Add(array *Clay__LayoutConfigArray, item Clay_LayoutConfig) *Clay_LayoutConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(func() int32 {
+func __LayoutConfigArray_Add(array *__LayoutConfigArray, item LayoutConfig) *LayoutConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(int64(array.Length)-1)))
+		return (*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_LayoutConfig_DEFAULT
+	return &LayoutConfig_DEFAULT
 }
-func Clay__LayoutConfigArraySlice_Get(slice *Clay__LayoutConfigArraySlice, index int32) *Clay_LayoutConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(index)))
+func __LayoutConfigArraySlice_Get(slice *__LayoutConfigArraySlice, index int32) *LayoutConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*LayoutConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index)))
 	}
-	return &Clay_LayoutConfig_DEFAULT
+	return &LayoutConfig_DEFAULT
 }
-func Clay__LayoutConfigArray_RemoveSwapback(array *Clay__LayoutConfigArray, index int32) Clay_LayoutConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __LayoutConfigArray_RemoveSwapback(array *__LayoutConfigArray, index int32) LayoutConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_LayoutConfig = *(*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(index)))
-		*(*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(index))) = *(*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(array.Length)))
+		var removed LayoutConfig = *(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index)))
+		*(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index))) = *(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_LayoutConfig_DEFAULT
+	return LayoutConfig_DEFAULT
 }
-func Clay__LayoutConfigArray_Set(array *Clay__LayoutConfigArray, index int32, value Clay_LayoutConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutConfig{})*uintptr(index))) = value
+func __LayoutConfigArray_Set(array *__LayoutConfigArray, index int32, value LayoutConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -789,63 +788,63 @@ func Clay__LayoutConfigArray_Set(array *Clay__LayoutConfigArray, index int32, va
 	}
 }
 
-type Clay__TextElementConfigArray struct {
+type __TextElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_TextElementConfig
+	InternalArray *TextElementConfig
 }
-type Clay__TextElementConfigArraySlice struct {
+type __TextElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_TextElementConfig
+	InternalArray *TextElementConfig
 }
 
-var Clay_TextElementConfig_DEFAULT Clay_TextElementConfig = Clay_TextElementConfig{}
+var TextElementConfig_DEFAULT TextElementConfig = TextElementConfig{}
 
-func Clay__TextElementConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__TextElementConfigArray {
-	return Clay__TextElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_TextElementConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_TextElementConfig{})), arena))}
+func __TextElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __TextElementConfigArray {
+	return __TextElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*TextElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(TextElementConfig{})), arena))}
 }
-func Clay__TextElementConfigArray_Get(array *Clay__TextElementConfigArray, index int32) *Clay_TextElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(index)))
+func __TextElementConfigArray_Get(array *__TextElementConfigArray, index int32) *TextElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index)))
 	}
-	return &Clay_TextElementConfig_DEFAULT
+	return &TextElementConfig_DEFAULT
 }
-func Clay__TextElementConfigArray_GetValue(array *Clay__TextElementConfigArray, index int32) Clay_TextElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(index)))
+func __TextElementConfigArray_GetValue(array *__TextElementConfigArray, index int32) TextElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index)))
 	}
-	return Clay_TextElementConfig_DEFAULT
+	return TextElementConfig_DEFAULT
 }
-func Clay__TextElementConfigArray_Add(array *Clay__TextElementConfigArray, item Clay_TextElementConfig) *Clay_TextElementConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(func() int32 {
+func __TextElementConfigArray_Add(array *__TextElementConfigArray, item TextElementConfig) *TextElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(int64(array.Length)-1)))
+		return (*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_TextElementConfig_DEFAULT
+	return &TextElementConfig_DEFAULT
 }
-func Clay__TextElementConfigArraySlice_Get(slice *Clay__TextElementConfigArraySlice, index int32) *Clay_TextElementConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(index)))
+func __TextElementConfigArraySlice_Get(slice *__TextElementConfigArraySlice, index int32) *TextElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*TextElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index)))
 	}
-	return &Clay_TextElementConfig_DEFAULT
+	return &TextElementConfig_DEFAULT
 }
-func Clay__TextElementConfigArray_RemoveSwapback(array *Clay__TextElementConfigArray, index int32) Clay_TextElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __TextElementConfigArray_RemoveSwapback(array *__TextElementConfigArray, index int32) TextElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_TextElementConfig = *(*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(index)))
-		*(*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(index))) = *(*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(array.Length)))
+		var removed TextElementConfig = *(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index)))
+		*(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index))) = *(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_TextElementConfig_DEFAULT
+	return TextElementConfig_DEFAULT
 }
-func Clay__TextElementConfigArray_Set(array *Clay__TextElementConfigArray, index int32, value Clay_TextElementConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_TextElementConfig{})*uintptr(index))) = value
+func __TextElementConfigArray_Set(array *__TextElementConfigArray, index int32, value TextElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -854,63 +853,63 @@ func Clay__TextElementConfigArray_Set(array *Clay__TextElementConfigArray, index
 	}
 }
 
-type Clay__ImageElementConfigArray struct {
+type __ImageElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_ImageElementConfig
+	InternalArray *ImageElementConfig
 }
-type Clay__ImageElementConfigArraySlice struct {
+type __ImageElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_ImageElementConfig
+	InternalArray *ImageElementConfig
 }
 
-var Clay_ImageElementConfig_DEFAULT Clay_ImageElementConfig = Clay_ImageElementConfig{}
+var ImageElementConfig_DEFAULT ImageElementConfig = ImageElementConfig{}
 
-func Clay__ImageElementConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__ImageElementConfigArray {
-	return Clay__ImageElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_ImageElementConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_ImageElementConfig{})), arena))}
+func __ImageElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __ImageElementConfigArray {
+	return __ImageElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*ImageElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ImageElementConfig{})), arena))}
 }
-func Clay__ImageElementConfigArray_Get(array *Clay__ImageElementConfigArray, index int32) *Clay_ImageElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(index)))
+func __ImageElementConfigArray_Get(array *__ImageElementConfigArray, index int32) *ImageElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index)))
 	}
-	return &Clay_ImageElementConfig_DEFAULT
+	return &ImageElementConfig_DEFAULT
 }
-func Clay__ImageElementConfigArray_GetValue(array *Clay__ImageElementConfigArray, index int32) Clay_ImageElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(index)))
+func __ImageElementConfigArray_GetValue(array *__ImageElementConfigArray, index int32) ImageElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index)))
 	}
-	return Clay_ImageElementConfig_DEFAULT
+	return ImageElementConfig_DEFAULT
 }
-func Clay__ImageElementConfigArray_Add(array *Clay__ImageElementConfigArray, item Clay_ImageElementConfig) *Clay_ImageElementConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(func() int32 {
+func __ImageElementConfigArray_Add(array *__ImageElementConfigArray, item ImageElementConfig) *ImageElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(int64(array.Length)-1)))
+		return (*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_ImageElementConfig_DEFAULT
+	return &ImageElementConfig_DEFAULT
 }
-func Clay__ImageElementConfigArraySlice_Get(slice *Clay__ImageElementConfigArraySlice, index int32) *Clay_ImageElementConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(index)))
+func __ImageElementConfigArraySlice_Get(slice *__ImageElementConfigArraySlice, index int32) *ImageElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*ImageElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index)))
 	}
-	return &Clay_ImageElementConfig_DEFAULT
+	return &ImageElementConfig_DEFAULT
 }
-func Clay__ImageElementConfigArray_RemoveSwapback(array *Clay__ImageElementConfigArray, index int32) Clay_ImageElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __ImageElementConfigArray_RemoveSwapback(array *__ImageElementConfigArray, index int32) ImageElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_ImageElementConfig = *(*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(index)))
-		*(*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(index))) = *(*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(array.Length)))
+		var removed ImageElementConfig = *(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index)))
+		*(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index))) = *(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_ImageElementConfig_DEFAULT
+	return ImageElementConfig_DEFAULT
 }
-func Clay__ImageElementConfigArray_Set(array *Clay__ImageElementConfigArray, index int32, value Clay_ImageElementConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ImageElementConfig{})*uintptr(index))) = value
+func __ImageElementConfigArray_Set(array *__ImageElementConfigArray, index int32, value ImageElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -919,63 +918,63 @@ func Clay__ImageElementConfigArray_Set(array *Clay__ImageElementConfigArray, ind
 	}
 }
 
-type Clay__FloatingElementConfigArray struct {
+type __FloatingElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_FloatingElementConfig
+	InternalArray *FloatingElementConfig
 }
-type Clay__FloatingElementConfigArraySlice struct {
+type __FloatingElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_FloatingElementConfig
+	InternalArray *FloatingElementConfig
 }
 
-var Clay_FloatingElementConfig_DEFAULT Clay_FloatingElementConfig = Clay_FloatingElementConfig{}
+var FloatingElementConfig_DEFAULT FloatingElementConfig = FloatingElementConfig{}
 
-func Clay__FloatingElementConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__FloatingElementConfigArray {
-	return Clay__FloatingElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_FloatingElementConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_FloatingElementConfig{})), arena))}
+func __FloatingElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __FloatingElementConfigArray {
+	return __FloatingElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*FloatingElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(FloatingElementConfig{})), arena))}
 }
-func Clay__FloatingElementConfigArray_Get(array *Clay__FloatingElementConfigArray, index int32) *Clay_FloatingElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(index)))
+func __FloatingElementConfigArray_Get(array *__FloatingElementConfigArray, index int32) *FloatingElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index)))
 	}
-	return &Clay_FloatingElementConfig_DEFAULT
+	return &FloatingElementConfig_DEFAULT
 }
-func Clay__FloatingElementConfigArray_GetValue(array *Clay__FloatingElementConfigArray, index int32) Clay_FloatingElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(index)))
+func __FloatingElementConfigArray_GetValue(array *__FloatingElementConfigArray, index int32) FloatingElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index)))
 	}
-	return Clay_FloatingElementConfig_DEFAULT
+	return FloatingElementConfig_DEFAULT
 }
-func Clay__FloatingElementConfigArray_Add(array *Clay__FloatingElementConfigArray, item Clay_FloatingElementConfig) *Clay_FloatingElementConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(func() int32 {
+func __FloatingElementConfigArray_Add(array *__FloatingElementConfigArray, item FloatingElementConfig) *FloatingElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(int64(array.Length)-1)))
+		return (*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_FloatingElementConfig_DEFAULT
+	return &FloatingElementConfig_DEFAULT
 }
-func Clay__FloatingElementConfigArraySlice_Get(slice *Clay__FloatingElementConfigArraySlice, index int32) *Clay_FloatingElementConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(index)))
+func __FloatingElementConfigArraySlice_Get(slice *__FloatingElementConfigArraySlice, index int32) *FloatingElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index)))
 	}
-	return &Clay_FloatingElementConfig_DEFAULT
+	return &FloatingElementConfig_DEFAULT
 }
-func Clay__FloatingElementConfigArray_RemoveSwapback(array *Clay__FloatingElementConfigArray, index int32) Clay_FloatingElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __FloatingElementConfigArray_RemoveSwapback(array *__FloatingElementConfigArray, index int32) FloatingElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_FloatingElementConfig = *(*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(index)))
-		*(*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(index))) = *(*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(array.Length)))
+		var removed FloatingElementConfig = *(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index)))
+		*(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index))) = *(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_FloatingElementConfig_DEFAULT
+	return FloatingElementConfig_DEFAULT
 }
-func Clay__FloatingElementConfigArray_Set(array *Clay__FloatingElementConfigArray, index int32, value Clay_FloatingElementConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_FloatingElementConfig{})*uintptr(index))) = value
+func __FloatingElementConfigArray_Set(array *__FloatingElementConfigArray, index int32, value FloatingElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -984,63 +983,63 @@ func Clay__FloatingElementConfigArray_Set(array *Clay__FloatingElementConfigArra
 	}
 }
 
-type Clay__CustomElementConfigArray struct {
+type __CustomElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_CustomElementConfig
+	InternalArray *CustomElementConfig
 }
-type Clay__CustomElementConfigArraySlice struct {
+type __CustomElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_CustomElementConfig
+	InternalArray *CustomElementConfig
 }
 
-var Clay_CustomElementConfig_DEFAULT Clay_CustomElementConfig = Clay_CustomElementConfig{}
+var CustomElementConfig_DEFAULT CustomElementConfig = CustomElementConfig{}
 
-func Clay__CustomElementConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__CustomElementConfigArray {
-	return Clay__CustomElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_CustomElementConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_CustomElementConfig{})), arena))}
+func __CustomElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __CustomElementConfigArray {
+	return __CustomElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*CustomElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(CustomElementConfig{})), arena))}
 }
-func Clay__CustomElementConfigArray_Get(array *Clay__CustomElementConfigArray, index int32) *Clay_CustomElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(index)))
+func __CustomElementConfigArray_Get(array *__CustomElementConfigArray, index int32) *CustomElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index)))
 	}
-	return &Clay_CustomElementConfig_DEFAULT
+	return &CustomElementConfig_DEFAULT
 }
-func Clay__CustomElementConfigArray_GetValue(array *Clay__CustomElementConfigArray, index int32) Clay_CustomElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(index)))
+func __CustomElementConfigArray_GetValue(array *__CustomElementConfigArray, index int32) CustomElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index)))
 	}
-	return Clay_CustomElementConfig_DEFAULT
+	return CustomElementConfig_DEFAULT
 }
-func Clay__CustomElementConfigArray_Add(array *Clay__CustomElementConfigArray, item Clay_CustomElementConfig) *Clay_CustomElementConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(func() int32 {
+func __CustomElementConfigArray_Add(array *__CustomElementConfigArray, item CustomElementConfig) *CustomElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(int64(array.Length)-1)))
+		return (*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_CustomElementConfig_DEFAULT
+	return &CustomElementConfig_DEFAULT
 }
-func Clay__CustomElementConfigArraySlice_Get(slice *Clay__CustomElementConfigArraySlice, index int32) *Clay_CustomElementConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(index)))
+func __CustomElementConfigArraySlice_Get(slice *__CustomElementConfigArraySlice, index int32) *CustomElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*CustomElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index)))
 	}
-	return &Clay_CustomElementConfig_DEFAULT
+	return &CustomElementConfig_DEFAULT
 }
-func Clay__CustomElementConfigArray_RemoveSwapback(array *Clay__CustomElementConfigArray, index int32) Clay_CustomElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __CustomElementConfigArray_RemoveSwapback(array *__CustomElementConfigArray, index int32) CustomElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_CustomElementConfig = *(*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(index)))
-		*(*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(index))) = *(*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(array.Length)))
+		var removed CustomElementConfig = *(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index)))
+		*(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index))) = *(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_CustomElementConfig_DEFAULT
+	return CustomElementConfig_DEFAULT
 }
-func Clay__CustomElementConfigArray_Set(array *Clay__CustomElementConfigArray, index int32, value Clay_CustomElementConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_CustomElementConfig{})*uintptr(index))) = value
+func __CustomElementConfigArray_Set(array *__CustomElementConfigArray, index int32, value CustomElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1049,63 +1048,63 @@ func Clay__CustomElementConfigArray_Set(array *Clay__CustomElementConfigArray, i
 	}
 }
 
-type Clay__ScrollElementConfigArray struct {
+type __ScrollElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_ScrollElementConfig
+	InternalArray *ScrollElementConfig
 }
-type Clay__ScrollElementConfigArraySlice struct {
+type __ScrollElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_ScrollElementConfig
+	InternalArray *ScrollElementConfig
 }
 
-var Clay_ScrollElementConfig_DEFAULT Clay_ScrollElementConfig = Clay_ScrollElementConfig{Horizontal: false}
+var ScrollElementConfig_DEFAULT ScrollElementConfig = ScrollElementConfig{Horizontal: false}
 
-func Clay__ScrollElementConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__ScrollElementConfigArray {
-	return Clay__ScrollElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_ScrollElementConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_ScrollElementConfig{})), arena))}
+func __ScrollElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __ScrollElementConfigArray {
+	return __ScrollElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*ScrollElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ScrollElementConfig{})), arena))}
 }
-func Clay__ScrollElementConfigArray_Get(array *Clay__ScrollElementConfigArray, index int32) *Clay_ScrollElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(index)))
+func __ScrollElementConfigArray_Get(array *__ScrollElementConfigArray, index int32) *ScrollElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
 	}
-	return &Clay_ScrollElementConfig_DEFAULT
+	return &ScrollElementConfig_DEFAULT
 }
-func Clay__ScrollElementConfigArray_GetValue(array *Clay__ScrollElementConfigArray, index int32) Clay_ScrollElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(index)))
+func __ScrollElementConfigArray_GetValue(array *__ScrollElementConfigArray, index int32) ScrollElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
 	}
-	return Clay_ScrollElementConfig_DEFAULT
+	return ScrollElementConfig_DEFAULT
 }
-func Clay__ScrollElementConfigArray_Add(array *Clay__ScrollElementConfigArray, item Clay_ScrollElementConfig) *Clay_ScrollElementConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(func() int32 {
+func __ScrollElementConfigArray_Add(array *__ScrollElementConfigArray, item ScrollElementConfig) *ScrollElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(int64(array.Length)-1)))
+		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_ScrollElementConfig_DEFAULT
+	return &ScrollElementConfig_DEFAULT
 }
-func Clay__ScrollElementConfigArraySlice_Get(slice *Clay__ScrollElementConfigArraySlice, index int32) *Clay_ScrollElementConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(index)))
+func __ScrollElementConfigArraySlice_Get(slice *__ScrollElementConfigArraySlice, index int32) *ScrollElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
 	}
-	return &Clay_ScrollElementConfig_DEFAULT
+	return &ScrollElementConfig_DEFAULT
 }
-func Clay__ScrollElementConfigArray_RemoveSwapback(array *Clay__ScrollElementConfigArray, index int32) Clay_ScrollElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __ScrollElementConfigArray_RemoveSwapback(array *__ScrollElementConfigArray, index int32) ScrollElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_ScrollElementConfig = *(*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(index)))
-		*(*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(index))) = *(*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(array.Length)))
+		var removed ScrollElementConfig = *(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
+		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index))) = *(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_ScrollElementConfig_DEFAULT
+	return ScrollElementConfig_DEFAULT
 }
-func Clay__ScrollElementConfigArray_Set(array *Clay__ScrollElementConfigArray, index int32, value Clay_ScrollElementConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ScrollElementConfig{})*uintptr(index))) = value
+func __ScrollElementConfigArray_Set(array *__ScrollElementConfigArray, index int32, value ScrollElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1114,63 +1113,63 @@ func Clay__ScrollElementConfigArray_Set(array *Clay__ScrollElementConfigArray, i
 	}
 }
 
-type Clay__BorderElementConfigArray struct {
+type __BorderElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_BorderElementConfig
+	InternalArray *BorderElementConfig
 }
-type Clay__BorderElementConfigArraySlice struct {
+type __BorderElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_BorderElementConfig
+	InternalArray *BorderElementConfig
 }
 
-var Clay_BorderElementConfig_DEFAULT Clay_BorderElementConfig = Clay_BorderElementConfig{}
+var BorderElementConfig_DEFAULT BorderElementConfig = BorderElementConfig{}
 
-func Clay__BorderElementConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__BorderElementConfigArray {
-	return Clay__BorderElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_BorderElementConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_BorderElementConfig{})), arena))}
+func __BorderElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __BorderElementConfigArray {
+	return __BorderElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*BorderElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(BorderElementConfig{})), arena))}
 }
-func Clay__BorderElementConfigArray_Get(array *Clay__BorderElementConfigArray, index int32) *Clay_BorderElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(index)))
+func __BorderElementConfigArray_Get(array *__BorderElementConfigArray, index int32) *BorderElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index)))
 	}
-	return &Clay_BorderElementConfig_DEFAULT
+	return &BorderElementConfig_DEFAULT
 }
-func Clay__BorderElementConfigArray_GetValue(array *Clay__BorderElementConfigArray, index int32) Clay_BorderElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(index)))
+func __BorderElementConfigArray_GetValue(array *__BorderElementConfigArray, index int32) BorderElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index)))
 	}
-	return Clay_BorderElementConfig_DEFAULT
+	return BorderElementConfig_DEFAULT
 }
-func Clay__BorderElementConfigArray_Add(array *Clay__BorderElementConfigArray, item Clay_BorderElementConfig) *Clay_BorderElementConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(func() int32 {
+func __BorderElementConfigArray_Add(array *__BorderElementConfigArray, item BorderElementConfig) *BorderElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(int64(array.Length)-1)))
+		return (*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_BorderElementConfig_DEFAULT
+	return &BorderElementConfig_DEFAULT
 }
-func Clay__BorderElementConfigArraySlice_Get(slice *Clay__BorderElementConfigArraySlice, index int32) *Clay_BorderElementConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(index)))
+func __BorderElementConfigArraySlice_Get(slice *__BorderElementConfigArraySlice, index int32) *BorderElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*BorderElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index)))
 	}
-	return &Clay_BorderElementConfig_DEFAULT
+	return &BorderElementConfig_DEFAULT
 }
-func Clay__BorderElementConfigArray_RemoveSwapback(array *Clay__BorderElementConfigArray, index int32) Clay_BorderElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __BorderElementConfigArray_RemoveSwapback(array *__BorderElementConfigArray, index int32) BorderElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_BorderElementConfig = *(*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(index)))
-		*(*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(index))) = *(*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(array.Length)))
+		var removed BorderElementConfig = *(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index)))
+		*(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index))) = *(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_BorderElementConfig_DEFAULT
+	return BorderElementConfig_DEFAULT
 }
-func Clay__BorderElementConfigArray_Set(array *Clay__BorderElementConfigArray, index int32, value Clay_BorderElementConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_BorderElementConfig{})*uintptr(index))) = value
+func __BorderElementConfigArray_Set(array *__BorderElementConfigArray, index int32, value BorderElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1179,63 +1178,63 @@ func Clay__BorderElementConfigArray_Set(array *Clay__BorderElementConfigArray, i
 	}
 }
 
-type Clay__StringArray struct {
+type __StringArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_String
+	InternalArray *String
 }
-type Clay__StringArraySlice struct {
+type __StringArraySlice struct {
 	Length        int32
-	InternalArray *Clay_String
+	InternalArray *String
 }
 
-var Clay_String_DEFAULT Clay_String = Clay_String{}
+var String_DEFAULT String = String{}
 
-func Clay__StringArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__StringArray {
-	return Clay__StringArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_String)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_String{})), arena))}
+func __StringArray_Allocate_Arena(capacity int32, arena *Arena) __StringArray {
+	return __StringArray{Capacity: capacity, Length: 0, InternalArray: (*String)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(String{})), arena))}
 }
-func Clay__StringArray_Get(array *Clay__StringArray, index int32) *Clay_String {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(index)))
+func __StringArray_Get(array *__StringArray, index int32) *String {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index)))
 	}
-	return &Clay_String_DEFAULT
+	return &String_DEFAULT
 }
-func Clay__StringArray_GetValue(array *Clay__StringArray, index int32) Clay_String {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(index)))
+func __StringArray_GetValue(array *__StringArray, index int32) String {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index)))
 	}
-	return Clay_String_DEFAULT
+	return String_DEFAULT
 }
-func Clay__StringArray_Add(array *Clay__StringArray, item Clay_String) *Clay_String {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(func() int32 {
+func __StringArray_Add(array *__StringArray, item String) *String {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(int64(array.Length)-1)))
+		return (*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_String_DEFAULT
+	return &String_DEFAULT
 }
-func Clay__StringArraySlice_Get(slice *Clay__StringArraySlice, index int32) *Clay_String {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_String)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(index)))
+func __StringArraySlice_Get(slice *__StringArraySlice, index int32) *String {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*String)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(String{})*uintptr(index)))
 	}
-	return &Clay_String_DEFAULT
+	return &String_DEFAULT
 }
-func Clay__StringArray_RemoveSwapback(array *Clay__StringArray, index int32) Clay_String {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __StringArray_RemoveSwapback(array *__StringArray, index int32) String {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_String = *(*Clay_String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(index)))
-		*(*Clay_String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(index))) = *(*Clay_String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(array.Length)))
+		var removed String = *(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index)))
+		*(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index))) = *(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_String_DEFAULT
+	return String_DEFAULT
 }
-func Clay__StringArray_Set(array *Clay__StringArray, index int32, value Clay_String) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_String{})*uintptr(index))) = value
+func __StringArray_Set(array *__StringArray, index int32, value String) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1244,63 +1243,63 @@ func Clay__StringArray_Set(array *Clay__StringArray, index int32, value Clay_Str
 	}
 }
 
-type Clay__SharedElementConfigArray struct {
+type __SharedElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_SharedElementConfig
+	InternalArray *SharedElementConfig
 }
-type Clay__SharedElementConfigArraySlice struct {
+type __SharedElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_SharedElementConfig
+	InternalArray *SharedElementConfig
 }
 
-var Clay_SharedElementConfig_DEFAULT Clay_SharedElementConfig = Clay_SharedElementConfig{}
+var SharedElementConfig_DEFAULT SharedElementConfig = SharedElementConfig{}
 
-func Clay__SharedElementConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__SharedElementConfigArray {
-	return Clay__SharedElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_SharedElementConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_SharedElementConfig{})), arena))}
+func __SharedElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __SharedElementConfigArray {
+	return __SharedElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*SharedElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(SharedElementConfig{})), arena))}
 }
-func Clay__SharedElementConfigArray_Get(array *Clay__SharedElementConfigArray, index int32) *Clay_SharedElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(index)))
+func __SharedElementConfigArray_Get(array *__SharedElementConfigArray, index int32) *SharedElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index)))
 	}
-	return &Clay_SharedElementConfig_DEFAULT
+	return &SharedElementConfig_DEFAULT
 }
-func Clay__SharedElementConfigArray_GetValue(array *Clay__SharedElementConfigArray, index int32) Clay_SharedElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(index)))
+func __SharedElementConfigArray_GetValue(array *__SharedElementConfigArray, index int32) SharedElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index)))
 	}
-	return Clay_SharedElementConfig_DEFAULT
+	return SharedElementConfig_DEFAULT
 }
-func Clay__SharedElementConfigArray_Add(array *Clay__SharedElementConfigArray, item Clay_SharedElementConfig) *Clay_SharedElementConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(func() int32 {
+func __SharedElementConfigArray_Add(array *__SharedElementConfigArray, item SharedElementConfig) *SharedElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(int64(array.Length)-1)))
+		return (*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_SharedElementConfig_DEFAULT
+	return &SharedElementConfig_DEFAULT
 }
-func Clay__SharedElementConfigArraySlice_Get(slice *Clay__SharedElementConfigArraySlice, index int32) *Clay_SharedElementConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(index)))
+func __SharedElementConfigArraySlice_Get(slice *__SharedElementConfigArraySlice, index int32) *SharedElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*SharedElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index)))
 	}
-	return &Clay_SharedElementConfig_DEFAULT
+	return &SharedElementConfig_DEFAULT
 }
-func Clay__SharedElementConfigArray_RemoveSwapback(array *Clay__SharedElementConfigArray, index int32) Clay_SharedElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __SharedElementConfigArray_RemoveSwapback(array *__SharedElementConfigArray, index int32) SharedElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_SharedElementConfig = *(*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(index)))
-		*(*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(index))) = *(*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(array.Length)))
+		var removed SharedElementConfig = *(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index)))
+		*(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index))) = *(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_SharedElementConfig_DEFAULT
+	return SharedElementConfig_DEFAULT
 }
-func Clay__SharedElementConfigArray_Set(array *Clay__SharedElementConfigArray, index int32, value Clay_SharedElementConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_SharedElementConfig{})*uintptr(index))) = value
+func __SharedElementConfigArray_Set(array *__SharedElementConfigArray, index int32, value SharedElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1309,58 +1308,58 @@ func Clay__SharedElementConfigArray_Set(array *Clay__SharedElementConfigArray, i
 	}
 }
 
-type Clay_RenderCommandArraySlice struct {
+type RenderCommandArraySlice struct {
 	Length        int32
-	InternalArray *Clay_RenderCommand
+	InternalArray *RenderCommand
 }
 
-var Clay_RenderCommand_DEFAULT Clay_RenderCommand = Clay_RenderCommand{}
+var RenderCommand_DEFAULT RenderCommand = RenderCommand{}
 
-func Clay_RenderCommandArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay_RenderCommandArray {
-	return Clay_RenderCommandArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_RenderCommand)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_RenderCommand{})), arena))}
+func RenderCommandArray_Allocate_Arena(capacity int32, arena *Arena) RenderCommandArray {
+	return RenderCommandArray{Capacity: capacity, Length: 0, InternalArray: (*RenderCommand)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(RenderCommand{})), arena))}
 }
-func Clay_RenderCommandArray_Get(array *Clay_RenderCommandArray, index int32) *Clay_RenderCommand {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(index)))
+func RenderCommandArray_Get(array *RenderCommandArray, index int32) *RenderCommand {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index)))
 	}
-	return &Clay_RenderCommand_DEFAULT
+	return &RenderCommand_DEFAULT
 }
-func Clay_RenderCommandArray_GetValue(array *Clay_RenderCommandArray, index int32) Clay_RenderCommand {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(index)))
+func RenderCommandArray_GetValue(array *RenderCommandArray, index int32) RenderCommand {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index)))
 	}
-	return Clay_RenderCommand_DEFAULT
+	return RenderCommand_DEFAULT
 }
-func Clay_RenderCommandArray_Add(array *Clay_RenderCommandArray, item Clay_RenderCommand) *Clay_RenderCommand {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(func() int32 {
+func RenderCommandArray_Add(array *RenderCommandArray, item RenderCommand) *RenderCommand {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(int64(array.Length)-1)))
+		return (*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_RenderCommand_DEFAULT
+	return &RenderCommand_DEFAULT
 }
-func Clay_RenderCommandArraySlice_Get(slice *Clay_RenderCommandArraySlice, index int32) *Clay_RenderCommand {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(index)))
+func RenderCommandArraySlice_Get(slice *RenderCommandArraySlice, index int32) *RenderCommand {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*RenderCommand)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index)))
 	}
-	return &Clay_RenderCommand_DEFAULT
+	return &RenderCommand_DEFAULT
 }
-func Clay_RenderCommandArray_RemoveSwapback(array *Clay_RenderCommandArray, index int32) Clay_RenderCommand {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func RenderCommandArray_RemoveSwapback(array *RenderCommandArray, index int32) RenderCommand {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_RenderCommand = *(*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(index)))
-		*(*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(index))) = *(*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(array.Length)))
+		var removed RenderCommand = *(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index)))
+		*(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index))) = *(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_RenderCommand_DEFAULT
+	return RenderCommand_DEFAULT
 }
-func Clay_RenderCommandArray_Set(array *Clay_RenderCommandArray, index int32, value Clay_RenderCommand) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_RenderCommand{})*uintptr(index))) = value
+func RenderCommandArray_Set(array *RenderCommandArray, index int32, value RenderCommand) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1369,90 +1368,90 @@ func Clay_RenderCommandArray_Set(array *Clay_RenderCommandArray, index int32, va
 	}
 }
 
-type Clay__ElementConfigType int64
+type __ElementConfigType int64
 
 const (
-	CLAY__ELEMENT_CONFIG_TYPE_NONE = Clay__ElementConfigType(iota)
-	CLAY__ELEMENT_CONFIG_TYPE_BORDER
-	CLAY__ELEMENT_CONFIG_TYPE_FLOATING
-	CLAY__ELEMENT_CONFIG_TYPE_SCROLL
-	CLAY__ELEMENT_CONFIG_TYPE_IMAGE
-	CLAY__ELEMENT_CONFIG_TYPE_TEXT
-	CLAY__ELEMENT_CONFIG_TYPE_CUSTOM
-	CLAY__ELEMENT_CONFIG_TYPE_SHARED
+	__ELEMENT_CONFIG_TYPE_NONE = __ElementConfigType(iota)
+	__ELEMENT_CONFIG_TYPE_BORDER
+	__ELEMENT_CONFIG_TYPE_FLOATING
+	__ELEMENT_CONFIG_TYPE_SCROLL
+	__ELEMENT_CONFIG_TYPE_IMAGE
+	__ELEMENT_CONFIG_TYPE_TEXT
+	__ELEMENT_CONFIG_TYPE_CUSTOM
+	__ELEMENT_CONFIG_TYPE_SHARED
 )
 
-type Clay_ElementConfigUnion struct {
+type ElementConfigUnion struct {
 	// union
-	TextElementConfig     *Clay_TextElementConfig
-	ImageElementConfig    *Clay_ImageElementConfig
-	FloatingElementConfig *Clay_FloatingElementConfig
-	CustomElementConfig   *Clay_CustomElementConfig
-	ScrollElementConfig   *Clay_ScrollElementConfig
-	BorderElementConfig   *Clay_BorderElementConfig
-	SharedElementConfig   *Clay_SharedElementConfig
+	TextElementConfig     *TextElementConfig
+	ImageElementConfig    *ImageElementConfig
+	FloatingElementConfig *FloatingElementConfig
+	CustomElementConfig   *CustomElementConfig
+	ScrollElementConfig   *ScrollElementConfig
+	BorderElementConfig   *BorderElementConfig
+	SharedElementConfig   *SharedElementConfig
 }
-type Clay_ElementConfig struct {
-	Type   Clay__ElementConfigType
-	Config Clay_ElementConfigUnion
+type ElementConfig struct {
+	Type   __ElementConfigType
+	Config ElementConfigUnion
 }
-type Clay__ElementConfigArray struct {
+type __ElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_ElementConfig
+	InternalArray *ElementConfig
 }
-type Clay__ElementConfigArraySlice struct {
+type __ElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *Clay_ElementConfig
+	InternalArray *ElementConfig
 }
 
-var Clay_ElementConfig_DEFAULT Clay_ElementConfig = Clay_ElementConfig{}
+var ElementConfig_DEFAULT ElementConfig = ElementConfig{}
 
-func Clay__ElementConfigArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__ElementConfigArray {
-	return Clay__ElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_ElementConfig)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_ElementConfig{})), arena))}
+func __ElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __ElementConfigArray {
+	return __ElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*ElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ElementConfig{})), arena))}
 }
-func Clay__ElementConfigArray_Get(array *Clay__ElementConfigArray, index int32) *Clay_ElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(index)))
+func __ElementConfigArray_Get(array *__ElementConfigArray, index int32) *ElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index)))
 	}
-	return &Clay_ElementConfig_DEFAULT
+	return &ElementConfig_DEFAULT
 }
-func Clay__ElementConfigArray_GetValue(array *Clay__ElementConfigArray, index int32) Clay_ElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(index)))
+func __ElementConfigArray_GetValue(array *__ElementConfigArray, index int32) ElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index)))
 	}
-	return Clay_ElementConfig_DEFAULT
+	return ElementConfig_DEFAULT
 }
-func Clay__ElementConfigArray_Add(array *Clay__ElementConfigArray, item Clay_ElementConfig) *Clay_ElementConfig {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(func() int32 {
+func __ElementConfigArray_Add(array *__ElementConfigArray, item ElementConfig) *ElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(int64(array.Length)-1)))
+		return (*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_ElementConfig_DEFAULT
+	return &ElementConfig_DEFAULT
 }
-func Clay__ElementConfigArraySlice_Get(slice *Clay__ElementConfigArraySlice, index int32) *Clay_ElementConfig {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(index)))
+func __ElementConfigArraySlice_Get(slice *__ElementConfigArraySlice, index int32) *ElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*ElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index)))
 	}
-	return &Clay_ElementConfig_DEFAULT
+	return &ElementConfig_DEFAULT
 }
-func Clay__ElementConfigArray_RemoveSwapback(array *Clay__ElementConfigArray, index int32) Clay_ElementConfig {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __ElementConfigArray_RemoveSwapback(array *__ElementConfigArray, index int32) ElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_ElementConfig = *(*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(index)))
-		*(*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(index))) = *(*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(array.Length)))
+		var removed ElementConfig = *(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index)))
+		*(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index))) = *(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_ElementConfig_DEFAULT
+	return ElementConfig_DEFAULT
 }
-func Clay__ElementConfigArray_Set(array *Clay__ElementConfigArray, index int32, value Clay_ElementConfig) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(index))) = value
+func __ElementConfigArray_Set(array *__ElementConfigArray, index int32, value ElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1461,67 +1460,67 @@ func Clay__ElementConfigArray_Set(array *Clay__ElementConfigArray, index int32, 
 	}
 }
 
-type Clay__WrappedTextLine struct {
-	Dimensions Clay_Dimensions
-	Line       Clay_String
+type __WrappedTextLine struct {
+	Dimensions Dimensions
+	Line       String
 }
-type Clay__WrappedTextLineArray struct {
+type __WrappedTextLineArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__WrappedTextLine
+	InternalArray *__WrappedTextLine
 }
-type Clay__WrappedTextLineArraySlice struct {
+type __WrappedTextLineArraySlice struct {
 	Length        int32
-	InternalArray *Clay__WrappedTextLine
+	InternalArray *__WrappedTextLine
 }
 
-var Clay__WrappedTextLine_DEFAULT Clay__WrappedTextLine = Clay__WrappedTextLine{}
+var __WrappedTextLine_DEFAULT __WrappedTextLine = __WrappedTextLine{}
 
-func Clay__WrappedTextLineArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__WrappedTextLineArray {
-	return Clay__WrappedTextLineArray{Capacity: capacity, Length: 0, InternalArray: (*Clay__WrappedTextLine)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay__WrappedTextLine{})), arena))}
+func __WrappedTextLineArray_Allocate_Arena(capacity int32, arena *Arena) __WrappedTextLineArray {
+	return __WrappedTextLineArray{Capacity: capacity, Length: 0, InternalArray: (*__WrappedTextLine)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__WrappedTextLine{})), arena))}
 }
-func Clay__WrappedTextLineArray_Get(array *Clay__WrappedTextLineArray, index int32) *Clay__WrappedTextLine {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(index)))
+func __WrappedTextLineArray_Get(array *__WrappedTextLineArray, index int32) *__WrappedTextLine {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index)))
 	}
-	return &Clay__WrappedTextLine_DEFAULT
+	return &__WrappedTextLine_DEFAULT
 }
-func Clay__WrappedTextLineArray_GetValue(array *Clay__WrappedTextLineArray, index int32) Clay__WrappedTextLine {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(index)))
+func __WrappedTextLineArray_GetValue(array *__WrappedTextLineArray, index int32) __WrappedTextLine {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index)))
 	}
-	return Clay__WrappedTextLine_DEFAULT
+	return __WrappedTextLine_DEFAULT
 }
-func Clay__WrappedTextLineArray_Add(array *Clay__WrappedTextLineArray, item Clay__WrappedTextLine) *Clay__WrappedTextLine {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(func() int32 {
+func __WrappedTextLineArray_Add(array *__WrappedTextLineArray, item __WrappedTextLine) *__WrappedTextLine {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(int64(array.Length)-1)))
+		return (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay__WrappedTextLine_DEFAULT
+	return &__WrappedTextLine_DEFAULT
 }
-func Clay__WrappedTextLineArraySlice_Get(slice *Clay__WrappedTextLineArraySlice, index int32) *Clay__WrappedTextLine {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(index)))
+func __WrappedTextLineArraySlice_Get(slice *__WrappedTextLineArraySlice, index int32) *__WrappedTextLine {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index)))
 	}
-	return &Clay__WrappedTextLine_DEFAULT
+	return &__WrappedTextLine_DEFAULT
 }
-func Clay__WrappedTextLineArray_RemoveSwapback(array *Clay__WrappedTextLineArray, index int32) Clay__WrappedTextLine {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __WrappedTextLineArray_RemoveSwapback(array *__WrappedTextLineArray, index int32) __WrappedTextLine {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay__WrappedTextLine = *(*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(index)))
-		*(*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(index))) = *(*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(array.Length)))
+		var removed __WrappedTextLine = *(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index)))
+		*(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index))) = *(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay__WrappedTextLine_DEFAULT
+	return __WrappedTextLine_DEFAULT
 }
-func Clay__WrappedTextLineArray_Set(array *Clay__WrappedTextLineArray, index int32, value Clay__WrappedTextLine) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(index))) = value
+func __WrappedTextLineArray_Set(array *__WrappedTextLineArray, index int32, value __WrappedTextLine) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1530,69 +1529,69 @@ func Clay__WrappedTextLineArray_Set(array *Clay__WrappedTextLineArray, index int
 	}
 }
 
-type Clay__TextElementData struct {
-	Text                Clay_String
-	PreferredDimensions Clay_Dimensions
+type __TextElementData struct {
+	Text                String
+	PreferredDimensions Dimensions
 	ElementIndex        int32
-	WrappedLines        Clay__WrappedTextLineArraySlice
+	WrappedLines        __WrappedTextLineArraySlice
 }
-type Clay__TextElementDataArray struct {
+type __TextElementDataArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__TextElementData
+	InternalArray *__TextElementData
 }
-type Clay__TextElementDataArraySlice struct {
+type __TextElementDataArraySlice struct {
 	Length        int32
-	InternalArray *Clay__TextElementData
+	InternalArray *__TextElementData
 }
 
-var Clay__TextElementData_DEFAULT Clay__TextElementData = Clay__TextElementData{}
+var __TextElementData_DEFAULT __TextElementData = __TextElementData{}
 
-func Clay__TextElementDataArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__TextElementDataArray {
-	return Clay__TextElementDataArray{Capacity: capacity, Length: 0, InternalArray: (*Clay__TextElementData)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay__TextElementData{})), arena))}
+func __TextElementDataArray_Allocate_Arena(capacity int32, arena *Arena) __TextElementDataArray {
+	return __TextElementDataArray{Capacity: capacity, Length: 0, InternalArray: (*__TextElementData)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__TextElementData{})), arena))}
 }
-func Clay__TextElementDataArray_Get(array *Clay__TextElementDataArray, index int32) *Clay__TextElementData {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(index)))
+func __TextElementDataArray_Get(array *__TextElementDataArray, index int32) *__TextElementData {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index)))
 	}
-	return &Clay__TextElementData_DEFAULT
+	return &__TextElementData_DEFAULT
 }
-func Clay__TextElementDataArray_GetValue(array *Clay__TextElementDataArray, index int32) Clay__TextElementData {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(index)))
+func __TextElementDataArray_GetValue(array *__TextElementDataArray, index int32) __TextElementData {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index)))
 	}
-	return Clay__TextElementData_DEFAULT
+	return __TextElementData_DEFAULT
 }
-func Clay__TextElementDataArray_Add(array *Clay__TextElementDataArray, item Clay__TextElementData) *Clay__TextElementData {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(func() int32 {
+func __TextElementDataArray_Add(array *__TextElementDataArray, item __TextElementData) *__TextElementData {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(int64(array.Length)-1)))
+		return (*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay__TextElementData_DEFAULT
+	return &__TextElementData_DEFAULT
 }
-func Clay__TextElementDataArraySlice_Get(slice *Clay__TextElementDataArraySlice, index int32) *Clay__TextElementData {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(index)))
+func __TextElementDataArraySlice_Get(slice *__TextElementDataArraySlice, index int32) *__TextElementData {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*__TextElementData)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index)))
 	}
-	return &Clay__TextElementData_DEFAULT
+	return &__TextElementData_DEFAULT
 }
-func Clay__TextElementDataArray_RemoveSwapback(array *Clay__TextElementDataArray, index int32) Clay__TextElementData {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __TextElementDataArray_RemoveSwapback(array *__TextElementDataArray, index int32) __TextElementData {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay__TextElementData = *(*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(index)))
-		*(*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(index))) = *(*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(array.Length)))
+		var removed __TextElementData = *(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index)))
+		*(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index))) = *(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay__TextElementData_DEFAULT
+	return __TextElementData_DEFAULT
 }
-func Clay__TextElementDataArray_Set(array *Clay__TextElementDataArray, index int32, value Clay__TextElementData) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__TextElementData{})*uintptr(index))) = value
+func __TextElementDataArray_Set(array *__TextElementDataArray, index int32, value __TextElementData) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1601,79 +1600,79 @@ func Clay__TextElementDataArray_Set(array *Clay__TextElementDataArray, index int
 	}
 }
 
-type Clay__LayoutElementChildren struct {
+type __LayoutElementChildren struct {
 	Elements *int32
 	Length   uint16
 }
-type Clay_LayoutElement struct {
+type LayoutElement struct {
 	ChildrenOrTextContent struct {
 		// union
-		Children        Clay__LayoutElementChildren
-		TextElementData *Clay__TextElementData
+		Children        __LayoutElementChildren
+		TextElementData *__TextElementData
 	}
-	Dimensions     Clay_Dimensions
-	MinDimensions  Clay_Dimensions
-	LayoutConfig   *Clay_LayoutConfig
-	ElementConfigs Clay__ElementConfigArraySlice
+	Dimensions     Dimensions
+	MinDimensions  Dimensions
+	LayoutConfig   *LayoutConfig
+	ElementConfigs __ElementConfigArraySlice
 	Id             uint32
 }
-type Clay_LayoutElementArray struct {
+type LayoutElementArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_LayoutElement
+	InternalArray *LayoutElement
 }
-type Clay_LayoutElementArraySlice struct {
+type LayoutElementArraySlice struct {
 	Length        int32
-	InternalArray *Clay_LayoutElement
+	InternalArray *LayoutElement
 }
 
-var Clay_LayoutElement_DEFAULT Clay_LayoutElement = Clay_LayoutElement{}
+var LayoutElement_DEFAULT LayoutElement = LayoutElement{}
 
-func Clay_LayoutElementArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay_LayoutElementArray {
-	return Clay_LayoutElementArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_LayoutElement)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_LayoutElement{})), arena))}
+func LayoutElementArray_Allocate_Arena(capacity int32, arena *Arena) LayoutElementArray {
+	return LayoutElementArray{Capacity: capacity, Length: 0, InternalArray: (*LayoutElement)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(LayoutElement{})), arena))}
 }
-func Clay_LayoutElementArray_Get(array *Clay_LayoutElementArray, index int32) *Clay_LayoutElement {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(index)))
+func LayoutElementArray_Get(array *LayoutElementArray, index int32) *LayoutElement {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index)))
 	}
-	return &Clay_LayoutElement_DEFAULT
+	return &LayoutElement_DEFAULT
 }
-func Clay_LayoutElementArray_GetValue(array *Clay_LayoutElementArray, index int32) Clay_LayoutElement {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(index)))
+func LayoutElementArray_GetValue(array *LayoutElementArray, index int32) LayoutElement {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index)))
 	}
-	return Clay_LayoutElement_DEFAULT
+	return LayoutElement_DEFAULT
 }
-func Clay_LayoutElementArray_Add(array *Clay_LayoutElementArray, item Clay_LayoutElement) *Clay_LayoutElement {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(func() int32 {
+func LayoutElementArray_Add(array *LayoutElementArray, item LayoutElement) *LayoutElement {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(int64(array.Length)-1)))
+		return (*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_LayoutElement_DEFAULT
+	return &LayoutElement_DEFAULT
 }
-func Clay_LayoutElementArraySlice_Get(slice *Clay_LayoutElementArraySlice, index int32) *Clay_LayoutElement {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(index)))
+func LayoutElementArraySlice_Get(slice *LayoutElementArraySlice, index int32) *LayoutElement {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*LayoutElement)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index)))
 	}
-	return &Clay_LayoutElement_DEFAULT
+	return &LayoutElement_DEFAULT
 }
-func Clay_LayoutElementArray_RemoveSwapback(array *Clay_LayoutElementArray, index int32) Clay_LayoutElement {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func LayoutElementArray_RemoveSwapback(array *LayoutElementArray, index int32) LayoutElement {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_LayoutElement = *(*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(index)))
-		*(*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(index))) = *(*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(array.Length)))
+		var removed LayoutElement = *(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index)))
+		*(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index))) = *(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_LayoutElement_DEFAULT
+	return LayoutElement_DEFAULT
 }
-func Clay_LayoutElementArray_Set(array *Clay_LayoutElementArray, index int32, value Clay_LayoutElement) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElement{})*uintptr(index))) = value
+func LayoutElementArray_Set(array *LayoutElementArray, index int32, value LayoutElement) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1682,77 +1681,77 @@ func Clay_LayoutElementArray_Set(array *Clay_LayoutElementArray, index int32, va
 	}
 }
 
-type Clay__ScrollContainerDataInternal struct {
-	LayoutElement       *Clay_LayoutElement
-	BoundingBox         Clay_BoundingBox
-	ContentSize         Clay_Dimensions
-	ScrollOrigin        Clay_Vector2
-	PointerOrigin       Clay_Vector2
-	ScrollMomentum      Clay_Vector2
-	ScrollPosition      Clay_Vector2
-	PreviousDelta       Clay_Vector2
+type __ScrollContainerDataInternal struct {
+	LayoutElement       *LayoutElement
+	BoundingBox         BoundingBox
+	ContentSize         Dimensions
+	ScrollOrigin        Vector2
+	PointerOrigin       Vector2
+	ScrollMomentum      Vector2
+	ScrollPosition      Vector2
+	PreviousDelta       Vector2
 	MomentumTime        float32
 	ElementId           uint32
 	OpenThisFrame       bool
 	PointerScrollActive bool
 }
-type Clay__ScrollContainerDataInternalArray struct {
+type __ScrollContainerDataInternalArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__ScrollContainerDataInternal
+	InternalArray *__ScrollContainerDataInternal
 }
-type Clay__ScrollContainerDataInternalArraySlice struct {
+type __ScrollContainerDataInternalArraySlice struct {
 	Length        int32
-	InternalArray *Clay__ScrollContainerDataInternal
+	InternalArray *__ScrollContainerDataInternal
 }
 
-var Clay__ScrollContainerDataInternal_DEFAULT Clay__ScrollContainerDataInternal = Clay__ScrollContainerDataInternal{}
+var __ScrollContainerDataInternal_DEFAULT __ScrollContainerDataInternal = __ScrollContainerDataInternal{}
 
-func Clay__ScrollContainerDataInternalArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__ScrollContainerDataInternalArray {
-	return Clay__ScrollContainerDataInternalArray{Capacity: capacity, Length: 0, InternalArray: (*Clay__ScrollContainerDataInternal)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay__ScrollContainerDataInternal{})), arena))}
+func __ScrollContainerDataInternalArray_Allocate_Arena(capacity int32, arena *Arena) __ScrollContainerDataInternalArray {
+	return __ScrollContainerDataInternalArray{Capacity: capacity, Length: 0, InternalArray: (*__ScrollContainerDataInternal)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__ScrollContainerDataInternal{})), arena))}
 }
-func Clay__ScrollContainerDataInternalArray_Get(array *Clay__ScrollContainerDataInternalArray, index int32) *Clay__ScrollContainerDataInternal {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(index)))
+func __ScrollContainerDataInternalArray_Get(array *__ScrollContainerDataInternalArray, index int32) *__ScrollContainerDataInternal {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index)))
 	}
-	return &Clay__ScrollContainerDataInternal_DEFAULT
+	return &__ScrollContainerDataInternal_DEFAULT
 }
-func Clay__ScrollContainerDataInternalArray_GetValue(array *Clay__ScrollContainerDataInternalArray, index int32) Clay__ScrollContainerDataInternal {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(index)))
+func __ScrollContainerDataInternalArray_GetValue(array *__ScrollContainerDataInternalArray, index int32) __ScrollContainerDataInternal {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index)))
 	}
-	return Clay__ScrollContainerDataInternal_DEFAULT
+	return __ScrollContainerDataInternal_DEFAULT
 }
-func Clay__ScrollContainerDataInternalArray_Add(array *Clay__ScrollContainerDataInternalArray, item Clay__ScrollContainerDataInternal) *Clay__ScrollContainerDataInternal {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(func() int32 {
+func __ScrollContainerDataInternalArray_Add(array *__ScrollContainerDataInternalArray, item __ScrollContainerDataInternal) *__ScrollContainerDataInternal {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(int64(array.Length)-1)))
+		return (*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay__ScrollContainerDataInternal_DEFAULT
+	return &__ScrollContainerDataInternal_DEFAULT
 }
-func Clay__ScrollContainerDataInternalArraySlice_Get(slice *Clay__ScrollContainerDataInternalArraySlice, index int32) *Clay__ScrollContainerDataInternal {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(index)))
+func __ScrollContainerDataInternalArraySlice_Get(slice *__ScrollContainerDataInternalArraySlice, index int32) *__ScrollContainerDataInternal {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index)))
 	}
-	return &Clay__ScrollContainerDataInternal_DEFAULT
+	return &__ScrollContainerDataInternal_DEFAULT
 }
-func Clay__ScrollContainerDataInternalArray_RemoveSwapback(array *Clay__ScrollContainerDataInternalArray, index int32) Clay__ScrollContainerDataInternal {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __ScrollContainerDataInternalArray_RemoveSwapback(array *__ScrollContainerDataInternalArray, index int32) __ScrollContainerDataInternal {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay__ScrollContainerDataInternal = *(*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(index)))
-		*(*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(index))) = *(*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(array.Length)))
+		var removed __ScrollContainerDataInternal = *(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index)))
+		*(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index))) = *(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay__ScrollContainerDataInternal_DEFAULT
+	return __ScrollContainerDataInternal_DEFAULT
 }
-func Clay__ScrollContainerDataInternalArray_Set(array *Clay__ScrollContainerDataInternalArray, index int32, value Clay__ScrollContainerDataInternal) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__ScrollContainerDataInternal{})*uintptr(index))) = value
+func __ScrollContainerDataInternalArray_Set(array *__ScrollContainerDataInternalArray, index int32, value __ScrollContainerDataInternal) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1761,67 +1760,67 @@ func Clay__ScrollContainerDataInternalArray_Set(array *Clay__ScrollContainerData
 	}
 }
 
-type Clay__DebugElementData struct {
+type __DebugElementData struct {
 	Collision bool
 	Collapsed bool
 }
-type Clay__DebugElementDataArray struct {
+type __DebugElementDataArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__DebugElementData
+	InternalArray *__DebugElementData
 }
-type Clay__DebugElementDataArraySlice struct {
+type __DebugElementDataArraySlice struct {
 	Length        int32
-	InternalArray *Clay__DebugElementData
+	InternalArray *__DebugElementData
 }
 
-var Clay__DebugElementData_DEFAULT Clay__DebugElementData = Clay__DebugElementData{Collision: false}
+var __DebugElementData_DEFAULT __DebugElementData = __DebugElementData{Collision: false}
 
-func Clay__DebugElementDataArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__DebugElementDataArray {
-	return Clay__DebugElementDataArray{Capacity: capacity, Length: 0, InternalArray: (*Clay__DebugElementData)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay__DebugElementData{})), arena))}
+func __DebugElementDataArray_Allocate_Arena(capacity int32, arena *Arena) __DebugElementDataArray {
+	return __DebugElementDataArray{Capacity: capacity, Length: 0, InternalArray: (*__DebugElementData)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__DebugElementData{})), arena))}
 }
-func Clay__DebugElementDataArray_Get(array *Clay__DebugElementDataArray, index int32) *Clay__DebugElementData {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(index)))
+func __DebugElementDataArray_Get(array *__DebugElementDataArray, index int32) *__DebugElementData {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index)))
 	}
-	return &Clay__DebugElementData_DEFAULT
+	return &__DebugElementData_DEFAULT
 }
-func Clay__DebugElementDataArray_GetValue(array *Clay__DebugElementDataArray, index int32) Clay__DebugElementData {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(index)))
+func __DebugElementDataArray_GetValue(array *__DebugElementDataArray, index int32) __DebugElementData {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index)))
 	}
-	return Clay__DebugElementData_DEFAULT
+	return __DebugElementData_DEFAULT
 }
-func Clay__DebugElementDataArray_Add(array *Clay__DebugElementDataArray, item Clay__DebugElementData) *Clay__DebugElementData {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(func() int32 {
+func __DebugElementDataArray_Add(array *__DebugElementDataArray, item __DebugElementData) *__DebugElementData {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(int64(array.Length)-1)))
+		return (*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay__DebugElementData_DEFAULT
+	return &__DebugElementData_DEFAULT
 }
-func Clay__DebugElementDataArraySlice_Get(slice *Clay__DebugElementDataArraySlice, index int32) *Clay__DebugElementData {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(index)))
+func __DebugElementDataArraySlice_Get(slice *__DebugElementDataArraySlice, index int32) *__DebugElementData {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*__DebugElementData)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index)))
 	}
-	return &Clay__DebugElementData_DEFAULT
+	return &__DebugElementData_DEFAULT
 }
-func Clay__DebugElementDataArray_RemoveSwapback(array *Clay__DebugElementDataArray, index int32) Clay__DebugElementData {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __DebugElementDataArray_RemoveSwapback(array *__DebugElementDataArray, index int32) __DebugElementData {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay__DebugElementData = *(*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(index)))
-		*(*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(index))) = *(*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(array.Length)))
+		var removed __DebugElementData = *(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index)))
+		*(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index))) = *(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay__DebugElementData_DEFAULT
+	return __DebugElementData_DEFAULT
 }
-func Clay__DebugElementDataArray_Set(array *Clay__DebugElementDataArray, index int32, value Clay__DebugElementData) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__DebugElementData{})*uintptr(index))) = value
+func __DebugElementDataArray_Set(array *__DebugElementDataArray, index int32, value __DebugElementData) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1830,74 +1829,74 @@ func Clay__DebugElementDataArray_Set(array *Clay__DebugElementDataArray, index i
 	}
 }
 
-type Clay_LayoutElementHashMapItem struct {
-	BoundingBox           Clay_BoundingBox
-	ElementId             Clay_ElementId
-	LayoutElement         *Clay_LayoutElement
-	OnHoverFunction       func(elementId Clay_ElementId, pointerInfo Clay_PointerData, userData int64)
+type LayoutElementHashMapItem struct {
+	BoundingBox           BoundingBox
+	ElementId             ElementId
+	LayoutElement         *LayoutElement
+	OnHoverFunction       func(elementId ElementId, pointerInfo PointerData, userData int64)
 	HoverFunctionUserData int64
 	NextIndex             int32
 	Generation            uint32
 	IdAlias               uint32
-	DebugData             *Clay__DebugElementData
+	DebugData             *__DebugElementData
 }
-type Clay__LayoutElementHashMapItemArray struct {
+type __LayoutElementHashMapItemArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay_LayoutElementHashMapItem
+	InternalArray *LayoutElementHashMapItem
 }
-type Clay__LayoutElementHashMapItemArraySlice struct {
+type __LayoutElementHashMapItemArraySlice struct {
 	Length        int32
-	InternalArray *Clay_LayoutElementHashMapItem
+	InternalArray *LayoutElementHashMapItem
 }
 
-var Clay_LayoutElementHashMapItem_DEFAULT Clay_LayoutElementHashMapItem = Clay_LayoutElementHashMapItem{}
+var LayoutElementHashMapItem_DEFAULT LayoutElementHashMapItem = LayoutElementHashMapItem{}
 
-func Clay__LayoutElementHashMapItemArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__LayoutElementHashMapItemArray {
-	return Clay__LayoutElementHashMapItemArray{Capacity: capacity, Length: 0, InternalArray: (*Clay_LayoutElementHashMapItem)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay_LayoutElementHashMapItem{})), arena))}
+func __LayoutElementHashMapItemArray_Allocate_Arena(capacity int32, arena *Arena) __LayoutElementHashMapItemArray {
+	return __LayoutElementHashMapItemArray{Capacity: capacity, Length: 0, InternalArray: (*LayoutElementHashMapItem)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(LayoutElementHashMapItem{})), arena))}
 }
-func Clay__LayoutElementHashMapItemArray_Get(array *Clay__LayoutElementHashMapItemArray, index int32) *Clay_LayoutElementHashMapItem {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(index)))
+func __LayoutElementHashMapItemArray_Get(array *__LayoutElementHashMapItemArray, index int32) *LayoutElementHashMapItem {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index)))
 	}
-	return &Clay_LayoutElementHashMapItem_DEFAULT
+	return &LayoutElementHashMapItem_DEFAULT
 }
-func Clay__LayoutElementHashMapItemArray_GetValue(array *Clay__LayoutElementHashMapItemArray, index int32) Clay_LayoutElementHashMapItem {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(index)))
+func __LayoutElementHashMapItemArray_GetValue(array *__LayoutElementHashMapItemArray, index int32) LayoutElementHashMapItem {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index)))
 	}
-	return Clay_LayoutElementHashMapItem_DEFAULT
+	return LayoutElementHashMapItem_DEFAULT
 }
-func Clay__LayoutElementHashMapItemArray_Add(array *Clay__LayoutElementHashMapItemArray, item Clay_LayoutElementHashMapItem) *Clay_LayoutElementHashMapItem {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(func() int32 {
+func __LayoutElementHashMapItemArray_Add(array *__LayoutElementHashMapItemArray, item LayoutElementHashMapItem) *LayoutElementHashMapItem {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(int64(array.Length)-1)))
+		return (*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay_LayoutElementHashMapItem_DEFAULT
+	return &LayoutElementHashMapItem_DEFAULT
 }
-func Clay__LayoutElementHashMapItemArraySlice_Get(slice *Clay__LayoutElementHashMapItemArraySlice, index int32) *Clay_LayoutElementHashMapItem {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(index)))
+func __LayoutElementHashMapItemArraySlice_Get(slice *__LayoutElementHashMapItemArraySlice, index int32) *LayoutElementHashMapItem {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index)))
 	}
-	return &Clay_LayoutElementHashMapItem_DEFAULT
+	return &LayoutElementHashMapItem_DEFAULT
 }
-func Clay__LayoutElementHashMapItemArray_RemoveSwapback(array *Clay__LayoutElementHashMapItemArray, index int32) Clay_LayoutElementHashMapItem {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __LayoutElementHashMapItemArray_RemoveSwapback(array *__LayoutElementHashMapItemArray, index int32) LayoutElementHashMapItem {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay_LayoutElementHashMapItem = *(*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(index)))
-		*(*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(index))) = *(*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(array.Length)))
+		var removed LayoutElementHashMapItem = *(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index)))
+		*(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index))) = *(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay_LayoutElementHashMapItem_DEFAULT
+	return LayoutElementHashMapItem_DEFAULT
 }
-func Clay__LayoutElementHashMapItemArray_Set(array *Clay__LayoutElementHashMapItemArray, index int32, value Clay_LayoutElementHashMapItem) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay_LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay_LayoutElementHashMapItem{})*uintptr(index))) = value
+func __LayoutElementHashMapItemArray_Set(array *__LayoutElementHashMapItemArray, index int32, value LayoutElementHashMapItem) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1906,69 +1905,69 @@ func Clay__LayoutElementHashMapItemArray_Set(array *Clay__LayoutElementHashMapIt
 	}
 }
 
-type Clay__MeasuredWord struct {
+type __MeasuredWord struct {
 	StartOffset int32
 	Length      int32
 	Width       float32
 	Next        int32
 }
-type Clay__MeasuredWordArray struct {
+type __MeasuredWordArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__MeasuredWord
+	InternalArray *__MeasuredWord
 }
-type Clay__MeasuredWordArraySlice struct {
+type __MeasuredWordArraySlice struct {
 	Length        int32
-	InternalArray *Clay__MeasuredWord
+	InternalArray *__MeasuredWord
 }
 
-var Clay__MeasuredWord_DEFAULT Clay__MeasuredWord = Clay__MeasuredWord{}
+var __MeasuredWord_DEFAULT __MeasuredWord = __MeasuredWord{}
 
-func Clay__MeasuredWordArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__MeasuredWordArray {
-	return Clay__MeasuredWordArray{Capacity: capacity, Length: 0, InternalArray: (*Clay__MeasuredWord)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay__MeasuredWord{})), arena))}
+func __MeasuredWordArray_Allocate_Arena(capacity int32, arena *Arena) __MeasuredWordArray {
+	return __MeasuredWordArray{Capacity: capacity, Length: 0, InternalArray: (*__MeasuredWord)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__MeasuredWord{})), arena))}
 }
-func Clay__MeasuredWordArray_Get(array *Clay__MeasuredWordArray, index int32) *Clay__MeasuredWord {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(index)))
+func __MeasuredWordArray_Get(array *__MeasuredWordArray, index int32) *__MeasuredWord {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index)))
 	}
-	return &Clay__MeasuredWord_DEFAULT
+	return &__MeasuredWord_DEFAULT
 }
-func Clay__MeasuredWordArray_GetValue(array *Clay__MeasuredWordArray, index int32) Clay__MeasuredWord {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(index)))
+func __MeasuredWordArray_GetValue(array *__MeasuredWordArray, index int32) __MeasuredWord {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index)))
 	}
-	return Clay__MeasuredWord_DEFAULT
+	return __MeasuredWord_DEFAULT
 }
-func Clay__MeasuredWordArray_Add(array *Clay__MeasuredWordArray, item Clay__MeasuredWord) *Clay__MeasuredWord {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(func() int32 {
+func __MeasuredWordArray_Add(array *__MeasuredWordArray, item __MeasuredWord) *__MeasuredWord {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(int64(array.Length)-1)))
+		return (*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay__MeasuredWord_DEFAULT
+	return &__MeasuredWord_DEFAULT
 }
-func Clay__MeasuredWordArraySlice_Get(slice *Clay__MeasuredWordArraySlice, index int32) *Clay__MeasuredWord {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(index)))
+func __MeasuredWordArraySlice_Get(slice *__MeasuredWordArraySlice, index int32) *__MeasuredWord {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*__MeasuredWord)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index)))
 	}
-	return &Clay__MeasuredWord_DEFAULT
+	return &__MeasuredWord_DEFAULT
 }
-func Clay__MeasuredWordArray_RemoveSwapback(array *Clay__MeasuredWordArray, index int32) Clay__MeasuredWord {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __MeasuredWordArray_RemoveSwapback(array *__MeasuredWordArray, index int32) __MeasuredWord {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay__MeasuredWord = *(*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(index)))
-		*(*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(index))) = *(*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(array.Length)))
+		var removed __MeasuredWord = *(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index)))
+		*(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index))) = *(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay__MeasuredWord_DEFAULT
+	return __MeasuredWord_DEFAULT
 }
-func Clay__MeasuredWordArray_Set(array *Clay__MeasuredWordArray, index int32, value Clay__MeasuredWord) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasuredWord{})*uintptr(index))) = value
+func __MeasuredWordArray_Set(array *__MeasuredWordArray, index int32, value __MeasuredWord) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -1977,71 +1976,71 @@ func Clay__MeasuredWordArray_Set(array *Clay__MeasuredWordArray, index int32, va
 	}
 }
 
-type Clay__MeasureTextCacheItem struct {
-	UnwrappedDimensions     Clay_Dimensions
+type __MeasureTextCacheItem struct {
+	UnwrappedDimensions     Dimensions
 	MeasuredWordsStartIndex int32
 	ContainsNewlines        bool
 	Id                      uint32
 	NextIndex               int32
 	Generation              uint32
 }
-type Clay__MeasureTextCacheItemArray struct {
+type __MeasureTextCacheItemArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__MeasureTextCacheItem
+	InternalArray *__MeasureTextCacheItem
 }
-type Clay__MeasureTextCacheItemArraySlice struct {
+type __MeasureTextCacheItemArraySlice struct {
 	Length        int32
-	InternalArray *Clay__MeasureTextCacheItem
+	InternalArray *__MeasureTextCacheItem
 }
 
-var Clay__MeasureTextCacheItem_DEFAULT Clay__MeasureTextCacheItem = Clay__MeasureTextCacheItem{}
+var __MeasureTextCacheItem_DEFAULT __MeasureTextCacheItem = __MeasureTextCacheItem{}
 
-func Clay__MeasureTextCacheItemArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__MeasureTextCacheItemArray {
-	return Clay__MeasureTextCacheItemArray{Capacity: capacity, Length: 0, InternalArray: (*Clay__MeasureTextCacheItem)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay__MeasureTextCacheItem{})), arena))}
+func __MeasureTextCacheItemArray_Allocate_Arena(capacity int32, arena *Arena) __MeasureTextCacheItemArray {
+	return __MeasureTextCacheItemArray{Capacity: capacity, Length: 0, InternalArray: (*__MeasureTextCacheItem)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__MeasureTextCacheItem{})), arena))}
 }
-func Clay__MeasureTextCacheItemArray_Get(array *Clay__MeasureTextCacheItemArray, index int32) *Clay__MeasureTextCacheItem {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(index)))
+func __MeasureTextCacheItemArray_Get(array *__MeasureTextCacheItemArray, index int32) *__MeasureTextCacheItem {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index)))
 	}
-	return &Clay__MeasureTextCacheItem_DEFAULT
+	return &__MeasureTextCacheItem_DEFAULT
 }
-func Clay__MeasureTextCacheItemArray_GetValue(array *Clay__MeasureTextCacheItemArray, index int32) Clay__MeasureTextCacheItem {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(index)))
+func __MeasureTextCacheItemArray_GetValue(array *__MeasureTextCacheItemArray, index int32) __MeasureTextCacheItem {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index)))
 	}
-	return Clay__MeasureTextCacheItem_DEFAULT
+	return __MeasureTextCacheItem_DEFAULT
 }
-func Clay__MeasureTextCacheItemArray_Add(array *Clay__MeasureTextCacheItemArray, item Clay__MeasureTextCacheItem) *Clay__MeasureTextCacheItem {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(func() int32 {
+func __MeasureTextCacheItemArray_Add(array *__MeasureTextCacheItemArray, item __MeasureTextCacheItem) *__MeasureTextCacheItem {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(int64(array.Length)-1)))
+		return (*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay__MeasureTextCacheItem_DEFAULT
+	return &__MeasureTextCacheItem_DEFAULT
 }
-func Clay__MeasureTextCacheItemArraySlice_Get(slice *Clay__MeasureTextCacheItemArraySlice, index int32) *Clay__MeasureTextCacheItem {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(index)))
+func __MeasureTextCacheItemArraySlice_Get(slice *__MeasureTextCacheItemArraySlice, index int32) *__MeasureTextCacheItem {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index)))
 	}
-	return &Clay__MeasureTextCacheItem_DEFAULT
+	return &__MeasureTextCacheItem_DEFAULT
 }
-func Clay__MeasureTextCacheItemArray_RemoveSwapback(array *Clay__MeasureTextCacheItemArray, index int32) Clay__MeasureTextCacheItem {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __MeasureTextCacheItemArray_RemoveSwapback(array *__MeasureTextCacheItemArray, index int32) __MeasureTextCacheItem {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay__MeasureTextCacheItem = *(*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(index)))
-		*(*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(index))) = *(*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(array.Length)))
+		var removed __MeasureTextCacheItem = *(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index)))
+		*(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index))) = *(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay__MeasureTextCacheItem_DEFAULT
+	return __MeasureTextCacheItem_DEFAULT
 }
-func Clay__MeasureTextCacheItemArray_Set(array *Clay__MeasureTextCacheItemArray, index int32, value Clay__MeasureTextCacheItem) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__MeasureTextCacheItem{})*uintptr(index))) = value
+func __MeasureTextCacheItemArray_Set(array *__MeasureTextCacheItemArray, index int32, value __MeasureTextCacheItem) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -2050,68 +2049,68 @@ func Clay__MeasureTextCacheItemArray_Set(array *Clay__MeasureTextCacheItemArray,
 	}
 }
 
-type Clay__LayoutElementTreeNode struct {
-	LayoutElement   *Clay_LayoutElement
-	Position        Clay_Vector2
-	NextChildOffset Clay_Vector2
+type __LayoutElementTreeNode struct {
+	LayoutElement   *LayoutElement
+	Position        Vector2
+	NextChildOffset Vector2
 }
-type Clay__LayoutElementTreeNodeArray struct {
+type __LayoutElementTreeNodeArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__LayoutElementTreeNode
+	InternalArray *__LayoutElementTreeNode
 }
-type Clay__LayoutElementTreeNodeArraySlice struct {
+type __LayoutElementTreeNodeArraySlice struct {
 	Length        int32
-	InternalArray *Clay__LayoutElementTreeNode
+	InternalArray *__LayoutElementTreeNode
 }
 
-var Clay__LayoutElementTreeNode_DEFAULT Clay__LayoutElementTreeNode = Clay__LayoutElementTreeNode{}
+var __LayoutElementTreeNode_DEFAULT __LayoutElementTreeNode = __LayoutElementTreeNode{}
 
-func Clay__LayoutElementTreeNodeArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__LayoutElementTreeNodeArray {
-	return Clay__LayoutElementTreeNodeArray{Capacity: capacity, Length: 0, InternalArray: (*Clay__LayoutElementTreeNode)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay__LayoutElementTreeNode{})), arena))}
+func __LayoutElementTreeNodeArray_Allocate_Arena(capacity int32, arena *Arena) __LayoutElementTreeNodeArray {
+	return __LayoutElementTreeNodeArray{Capacity: capacity, Length: 0, InternalArray: (*__LayoutElementTreeNode)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__LayoutElementTreeNode{})), arena))}
 }
-func Clay__LayoutElementTreeNodeArray_Get(array *Clay__LayoutElementTreeNodeArray, index int32) *Clay__LayoutElementTreeNode {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(index)))
+func __LayoutElementTreeNodeArray_Get(array *__LayoutElementTreeNodeArray, index int32) *__LayoutElementTreeNode {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index)))
 	}
-	return &Clay__LayoutElementTreeNode_DEFAULT
+	return &__LayoutElementTreeNode_DEFAULT
 }
-func Clay__LayoutElementTreeNodeArray_GetValue(array *Clay__LayoutElementTreeNodeArray, index int32) Clay__LayoutElementTreeNode {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(index)))
+func __LayoutElementTreeNodeArray_GetValue(array *__LayoutElementTreeNodeArray, index int32) __LayoutElementTreeNode {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index)))
 	}
-	return Clay__LayoutElementTreeNode_DEFAULT
+	return __LayoutElementTreeNode_DEFAULT
 }
-func Clay__LayoutElementTreeNodeArray_Add(array *Clay__LayoutElementTreeNodeArray, item Clay__LayoutElementTreeNode) *Clay__LayoutElementTreeNode {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(func() int32 {
+func __LayoutElementTreeNodeArray_Add(array *__LayoutElementTreeNodeArray, item __LayoutElementTreeNode) *__LayoutElementTreeNode {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(int64(array.Length)-1)))
+		return (*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay__LayoutElementTreeNode_DEFAULT
+	return &__LayoutElementTreeNode_DEFAULT
 }
-func Clay__LayoutElementTreeNodeArraySlice_Get(slice *Clay__LayoutElementTreeNodeArraySlice, index int32) *Clay__LayoutElementTreeNode {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(index)))
+func __LayoutElementTreeNodeArraySlice_Get(slice *__LayoutElementTreeNodeArraySlice, index int32) *__LayoutElementTreeNode {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index)))
 	}
-	return &Clay__LayoutElementTreeNode_DEFAULT
+	return &__LayoutElementTreeNode_DEFAULT
 }
-func Clay__LayoutElementTreeNodeArray_RemoveSwapback(array *Clay__LayoutElementTreeNodeArray, index int32) Clay__LayoutElementTreeNode {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __LayoutElementTreeNodeArray_RemoveSwapback(array *__LayoutElementTreeNodeArray, index int32) __LayoutElementTreeNode {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay__LayoutElementTreeNode = *(*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(index)))
-		*(*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(index))) = *(*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(array.Length)))
+		var removed __LayoutElementTreeNode = *(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index)))
+		*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index))) = *(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay__LayoutElementTreeNode_DEFAULT
+	return __LayoutElementTreeNode_DEFAULT
 }
-func Clay__LayoutElementTreeNodeArray_Set(array *Clay__LayoutElementTreeNodeArray, index int32, value Clay__LayoutElementTreeNode) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(index))) = value
+func __LayoutElementTreeNodeArray_Set(array *__LayoutElementTreeNodeArray, index int32, value __LayoutElementTreeNode) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -2120,70 +2119,70 @@ func Clay__LayoutElementTreeNodeArray_Set(array *Clay__LayoutElementTreeNodeArra
 	}
 }
 
-type Clay__LayoutElementTreeRoot struct {
+type __LayoutElementTreeRoot struct {
 	LayoutElementIndex int32
 	ParentId           uint32
 	ClipElementId      uint32
 	ZIndex             int16
-	PointerOffset      Clay_Vector2
+	PointerOffset      Vector2
 }
-type Clay__LayoutElementTreeRootArray struct {
+type __LayoutElementTreeRootArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *Clay__LayoutElementTreeRoot
+	InternalArray *__LayoutElementTreeRoot
 }
-type Clay__LayoutElementTreeRootArraySlice struct {
+type __LayoutElementTreeRootArraySlice struct {
 	Length        int32
-	InternalArray *Clay__LayoutElementTreeRoot
+	InternalArray *__LayoutElementTreeRoot
 }
 
-var Clay__LayoutElementTreeRoot_DEFAULT Clay__LayoutElementTreeRoot = Clay__LayoutElementTreeRoot{}
+var __LayoutElementTreeRoot_DEFAULT __LayoutElementTreeRoot = __LayoutElementTreeRoot{}
 
-func Clay__LayoutElementTreeRootArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__LayoutElementTreeRootArray {
-	return Clay__LayoutElementTreeRootArray{Capacity: capacity, Length: 0, InternalArray: (*Clay__LayoutElementTreeRoot)(Clay__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(Clay__LayoutElementTreeRoot{})), arena))}
+func __LayoutElementTreeRootArray_Allocate_Arena(capacity int32, arena *Arena) __LayoutElementTreeRootArray {
+	return __LayoutElementTreeRootArray{Capacity: capacity, Length: 0, InternalArray: (*__LayoutElementTreeRoot)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__LayoutElementTreeRoot{})), arena))}
 }
-func Clay__LayoutElementTreeRootArray_Get(array *Clay__LayoutElementTreeRootArray, index int32) *Clay__LayoutElementTreeRoot {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return (*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(index)))
+func __LayoutElementTreeRootArray_Get(array *__LayoutElementTreeRootArray, index int32) *__LayoutElementTreeRoot {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index)))
 	}
-	return &Clay__LayoutElementTreeRoot_DEFAULT
+	return &__LayoutElementTreeRoot_DEFAULT
 }
-func Clay__LayoutElementTreeRootArray_GetValue(array *Clay__LayoutElementTreeRootArray, index int32) Clay__LayoutElementTreeRoot {
-	if Clay__Array_RangeCheck(index, array.Length) {
-		return *(*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(index)))
+func __LayoutElementTreeRootArray_GetValue(array *__LayoutElementTreeRootArray, index int32) __LayoutElementTreeRoot {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index)))
 	}
-	return Clay__LayoutElementTreeRoot_DEFAULT
+	return __LayoutElementTreeRoot_DEFAULT
 }
-func Clay__LayoutElementTreeRootArray_Add(array *Clay__LayoutElementTreeRootArray, item Clay__LayoutElementTreeRoot) *Clay__LayoutElementTreeRoot {
-	if Clay__Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(func() int32 {
+func __LayoutElementTreeRootArray_Add(array *__LayoutElementTreeRootArray, item __LayoutElementTreeRoot) *__LayoutElementTreeRoot {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(int64(array.Length)-1)))
+		return (*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(int64(array.Length)-1)))
 	}
-	return &Clay__LayoutElementTreeRoot_DEFAULT
+	return &__LayoutElementTreeRoot_DEFAULT
 }
-func Clay__LayoutElementTreeRootArraySlice_Get(slice *Clay__LayoutElementTreeRootArraySlice, index int32) *Clay__LayoutElementTreeRoot {
-	if Clay__Array_RangeCheck(index, slice.Length) {
-		return (*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(index)))
+func __LayoutElementTreeRootArraySlice_Get(slice *__LayoutElementTreeRootArraySlice, index int32) *__LayoutElementTreeRoot {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index)))
 	}
-	return &Clay__LayoutElementTreeRoot_DEFAULT
+	return &__LayoutElementTreeRoot_DEFAULT
 }
-func Clay__LayoutElementTreeRootArray_RemoveSwapback(array *Clay__LayoutElementTreeRootArray, index int32) Clay__LayoutElementTreeRoot {
-	if Clay__Array_RangeCheck(index, array.Length) {
+func __LayoutElementTreeRootArray_RemoveSwapback(array *__LayoutElementTreeRootArray, index int32) __LayoutElementTreeRoot {
+	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed Clay__LayoutElementTreeRoot = *(*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(index)))
-		*(*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(index))) = *(*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(array.Length)))
+		var removed __LayoutElementTreeRoot = *(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index)))
+		*(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index))) = *(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(array.Length)))
 		return removed
 	}
-	return Clay__LayoutElementTreeRoot_DEFAULT
+	return __LayoutElementTreeRoot_DEFAULT
 }
-func Clay__LayoutElementTreeRootArray_Set(array *Clay__LayoutElementTreeRootArray, index int32, value Clay__LayoutElementTreeRoot) {
-	if Clay__Array_RangeCheck(index, array.Capacity) {
-		*(*Clay__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeRoot{})*uintptr(index))) = value
+func __LayoutElementTreeRootArray_Set(array *__LayoutElementTreeRootArray, index int32, value __LayoutElementTreeRoot) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index))) = value
 		if int64(index) < int64(array.Length) {
 			array.Length = array.Length
 		} else {
@@ -2191,9 +2190,9 @@ func Clay__LayoutElementTreeRootArray_Set(array *Clay__LayoutElementTreeRootArra
 		}
 	}
 }
-func Clay__Context_Allocate_Arena(arena *Clay_Arena) *Clay_Context {
+func __Context_Allocate_Arena(arena *Arena) *Context {
 	var (
-		totalSizeBytes  uint64 = uint64(unsafe.Sizeof(Clay_Context{}))
+		totalSizeBytes  uint64 = uint64(unsafe.Sizeof(Context{}))
 		memoryAddress   uint64 = uint64(uintptr(unsafe.Pointer(arena.Memory)))
 		nextAllocOffset uint64 = (memoryAddress % 64)
 	)
@@ -2201,94 +2200,94 @@ func Clay__Context_Allocate_Arena(arena *Clay_Arena) *Clay_Context {
 		return nil
 	}
 	arena.NextAllocation = nextAllocOffset + totalSizeBytes
-	return (*Clay_Context)(unsafe.Pointer(uintptr(memoryAddress + nextAllocOffset)))
+	return (*Context)(unsafe.Pointer(uintptr(memoryAddress + nextAllocOffset)))
 }
-func Clay__WriteStringToCharBuffer(buffer *Clay__charArray, string_ Clay_String) Clay_String {
+func __WriteStringToCharBuffer(buffer *__charArray, string_ String) String {
 	for i := int32(0); int64(i) < int64(string_.Length); i++ {
 		*(*byte)(unsafe.Add(unsafe.Pointer(buffer.InternalArray), int64(buffer.Length)+int64(i))) = *(*byte)(unsafe.Add(unsafe.Pointer(string_.Chars), i))
 	}
 	buffer.Length += string_.Length
-	return Clay_String{Length: string_.Length, Chars: ((*byte)(unsafe.Add(unsafe.Pointer((*byte)(unsafe.Add(unsafe.Pointer(buffer.InternalArray), buffer.Length))), -string_.Length)))}
+	return String{Length: string_.Length, Chars: ((*byte)(unsafe.Add(unsafe.Pointer((*byte)(unsafe.Add(unsafe.Pointer(buffer.InternalArray), buffer.Length))), -string_.Length)))}
 }
 
-var Clay__MeasureText func(text Clay_StringSlice, config *Clay_TextElementConfig, userData unsafe.Pointer) Clay_Dimensions
-var Clay__QueryScrollOffset func(elementId uint32, userData unsafe.Pointer) Clay_Vector2
+var __MeasureText func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions
+var __QueryScrollOffset func(elementId uint32, userData unsafe.Pointer) Vector2
 
-func Clay__GetOpenLayoutElement() *Clay_LayoutElement {
-	var context *Clay_Context = Clay_GetCurrentContext()
-	return Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-1)))
+func __GetOpenLayoutElement() *LayoutElement {
+	var context *Context = GetCurrentContext()
+	return LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-1)))
 }
-func Clay__GetParentElementId() uint32 {
-	var context *Clay_Context = Clay_GetCurrentContext()
-	return Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-2))).Id
+func __GetParentElementId() uint32 {
+	var context *Context = GetCurrentContext()
+	return LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-2))).Id
 }
-func Clay__StoreLayoutConfig(config Clay_LayoutConfig) *Clay_LayoutConfig {
-	if Clay_GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
-		return &CLAY_LAYOUT_DEFAULT
+func __StoreLayoutConfig(config LayoutConfig) *LayoutConfig {
+	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+		return &LAYOUT_DEFAULT
 	}
-	return Clay__LayoutConfigArray_Add(&Clay_GetCurrentContext().LayoutConfigs, config)
+	return __LayoutConfigArray_Add(&GetCurrentContext().LayoutConfigs, config)
 }
-func Clay__StoreTextElementConfig(config Clay_TextElementConfig) *Clay_TextElementConfig {
-	if Clay_GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
-		return &Clay_TextElementConfig_DEFAULT
+func __StoreTextElementConfig(config TextElementConfig) *TextElementConfig {
+	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+		return &TextElementConfig_DEFAULT
 	}
-	return Clay__TextElementConfigArray_Add(&Clay_GetCurrentContext().TextElementConfigs, config)
+	return __TextElementConfigArray_Add(&GetCurrentContext().TextElementConfigs, config)
 }
-func Clay__StoreImageElementConfig(config Clay_ImageElementConfig) *Clay_ImageElementConfig {
-	if Clay_GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
-		return &Clay_ImageElementConfig_DEFAULT
+func __StoreImageElementConfig(config ImageElementConfig) *ImageElementConfig {
+	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+		return &ImageElementConfig_DEFAULT
 	}
-	return Clay__ImageElementConfigArray_Add(&Clay_GetCurrentContext().ImageElementConfigs, config)
+	return __ImageElementConfigArray_Add(&GetCurrentContext().ImageElementConfigs, config)
 }
-func Clay__StoreFloatingElementConfig(config Clay_FloatingElementConfig) *Clay_FloatingElementConfig {
-	if Clay_GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
-		return &Clay_FloatingElementConfig_DEFAULT
+func __StoreFloatingElementConfig(config FloatingElementConfig) *FloatingElementConfig {
+	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+		return &FloatingElementConfig_DEFAULT
 	}
-	return Clay__FloatingElementConfigArray_Add(&Clay_GetCurrentContext().FloatingElementConfigs, config)
+	return __FloatingElementConfigArray_Add(&GetCurrentContext().FloatingElementConfigs, config)
 }
-func Clay__StoreCustomElementConfig(config Clay_CustomElementConfig) *Clay_CustomElementConfig {
-	if Clay_GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
-		return &Clay_CustomElementConfig_DEFAULT
+func __StoreCustomElementConfig(config CustomElementConfig) *CustomElementConfig {
+	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+		return &CustomElementConfig_DEFAULT
 	}
-	return Clay__CustomElementConfigArray_Add(&Clay_GetCurrentContext().CustomElementConfigs, config)
+	return __CustomElementConfigArray_Add(&GetCurrentContext().CustomElementConfigs, config)
 }
-func Clay__StoreScrollElementConfig(config Clay_ScrollElementConfig) *Clay_ScrollElementConfig {
-	if Clay_GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
-		return &Clay_ScrollElementConfig_DEFAULT
+func __StoreScrollElementConfig(config ScrollElementConfig) *ScrollElementConfig {
+	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+		return &ScrollElementConfig_DEFAULT
 	}
-	return Clay__ScrollElementConfigArray_Add(&Clay_GetCurrentContext().ScrollElementConfigs, config)
+	return __ScrollElementConfigArray_Add(&GetCurrentContext().ScrollElementConfigs, config)
 }
-func Clay__StoreBorderElementConfig(config Clay_BorderElementConfig) *Clay_BorderElementConfig {
-	if Clay_GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
-		return &Clay_BorderElementConfig_DEFAULT
+func __StoreBorderElementConfig(config BorderElementConfig) *BorderElementConfig {
+	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+		return &BorderElementConfig_DEFAULT
 	}
-	return Clay__BorderElementConfigArray_Add(&Clay_GetCurrentContext().BorderElementConfigs, config)
+	return __BorderElementConfigArray_Add(&GetCurrentContext().BorderElementConfigs, config)
 }
-func Clay__StoreSharedElementConfig(config Clay_SharedElementConfig) *Clay_SharedElementConfig {
-	if Clay_GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
-		return &Clay_SharedElementConfig_DEFAULT
+func __StoreSharedElementConfig(config SharedElementConfig) *SharedElementConfig {
+	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+		return &SharedElementConfig_DEFAULT
 	}
-	return Clay__SharedElementConfigArray_Add(&Clay_GetCurrentContext().SharedElementConfigs, config)
+	return __SharedElementConfigArray_Add(&GetCurrentContext().SharedElementConfigs, config)
 }
-func Clay__AttachElementConfig(config Clay_ElementConfigUnion, type_ Clay__ElementConfigType) Clay_ElementConfig {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __AttachElementConfig(config ElementConfigUnion, type_ __ElementConfigType) ElementConfig {
+	var context *Context = GetCurrentContext()
 	if context.BooleanWarnings.MaxElementsExceeded {
-		return Clay_ElementConfig{}
+		return ElementConfig{}
 	}
-	var openLayoutElement *Clay_LayoutElement = Clay__GetOpenLayoutElement()
+	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	openLayoutElement.ElementConfigs.Length++
-	return *Clay__ElementConfigArray_Add(&context.ElementConfigs, Clay_ElementConfig{Type: type_, Config: config})
+	return *__ElementConfigArray_Add(&context.ElementConfigs, ElementConfig{Type: type_, Config: config})
 }
-func Clay__FindElementConfigWithType(element *Clay_LayoutElement, type_ Clay__ElementConfigType) Clay_ElementConfigUnion {
+func __FindElementConfigWithType(element *LayoutElement, type_ __ElementConfigType) ElementConfigUnion {
 	for i := int32(0); int64(i) < int64(element.ElementConfigs.Length); i++ {
-		var config *Clay_ElementConfig = Clay__ElementConfigArraySlice_Get(&element.ElementConfigs, i)
+		var config *ElementConfig = __ElementConfigArraySlice_Get(&element.ElementConfigs, i)
 		if config.Type == type_ {
 			return config.Config
 		}
 	}
-	return Clay_ElementConfigUnion{}
+	return ElementConfigUnion{}
 }
-func Clay__HashNumber(offset uint32, seed uint32) Clay_ElementId {
+func __HashNumber(offset uint32, seed uint32) ElementId {
 	var hash uint32 = seed
 	hash += uint32(int32(int64(offset) + 48))
 	hash += uint32(int32(int64(hash) << 10))
@@ -2296,9 +2295,9 @@ func Clay__HashNumber(offset uint32, seed uint32) Clay_ElementId {
 	hash += uint32(int32(int64(hash) << 3))
 	hash ^= uint32(int32(int64(hash) >> 11))
 	hash += uint32(int32(int64(hash) << 15))
-	return Clay_ElementId{Id: uint32(int32(int64(hash) + 1)), Offset: offset, BaseId: seed, StringId: CLAY__STRING_DEFAULT}
+	return ElementId{Id: uint32(int32(int64(hash) + 1)), Offset: offset, BaseId: seed, StringId: __STRING_DEFAULT}
 }
-func Clay__HashString(key Clay_String, offset uint32, seed uint32) Clay_ElementId {
+func __HashString(key String, offset uint32, seed uint32) ElementId {
 	var (
 		hash uint32 = 0
 		base uint32 = seed
@@ -2318,9 +2317,9 @@ func Clay__HashString(key Clay_String, offset uint32, seed uint32) Clay_ElementI
 	base ^= uint32(int32(int64(base) >> 11))
 	hash += uint32(int32(int64(hash) << 15))
 	base += uint32(int32(int64(base) << 15))
-	return Clay_ElementId{Id: uint32(int32(int64(hash) + 1)), Offset: offset, BaseId: uint32(int32(int64(base) + 1)), StringId: key}
+	return ElementId{Id: uint32(int32(int64(hash) + 1)), Offset: offset, BaseId: uint32(int32(int64(base) + 1)), StringId: key}
 }
-func Clay__HashTextWithConfig(text *Clay_String, config *Clay_TextElementConfig) uint32 {
+func __HashTextWithConfig(text *String, config *TextElementConfig) uint32 {
 	var (
 		hash            uint32 = 0
 		pointerAsNumber uint64 = uint64(uintptr(unsafe.Pointer(text.Chars)))
@@ -2365,34 +2364,34 @@ func Clay__HashTextWithConfig(text *Clay_String, config *Clay_TextElementConfig)
 	hash += uint32(int32(int64(hash) << 15))
 	return uint32(int32(int64(hash) + 1))
 }
-func Clay__AddMeasuredWord(word Clay__MeasuredWord, previousWord *Clay__MeasuredWord) *Clay__MeasuredWord {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __AddMeasuredWord(word __MeasuredWord, previousWord *__MeasuredWord) *__MeasuredWord {
+	var context *Context = GetCurrentContext()
 	if int64(context.MeasuredWordsFreeList.Length) > 0 {
-		var newItemIndex uint32 = uint32(Clay__int32_tArray_GetValue(&context.MeasuredWordsFreeList, int32(int64(context.MeasuredWordsFreeList.Length)-1)))
+		var newItemIndex uint32 = uint32(__int32_tArray_GetValue(&context.MeasuredWordsFreeList, int32(int64(context.MeasuredWordsFreeList.Length)-1)))
 		context.MeasuredWordsFreeList.Length--
-		Clay__MeasuredWordArray_Set(&context.MeasuredWords, int32(int64(newItemIndex)), word)
+		__MeasuredWordArray_Set(&context.MeasuredWords, int32(int64(newItemIndex)), word)
 		previousWord.Next = int32(newItemIndex)
-		return Clay__MeasuredWordArray_Get(&context.MeasuredWords, int32(int64(newItemIndex)))
+		return __MeasuredWordArray_Get(&context.MeasuredWords, int32(int64(newItemIndex)))
 	} else {
 		previousWord.Next = context.MeasuredWords.Length
-		return Clay__MeasuredWordArray_Add(&context.MeasuredWords, word)
+		return __MeasuredWordArray_Add(&context.MeasuredWords, word)
 	}
 }
-func Clay__MeasureTextCached(text *Clay_String, config *Clay_TextElementConfig) *Clay__MeasureTextCacheItem {
-	var context *Clay_Context = Clay_GetCurrentContext()
-	if Clay__MeasureText == nil {
+func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureTextCacheItem {
+	var context *Context = GetCurrentContext()
+	if __MeasureText == nil {
 		if !context.BooleanWarnings.TextMeasurementFunctionNotSet {
 			context.BooleanWarnings.TextMeasurementFunctionNotSet = true
-			context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay's internal MeasureText function is null. You may have forgotten to call Clay_SetMeasureTextFunction(), or passed a NULL function pointer by mistake.")}, UserData: context.ErrorHandler.UserData})
+			context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.")}, UserData: context.ErrorHandler.UserData})
 		}
-		return &Clay__MeasureTextCacheItem_DEFAULT
+		return &__MeasureTextCacheItem_DEFAULT
 	}
-	var id uint32 = Clay__HashTextWithConfig(text, config)
+	var id uint32 = __HashTextWithConfig(text, config)
 	var hashBucket uint32 = uint32(int32(int64(id) % (int64(context.MaxMeasureTextCacheWordCount) / 32)))
 	var elementIndexPrevious int32 = 0
 	var elementIndex int32 = *(*int32)(unsafe.Add(unsafe.Pointer(context.MeasureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
 	for int64(elementIndex) != 0 {
-		var hashEntry *Clay__MeasureTextCacheItem = Clay__MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndex)
+		var hashEntry *__MeasureTextCacheItem = __MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndex)
 		if int64(hashEntry.Id) == int64(id) {
 			hashEntry.Generation = context.Generation
 			return hashEntry
@@ -2400,17 +2399,17 @@ func Clay__MeasureTextCached(text *Clay_String, config *Clay_TextElementConfig) 
 		if int64(context.Generation)-int64(hashEntry.Generation) > 2 {
 			var nextWordIndex int32 = hashEntry.MeasuredWordsStartIndex
 			for int64(nextWordIndex) != -1 {
-				var measuredWord *Clay__MeasuredWord = Clay__MeasuredWordArray_Get(&context.MeasuredWords, nextWordIndex)
-				Clay__int32_tArray_Add(&context.MeasuredWordsFreeList, nextWordIndex)
+				var measuredWord *__MeasuredWord = __MeasuredWordArray_Get(&context.MeasuredWords, nextWordIndex)
+				__int32_tArray_Add(&context.MeasuredWordsFreeList, nextWordIndex)
 				nextWordIndex = measuredWord.Next
 			}
 			var nextIndex int32 = hashEntry.NextIndex
-			Clay__MeasureTextCacheItemArray_Set(&context.MeasureTextHashMapInternal, elementIndex, Clay__MeasureTextCacheItem{MeasuredWordsStartIndex: -1})
-			Clay__int32_tArray_Add(&context.MeasureTextHashMapInternalFreeList, elementIndex)
+			__MeasureTextCacheItemArray_Set(&context.MeasureTextHashMapInternal, elementIndex, __MeasureTextCacheItem{MeasuredWordsStartIndex: -1})
+			__int32_tArray_Add(&context.MeasureTextHashMapInternalFreeList, elementIndex)
 			if int64(elementIndexPrevious) == 0 {
 				*(*int32)(unsafe.Add(unsafe.Pointer(context.MeasureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = nextIndex
 			} else {
-				var previousHashEntry *Clay__MeasureTextCacheItem = Clay__MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndexPrevious)
+				var previousHashEntry *__MeasureTextCacheItem = __MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndexPrevious)
 				previousHashEntry.NextIndex = nextIndex
 			}
 			elementIndex = nextIndex
@@ -2420,22 +2419,22 @@ func Clay__MeasureTextCached(text *Clay_String, config *Clay_TextElementConfig) 
 		}
 	}
 	var newItemIndex int32 = 0
-	var newCacheItem Clay__MeasureTextCacheItem = Clay__MeasureTextCacheItem{MeasuredWordsStartIndex: -1, Id: id, Generation: context.Generation}
-	var measured *Clay__MeasureTextCacheItem = nil
+	var newCacheItem __MeasureTextCacheItem = __MeasureTextCacheItem{MeasuredWordsStartIndex: -1, Id: id, Generation: context.Generation}
+	var measured *__MeasureTextCacheItem = nil
 	if int64(context.MeasureTextHashMapInternalFreeList.Length) > 0 {
-		newItemIndex = Clay__int32_tArray_GetValue(&context.MeasureTextHashMapInternalFreeList, int32(int64(context.MeasureTextHashMapInternalFreeList.Length)-1))
+		newItemIndex = __int32_tArray_GetValue(&context.MeasureTextHashMapInternalFreeList, int32(int64(context.MeasureTextHashMapInternalFreeList.Length)-1))
 		context.MeasureTextHashMapInternalFreeList.Length--
-		Clay__MeasureTextCacheItemArray_Set(&context.MeasureTextHashMapInternal, newItemIndex, newCacheItem)
-		measured = Clay__MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, newItemIndex)
+		__MeasureTextCacheItemArray_Set(&context.MeasureTextHashMapInternal, newItemIndex, newCacheItem)
+		measured = __MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, newItemIndex)
 	} else {
 		if int64(context.MeasureTextHashMapInternal.Length) == int64(context.MeasureTextHashMapInternal.Capacity)-1 {
 			if context.BooleanWarnings.MaxTextMeasureCacheExceeded {
-				context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using Clay_SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData})
+				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData})
 				context.BooleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
-			return &Clay__MeasureTextCacheItem_DEFAULT
+			return &__MeasureTextCacheItem_DEFAULT
 		}
-		measured = Clay__MeasureTextCacheItemArray_Add(&context.MeasureTextHashMapInternal, newCacheItem)
+		measured = __MeasureTextCacheItemArray_Add(&context.MeasureTextHashMapInternal, newCacheItem)
 		newItemIndex = int32(int64(context.MeasureTextHashMapInternal.Length) - 1)
 	}
 	var start int32 = 0
@@ -2443,22 +2442,22 @@ func Clay__MeasureTextCached(text *Clay_String, config *Clay_TextElementConfig) 
 	var lineWidth float32 = 0
 	var measuredWidth float32 = 0
 	var measuredHeight float32 = 0
-	var spaceWidth float32 = Clay__MeasureText(Clay_StringSlice{Length: 1, Chars: CLAY__SPACECHAR.Chars, BaseChars: CLAY__SPACECHAR.Chars}, config, context.MeasureTextUserData).Width
-	var tempWord Clay__MeasuredWord = Clay__MeasuredWord{Next: -1}
-	var previousWord *Clay__MeasuredWord = &tempWord
+	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.MeasureTextUserData).Width
+	var tempWord __MeasuredWord = __MeasuredWord{Next: -1}
+	var previousWord *__MeasuredWord = &tempWord
 	for int64(end) < int64(text.Length) {
 		if int64(context.MeasuredWords.Length) == int64(context.MeasuredWords.Capacity)-1 {
 			if !context.BooleanWarnings.MaxTextMeasureCacheExceeded {
-				context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay has run out of space in it's internal text measurement cache. Try using Clay_SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).")}, UserData: context.ErrorHandler.UserData})
+				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).")}, UserData: context.ErrorHandler.UserData})
 				context.BooleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
-			return &Clay__MeasureTextCacheItem_DEFAULT
+			return &__MeasureTextCacheItem_DEFAULT
 		}
 		var current int8 = int8(*(*byte)(unsafe.Add(unsafe.Pointer(text.Chars), end)))
 		if int64(current) == ' ' || int64(current) == '\n' {
 			var (
-				length     int32           = int32(int64(end) - int64(start))
-				dimensions Clay_Dimensions = Clay__MeasureText(Clay_StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
+				length     int32      = int32(int64(end) - int64(start))
+				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
 			)
 			if measuredHeight > dimensions.Height {
 				measuredHeight = measuredHeight
@@ -2467,14 +2466,14 @@ func Clay__MeasureTextCached(text *Clay_String, config *Clay_TextElementConfig) 
 			}
 			if int64(current) == ' ' {
 				dimensions.Width += spaceWidth
-				previousWord = Clay__AddMeasuredWord(Clay__MeasuredWord{StartOffset: start, Length: int32(int64(length) + 1), Width: dimensions.Width, Next: -1}, previousWord)
+				previousWord = __AddMeasuredWord(__MeasuredWord{StartOffset: start, Length: int32(int64(length) + 1), Width: dimensions.Width, Next: -1}, previousWord)
 				lineWidth += dimensions.Width
 			}
 			if int64(current) == '\n' {
 				if int64(length) > 0 {
-					previousWord = Clay__AddMeasuredWord(Clay__MeasuredWord{StartOffset: start, Length: length, Width: dimensions.Width, Next: -1}, previousWord)
+					previousWord = __AddMeasuredWord(__MeasuredWord{StartOffset: start, Length: length, Width: dimensions.Width, Next: -1}, previousWord)
 				}
-				previousWord = Clay__AddMeasuredWord(Clay__MeasuredWord{StartOffset: int32(int64(end) + 1), Length: 0, Width: 0, Next: -1}, previousWord)
+				previousWord = __AddMeasuredWord(__MeasuredWord{StartOffset: int32(int64(end) + 1), Length: 0, Width: 0, Next: -1}, previousWord)
 				lineWidth += dimensions.Width
 				if lineWidth > measuredWidth {
 					measuredWidth = lineWidth
@@ -2489,8 +2488,8 @@ func Clay__MeasureTextCached(text *Clay_String, config *Clay_TextElementConfig) 
 		end++
 	}
 	if int64(end)-int64(start) > 0 {
-		var dimensions Clay_Dimensions = Clay__MeasureText(Clay_StringSlice{Length: int32(int64(end) - int64(start)), Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
-		Clay__AddMeasuredWord(Clay__MeasuredWord{StartOffset: start, Length: int32(int64(end) - int64(start)), Width: dimensions.Width, Next: -1}, previousWord)
+		var dimensions Dimensions = __MeasureText(StringSlice{Length: int32(int64(end) - int64(start)), Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
+		__AddMeasuredWord(__MeasuredWord{StartOffset: start, Length: int32(int64(end) - int64(start)), Width: dimensions.Width, Next: -1}, previousWord)
 		lineWidth += dimensions.Width
 		if measuredHeight > dimensions.Height {
 			measuredHeight = measuredHeight
@@ -2507,26 +2506,26 @@ func Clay__MeasureTextCached(text *Clay_String, config *Clay_TextElementConfig) 
 	measured.UnwrappedDimensions.Width = measuredWidth
 	measured.UnwrappedDimensions.Height = measuredHeight
 	if int64(elementIndexPrevious) != 0 {
-		Clay__MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndexPrevious).NextIndex = newItemIndex
+		__MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndexPrevious).NextIndex = newItemIndex
 	} else {
 		*(*int32)(unsafe.Add(unsafe.Pointer(context.MeasureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = newItemIndex
 	}
 	return measured
 }
-func Clay__PointIsInsideRect(point Clay_Vector2, rect Clay_BoundingBox) bool {
+func __PointIsInsideRect(point Vector2, rect BoundingBox) bool {
 	return point.X >= rect.X && point.X <= rect.X+rect.Width && point.Y >= rect.Y && point.Y <= rect.Y+rect.Height
 }
-func Clay__AddHashMapItem(elementId Clay_ElementId, layoutElement *Clay_LayoutElement, idAlias uint32) *Clay_LayoutElementHashMapItem {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __AddHashMapItem(elementId ElementId, layoutElement *LayoutElement, idAlias uint32) *LayoutElementHashMapItem {
+	var context *Context = GetCurrentContext()
 	if int64(context.LayoutElementsHashMapInternal.Length) == int64(context.LayoutElementsHashMapInternal.Capacity)-1 {
 		return nil
 	}
-	var item Clay_LayoutElementHashMapItem = Clay_LayoutElementHashMapItem{ElementId: elementId, LayoutElement: layoutElement, NextIndex: -1, Generation: uint32(int32(int64(context.Generation) + 1)), IdAlias: idAlias}
+	var item LayoutElementHashMapItem = LayoutElementHashMapItem{ElementId: elementId, LayoutElement: layoutElement, NextIndex: -1, Generation: uint32(int32(int64(context.Generation) + 1)), IdAlias: idAlias}
 	var hashBucket uint32 = uint32(int32(int64(elementId.Id) % int64(context.LayoutElementsHashMap.Capacity)))
 	var hashItemPrevious int32 = -1
 	var hashItemIndex int32 = *(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
 	for int64(hashItemIndex) != -1 {
-		var hashItem *Clay_LayoutElementHashMapItem = Clay__LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, hashItemIndex)
+		var hashItem *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, hashItemIndex)
 		if int64(hashItem.ElementId.Id) == int64(elementId.Id) {
 			item.NextIndex = hashItem.NextIndex
 			if int64(hashItem.Generation) <= int64(context.Generation) {
@@ -2535,7 +2534,7 @@ func Clay__AddHashMapItem(elementId Clay_ElementId, layoutElement *Clay_LayoutEl
 				hashItem.LayoutElement = layoutElement
 				hashItem.DebugData.Collision = false
 			} else {
-				context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_DUPLICATE_ID, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.ErrorHandler.UserData})
+				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_DUPLICATE_ID, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.ErrorHandler.UserData})
 				if context.DebugModeEnabled {
 					hashItem.DebugData.Collision = true
 				}
@@ -2545,61 +2544,61 @@ func Clay__AddHashMapItem(elementId Clay_ElementId, layoutElement *Clay_LayoutEl
 		hashItemPrevious = hashItemIndex
 		hashItemIndex = hashItem.NextIndex
 	}
-	var hashItem *Clay_LayoutElementHashMapItem = Clay__LayoutElementHashMapItemArray_Add(&context.LayoutElementsHashMapInternal, item)
-	hashItem.DebugData = Clay__DebugElementDataArray_Add(&context.DebugElementData, Clay__DebugElementData{Collision: false})
+	var hashItem *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Add(&context.LayoutElementsHashMapInternal, item)
+	hashItem.DebugData = __DebugElementDataArray_Add(&context.DebugElementData, __DebugElementData{Collision: false})
 	if int64(hashItemPrevious) != -1 {
-		Clay__LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, hashItemPrevious).NextIndex = int32(int64(context.LayoutElementsHashMapInternal.Length) - 1)
+		__LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, hashItemPrevious).NextIndex = int32(int64(context.LayoutElementsHashMapInternal.Length) - 1)
 	} else {
 		*(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = int32(int64(context.LayoutElementsHashMapInternal.Length) - 1)
 	}
 	return hashItem
 }
-func Clay__GetHashMapItem(id uint32) *Clay_LayoutElementHashMapItem {
+func __GetHashMapItem(id uint32) *LayoutElementHashMapItem {
 	var (
-		context      *Clay_Context = Clay_GetCurrentContext()
-		hashBucket   uint32        = uint32(int32(int64(id) % int64(context.LayoutElementsHashMap.Capacity)))
-		elementIndex int32         = *(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
+		context      *Context = GetCurrentContext()
+		hashBucket   uint32   = uint32(int32(int64(id) % int64(context.LayoutElementsHashMap.Capacity)))
+		elementIndex int32    = *(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
 	)
 	for int64(elementIndex) != -1 {
-		var hashEntry *Clay_LayoutElementHashMapItem = Clay__LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, elementIndex)
+		var hashEntry *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, elementIndex)
 		if int64(hashEntry.ElementId.Id) == int64(id) {
 			return hashEntry
 		}
 		elementIndex = hashEntry.NextIndex
 	}
-	return &Clay_LayoutElementHashMapItem_DEFAULT
+	return &LayoutElementHashMapItem_DEFAULT
 }
-func Clay__GenerateIdForAnonymousElement(openLayoutElement *Clay_LayoutElement) Clay_ElementId {
+func __GenerateIdForAnonymousElement(openLayoutElement *LayoutElement) ElementId {
 	var (
-		context       *Clay_Context       = Clay_GetCurrentContext()
-		parentElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-2)))
-		elementId     Clay_ElementId      = Clay__HashNumber(uint32(parentElement.ChildrenOrTextContent.Children.Length), parentElement.Id)
+		context       *Context       = GetCurrentContext()
+		parentElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-2)))
+		elementId     ElementId      = __HashNumber(uint32(parentElement.ChildrenOrTextContent.Children.Length), parentElement.Id)
 	)
 	openLayoutElement.Id = elementId.Id
-	Clay__AddHashMapItem(elementId, openLayoutElement, 0)
-	Clay__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
+	__AddHashMapItem(elementId, openLayoutElement, 0)
+	__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
 	return elementId
 }
-func Clay__ElementHasConfig(layoutElement *Clay_LayoutElement, type_ Clay__ElementConfigType) bool {
+func __ElementHasConfig(layoutElement *LayoutElement, type_ __ElementConfigType) bool {
 	for i := int32(0); int64(i) < int64(layoutElement.ElementConfigs.Length); i++ {
-		if Clay__ElementConfigArraySlice_Get(&layoutElement.ElementConfigs, i).Type == type_ {
+		if __ElementConfigArraySlice_Get(&layoutElement.ElementConfigs, i).Type == type_ {
 			return true
 		}
 	}
 	return false
 }
-func Clay__CloseElement() {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __CloseElement() {
+	var context *Context = GetCurrentContext()
 	if context.BooleanWarnings.MaxElementsExceeded {
 		return
 	}
-	var openLayoutElement *Clay_LayoutElement = Clay__GetOpenLayoutElement()
-	var layoutConfig *Clay_LayoutConfig = openLayoutElement.LayoutConfig
+	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
+	var layoutConfig *LayoutConfig = openLayoutElement.LayoutConfig
 	var elementHasScrollHorizontal bool = false
 	var elementHasScrollVertical bool = false
 	for i := int32(0); int64(i) < int64(openLayoutElement.ElementConfigs.Length); i++ {
-		var config *Clay_ElementConfig = Clay__ElementConfigArraySlice_Get(&openLayoutElement.ElementConfigs, i)
-		if config.Type == CLAY__ELEMENT_CONFIG_TYPE_SCROLL {
+		var config *ElementConfig = __ElementConfigArraySlice_Get(&openLayoutElement.ElementConfigs, i)
+		if config.Type == __ELEMENT_CONFIG_TYPE_SCROLL {
 			elementHasScrollHorizontal = config.Config.ScrollElementConfig.Horizontal
 			elementHasScrollVertical = config.Config.ScrollElementConfig.Vertical
 			context.OpenClipElementStack.Length--
@@ -2607,12 +2606,12 @@ func Clay__CloseElement() {
 		}
 	}
 	openLayoutElement.ChildrenOrTextContent.Children.Elements = (*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementChildren.InternalArray), unsafe.Sizeof(int32(0))*uintptr(context.LayoutElementChildren.Length)))
-	if layoutConfig.LayoutDirection == CLAY_LEFT_TO_RIGHT {
+	if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 		openLayoutElement.Dimensions.Width = float32(int64(layoutConfig.Padding.Left) + int64(layoutConfig.Padding.Right))
 		for i := int32(0); int64(i) < int64(openLayoutElement.ChildrenOrTextContent.Children.Length); i++ {
 			var (
-				childIndex int32               = Clay__int32_tArray_GetValue(&context.LayoutElementChildrenBuffer, int32(int64(context.LayoutElementChildrenBuffer.Length)-int64(openLayoutElement.ChildrenOrTextContent.Children.Length)+int64(i)))
-				child      *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, childIndex)
+				childIndex int32          = __int32_tArray_GetValue(&context.LayoutElementChildrenBuffer, int32(int64(context.LayoutElementChildrenBuffer.Length)-int64(openLayoutElement.ChildrenOrTextContent.Children.Length)+int64(i)))
+				child      *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childIndex)
 			)
 			openLayoutElement.Dimensions.Width += child.Dimensions.Width
 			if openLayoutElement.Dimensions.Height > (child.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)) {
@@ -2630,7 +2629,7 @@ func Clay__CloseElement() {
 					openLayoutElement.MinDimensions.Height = child.MinDimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)
 				}
 			}
-			Clay__int32_tArray_Add(&context.LayoutElementChildren, childIndex)
+			__int32_tArray_Add(&context.LayoutElementChildren, childIndex)
 		}
 		var childGap float32 = float32((func() int64 {
 			if (int64(openLayoutElement.ChildrenOrTextContent.Children.Length) - 1) > 0 {
@@ -2640,12 +2639,12 @@ func Clay__CloseElement() {
 		}()) * int64(layoutConfig.ChildGap))
 		openLayoutElement.Dimensions.Width += childGap
 		openLayoutElement.MinDimensions.Width += childGap
-	} else if layoutConfig.LayoutDirection == CLAY_TOP_TO_BOTTOM {
+	} else if layoutConfig.LayoutDirection == TOP_TO_BOTTOM {
 		openLayoutElement.Dimensions.Height = float32(int64(layoutConfig.Padding.Top) + int64(layoutConfig.Padding.Bottom))
 		for i := int32(0); int64(i) < int64(openLayoutElement.ChildrenOrTextContent.Children.Length); i++ {
 			var (
-				childIndex int32               = Clay__int32_tArray_GetValue(&context.LayoutElementChildrenBuffer, int32(int64(context.LayoutElementChildrenBuffer.Length)-int64(openLayoutElement.ChildrenOrTextContent.Children.Length)+int64(i)))
-				child      *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, childIndex)
+				childIndex int32          = __int32_tArray_GetValue(&context.LayoutElementChildrenBuffer, int32(int64(context.LayoutElementChildrenBuffer.Length)-int64(openLayoutElement.ChildrenOrTextContent.Children.Length)+int64(i)))
+				child      *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childIndex)
 			)
 			openLayoutElement.Dimensions.Height += child.Dimensions.Height
 			if openLayoutElement.Dimensions.Width > (child.Dimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)) {
@@ -2663,7 +2662,7 @@ func Clay__CloseElement() {
 					openLayoutElement.MinDimensions.Width = child.MinDimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)
 				}
 			}
-			Clay__int32_tArray_Add(&context.LayoutElementChildren, childIndex)
+			__int32_tArray_Add(&context.LayoutElementChildren, childIndex)
 		}
 		var childGap float32 = float32((func() int64 {
 			if (int64(openLayoutElement.ChildrenOrTextContent.Children.Length) - 1) > 0 {
@@ -2675,9 +2674,9 @@ func Clay__CloseElement() {
 		openLayoutElement.MinDimensions.Height += childGap
 	}
 	context.LayoutElementChildrenBuffer.Length -= int32(openLayoutElement.ChildrenOrTextContent.Children.Length)
-	if layoutConfig.Sizing.Width.Type != CLAY__SIZING_TYPE_PERCENT {
+	if layoutConfig.Sizing.Width.Type != __SIZING_TYPE_PERCENT {
 		if layoutConfig.Sizing.Width.Size.MinMax.Max <= 0 {
-			layoutConfig.Sizing.Width.Size.MinMax.Max = CLAY__MAXFLOAT
+			layoutConfig.Sizing.Width.Size.MinMax.Max = __MAXFLOAT
 		}
 		if (func() float32 {
 			if openLayoutElement.Dimensions.Width > layoutConfig.Sizing.Width.Size.MinMax.Min {
@@ -2710,9 +2709,9 @@ func Clay__CloseElement() {
 	} else {
 		openLayoutElement.Dimensions.Width = 0
 	}
-	if layoutConfig.Sizing.Height.Type != CLAY__SIZING_TYPE_PERCENT {
+	if layoutConfig.Sizing.Height.Type != __SIZING_TYPE_PERCENT {
 		if layoutConfig.Sizing.Height.Size.MinMax.Max <= 0 {
-			layoutConfig.Sizing.Height.Size.MinMax.Max = CLAY__MAXFLOAT
+			layoutConfig.Sizing.Height.Size.MinMax.Max = __MAXFLOAT
 		}
 		if (func() float32 {
 			if openLayoutElement.Dimensions.Height > layoutConfig.Sizing.Height.Size.MinMax.Min {
@@ -2745,15 +2744,15 @@ func Clay__CloseElement() {
 	} else {
 		openLayoutElement.Dimensions.Height = 0
 	}
-	var elementIsFloating bool = Clay__ElementHasConfig(openLayoutElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING)
-	var closingElementIndex int32 = Clay__int32_tArray_RemoveSwapback(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-1))
-	openLayoutElement = Clay__GetOpenLayoutElement()
+	var elementIsFloating bool = __ElementHasConfig(openLayoutElement, __ELEMENT_CONFIG_TYPE_FLOATING)
+	var closingElementIndex int32 = __int32_tArray_RemoveSwapback(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-1))
+	openLayoutElement = __GetOpenLayoutElement()
 	if !elementIsFloating && int64(context.OpenLayoutElementStack.Length) > 1 {
 		openLayoutElement.ChildrenOrTextContent.Children.Length++
-		Clay__int32_tArray_Add(&context.LayoutElementChildrenBuffer, closingElementIndex)
+		__int32_tArray_Add(&context.LayoutElementChildrenBuffer, closingElementIndex)
 	}
 }
-func Clay__MemCmp(s1 *byte, s2 *byte, length int32) bool {
+func __MemCmp(s1 *byte, s2 *byte, length int32) bool {
 	for i := int32(0); int64(i) < int64(length); i++ {
 		if *(*byte)(unsafe.Add(unsafe.Pointer(s1), i)) != *(*byte)(unsafe.Add(unsafe.Pointer(s2), i)) {
 			return false
@@ -2761,145 +2760,145 @@ func Clay__MemCmp(s1 *byte, s2 *byte, length int32) bool {
 	}
 	return true
 }
-func Clay__OpenElement() {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __OpenElement() {
+	var context *Context = GetCurrentContext()
 	if int64(context.LayoutElements.Length) == int64(context.LayoutElements.Capacity)-1 || context.BooleanWarnings.MaxElementsExceeded {
 		context.BooleanWarnings.MaxElementsExceeded = true
 		return
 	}
-	var layoutElement Clay_LayoutElement = Clay_LayoutElement{}
-	Clay_LayoutElementArray_Add(&context.LayoutElements, layoutElement)
-	Clay__int32_tArray_Add(&context.OpenLayoutElementStack, int32(int64(context.LayoutElements.Length)-1))
+	var layoutElement LayoutElement = LayoutElement{}
+	LayoutElementArray_Add(&context.LayoutElements, layoutElement)
+	__int32_tArray_Add(&context.OpenLayoutElementStack, int32(int64(context.LayoutElements.Length)-1))
 	if int64(context.OpenClipElementStack.Length) > 0 {
-		Clay__int32_tArray_Set(&context.LayoutElementClipElementIds, int32(int64(context.LayoutElements.Length)-1), Clay__int32_tArray_GetValue(&context.OpenClipElementStack, int32(int64(context.OpenClipElementStack.Length)-1)))
+		__int32_tArray_Set(&context.LayoutElementClipElementIds, int32(int64(context.LayoutElements.Length)-1), __int32_tArray_GetValue(&context.OpenClipElementStack, int32(int64(context.OpenClipElementStack.Length)-1)))
 	} else {
-		Clay__int32_tArray_Set(&context.LayoutElementClipElementIds, int32(int64(context.LayoutElements.Length)-1), 0)
+		__int32_tArray_Set(&context.LayoutElementClipElementIds, int32(int64(context.LayoutElements.Length)-1), 0)
 	}
 }
-func Clay__OpenTextElement(text Clay_String, textConfig *Clay_TextElementConfig) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __OpenTextElement(text String, textConfig *TextElementConfig) {
+	var context *Context = GetCurrentContext()
 	if int64(context.LayoutElements.Length) == int64(context.LayoutElements.Capacity)-1 || context.BooleanWarnings.MaxElementsExceeded {
 		context.BooleanWarnings.MaxElementsExceeded = true
 		return
 	}
-	var parentElement *Clay_LayoutElement = Clay__GetOpenLayoutElement()
-	var layoutElement Clay_LayoutElement = Clay_LayoutElement{}
-	var textElement *Clay_LayoutElement = Clay_LayoutElementArray_Add(&context.LayoutElements, layoutElement)
+	var parentElement *LayoutElement = __GetOpenLayoutElement()
+	var layoutElement LayoutElement = LayoutElement{}
+	var textElement *LayoutElement = LayoutElementArray_Add(&context.LayoutElements, layoutElement)
 	if int64(context.OpenClipElementStack.Length) > 0 {
-		Clay__int32_tArray_Set(&context.LayoutElementClipElementIds, int32(int64(context.LayoutElements.Length)-1), Clay__int32_tArray_GetValue(&context.OpenClipElementStack, int32(int64(context.OpenClipElementStack.Length)-1)))
+		__int32_tArray_Set(&context.LayoutElementClipElementIds, int32(int64(context.LayoutElements.Length)-1), __int32_tArray_GetValue(&context.OpenClipElementStack, int32(int64(context.OpenClipElementStack.Length)-1)))
 	} else {
-		Clay__int32_tArray_Set(&context.LayoutElementClipElementIds, int32(int64(context.LayoutElements.Length)-1), 0)
+		__int32_tArray_Set(&context.LayoutElementClipElementIds, int32(int64(context.LayoutElements.Length)-1), 0)
 	}
-	Clay__int32_tArray_Add(&context.LayoutElementChildrenBuffer, int32(int64(context.LayoutElements.Length)-1))
-	var textMeasured *Clay__MeasureTextCacheItem = Clay__MeasureTextCached(&text, textConfig)
-	var elementId Clay_ElementId = Clay__HashNumber(uint32(parentElement.ChildrenOrTextContent.Children.Length), parentElement.Id)
+	__int32_tArray_Add(&context.LayoutElementChildrenBuffer, int32(int64(context.LayoutElements.Length)-1))
+	var textMeasured *__MeasureTextCacheItem = __MeasureTextCached(&text, textConfig)
+	var elementId ElementId = __HashNumber(uint32(parentElement.ChildrenOrTextContent.Children.Length), parentElement.Id)
 	textElement.Id = elementId.Id
-	Clay__AddHashMapItem(elementId, textElement, 0)
-	Clay__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
-	var textDimensions Clay_Dimensions = Clay_Dimensions{Width: textMeasured.UnwrappedDimensions.Width, Height: func() float32 {
+	__AddHashMapItem(elementId, textElement, 0)
+	__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
+	var textDimensions Dimensions = Dimensions{Width: textMeasured.UnwrappedDimensions.Width, Height: func() float32 {
 		if int64(textConfig.LineHeight) > 0 {
 			return float32(textConfig.LineHeight)
 		}
 		return textMeasured.UnwrappedDimensions.Height
 	}()}
 	textElement.Dimensions = textDimensions
-	textElement.MinDimensions = Clay_Dimensions{Width: textMeasured.UnwrappedDimensions.Height, Height: textDimensions.Height}
-	textElement.ChildrenOrTextContent.TextElementData = Clay__TextElementDataArray_Add(&context.TextElementData, Clay__TextElementData{Text: text, PreferredDimensions: textMeasured.UnwrappedDimensions, ElementIndex: int32(int64(context.LayoutElements.Length) - 1)})
-	textElement.ElementConfigs = Clay__ElementConfigArraySlice{Length: 1, InternalArray: Clay__ElementConfigArray_Add(&context.ElementConfigs, Clay_ElementConfig{Type: CLAY__ELEMENT_CONFIG_TYPE_TEXT, Config: Clay_ElementConfigUnion{TextElementConfig: textConfig}})}
-	textElement.LayoutConfig = &CLAY_LAYOUT_DEFAULT
+	textElement.MinDimensions = Dimensions{Width: textMeasured.UnwrappedDimensions.Height, Height: textDimensions.Height}
+	textElement.ChildrenOrTextContent.TextElementData = __TextElementDataArray_Add(&context.TextElementData, __TextElementData{Text: text, PreferredDimensions: textMeasured.UnwrappedDimensions, ElementIndex: int32(int64(context.LayoutElements.Length) - 1)})
+	textElement.ElementConfigs = __ElementConfigArraySlice{Length: 1, InternalArray: __ElementConfigArray_Add(&context.ElementConfigs, ElementConfig{Type: __ELEMENT_CONFIG_TYPE_TEXT, Config: ElementConfigUnion{TextElementConfig: textConfig}})}
+	textElement.LayoutConfig = &LAYOUT_DEFAULT
 	parentElement.ChildrenOrTextContent.Children.Length++
 }
-func Clay__AttachId(elementId Clay_ElementId) Clay_ElementId {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __AttachId(elementId ElementId) ElementId {
+	var context *Context = GetCurrentContext()
 	if context.BooleanWarnings.MaxElementsExceeded {
-		return Clay_ElementId_DEFAULT
+		return ElementId_DEFAULT
 	}
-	var openLayoutElement *Clay_LayoutElement = Clay__GetOpenLayoutElement()
+	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	var idAlias uint32 = openLayoutElement.Id
 	openLayoutElement.Id = elementId.Id
-	Clay__AddHashMapItem(elementId, openLayoutElement, idAlias)
-	Clay__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
+	__AddHashMapItem(elementId, openLayoutElement, idAlias)
+	__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
 	return elementId
 }
-func Clay__ConfigureOpenElement(declaration Clay_ElementDeclaration) {
+func __ConfigureOpenElement(declaration ElementDeclaration) {
 	var (
-		context           *Clay_Context       = Clay_GetCurrentContext()
-		openLayoutElement *Clay_LayoutElement = Clay__GetOpenLayoutElement()
+		context           *Context       = GetCurrentContext()
+		openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	)
-	openLayoutElement.LayoutConfig = Clay__StoreLayoutConfig(declaration.Layout)
-	if declaration.Layout.Sizing.Width.Type == CLAY__SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Width.Size.Percent > 1 || declaration.Layout.Sizing.Height.Type == CLAY__SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Height.Size.Percent > 1 {
-		context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_PERCENTAGE_OVER_1, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element was configured with CLAY_SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.")}, UserData: context.ErrorHandler.UserData})
+	openLayoutElement.LayoutConfig = __StoreLayoutConfig(declaration.Layout)
+	if declaration.Layout.Sizing.Width.Type == __SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Width.Size.Percent > 1 || declaration.Layout.Sizing.Height.Type == __SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Height.Size.Percent > 1 {
+		context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_PERCENTAGE_OVER_1, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.")}, UserData: context.ErrorHandler.UserData})
 	}
-	var openLayoutElementId Clay_ElementId = declaration.Id
-	openLayoutElement.ElementConfigs.InternalArray = (*Clay_ElementConfig)(unsafe.Add(unsafe.Pointer(context.ElementConfigs.InternalArray), unsafe.Sizeof(Clay_ElementConfig{})*uintptr(context.ElementConfigs.Length)))
-	var sharedConfig *Clay_SharedElementConfig = nil
+	var openLayoutElementId ElementId = declaration.Id
+	openLayoutElement.ElementConfigs.InternalArray = (*ElementConfig)(unsafe.Add(unsafe.Pointer(context.ElementConfigs.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(context.ElementConfigs.Length)))
+	var sharedConfig *SharedElementConfig = nil
 	if declaration.BackgroundColor.A > 0 {
-		sharedConfig = Clay__StoreSharedElementConfig(Clay_SharedElementConfig{BackgroundColor: declaration.BackgroundColor})
-		Clay__AttachElementConfig(Clay_ElementConfigUnion{SharedElementConfig: sharedConfig}, CLAY__ELEMENT_CONFIG_TYPE_SHARED)
+		sharedConfig = __StoreSharedElementConfig(SharedElementConfig{BackgroundColor: declaration.BackgroundColor})
+		__AttachElementConfig(ElementConfigUnion{SharedElementConfig: sharedConfig}, __ELEMENT_CONFIG_TYPE_SHARED)
 	}
-	if !Clay__MemCmp((*byte)(unsafe.Pointer(&declaration.CornerRadius)), (*byte)(unsafe.Pointer(&Clay__CornerRadius_DEFAULT)), int32(uint32(unsafe.Sizeof(Clay_CornerRadius{})))) {
+	if !__MemCmp((*byte)(unsafe.Pointer(&declaration.CornerRadius)), (*byte)(unsafe.Pointer(&__CornerRadius_DEFAULT)), int32(uint32(unsafe.Sizeof(CornerRadius{})))) {
 		if sharedConfig != nil {
 			sharedConfig.CornerRadius = declaration.CornerRadius
 		} else {
-			sharedConfig = Clay__StoreSharedElementConfig(Clay_SharedElementConfig{CornerRadius: declaration.CornerRadius})
-			Clay__AttachElementConfig(Clay_ElementConfigUnion{SharedElementConfig: sharedConfig}, CLAY__ELEMENT_CONFIG_TYPE_SHARED)
+			sharedConfig = __StoreSharedElementConfig(SharedElementConfig{CornerRadius: declaration.CornerRadius})
+			__AttachElementConfig(ElementConfigUnion{SharedElementConfig: sharedConfig}, __ELEMENT_CONFIG_TYPE_SHARED)
 		}
 	}
 	if declaration.UserData != nil {
 		if sharedConfig != nil {
 			sharedConfig.UserData = declaration.UserData
 		} else {
-			sharedConfig = Clay__StoreSharedElementConfig(Clay_SharedElementConfig{UserData: declaration.UserData})
-			Clay__AttachElementConfig(Clay_ElementConfigUnion{SharedElementConfig: sharedConfig}, CLAY__ELEMENT_CONFIG_TYPE_SHARED)
+			sharedConfig = __StoreSharedElementConfig(SharedElementConfig{UserData: declaration.UserData})
+			__AttachElementConfig(ElementConfigUnion{SharedElementConfig: sharedConfig}, __ELEMENT_CONFIG_TYPE_SHARED)
 		}
 	}
 	if declaration.Image.ImageData != nil {
-		Clay__AttachElementConfig(Clay_ElementConfigUnion{ImageElementConfig: Clay__StoreImageElementConfig(declaration.Image)}, CLAY__ELEMENT_CONFIG_TYPE_IMAGE)
-		Clay__int32_tArray_Add(&context.ImageElementPointers, int32(int64(context.LayoutElements.Length)-1))
+		__AttachElementConfig(ElementConfigUnion{ImageElementConfig: __StoreImageElementConfig(declaration.Image)}, __ELEMENT_CONFIG_TYPE_IMAGE)
+		__int32_tArray_Add(&context.ImageElementPointers, int32(int64(context.LayoutElements.Length)-1))
 	}
-	if declaration.Floating.AttachTo != CLAY_ATTACH_TO_NONE {
+	if declaration.Floating.AttachTo != ATTACH_TO_NONE {
 		var (
-			floatingConfig     Clay_FloatingElementConfig = declaration.Floating
-			hierarchicalParent *Clay_LayoutElement        = Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-2)))
+			floatingConfig     FloatingElementConfig = declaration.Floating
+			hierarchicalParent *LayoutElement        = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-2)))
 		)
 		if hierarchicalParent != nil {
 			var clipElementId uint32 = 0
-			if declaration.Floating.AttachTo == CLAY_ATTACH_TO_PARENT {
+			if declaration.Floating.AttachTo == ATTACH_TO_PARENT {
 				floatingConfig.ParentId = hierarchicalParent.Id
 				if int64(context.OpenClipElementStack.Length) > 0 {
-					clipElementId = uint32(Clay__int32_tArray_GetValue(&context.OpenClipElementStack, int32(int64(context.OpenClipElementStack.Length)-1)))
+					clipElementId = uint32(__int32_tArray_GetValue(&context.OpenClipElementStack, int32(int64(context.OpenClipElementStack.Length)-1)))
 				}
-			} else if declaration.Floating.AttachTo == CLAY_ATTACH_TO_ELEMENT_WITH_ID {
-				var parentItem *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(floatingConfig.ParentId)
+			} else if declaration.Floating.AttachTo == ATTACH_TO_ELEMENT_WITH_ID {
+				var parentItem *LayoutElementHashMapItem = __GetHashMapItem(floatingConfig.ParentId)
 				if parentItem == nil {
-					context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.ErrorHandler.UserData})
+					context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.ErrorHandler.UserData})
 				} else {
-					clipElementId = uint32(Clay__int32_tArray_GetValue(&context.LayoutElementClipElementIds, int32(int64(uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))))))
+					clipElementId = uint32(__int32_tArray_GetValue(&context.LayoutElementClipElementIds, int32(int64(uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))))))
 				}
-			} else if declaration.Floating.AttachTo == CLAY_ATTACH_TO_ROOT {
-				floatingConfig.ParentId = Clay__HashString(Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay__RootContainer")}, 0, 0).Id
+			} else if declaration.Floating.AttachTo == ATTACH_TO_ROOT {
+				floatingConfig.ParentId = __HashString(String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0).Id
 			}
 			if int64(openLayoutElementId.Id) == 0 {
-				openLayoutElementId = Clay__HashString(Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay__FloatingContainer")}, uint32(context.LayoutElementTreeRoots.Length), 0)
+				openLayoutElementId = __HashString(String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("__FloatingContainer")}, uint32(context.LayoutElementTreeRoots.Length), 0)
 			}
-			Clay__LayoutElementTreeRootArray_Add(&context.LayoutElementTreeRoots, Clay__LayoutElementTreeRoot{LayoutElementIndex: Clay__int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-1)), ParentId: floatingConfig.ParentId, ClipElementId: clipElementId, ZIndex: floatingConfig.ZIndex})
-			Clay__AttachElementConfig(Clay_ElementConfigUnion{FloatingElementConfig: Clay__StoreFloatingElementConfig(declaration.Floating)}, CLAY__ELEMENT_CONFIG_TYPE_FLOATING)
+			__LayoutElementTreeRootArray_Add(&context.LayoutElementTreeRoots, __LayoutElementTreeRoot{LayoutElementIndex: __int32_tArray_GetValue(&context.OpenLayoutElementStack, int32(int64(context.OpenLayoutElementStack.Length)-1)), ParentId: floatingConfig.ParentId, ClipElementId: clipElementId, ZIndex: floatingConfig.ZIndex})
+			__AttachElementConfig(ElementConfigUnion{FloatingElementConfig: __StoreFloatingElementConfig(declaration.Floating)}, __ELEMENT_CONFIG_TYPE_FLOATING)
 		}
 	}
 	if declaration.Custom.CustomData != nil {
-		Clay__AttachElementConfig(Clay_ElementConfigUnion{CustomElementConfig: Clay__StoreCustomElementConfig(declaration.Custom)}, CLAY__ELEMENT_CONFIG_TYPE_CUSTOM)
+		__AttachElementConfig(ElementConfigUnion{CustomElementConfig: __StoreCustomElementConfig(declaration.Custom)}, __ELEMENT_CONFIG_TYPE_CUSTOM)
 	}
 	if int64(openLayoutElementId.Id) != 0 {
-		Clay__AttachId(openLayoutElementId)
+		__AttachId(openLayoutElementId)
 	} else if int64(openLayoutElement.Id) == 0 {
-		openLayoutElementId = Clay__GenerateIdForAnonymousElement(openLayoutElement)
+		openLayoutElementId = __GenerateIdForAnonymousElement(openLayoutElement)
 	}
 	if declaration.Scroll.Horizontal || declaration.Scroll.Vertical {
-		Clay__AttachElementConfig(Clay_ElementConfigUnion{ScrollElementConfig: Clay__StoreScrollElementConfig(declaration.Scroll)}, CLAY__ELEMENT_CONFIG_TYPE_SCROLL)
-		Clay__int32_tArray_Add(&context.OpenClipElementStack, int32(int64(openLayoutElement.Id)))
-		var scrollOffset *Clay__ScrollContainerDataInternal = (*Clay__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(CLAY__NULL)))
+		__AttachElementConfig(ElementConfigUnion{ScrollElementConfig: __StoreScrollElementConfig(declaration.Scroll)}, __ELEMENT_CONFIG_TYPE_SCROLL)
+		__int32_tArray_Add(&context.OpenClipElementStack, int32(int64(openLayoutElement.Id)))
+		var scrollOffset *__ScrollContainerDataInternal = (*__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(__NULL)))
 		for i := int32(0); int64(i) < int64(context.ScrollContainerDatas.Length); i++ {
-			var mapping *Clay__ScrollContainerDataInternal = Clay__ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+			var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
 			if int64(openLayoutElement.Id) == int64(mapping.ElementId) {
 				scrollOffset = mapping
 				scrollOffset.LayoutElement = openLayoutElement
@@ -2907,72 +2906,72 @@ func Clay__ConfigureOpenElement(declaration Clay_ElementDeclaration) {
 			}
 		}
 		if scrollOffset == nil {
-			scrollOffset = Clay__ScrollContainerDataInternalArray_Add(&context.ScrollContainerDatas, Clay__ScrollContainerDataInternal{LayoutElement: openLayoutElement, ScrollOrigin: Clay_Vector2{X: -1, Y: -1}, ElementId: openLayoutElement.Id, OpenThisFrame: true})
+			scrollOffset = __ScrollContainerDataInternalArray_Add(&context.ScrollContainerDatas, __ScrollContainerDataInternal{LayoutElement: openLayoutElement, ScrollOrigin: Vector2{X: -1, Y: -1}, ElementId: openLayoutElement.Id, OpenThisFrame: true})
 		}
 		if context.ExternalScrollHandlingEnabled {
-			scrollOffset.ScrollPosition = Clay__QueryScrollOffset(scrollOffset.ElementId, context.QueryScrollOffsetUserData)
+			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.QueryScrollOffsetUserData)
 		}
 	}
-	if !Clay__MemCmp((*byte)(unsafe.Pointer(&declaration.Border.Width)), (*byte)(unsafe.Pointer(&Clay__BorderWidth_DEFAULT)), int32(uint32(unsafe.Sizeof(Clay_BorderWidth{})))) {
-		Clay__AttachElementConfig(Clay_ElementConfigUnion{BorderElementConfig: Clay__StoreBorderElementConfig(declaration.Border)}, CLAY__ELEMENT_CONFIG_TYPE_BORDER)
+	if !__MemCmp((*byte)(unsafe.Pointer(&declaration.Border.Width)), (*byte)(unsafe.Pointer(&__BorderWidth_DEFAULT)), int32(uint32(unsafe.Sizeof(BorderWidth{})))) {
+		__AttachElementConfig(ElementConfigUnion{BorderElementConfig: __StoreBorderElementConfig(declaration.Border)}, __ELEMENT_CONFIG_TYPE_BORDER)
 	}
 }
-func Clay__InitializeEphemeralMemory(context *Clay_Context) {
+func __InitializeEphemeralMemory(context *Context) {
 	var (
-		maxElementCount int32       = context.MaxElementCount
-		arena           *Clay_Arena = &context.InternalArena
+		maxElementCount int32  = context.MaxElementCount
+		arena           *Arena = &context.InternalArena
 	)
 	arena.NextAllocation = context.ArenaResetOffset
-	context.LayoutElementChildrenBuffer = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElements = Clay_LayoutElementArray_Allocate_Arena(maxElementCount, arena)
-	context.Warnings = Clay__WarningArray_Allocate_Arena(100, arena)
-	context.LayoutConfigs = Clay__LayoutConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.ElementConfigs = Clay__ElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.TextElementConfigs = Clay__TextElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.ImageElementConfigs = Clay__ImageElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.FloatingElementConfigs = Clay__FloatingElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.ScrollElementConfigs = Clay__ScrollElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.CustomElementConfigs = Clay__CustomElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.BorderElementConfigs = Clay__BorderElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.SharedElementConfigs = Clay__SharedElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementIdStrings = Clay__StringArray_Allocate_Arena(maxElementCount, arena)
-	context.WrappedTextLines = Clay__WrappedTextLineArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementTreeNodeArray1 = Clay__LayoutElementTreeNodeArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementTreeRoots = Clay__LayoutElementTreeRootArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementChildren = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.OpenLayoutElementStack = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.TextElementData = Clay__TextElementDataArray_Allocate_Arena(maxElementCount, arena)
-	context.ImageElementPointers = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.RenderCommands = Clay_RenderCommandArray_Allocate_Arena(maxElementCount, arena)
-	context.TreeNodeVisited = Clay__boolArray_Allocate_Arena(maxElementCount, arena)
+	context.LayoutElementChildrenBuffer = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.LayoutElements = LayoutElementArray_Allocate_Arena(maxElementCount, arena)
+	context.Warnings = __WarningArray_Allocate_Arena(100, arena)
+	context.LayoutConfigs = __LayoutConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.ElementConfigs = __ElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.TextElementConfigs = __TextElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.ImageElementConfigs = __ImageElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.FloatingElementConfigs = __FloatingElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.ScrollElementConfigs = __ScrollElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.CustomElementConfigs = __CustomElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.BorderElementConfigs = __BorderElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.SharedElementConfigs = __SharedElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.LayoutElementIdStrings = __StringArray_Allocate_Arena(maxElementCount, arena)
+	context.WrappedTextLines = __WrappedTextLineArray_Allocate_Arena(maxElementCount, arena)
+	context.LayoutElementTreeNodeArray1 = __LayoutElementTreeNodeArray_Allocate_Arena(maxElementCount, arena)
+	context.LayoutElementTreeRoots = __LayoutElementTreeRootArray_Allocate_Arena(maxElementCount, arena)
+	context.LayoutElementChildren = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.OpenLayoutElementStack = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.TextElementData = __TextElementDataArray_Allocate_Arena(maxElementCount, arena)
+	context.ImageElementPointers = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.RenderCommands = RenderCommandArray_Allocate_Arena(maxElementCount, arena)
+	context.TreeNodeVisited = __boolArray_Allocate_Arena(maxElementCount, arena)
 	context.TreeNodeVisited.Length = context.TreeNodeVisited.Capacity
-	context.OpenClipElementStack = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.ReusableElementIndexBuffer = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementClipElementIds = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.DynamicStringData = Clay__charArray_Allocate_Arena(maxElementCount, arena)
+	context.OpenClipElementStack = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.ReusableElementIndexBuffer = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.LayoutElementClipElementIds = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.DynamicStringData = __charArray_Allocate_Arena(maxElementCount, arena)
 }
-func Clay__InitializePersistentMemory(context *Clay_Context) {
+func __InitializePersistentMemory(context *Context) {
 	var (
-		maxElementCount              int32       = context.MaxElementCount
-		maxMeasureTextCacheWordCount int32       = context.MaxMeasureTextCacheWordCount
-		arena                        *Clay_Arena = &context.InternalArena
+		maxElementCount              int32  = context.MaxElementCount
+		maxMeasureTextCacheWordCount int32  = context.MaxMeasureTextCacheWordCount
+		arena                        *Arena = &context.InternalArena
 	)
-	context.ScrollContainerDatas = Clay__ScrollContainerDataInternalArray_Allocate_Arena(10, arena)
-	context.LayoutElementsHashMapInternal = Clay__LayoutElementHashMapItemArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementsHashMap = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.MeasureTextHashMapInternal = Clay__MeasureTextCacheItemArray_Allocate_Arena(maxElementCount, arena)
-	context.MeasureTextHashMapInternalFreeList = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.MeasuredWordsFreeList = Clay__int32_tArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
-	context.MeasureTextHashMap = Clay__int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.MeasuredWords = Clay__MeasuredWordArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
-	context.PointerOverIds = Clay__ElementIdArray_Allocate_Arena(maxElementCount, arena)
-	context.DebugElementData = Clay__DebugElementDataArray_Allocate_Arena(maxElementCount, arena)
+	context.ScrollContainerDatas = __ScrollContainerDataInternalArray_Allocate_Arena(10, arena)
+	context.LayoutElementsHashMapInternal = __LayoutElementHashMapItemArray_Allocate_Arena(maxElementCount, arena)
+	context.LayoutElementsHashMap = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.MeasureTextHashMapInternal = __MeasureTextCacheItemArray_Allocate_Arena(maxElementCount, arena)
+	context.MeasureTextHashMapInternalFreeList = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.MeasuredWordsFreeList = __int32_tArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
+	context.MeasureTextHashMap = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.MeasuredWords = __MeasuredWordArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
+	context.PointerOverIds = __ElementIdArray_Allocate_Arena(maxElementCount, arena)
+	context.DebugElementData = __DebugElementDataArray_Allocate_Arena(maxElementCount, arena)
 	context.ArenaResetOffset = arena.NextAllocation
 }
-func Clay__CompressChildrenAlongAxis(xAxis bool, totalSizeToDistribute float32, resizableContainerBuffer Clay__int32_tArray) {
+func __CompressChildrenAlongAxis(xAxis bool, totalSizeToDistribute float32, resizableContainerBuffer __int32_tArray) {
 	var (
-		context           *Clay_Context      = Clay_GetCurrentContext()
-		largestContainers Clay__int32_tArray = context.OpenClipElementStack
+		context           *Context       = GetCurrentContext()
+		largestContainers __int32_tArray = context.OpenClipElementStack
 	)
 	for totalSizeToDistribute > 0.1 {
 		largestContainers.Length = 0
@@ -2980,7 +2979,7 @@ func Clay__CompressChildrenAlongAxis(xAxis bool, totalSizeToDistribute float32, 
 		var targetSize float32 = 0
 		for i := int32(0); int64(i) < int64(resizableContainerBuffer.Length); i++ {
 			var (
-				childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&resizableContainerBuffer, i))
+				childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, i))
 				childSize    float32
 			)
 			if xAxis {
@@ -2989,12 +2988,12 @@ func Clay__CompressChildrenAlongAxis(xAxis bool, totalSizeToDistribute float32, 
 				childSize = childElement.Dimensions.Height
 			}
 			if (childSize-largestSize) < 0.1 && (childSize-largestSize) > -0.1 {
-				Clay__int32_tArray_Add(&largestContainers, Clay__int32_tArray_GetValue(&resizableContainerBuffer, i))
+				__int32_tArray_Add(&largestContainers, __int32_tArray_GetValue(&resizableContainerBuffer, i))
 			} else if childSize > largestSize {
 				targetSize = largestSize
 				largestSize = childSize
 				largestContainers.Length = 0
-				Clay__int32_tArray_Add(&largestContainers, Clay__int32_tArray_GetValue(&resizableContainerBuffer, i))
+				__int32_tArray_Add(&largestContainers, __int32_tArray_GetValue(&resizableContainerBuffer, i))
 			} else if childSize > targetSize {
 				targetSize = childSize
 			}
@@ -3010,8 +3009,8 @@ func Clay__CompressChildrenAlongAxis(xAxis bool, totalSizeToDistribute float32, 
 		}()) / float32(largestContainers.Length)
 		for childOffset := int32(0); int64(childOffset) < int64(largestContainers.Length); childOffset++ {
 			var (
-				childIndex   int32               = Clay__int32_tArray_GetValue(&largestContainers, childOffset)
-				childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, childIndex)
+				childIndex   int32          = __int32_tArray_GetValue(&largestContainers, childOffset)
+				childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childIndex)
 				childSize    *float32
 			)
 			if xAxis {
@@ -3034,8 +3033,8 @@ func Clay__CompressChildrenAlongAxis(xAxis bool, totalSizeToDistribute float32, 
 			totalSizeToDistribute -= oldChildSize - *childSize
 			if *childSize == childMinSize {
 				for i := int32(0); int64(i) < int64(resizableContainerBuffer.Length); i++ {
-					if int64(Clay__int32_tArray_GetValue(&resizableContainerBuffer, i)) == int64(childIndex) {
-						Clay__int32_tArray_RemoveSwapback(&resizableContainerBuffer, i)
+					if int64(__int32_tArray_GetValue(&resizableContainerBuffer, i)) == int64(childIndex) {
+						__int32_tArray_RemoveSwapback(&resizableContainerBuffer, i)
 						break
 					}
 				}
@@ -3043,28 +3042,28 @@ func Clay__CompressChildrenAlongAxis(xAxis bool, totalSizeToDistribute float32, 
 		}
 	}
 }
-func Clay__SizeContainersAlongAxis(xAxis bool) {
+func __SizeContainersAlongAxis(xAxis bool) {
 	var (
-		context                  *Clay_Context      = Clay_GetCurrentContext()
-		bfsBuffer                Clay__int32_tArray = context.LayoutElementChildrenBuffer
-		resizableContainerBuffer Clay__int32_tArray = context.OpenLayoutElementStack
+		context                  *Context       = GetCurrentContext()
+		bfsBuffer                __int32_tArray = context.LayoutElementChildrenBuffer
+		resizableContainerBuffer __int32_tArray = context.OpenLayoutElementStack
 	)
 	for rootIndex := int32(0); int64(rootIndex) < int64(context.LayoutElementTreeRoots.Length); rootIndex++ {
 		bfsBuffer.Length = 0
-		var root *Clay__LayoutElementTreeRoot = Clay__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
-		var rootElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, int32(int64(root.LayoutElementIndex)))
-		Clay__int32_tArray_Add(&bfsBuffer, root.LayoutElementIndex)
-		if Clay__ElementHasConfig(rootElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING) {
+		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
+		var rootElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, int32(int64(root.LayoutElementIndex)))
+		__int32_tArray_Add(&bfsBuffer, root.LayoutElementIndex)
+		if __ElementHasConfig(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING) {
 			var (
-				floatingElementConfig *Clay_FloatingElementConfig    = Clay__FindElementConfigWithType(rootElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig
-				parentItem            *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(floatingElementConfig.ParentId)
+				floatingElementConfig *FloatingElementConfig    = __FindElementConfigWithType(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig
+				parentItem            *LayoutElementHashMapItem = __GetHashMapItem(floatingElementConfig.ParentId)
 			)
-			if parentItem != nil && parentItem != &Clay_LayoutElementHashMapItem_DEFAULT {
-				var parentLayoutElement *Clay_LayoutElement = parentItem.LayoutElement
-				if rootElement.LayoutConfig.Sizing.Width.Type == CLAY__SIZING_TYPE_GROW {
+			if parentItem != nil && parentItem != &LayoutElementHashMapItem_DEFAULT {
+				var parentLayoutElement *LayoutElement = parentItem.LayoutElement
+				if rootElement.LayoutConfig.Sizing.Width.Type == __SIZING_TYPE_GROW {
 					rootElement.Dimensions.Width = parentLayoutElement.Dimensions.Width
 				}
-				if rootElement.LayoutConfig.Sizing.Height.Type == CLAY__SIZING_TYPE_GROW {
+				if rootElement.LayoutConfig.Sizing.Height.Type == __SIZING_TYPE_GROW {
 					rootElement.Dimensions.Height = parentLayoutElement.Dimensions.Height
 				}
 			}
@@ -3099,10 +3098,10 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 		}
 		for i := int32(0); int64(i) < int64(bfsBuffer.Length); i++ {
 			var (
-				parentIndex        int32               = Clay__int32_tArray_GetValue(&bfsBuffer, i)
-				parent             *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, parentIndex)
-				parentStyleConfig  *Clay_LayoutConfig  = parent.LayoutConfig
-				growContainerCount int32               = 0
+				parentIndex        int32          = __int32_tArray_GetValue(&bfsBuffer, i)
+				parent             *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, parentIndex)
+				parentStyleConfig  *LayoutConfig  = parent.LayoutConfig
+				growContainerCount int32          = 0
 				parentSize         float32
 			)
 			if xAxis {
@@ -3119,14 +3118,14 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 			var innerContentSize float32 = 0
 			var growContainerContentSize float32 = 0
 			var totalPaddingAndChildGaps float32 = parentPadding
-			var sizingAlongAxis bool = xAxis && parentStyleConfig.LayoutDirection == CLAY_LEFT_TO_RIGHT || !xAxis && parentStyleConfig.LayoutDirection == CLAY_TOP_TO_BOTTOM
+			var sizingAlongAxis bool = xAxis && parentStyleConfig.LayoutDirection == LEFT_TO_RIGHT || !xAxis && parentStyleConfig.LayoutDirection == TOP_TO_BOTTOM
 			resizableContainerBuffer.Length = 0
 			var parentChildGap float32 = float32(parentStyleConfig.ChildGap)
 			for childOffset := int32(0); int64(childOffset) < int64(parent.ChildrenOrTextContent.Children.Length); childOffset++ {
 				var (
-					childElementIndex int32               = *(*int32)(unsafe.Add(unsafe.Pointer(parent.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(childOffset)))
-					childElement      *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, childElementIndex)
-					childSizing       Clay_SizingAxis
+					childElementIndex int32          = *(*int32)(unsafe.Add(unsafe.Pointer(parent.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(childOffset)))
+					childElement      *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childElementIndex)
+					childSizing       SizingAxis
 				)
 				if xAxis {
 					childSizing = childElement.LayoutConfig.Sizing.Width
@@ -3139,19 +3138,19 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 				} else {
 					childSize = childElement.Dimensions.Height
 				}
-				if !Clay__ElementHasConfig(childElement, CLAY__ELEMENT_CONFIG_TYPE_TEXT) && int64(childElement.ChildrenOrTextContent.Children.Length) > 0 {
-					Clay__int32_tArray_Add(&bfsBuffer, childElementIndex)
+				if !__ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_TEXT) && int64(childElement.ChildrenOrTextContent.Children.Length) > 0 {
+					__int32_tArray_Add(&bfsBuffer, childElementIndex)
 				}
-				if childSizing.Type != CLAY__SIZING_TYPE_PERCENT && childSizing.Type != CLAY__SIZING_TYPE_FIXED && (!Clay__ElementHasConfig(childElement, CLAY__ELEMENT_CONFIG_TYPE_TEXT) || Clay__FindElementConfigWithType(childElement, CLAY__ELEMENT_CONFIG_TYPE_TEXT).TextElementConfig.WrapMode == CLAY_TEXT_WRAP_WORDS) && (xAxis || !Clay__ElementHasConfig(childElement, CLAY__ELEMENT_CONFIG_TYPE_IMAGE)) {
-					Clay__int32_tArray_Add(&resizableContainerBuffer, childElementIndex)
+				if childSizing.Type != __SIZING_TYPE_PERCENT && childSizing.Type != __SIZING_TYPE_FIXED && (!__ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_TEXT) || __FindElementConfigWithType(childElement, __ELEMENT_CONFIG_TYPE_TEXT).TextElementConfig.WrapMode == TEXT_WRAP_WORDS) && (xAxis || !__ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_IMAGE)) {
+					__int32_tArray_Add(&resizableContainerBuffer, childElementIndex)
 				}
 				if sizingAlongAxis {
-					if childSizing.Type == CLAY__SIZING_TYPE_PERCENT {
+					if childSizing.Type == __SIZING_TYPE_PERCENT {
 						innerContentSize += 0
 					} else {
 						innerContentSize += childSize
 					}
-					if childSizing.Type == CLAY__SIZING_TYPE_GROW {
+					if childSizing.Type == __SIZING_TYPE_GROW {
 						growContainerContentSize += childSize
 						growContainerCount++
 					}
@@ -3169,9 +3168,9 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 			}
 			for childOffset := int32(0); int64(childOffset) < int64(parent.ChildrenOrTextContent.Children.Length); childOffset++ {
 				var (
-					childElementIndex int32               = *(*int32)(unsafe.Add(unsafe.Pointer(parent.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(childOffset)))
-					childElement      *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, childElementIndex)
-					childSizing       Clay_SizingAxis
+					childElementIndex int32          = *(*int32)(unsafe.Add(unsafe.Pointer(parent.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(childOffset)))
+					childElement      *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childElementIndex)
+					childSizing       SizingAxis
 				)
 				if xAxis {
 					childSizing = childElement.LayoutConfig.Sizing.Width
@@ -3184,7 +3183,7 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 				} else {
 					childSize = &childElement.Dimensions.Height
 				}
-				if childSizing.Type == CLAY__SIZING_TYPE_PERCENT {
+				if childSizing.Type == __SIZING_TYPE_PERCENT {
 					*childSize = (parentSize - totalPaddingAndChildGaps) * childSizing.Size.Percent
 					if sizingAlongAxis {
 						innerContentSize += *childSize
@@ -3194,26 +3193,26 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 			if sizingAlongAxis {
 				var sizeToDistribute float32 = parentSize - parentPadding - innerContentSize
 				if sizeToDistribute < 0 {
-					var scrollElementConfig *Clay_ScrollElementConfig = Clay__FindElementConfigWithType(parent, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+					var scrollElementConfig *ScrollElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
 					if scrollElementConfig != nil {
 						if xAxis && scrollElementConfig.Horizontal || !xAxis && scrollElementConfig.Vertical {
 							continue
 						}
 					}
-					Clay__CompressChildrenAlongAxis(xAxis, -sizeToDistribute, resizableContainerBuffer)
+					__CompressChildrenAlongAxis(xAxis, -sizeToDistribute, resizableContainerBuffer)
 				} else if sizeToDistribute > 0 && int64(growContainerCount) > 0 {
 					var targetSize float32 = (sizeToDistribute + growContainerContentSize) / float32(growContainerCount)
 					for childOffset := int32(0); int64(childOffset) < int64(resizableContainerBuffer.Length); childOffset++ {
 						var (
-							childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&resizableContainerBuffer, childOffset))
-							childSizing  Clay_SizingAxis
+							childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childOffset))
+							childSizing  SizingAxis
 						)
 						if xAxis {
 							childSizing = childElement.LayoutConfig.Sizing.Width
 						} else {
 							childSizing = childElement.LayoutConfig.Sizing.Height
 						}
-						if childSizing.Type == CLAY__SIZING_TYPE_GROW {
+						if childSizing.Type == __SIZING_TYPE_GROW {
 							var childSize *float32
 							_ = childSize
 							if xAxis {
@@ -3229,7 +3228,7 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 							}
 							if targetSize < *minSize {
 								growContainerContentSize -= *minSize
-								Clay__int32_tArray_RemoveSwapback(&resizableContainerBuffer, childOffset)
+								__int32_tArray_RemoveSwapback(&resizableContainerBuffer, childOffset)
 								growContainerCount--
 								targetSize = (sizeToDistribute + growContainerContentSize) / float32(growContainerCount)
 								childOffset = -1
@@ -3242,8 +3241,8 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 			} else {
 				for childOffset := int32(0); int64(childOffset) < int64(resizableContainerBuffer.Length); childOffset++ {
 					var (
-						childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&resizableContainerBuffer, childOffset))
-						childSizing  Clay_SizingAxis
+						childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childOffset))
+						childSizing  SizingAxis
 					)
 					if xAxis {
 						childSizing = childElement.LayoutConfig.Sizing.Width
@@ -3256,12 +3255,12 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 					} else {
 						childSize = &childElement.Dimensions.Height
 					}
-					if !xAxis && Clay__ElementHasConfig(childElement, CLAY__ELEMENT_CONFIG_TYPE_IMAGE) {
+					if !xAxis && __ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_IMAGE) {
 						continue
 					}
 					var maxSize float32 = parentSize - parentPadding
-					if Clay__ElementHasConfig(parent, CLAY__ELEMENT_CONFIG_TYPE_SCROLL) {
-						var scrollElementConfig *Clay_ScrollElementConfig = Clay__FindElementConfigWithType(parent, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+					if __ElementHasConfig(parent, __ELEMENT_CONFIG_TYPE_SCROLL) {
+						var scrollElementConfig *ScrollElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
 						if xAxis && scrollElementConfig.Horizontal || !xAxis && scrollElementConfig.Vertical {
 							if maxSize > innerContentSize {
 								maxSize = maxSize
@@ -3270,7 +3269,7 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 							}
 						}
 					}
-					if childSizing.Type == CLAY__SIZING_TYPE_FIT {
+					if childSizing.Type == __SIZING_TYPE_FIT {
 						if childSizing.Size.MinMax.Min > (func() float32 {
 							if (*childSize) < maxSize {
 								return *childSize
@@ -3283,7 +3282,7 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 						} else {
 							*childSize = maxSize
 						}
-					} else if childSizing.Type == CLAY__SIZING_TYPE_GROW {
+					} else if childSizing.Type == __SIZING_TYPE_GROW {
 						if maxSize < childSizing.Size.MinMax.Max {
 							*childSize = maxSize
 						} else {
@@ -3295,11 +3294,11 @@ func Clay__SizeContainersAlongAxis(xAxis bool) {
 		}
 	}
 }
-func Clay__IntToString(integer int32) Clay_String {
+func __IntToString(integer int32) String {
 	if int64(integer) == 0 {
-		return Clay_String{Length: 1, Chars: libc.CString("0")}
+		return String{Length: 1, Chars: libc.CString("0")}
 	}
-	var context *Clay_Context = Clay_GetCurrentContext()
+	var context *Context = GetCurrentContext()
 	var chars *byte = ((*byte)(unsafe.Add(unsafe.Pointer(context.DynamicStringData.InternalArray), context.DynamicStringData.Length)))
 	var length int32 = 0
 	var sign int32 = integer
@@ -3337,35 +3336,35 @@ func Clay__IntToString(integer int32) Clay_String {
 		*(*byte)(unsafe.Add(unsafe.Pointer(chars), k)) = byte(temp)
 	}
 	context.DynamicStringData.Length += length
-	return Clay_String{Length: length, Chars: chars}
+	return String{Length: length, Chars: chars}
 }
-func Clay__AddRenderCommand(renderCommand Clay_RenderCommand) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __AddRenderCommand(renderCommand RenderCommand) {
+	var context *Context = GetCurrentContext()
 	if int64(context.RenderCommands.Length) < int64(context.RenderCommands.Capacity)-1 {
-		Clay_RenderCommandArray_Add(&context.RenderCommands, renderCommand)
+		RenderCommandArray_Add(&context.RenderCommands, renderCommand)
 	} else {
 		if !context.BooleanWarnings.MaxRenderCommandsExceeded {
 			context.BooleanWarnings.MaxRenderCommandsExceeded = true
-			context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using Clay_SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData})
+			context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData})
 		}
 	}
 }
-func Clay__ElementIsOffscreen(boundingBox *Clay_BoundingBox) bool {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func __ElementIsOffscreen(boundingBox *BoundingBox) bool {
+	var context *Context = GetCurrentContext()
 	if context.DisableCulling {
 		return false
 	}
 	return boundingBox.X > context.LayoutDimensions.Width || boundingBox.Y > context.LayoutDimensions.Height || boundingBox.X+boundingBox.Width < 0 || boundingBox.Y+boundingBox.Height < 0
 }
-func Clay__CalculateFinalLayout() {
-	var context *Clay_Context = Clay_GetCurrentContext()
-	Clay__SizeContainersAlongAxis(true)
+func __CalculateFinalLayout() {
+	var context *Context = GetCurrentContext()
+	__SizeContainersAlongAxis(true)
 	for textElementIndex := int32(0); int64(textElementIndex) < int64(context.TextElementData.Length); textElementIndex++ {
-		var textElementData *Clay__TextElementData = Clay__TextElementDataArray_Get(&context.TextElementData, textElementIndex)
-		textElementData.WrappedLines = Clay__WrappedTextLineArraySlice{Length: 0, InternalArray: (*Clay__WrappedTextLine)(unsafe.Add(unsafe.Pointer(context.WrappedTextLines.InternalArray), unsafe.Sizeof(Clay__WrappedTextLine{})*uintptr(context.WrappedTextLines.Length)))}
-		var containerElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, int32(int64(textElementData.ElementIndex)))
-		var textConfig *Clay_TextElementConfig = Clay__FindElementConfigWithType(containerElement, CLAY__ELEMENT_CONFIG_TYPE_TEXT).TextElementConfig
-		var measureTextCacheItem *Clay__MeasureTextCacheItem = Clay__MeasureTextCached(&textElementData.Text, textConfig)
+		var textElementData *__TextElementData = __TextElementDataArray_Get(&context.TextElementData, textElementIndex)
+		textElementData.WrappedLines = __WrappedTextLineArraySlice{Length: 0, InternalArray: (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(context.WrappedTextLines.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(context.WrappedTextLines.Length)))}
+		var containerElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, int32(int64(textElementData.ElementIndex)))
+		var textConfig *TextElementConfig = __FindElementConfigWithType(containerElement, __ELEMENT_CONFIG_TYPE_TEXT).TextElementConfig
+		var measureTextCacheItem *__MeasureTextCacheItem = __MeasureTextCached(&textElementData.Text, textConfig)
 		var lineWidth float32 = 0
 		var lineHeight float32
 		if int64(textConfig.LineHeight) > 0 {
@@ -3376,31 +3375,31 @@ func Clay__CalculateFinalLayout() {
 		var lineLengthChars int32 = 0
 		var lineStartOffset int32 = 0
 		if !measureTextCacheItem.ContainsNewlines && textElementData.PreferredDimensions.Width <= containerElement.Dimensions.Width {
-			Clay__WrappedTextLineArray_Add(&context.WrappedTextLines, Clay__WrappedTextLine{Dimensions: containerElement.Dimensions, Line: textElementData.Text})
+			__WrappedTextLineArray_Add(&context.WrappedTextLines, __WrappedTextLine{Dimensions: containerElement.Dimensions, Line: textElementData.Text})
 			textElementData.WrappedLines.Length++
 			continue
 		}
-		var spaceWidth float32 = Clay__MeasureText(Clay_StringSlice{Length: 1, Chars: CLAY__SPACECHAR.Chars, BaseChars: CLAY__SPACECHAR.Chars}, textConfig, context.MeasureTextUserData).Width
+		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.MeasureTextUserData).Width
 		_ = spaceWidth
 		var wordIndex int32 = measureTextCacheItem.MeasuredWordsStartIndex
 		for int64(wordIndex) != -1 {
 			if int64(context.WrappedTextLines.Length) > int64(context.WrappedTextLines.Capacity)-1 {
 				break
 			}
-			var measuredWord *Clay__MeasuredWord = Clay__MeasuredWordArray_Get(&context.MeasuredWords, wordIndex)
+			var measuredWord *__MeasuredWord = __MeasuredWordArray_Get(&context.MeasuredWords, wordIndex)
 			if int64(lineLengthChars) == 0 && lineWidth+measuredWord.Width > containerElement.Dimensions.Width {
-				Clay__WrappedTextLineArray_Add(&context.WrappedTextLines, Clay__WrappedTextLine{Dimensions: Clay_Dimensions{Width: measuredWord.Width, Height: lineHeight}, Line: Clay_String{Length: measuredWord.Length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), measuredWord.StartOffset))}})
+				__WrappedTextLineArray_Add(&context.WrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: measuredWord.Width, Height: lineHeight}, Line: String{Length: measuredWord.Length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), measuredWord.StartOffset))}})
 				textElementData.WrappedLines.Length++
 				wordIndex = measuredWord.Next
 				lineStartOffset = int32(int64(measuredWord.StartOffset) + int64(measuredWord.Length))
 			} else if int64(measuredWord.Length) == 0 || lineWidth+measuredWord.Width > containerElement.Dimensions.Width {
 				var finalCharIsSpace bool = *(*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), int64(lineStartOffset)+int64(lineLengthChars)-1)) == ' '
-				Clay__WrappedTextLineArray_Add(&context.WrappedTextLines, Clay__WrappedTextLine{Dimensions: Clay_Dimensions{Width: lineWidth + (func() float32 {
+				__WrappedTextLineArray_Add(&context.WrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth + (func() float32 {
 					if finalCharIsSpace {
 						return -spaceWidth
 					}
 					return 0
-				}()), Height: lineHeight}, Line: Clay_String{Length: int32(int64(lineLengthChars) + (func() int64 {
+				}()), Height: lineHeight}, Line: String{Length: int32(int64(lineLengthChars) + (func() int64 {
 					if finalCharIsSpace {
 						return -1
 					}
@@ -3420,15 +3419,15 @@ func Clay__CalculateFinalLayout() {
 			}
 		}
 		if int64(lineLengthChars) > 0 {
-			Clay__WrappedTextLineArray_Add(&context.WrappedTextLines, Clay__WrappedTextLine{Dimensions: Clay_Dimensions{Width: lineWidth, Height: lineHeight}, Line: Clay_String{Length: lineLengthChars, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), lineStartOffset))}})
+			__WrappedTextLineArray_Add(&context.WrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth, Height: lineHeight}, Line: String{Length: lineLengthChars, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), lineStartOffset))}})
 			textElementData.WrappedLines.Length++
 		}
 		containerElement.Dimensions.Height = lineHeight * float32(textElementData.WrappedLines.Length)
 	}
 	for i := int32(0); int64(i) < int64(context.ImageElementPointers.Length); i++ {
 		var (
-			imageElement *Clay_LayoutElement      = Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&context.ImageElementPointers, i))
-			config       *Clay_ImageElementConfig = Clay__FindElementConfigWithType(imageElement, CLAY__ELEMENT_CONFIG_TYPE_IMAGE).ImageElementConfig
+			imageElement *LayoutElement      = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.ImageElementPointers, i))
+			config       *ImageElementConfig = __FindElementConfigWithType(imageElement, __ELEMENT_CONFIG_TYPE_IMAGE).ImageElementConfig
 		)
 		imageElement.Dimensions.Height = (config.SourceDimensions.Height / (func() float32 {
 			if config.SourceDimensions.Width > 1 {
@@ -3437,37 +3436,37 @@ func Clay__CalculateFinalLayout() {
 			return 1
 		}())) * imageElement.Dimensions.Width
 	}
-	var dfsBuffer Clay__LayoutElementTreeNodeArray = context.LayoutElementTreeNodeArray1
+	var dfsBuffer __LayoutElementTreeNodeArray = context.LayoutElementTreeNodeArray1
 	dfsBuffer.Length = 0
 	for i := int32(0); int64(i) < int64(context.LayoutElementTreeRoots.Length); i++ {
-		var root *Clay__LayoutElementTreeRoot = Clay__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, i)
+		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, i)
 		*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length)) = false
-		Clay__LayoutElementTreeNodeArray_Add(&dfsBuffer, Clay__LayoutElementTreeNode{LayoutElement: Clay_LayoutElementArray_Get(&context.LayoutElements, int32(int64(root.LayoutElementIndex)))})
+		__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: LayoutElementArray_Get(&context.LayoutElements, int32(int64(root.LayoutElementIndex)))})
 	}
 	for int64(dfsBuffer.Length) > 0 {
 		var (
-			currentElementTreeNode *Clay__LayoutElementTreeNode = Clay__LayoutElementTreeNodeArray_Get(&dfsBuffer, int32(int64(dfsBuffer.Length)-1))
-			currentElement         *Clay_LayoutElement          = currentElementTreeNode.LayoutElement
+			currentElementTreeNode *__LayoutElementTreeNode = __LayoutElementTreeNodeArray_Get(&dfsBuffer, int32(int64(dfsBuffer.Length)-1))
+			currentElement         *LayoutElement           = currentElementTreeNode.LayoutElement
 		)
 		if !*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), int64(dfsBuffer.Length)-1)) {
 			*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), int64(dfsBuffer.Length)-1)) = true
-			if Clay__ElementHasConfig(currentElement, CLAY__ELEMENT_CONFIG_TYPE_TEXT) || int64(currentElement.ChildrenOrTextContent.Children.Length) == 0 {
+			if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_TEXT) || int64(currentElement.ChildrenOrTextContent.Children.Length) == 0 {
 				dfsBuffer.Length--
 				continue
 			}
 			for i := int32(0); int64(i) < int64(currentElement.ChildrenOrTextContent.Children.Length); i++ {
 				*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length)) = false
-				Clay__LayoutElementTreeNodeArray_Add(&dfsBuffer, Clay__LayoutElementTreeNode{LayoutElement: Clay_LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))})
+				__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))})
 			}
 			continue
 		}
 		dfsBuffer.Length--
-		var layoutConfig *Clay_LayoutConfig = currentElement.LayoutConfig
-		if layoutConfig.LayoutDirection == CLAY_LEFT_TO_RIGHT {
+		var layoutConfig *LayoutConfig = currentElement.LayoutConfig
+		if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 			for j := int32(0); int64(j) < int64(currentElement.ChildrenOrTextContent.Children.Length); j++ {
 				var (
-					childElement           *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(j))))
-					childHeightWithPadding float32             = (func() float32 {
+					childElement           *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(j))))
+					childHeightWithPadding float32        = (func() float32 {
 						if (childElement.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)) > currentElement.Dimensions.Height {
 							return childElement.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)
 						}
@@ -3489,10 +3488,10 @@ func Clay__CalculateFinalLayout() {
 					currentElement.Dimensions.Height = layoutConfig.Sizing.Height.Size.MinMax.Max
 				}
 			}
-		} else if layoutConfig.LayoutDirection == CLAY_TOP_TO_BOTTOM {
+		} else if layoutConfig.LayoutDirection == TOP_TO_BOTTOM {
 			var contentHeight float32 = float32(int64(layoutConfig.Padding.Top) + int64(layoutConfig.Padding.Bottom))
 			for j := int32(0); int64(j) < int64(currentElement.ChildrenOrTextContent.Children.Length); j++ {
-				var childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(j))))
+				var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(j))))
 				contentHeight += childElement.Dimensions.Height
 			}
 			contentHeight += float32((func() int64 {
@@ -3517,17 +3516,17 @@ func Clay__CalculateFinalLayout() {
 			}
 		}
 	}
-	Clay__SizeContainersAlongAxis(false)
+	__SizeContainersAlongAxis(false)
 	var sortMax int32 = int32(int64(context.LayoutElementTreeRoots.Length) - 1)
 	for int64(sortMax) > 0 {
 		for i := int32(0); int64(i) < int64(sortMax); i++ {
 			var (
-				current Clay__LayoutElementTreeRoot = *Clay__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, i)
-				next    Clay__LayoutElementTreeRoot = *Clay__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, int32(int64(i)+1))
+				current __LayoutElementTreeRoot = *__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, i)
+				next    __LayoutElementTreeRoot = *__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, int32(int64(i)+1))
 			)
 			if int64(next.ZIndex) < int64(current.ZIndex) {
-				Clay__LayoutElementTreeRootArray_Set(&context.LayoutElementTreeRoots, i, next)
-				Clay__LayoutElementTreeRootArray_Set(&context.LayoutElementTreeRoots, int32(int64(i)+1), current)
+				__LayoutElementTreeRootArray_Set(&context.LayoutElementTreeRoots, i, next)
+				__LayoutElementTreeRootArray_Set(&context.LayoutElementTreeRoots, int32(int64(i)+1), current)
 			}
 		}
 		sortMax--
@@ -3536,93 +3535,93 @@ func Clay__CalculateFinalLayout() {
 	dfsBuffer.Length = 0
 	for rootIndex := int32(0); int64(rootIndex) < int64(context.LayoutElementTreeRoots.Length); rootIndex++ {
 		dfsBuffer.Length = 0
-		var root *Clay__LayoutElementTreeRoot = Clay__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
-		var rootElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, int32(int64(root.LayoutElementIndex)))
-		var rootPosition Clay_Vector2 = Clay_Vector2{}
-		var parentHashMapItem *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(root.ParentId)
-		if Clay__ElementHasConfig(rootElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING) && parentHashMapItem != nil {
+		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
+		var rootElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, int32(int64(root.LayoutElementIndex)))
+		var rootPosition Vector2 = Vector2{}
+		var parentHashMapItem *LayoutElementHashMapItem = __GetHashMapItem(root.ParentId)
+		if __ElementHasConfig(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING) && parentHashMapItem != nil {
 			var (
-				config               *Clay_FloatingElementConfig = Clay__FindElementConfigWithType(rootElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig
-				rootDimensions       Clay_Dimensions             = rootElement.Dimensions
-				parentBoundingBox    Clay_BoundingBox            = parentHashMapItem.BoundingBox
-				targetAttachPosition Clay_Vector2                = Clay_Vector2{}
+				config               *FloatingElementConfig = __FindElementConfigWithType(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig
+				rootDimensions       Dimensions             = rootElement.Dimensions
+				parentBoundingBox    BoundingBox            = parentHashMapItem.BoundingBox
+				targetAttachPosition Vector2                = Vector2{}
 			)
 			switch config.AttachPoints.Parent {
-			case CLAY_ATTACH_POINT_LEFT_TOP:
+			case ATTACH_POINT_LEFT_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_LEFT_CENTER:
+			case ATTACH_POINT_LEFT_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_LEFT_BOTTOM:
+			case ATTACH_POINT_LEFT_BOTTOM:
 				targetAttachPosition.X = parentBoundingBox.X
-			case CLAY_ATTACH_POINT_CENTER_TOP:
+			case ATTACH_POINT_CENTER_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_CENTER:
+			case ATTACH_POINT_CENTER_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_BOTTOM:
+			case ATTACH_POINT_CENTER_BOTTOM:
 				targetAttachPosition.X = parentBoundingBox.X + parentBoundingBox.Width/2
-			case CLAY_ATTACH_POINT_RIGHT_TOP:
+			case ATTACH_POINT_RIGHT_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_CENTER:
+			case ATTACH_POINT_RIGHT_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_BOTTOM:
+			case ATTACH_POINT_RIGHT_BOTTOM:
 				targetAttachPosition.X = parentBoundingBox.X + parentBoundingBox.Width
 			}
 			switch config.AttachPoints.Element {
-			case CLAY_ATTACH_POINT_LEFT_TOP:
+			case ATTACH_POINT_LEFT_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_LEFT_CENTER:
+			case ATTACH_POINT_LEFT_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_LEFT_BOTTOM:
-			case CLAY_ATTACH_POINT_CENTER_TOP:
+			case ATTACH_POINT_LEFT_BOTTOM:
+			case ATTACH_POINT_CENTER_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_CENTER:
+			case ATTACH_POINT_CENTER_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_BOTTOM:
+			case ATTACH_POINT_CENTER_BOTTOM:
 				targetAttachPosition.X -= rootDimensions.Width / 2
-			case CLAY_ATTACH_POINT_RIGHT_TOP:
+			case ATTACH_POINT_RIGHT_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_CENTER:
+			case ATTACH_POINT_RIGHT_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_BOTTOM:
+			case ATTACH_POINT_RIGHT_BOTTOM:
 				targetAttachPosition.X -= rootDimensions.Width
 			}
 			switch config.AttachPoints.Parent {
-			case CLAY_ATTACH_POINT_LEFT_TOP:
+			case ATTACH_POINT_LEFT_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_TOP:
+			case ATTACH_POINT_RIGHT_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_TOP:
+			case ATTACH_POINT_CENTER_TOP:
 				targetAttachPosition.Y = parentBoundingBox.Y
-			case CLAY_ATTACH_POINT_LEFT_CENTER:
+			case ATTACH_POINT_LEFT_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_CENTER:
+			case ATTACH_POINT_CENTER_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_CENTER:
+			case ATTACH_POINT_RIGHT_CENTER:
 				targetAttachPosition.Y = parentBoundingBox.Y + parentBoundingBox.Height/2
-			case CLAY_ATTACH_POINT_LEFT_BOTTOM:
+			case ATTACH_POINT_LEFT_BOTTOM:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_BOTTOM:
+			case ATTACH_POINT_CENTER_BOTTOM:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_BOTTOM:
+			case ATTACH_POINT_RIGHT_BOTTOM:
 				targetAttachPosition.Y = parentBoundingBox.Y + parentBoundingBox.Height
 			}
 			switch config.AttachPoints.Element {
-			case CLAY_ATTACH_POINT_LEFT_TOP:
+			case ATTACH_POINT_LEFT_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_TOP:
+			case ATTACH_POINT_RIGHT_TOP:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_TOP:
-			case CLAY_ATTACH_POINT_LEFT_CENTER:
+			case ATTACH_POINT_CENTER_TOP:
+			case ATTACH_POINT_LEFT_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_CENTER:
+			case ATTACH_POINT_CENTER_CENTER:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_CENTER:
+			case ATTACH_POINT_RIGHT_CENTER:
 				targetAttachPosition.Y -= rootDimensions.Height / 2
-			case CLAY_ATTACH_POINT_LEFT_BOTTOM:
+			case ATTACH_POINT_LEFT_BOTTOM:
 				fallthrough
-			case CLAY_ATTACH_POINT_CENTER_BOTTOM:
+			case ATTACH_POINT_CENTER_BOTTOM:
 				fallthrough
-			case CLAY_ATTACH_POINT_RIGHT_BOTTOM:
+			case ATTACH_POINT_RIGHT_BOTTOM:
 				targetAttachPosition.Y -= rootDimensions.Height
 			}
 			targetAttachPosition.X += config.Offset.X
@@ -3630,12 +3629,12 @@ func Clay__CalculateFinalLayout() {
 			rootPosition = targetAttachPosition
 		}
 		if int64(root.ClipElementId) != 0 {
-			var clipHashMapItem *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(root.ClipElementId)
+			var clipHashMapItem *LayoutElementHashMapItem = __GetHashMapItem(root.ClipElementId)
 			if clipHashMapItem != nil {
 				if context.ExternalScrollHandlingEnabled {
-					var scrollConfig *Clay_ScrollElementConfig = Clay__FindElementConfigWithType(clipHashMapItem.LayoutElement, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+					var scrollConfig *ScrollElementConfig = __FindElementConfigWithType(clipHashMapItem.LayoutElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
 					for i := int32(0); int64(i) < int64(context.ScrollContainerDatas.Length); i++ {
-						var mapping *Clay__ScrollContainerDataInternal = Clay__ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
 						if mapping.LayoutElement == clipHashMapItem.LayoutElement {
 							root.PointerOffset = mapping.ScrollPosition
 							if scrollConfig.Horizontal {
@@ -3648,36 +3647,36 @@ func Clay__CalculateFinalLayout() {
 						}
 					}
 				}
-				Clay__AddRenderCommand(Clay_RenderCommand{BoundingBox: clipHashMapItem.BoundingBox, UserData: nil, Id: Clay__HashNumber(rootElement.Id, uint32(int32(int64(rootElement.ChildrenOrTextContent.Children.Length)+10))).Id, ZIndex: root.ZIndex, CommandType: CLAY_RENDER_COMMAND_TYPE_SCISSOR_START})
+				__AddRenderCommand(RenderCommand{BoundingBox: clipHashMapItem.BoundingBox, UserData: nil, Id: __HashNumber(rootElement.Id, uint32(int32(int64(rootElement.ChildrenOrTextContent.Children.Length)+10))).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_SCISSOR_START})
 			}
 		}
-		Clay__LayoutElementTreeNodeArray_Add(&dfsBuffer, Clay__LayoutElementTreeNode{LayoutElement: rootElement, Position: rootPosition, NextChildOffset: Clay_Vector2{X: float32(rootElement.LayoutConfig.Padding.Left), Y: float32(rootElement.LayoutConfig.Padding.Top)}})
+		__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: rootElement, Position: rootPosition, NextChildOffset: Vector2{X: float32(rootElement.LayoutConfig.Padding.Left), Y: float32(rootElement.LayoutConfig.Padding.Top)}})
 		*context.TreeNodeVisited.InternalArray = false
 		for int64(dfsBuffer.Length) > 0 {
 			var (
-				currentElementTreeNode *Clay__LayoutElementTreeNode = Clay__LayoutElementTreeNodeArray_Get(&dfsBuffer, int32(int64(dfsBuffer.Length)-1))
-				currentElement         *Clay_LayoutElement          = currentElementTreeNode.LayoutElement
-				layoutConfig           *Clay_LayoutConfig           = currentElement.LayoutConfig
-				scrollOffset           Clay_Vector2                 = Clay_Vector2{}
+				currentElementTreeNode *__LayoutElementTreeNode = __LayoutElementTreeNodeArray_Get(&dfsBuffer, int32(int64(dfsBuffer.Length)-1))
+				currentElement         *LayoutElement           = currentElementTreeNode.LayoutElement
+				layoutConfig           *LayoutConfig            = currentElement.LayoutConfig
+				scrollOffset           Vector2                  = Vector2{}
 			)
 			if !*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), int64(dfsBuffer.Length)-1)) {
 				*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), int64(dfsBuffer.Length)-1)) = true
-				var currentElementBoundingBox Clay_BoundingBox = Clay_BoundingBox{X: currentElementTreeNode.Position.X, Y: currentElementTreeNode.Position.Y, Width: currentElement.Dimensions.Width, Height: currentElement.Dimensions.Height}
-				if Clay__ElementHasConfig(currentElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING) {
+				var currentElementBoundingBox BoundingBox = BoundingBox{X: currentElementTreeNode.Position.X, Y: currentElementTreeNode.Position.Y, Width: currentElement.Dimensions.Width, Height: currentElement.Dimensions.Height}
+				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_FLOATING) {
 					var (
-						floatingElementConfig *Clay_FloatingElementConfig = Clay__FindElementConfigWithType(currentElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig
-						expand                Clay_Dimensions             = floatingElementConfig.Expand
+						floatingElementConfig *FloatingElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig
+						expand                Dimensions             = floatingElementConfig.Expand
 					)
 					currentElementBoundingBox.X -= expand.Width
 					currentElementBoundingBox.Width += expand.Width * 2
 					currentElementBoundingBox.Y -= expand.Height
 					currentElementBoundingBox.Height += expand.Height * 2
 				}
-				var scrollContainerData *Clay__ScrollContainerDataInternal = (*Clay__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(CLAY__NULL)))
-				if Clay__ElementHasConfig(currentElement, CLAY__ELEMENT_CONFIG_TYPE_SCROLL) {
-					var scrollConfig *Clay_ScrollElementConfig = Clay__FindElementConfigWithType(currentElement, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+				var scrollContainerData *__ScrollContainerDataInternal = (*__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(__NULL)))
+				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_SCROLL) {
+					var scrollConfig *ScrollElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
 					for i := int32(0); int64(i) < int64(context.ScrollContainerDatas.Length); i++ {
-						var mapping *Clay__ScrollContainerDataInternal = Clay__ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
 						if mapping.LayoutElement == currentElement {
 							scrollContainerData = mapping
 							mapping.BoundingBox = currentElementBoundingBox
@@ -3688,17 +3687,17 @@ func Clay__CalculateFinalLayout() {
 								scrollOffset.Y = mapping.ScrollPosition.Y
 							}
 							if context.ExternalScrollHandlingEnabled {
-								scrollOffset = Clay_Vector2{}
+								scrollOffset = Vector2{}
 							}
 							break
 						}
 					}
 				}
-				var hashMapItem *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(currentElement.Id)
+				var hashMapItem *LayoutElementHashMapItem = __GetHashMapItem(currentElement.Id)
 				if hashMapItem != nil {
 					hashMapItem.BoundingBox = currentElementBoundingBox
 					if int64(hashMapItem.IdAlias) != 0 {
-						var hashMapItemAlias *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(hashMapItem.IdAlias)
+						var hashMapItemAlias *LayoutElementHashMapItem = __GetHashMapItem(hashMapItem.IdAlias)
 						if hashMapItemAlias != nil {
 							hashMapItemAlias.BoundingBox = currentElementBoundingBox
 						}
@@ -3712,12 +3711,12 @@ func Clay__CalculateFinalLayout() {
 				for int64(sortMax) > 0 {
 					for i := int32(0); int64(i) < int64(sortMax); i++ {
 						var (
-							current     int32                   = sortedConfigIndexes[i]
-							next        int32                   = sortedConfigIndexes[int64(i)+1]
-							currentType Clay__ElementConfigType = Clay__ElementConfigArraySlice_Get(&currentElement.ElementConfigs, current).Type
-							nextType    Clay__ElementConfigType = Clay__ElementConfigArraySlice_Get(&currentElement.ElementConfigs, next).Type
+							current     int32               = sortedConfigIndexes[i]
+							next        int32               = sortedConfigIndexes[int64(i)+1]
+							currentType __ElementConfigType = __ElementConfigArraySlice_Get(&currentElement.ElementConfigs, current).Type
+							nextType    __ElementConfigType = __ElementConfigArraySlice_Get(&currentElement.ElementConfigs, next).Type
 						)
-						if nextType == CLAY__ELEMENT_CONFIG_TYPE_SCROLL || currentType == CLAY__ELEMENT_CONFIG_TYPE_BORDER {
+						if nextType == __ELEMENT_CONFIG_TYPE_SCROLL || currentType == __ELEMENT_CONFIG_TYPE_BORDER {
 							sortedConfigIndexes[i] = next
 							sortedConfigIndexes[int64(i)+1] = current
 						}
@@ -3725,41 +3724,41 @@ func Clay__CalculateFinalLayout() {
 					sortMax--
 				}
 				var emitRectangle bool = false
-				var sharedConfig *Clay_SharedElementConfig = Clay__FindElementConfigWithType(currentElement, CLAY__ELEMENT_CONFIG_TYPE_SHARED).SharedElementConfig
+				var sharedConfig *SharedElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_SHARED).SharedElementConfig
 				if sharedConfig != nil && sharedConfig.BackgroundColor.A > 0 {
 					emitRectangle = true
 				} else if sharedConfig == nil {
 					emitRectangle = false
-					sharedConfig = &Clay_SharedElementConfig_DEFAULT
+					sharedConfig = &SharedElementConfig_DEFAULT
 				}
 				for elementConfigIndex := int32(0); int64(elementConfigIndex) < int64(currentElement.ElementConfigs.Length); elementConfigIndex++ {
 					var (
-						elementConfig *Clay_ElementConfig = Clay__ElementConfigArraySlice_Get(&currentElement.ElementConfigs, sortedConfigIndexes[elementConfigIndex])
-						renderCommand Clay_RenderCommand  = Clay_RenderCommand{BoundingBox: currentElementBoundingBox, UserData: sharedConfig.UserData, Id: currentElement.Id}
-						offscreen     bool                = Clay__ElementIsOffscreen(&currentElementBoundingBox)
-						shouldRender  bool                = !offscreen
+						elementConfig *ElementConfig = __ElementConfigArraySlice_Get(&currentElement.ElementConfigs, sortedConfigIndexes[elementConfigIndex])
+						renderCommand RenderCommand  = RenderCommand{BoundingBox: currentElementBoundingBox, UserData: sharedConfig.UserData, Id: currentElement.Id}
+						offscreen     bool           = __ElementIsOffscreen(&currentElementBoundingBox)
+						shouldRender  bool           = !offscreen
 					)
 					switch elementConfig.Type {
-					case CLAY__ELEMENT_CONFIG_TYPE_FLOATING:
+					case __ELEMENT_CONFIG_TYPE_FLOATING:
 						fallthrough
-					case CLAY__ELEMENT_CONFIG_TYPE_SHARED:
+					case __ELEMENT_CONFIG_TYPE_SHARED:
 						fallthrough
-					case CLAY__ELEMENT_CONFIG_TYPE_BORDER:
+					case __ELEMENT_CONFIG_TYPE_BORDER:
 						shouldRender = false
-					case CLAY__ELEMENT_CONFIG_TYPE_SCROLL:
-						renderCommand.CommandType = CLAY_RENDER_COMMAND_TYPE_SCISSOR_START
-						renderCommand.RenderData = Clay_RenderData{Scroll: Clay_ScrollRenderData{Horizontal: elementConfig.Config.ScrollElementConfig.Horizontal, Vertical: elementConfig.Config.ScrollElementConfig.Vertical}}
-					case CLAY__ELEMENT_CONFIG_TYPE_IMAGE:
-						renderCommand.CommandType = CLAY_RENDER_COMMAND_TYPE_IMAGE
-						renderCommand.RenderData = Clay_RenderData{Image: Clay_ImageRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius, SourceDimensions: elementConfig.Config.ImageElementConfig.SourceDimensions, ImageData: elementConfig.Config.ImageElementConfig.ImageData}}
+					case __ELEMENT_CONFIG_TYPE_SCROLL:
+						renderCommand.CommandType = RENDER_COMMAND_TYPE_SCISSOR_START
+						renderCommand.RenderData = RenderData{Scroll: ScrollRenderData{Horizontal: elementConfig.Config.ScrollElementConfig.Horizontal, Vertical: elementConfig.Config.ScrollElementConfig.Vertical}}
+					case __ELEMENT_CONFIG_TYPE_IMAGE:
+						renderCommand.CommandType = RENDER_COMMAND_TYPE_IMAGE
+						renderCommand.RenderData = RenderData{Image: ImageRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius, SourceDimensions: elementConfig.Config.ImageElementConfig.SourceDimensions, ImageData: elementConfig.Config.ImageElementConfig.ImageData}}
 						emitRectangle = false
-					case CLAY__ELEMENT_CONFIG_TYPE_TEXT:
+					case __ELEMENT_CONFIG_TYPE_TEXT:
 						if !shouldRender {
 							break
 						}
 						shouldRender = false
-						var configUnion Clay_ElementConfigUnion = elementConfig.Config
-						var textElementConfig *Clay_TextElementConfig = configUnion.TextElementConfig
+						var configUnion ElementConfigUnion = elementConfig.Config
+						var textElementConfig *TextElementConfig = configUnion.TextElementConfig
 						var naturalLineHeight float32 = currentElement.ChildrenOrTextContent.TextElementData.PreferredDimensions.Height
 						var finalLineHeight float32
 						if int64(textElementConfig.LineHeight) > 0 {
@@ -3770,44 +3769,44 @@ func Clay__CalculateFinalLayout() {
 						var lineHeightOffset float32 = (finalLineHeight - naturalLineHeight) / 2
 						var yPosition float32 = lineHeightOffset
 						for lineIndex := int32(0); int64(lineIndex) < int64(currentElement.ChildrenOrTextContent.TextElementData.WrappedLines.Length); lineIndex++ {
-							var wrappedLine *Clay__WrappedTextLine = Clay__WrappedTextLineArraySlice_Get(&currentElement.ChildrenOrTextContent.TextElementData.WrappedLines, lineIndex)
+							var wrappedLine *__WrappedTextLine = __WrappedTextLineArraySlice_Get(&currentElement.ChildrenOrTextContent.TextElementData.WrappedLines, lineIndex)
 							if int64(wrappedLine.Line.Length) == 0 {
 								yPosition += finalLineHeight
 								continue
 							}
 							var offset float32 = (currentElementBoundingBox.Width - wrappedLine.Dimensions.Width)
-							if textElementConfig.TextAlignment == CLAY_TEXT_ALIGN_LEFT {
+							if textElementConfig.TextAlignment == TEXT_ALIGN_LEFT {
 								offset = 0
 							}
-							if textElementConfig.TextAlignment == CLAY_TEXT_ALIGN_CENTER {
+							if textElementConfig.TextAlignment == TEXT_ALIGN_CENTER {
 								offset /= 2
 							}
-							Clay__AddRenderCommand(Clay_RenderCommand{BoundingBox: Clay_BoundingBox{X: currentElementBoundingBox.X + offset, Y: currentElementBoundingBox.Y + yPosition, Width: wrappedLine.Dimensions.Width, Height: wrappedLine.Dimensions.Height}, RenderData: Clay_RenderData{Text: Clay_TextRenderData{StringContents: Clay_StringSlice{Length: wrappedLine.Line.Length, Chars: wrappedLine.Line.Chars, BaseChars: currentElement.ChildrenOrTextContent.TextElementData.Text.Chars}, TextColor: textElementConfig.TextColor, FontId: textElementConfig.FontId, FontSize: textElementConfig.FontSize, LetterSpacing: textElementConfig.LetterSpacing, LineHeight: textElementConfig.LineHeight}}, UserData: sharedConfig.UserData, Id: Clay__HashNumber(uint32(lineIndex), currentElement.Id).Id, ZIndex: root.ZIndex, CommandType: CLAY_RENDER_COMMAND_TYPE_TEXT})
+							__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: currentElementBoundingBox.X + offset, Y: currentElementBoundingBox.Y + yPosition, Width: wrappedLine.Dimensions.Width, Height: wrappedLine.Dimensions.Height}, RenderData: RenderData{Text: TextRenderData{StringContents: StringSlice{Length: wrappedLine.Line.Length, Chars: wrappedLine.Line.Chars, BaseChars: currentElement.ChildrenOrTextContent.TextElementData.Text.Chars}, TextColor: textElementConfig.TextColor, FontId: textElementConfig.FontId, FontSize: textElementConfig.FontSize, LetterSpacing: textElementConfig.LetterSpacing, LineHeight: textElementConfig.LineHeight}}, UserData: sharedConfig.UserData, Id: __HashNumber(uint32(lineIndex), currentElement.Id).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_TEXT})
 							yPosition += finalLineHeight
 							if !context.DisableCulling && currentElementBoundingBox.Y+yPosition > context.LayoutDimensions.Height {
 								break
 							}
 						}
-					case CLAY__ELEMENT_CONFIG_TYPE_CUSTOM:
-						renderCommand.CommandType = CLAY_RENDER_COMMAND_TYPE_CUSTOM
-						renderCommand.RenderData = Clay_RenderData{Custom: Clay_CustomRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius, CustomData: elementConfig.Config.CustomElementConfig.CustomData}}
+					case __ELEMENT_CONFIG_TYPE_CUSTOM:
+						renderCommand.CommandType = RENDER_COMMAND_TYPE_CUSTOM
+						renderCommand.RenderData = RenderData{Custom: CustomRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius, CustomData: elementConfig.Config.CustomElementConfig.CustomData}}
 						emitRectangle = false
 					default:
 					}
 					if shouldRender {
-						Clay__AddRenderCommand(renderCommand)
+						__AddRenderCommand(renderCommand)
 					}
 					if offscreen {
 					}
 				}
 				if emitRectangle {
-					Clay__AddRenderCommand(Clay_RenderCommand{BoundingBox: currentElementBoundingBox, RenderData: Clay_RenderData{Rectangle: Clay_RectangleRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius}}, UserData: sharedConfig.UserData, Id: currentElement.Id, ZIndex: root.ZIndex, CommandType: CLAY_RENDER_COMMAND_TYPE_RECTANGLE})
+					__AddRenderCommand(RenderCommand{BoundingBox: currentElementBoundingBox, RenderData: RenderData{Rectangle: RectangleRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius}}, UserData: sharedConfig.UserData, Id: currentElement.Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_RECTANGLE})
 				}
-				if !Clay__ElementHasConfig(currentElementTreeNode.LayoutElement, CLAY__ELEMENT_CONFIG_TYPE_TEXT) {
-					var contentSize Clay_Dimensions = Clay_Dimensions{}
-					if layoutConfig.LayoutDirection == CLAY_LEFT_TO_RIGHT {
+				if !__ElementHasConfig(currentElementTreeNode.LayoutElement, __ELEMENT_CONFIG_TYPE_TEXT) {
+					var contentSize Dimensions = Dimensions{}
+					if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 						for i := int32(0); int64(i) < int64(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-							var childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+							var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 							contentSize.Width += childElement.Dimensions.Width
 							if contentSize.Height > childElement.Dimensions.Height {
 								contentSize.Height = contentSize.Height
@@ -3823,16 +3822,16 @@ func Clay__CalculateFinalLayout() {
 						}()) * int64(layoutConfig.ChildGap))
 						var extraSpace float32 = currentElement.Dimensions.Width - float32(int64(layoutConfig.Padding.Left)+int64(layoutConfig.Padding.Right)) - contentSize.Width
 						switch layoutConfig.ChildAlignment.X {
-						case CLAY_ALIGN_X_LEFT:
+						case ALIGN_X_LEFT:
 							extraSpace = 0
-						case CLAY_ALIGN_X_CENTER:
+						case ALIGN_X_CENTER:
 							extraSpace /= 2
 						default:
 						}
 						currentElementTreeNode.NextChildOffset.X += extraSpace
 					} else {
 						for i := int32(0); int64(i) < int64(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-							var childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+							var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 							if contentSize.Width > childElement.Dimensions.Width {
 								contentSize.Width = contentSize.Width
 							} else {
@@ -3848,27 +3847,27 @@ func Clay__CalculateFinalLayout() {
 						}()) * int64(layoutConfig.ChildGap))
 						var extraSpace float32 = currentElement.Dimensions.Height - float32(int64(layoutConfig.Padding.Top)+int64(layoutConfig.Padding.Bottom)) - contentSize.Height
 						switch layoutConfig.ChildAlignment.Y {
-						case CLAY_ALIGN_Y_TOP:
+						case ALIGN_Y_TOP:
 							extraSpace = 0
-						case CLAY_ALIGN_Y_CENTER:
+						case ALIGN_Y_CENTER:
 							extraSpace /= 2
 						default:
 						}
 						currentElementTreeNode.NextChildOffset.Y += extraSpace
 					}
 					if scrollContainerData != nil {
-						scrollContainerData.ContentSize = Clay_Dimensions{Width: contentSize.Width + float32(int64(layoutConfig.Padding.Left)+int64(layoutConfig.Padding.Right)), Height: contentSize.Height + float32(int64(layoutConfig.Padding.Top)+int64(layoutConfig.Padding.Bottom))}
+						scrollContainerData.ContentSize = Dimensions{Width: contentSize.Width + float32(int64(layoutConfig.Padding.Left)+int64(layoutConfig.Padding.Right)), Height: contentSize.Height + float32(int64(layoutConfig.Padding.Top)+int64(layoutConfig.Padding.Bottom))}
 					}
 				}
 			} else {
 				var (
-					closeScrollElement bool                      = false
-					scrollConfig       *Clay_ScrollElementConfig = Clay__FindElementConfigWithType(currentElement, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+					closeScrollElement bool                 = false
+					scrollConfig       *ScrollElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
 				)
 				if scrollConfig != nil {
 					closeScrollElement = true
 					for i := int32(0); int64(i) < int64(context.ScrollContainerDatas.Length); i++ {
-						var mapping *Clay__ScrollContainerDataInternal = Clay__ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
 						if mapping.LayoutElement == currentElement {
 							if scrollConfig.Horizontal {
 								scrollOffset.X = mapping.ScrollPosition.X
@@ -3877,45 +3876,45 @@ func Clay__CalculateFinalLayout() {
 								scrollOffset.Y = mapping.ScrollPosition.Y
 							}
 							if context.ExternalScrollHandlingEnabled {
-								scrollOffset = Clay_Vector2{}
+								scrollOffset = Vector2{}
 							}
 							break
 						}
 					}
 				}
-				if Clay__ElementHasConfig(currentElement, CLAY__ELEMENT_CONFIG_TYPE_BORDER) {
+				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_BORDER) {
 					var (
-						currentElementData        *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(currentElement.Id)
-						currentElementBoundingBox Clay_BoundingBox               = currentElementData.BoundingBox
+						currentElementData        *LayoutElementHashMapItem = __GetHashMapItem(currentElement.Id)
+						currentElementBoundingBox BoundingBox               = currentElementData.BoundingBox
 					)
-					if !Clay__ElementIsOffscreen(&currentElementBoundingBox) {
-						var sharedConfig *Clay_SharedElementConfig
-						if Clay__ElementHasConfig(currentElement, CLAY__ELEMENT_CONFIG_TYPE_SHARED) {
-							sharedConfig = Clay__FindElementConfigWithType(currentElement, CLAY__ELEMENT_CONFIG_TYPE_SHARED).SharedElementConfig
+					if !__ElementIsOffscreen(&currentElementBoundingBox) {
+						var sharedConfig *SharedElementConfig
+						if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_SHARED) {
+							sharedConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_SHARED).SharedElementConfig
 						} else {
-							sharedConfig = &Clay_SharedElementConfig_DEFAULT
+							sharedConfig = &SharedElementConfig_DEFAULT
 						}
-						var borderConfig *Clay_BorderElementConfig = Clay__FindElementConfigWithType(currentElement, CLAY__ELEMENT_CONFIG_TYPE_BORDER).BorderElementConfig
-						var renderCommand Clay_RenderCommand = Clay_RenderCommand{BoundingBox: currentElementBoundingBox, RenderData: Clay_RenderData{Border: Clay_BorderRenderData{Color: borderConfig.Color, CornerRadius: sharedConfig.CornerRadius, Width: borderConfig.Width}}, UserData: sharedConfig.UserData, Id: Clay__HashNumber(currentElement.Id, uint32(currentElement.ChildrenOrTextContent.Children.Length)).Id, CommandType: CLAY_RENDER_COMMAND_TYPE_BORDER}
-						Clay__AddRenderCommand(renderCommand)
+						var borderConfig *BorderElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_BORDER).BorderElementConfig
+						var renderCommand RenderCommand = RenderCommand{BoundingBox: currentElementBoundingBox, RenderData: RenderData{Border: BorderRenderData{Color: borderConfig.Color, CornerRadius: sharedConfig.CornerRadius, Width: borderConfig.Width}}, UserData: sharedConfig.UserData, Id: __HashNumber(currentElement.Id, uint32(currentElement.ChildrenOrTextContent.Children.Length)).Id, CommandType: RENDER_COMMAND_TYPE_BORDER}
+						__AddRenderCommand(renderCommand)
 						if int64(borderConfig.Width.BetweenChildren) > 0 && borderConfig.Color.A > 0 {
 							var (
-								halfGap      float32      = float32(int64(layoutConfig.ChildGap) / 2)
-								borderOffset Clay_Vector2 = Clay_Vector2{X: float32(layoutConfig.Padding.Left) - halfGap, Y: float32(layoutConfig.Padding.Top) - halfGap}
+								halfGap      float32 = float32(int64(layoutConfig.ChildGap) / 2)
+								borderOffset Vector2 = Vector2{X: float32(layoutConfig.Padding.Left) - halfGap, Y: float32(layoutConfig.Padding.Top) - halfGap}
 							)
-							if layoutConfig.LayoutDirection == CLAY_LEFT_TO_RIGHT {
+							if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 								for i := int32(0); int64(i) < int64(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-									var childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+									var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 									if int64(i) > 0 {
-										Clay__AddRenderCommand(Clay_RenderCommand{BoundingBox: Clay_BoundingBox{X: currentElementBoundingBox.X + borderOffset.X + scrollOffset.X, Y: currentElementBoundingBox.Y + scrollOffset.Y, Width: float32(borderConfig.Width.BetweenChildren), Height: currentElement.Dimensions.Height}, RenderData: Clay_RenderData{Rectangle: Clay_RectangleRenderData{BackgroundColor: borderConfig.Color}}, UserData: sharedConfig.UserData, Id: Clay__HashNumber(currentElement.Id, uint32(int32(int64(currentElement.ChildrenOrTextContent.Children.Length)+1+int64(i)))).Id, CommandType: CLAY_RENDER_COMMAND_TYPE_RECTANGLE})
+										__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: currentElementBoundingBox.X + borderOffset.X + scrollOffset.X, Y: currentElementBoundingBox.Y + scrollOffset.Y, Width: float32(borderConfig.Width.BetweenChildren), Height: currentElement.Dimensions.Height}, RenderData: RenderData{Rectangle: RectangleRenderData{BackgroundColor: borderConfig.Color}}, UserData: sharedConfig.UserData, Id: __HashNumber(currentElement.Id, uint32(int32(int64(currentElement.ChildrenOrTextContent.Children.Length)+1+int64(i)))).Id, CommandType: RENDER_COMMAND_TYPE_RECTANGLE})
 									}
 									borderOffset.X += childElement.Dimensions.Width + float32(layoutConfig.ChildGap)
 								}
 							} else {
 								for i := int32(0); int64(i) < int64(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-									var childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+									var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 									if int64(i) > 0 {
-										Clay__AddRenderCommand(Clay_RenderCommand{BoundingBox: Clay_BoundingBox{X: currentElementBoundingBox.X + scrollOffset.X, Y: currentElementBoundingBox.Y + borderOffset.Y + scrollOffset.Y, Width: currentElement.Dimensions.Width, Height: float32(borderConfig.Width.BetweenChildren)}, RenderData: Clay_RenderData{Rectangle: Clay_RectangleRenderData{BackgroundColor: borderConfig.Color}}, UserData: sharedConfig.UserData, Id: Clay__HashNumber(currentElement.Id, uint32(int32(int64(currentElement.ChildrenOrTextContent.Children.Length)+1+int64(i)))).Id, CommandType: CLAY_RENDER_COMMAND_TYPE_RECTANGLE})
+										__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: currentElementBoundingBox.X + scrollOffset.X, Y: currentElementBoundingBox.Y + borderOffset.Y + scrollOffset.Y, Width: currentElement.Dimensions.Width, Height: float32(borderConfig.Width.BetweenChildren)}, RenderData: RenderData{Rectangle: RectangleRenderData{BackgroundColor: borderConfig.Color}}, UserData: sharedConfig.UserData, Id: __HashNumber(currentElement.Id, uint32(int32(int64(currentElement.ChildrenOrTextContent.Children.Length)+1+int64(i)))).Id, CommandType: RENDER_COMMAND_TYPE_RECTANGLE})
 									}
 									borderOffset.Y += childElement.Dimensions.Height + float32(layoutConfig.ChildGap)
 								}
@@ -3924,41 +3923,41 @@ func Clay__CalculateFinalLayout() {
 					}
 				}
 				if closeScrollElement {
-					Clay__AddRenderCommand(Clay_RenderCommand{Id: Clay__HashNumber(currentElement.Id, uint32(int32(int64(rootElement.ChildrenOrTextContent.Children.Length)+11))).Id, CommandType: CLAY_RENDER_COMMAND_TYPE_SCISSOR_END})
+					__AddRenderCommand(RenderCommand{Id: __HashNumber(currentElement.Id, uint32(int32(int64(rootElement.ChildrenOrTextContent.Children.Length)+11))).Id, CommandType: RENDER_COMMAND_TYPE_SCISSOR_END})
 				}
 				dfsBuffer.Length--
 				continue
 			}
-			if !Clay__ElementHasConfig(currentElement, CLAY__ELEMENT_CONFIG_TYPE_TEXT) {
+			if !__ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_TEXT) {
 				dfsBuffer.Length += int32(currentElement.ChildrenOrTextContent.Children.Length)
 				for i := int32(0); int64(i) < int64(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-					var childElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
-					if layoutConfig.LayoutDirection == CLAY_LEFT_TO_RIGHT {
+					var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+					if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 						currentElementTreeNode.NextChildOffset.Y = float32(currentElement.LayoutConfig.Padding.Top)
 						var whiteSpaceAroundChild float32 = currentElement.Dimensions.Height - float32(int64(layoutConfig.Padding.Top)+int64(layoutConfig.Padding.Bottom)) - childElement.Dimensions.Height
 						switch layoutConfig.ChildAlignment.Y {
-						case CLAY_ALIGN_Y_TOP:
-						case CLAY_ALIGN_Y_CENTER:
+						case ALIGN_Y_TOP:
+						case ALIGN_Y_CENTER:
 							currentElementTreeNode.NextChildOffset.Y += whiteSpaceAroundChild / 2
-						case CLAY_ALIGN_Y_BOTTOM:
+						case ALIGN_Y_BOTTOM:
 							currentElementTreeNode.NextChildOffset.Y += whiteSpaceAroundChild
 						}
 					} else {
 						currentElementTreeNode.NextChildOffset.X = float32(currentElement.LayoutConfig.Padding.Left)
 						var whiteSpaceAroundChild float32 = currentElement.Dimensions.Width - float32(int64(layoutConfig.Padding.Left)+int64(layoutConfig.Padding.Right)) - childElement.Dimensions.Width
 						switch layoutConfig.ChildAlignment.X {
-						case CLAY_ALIGN_X_LEFT:
-						case CLAY_ALIGN_X_CENTER:
+						case ALIGN_X_LEFT:
+						case ALIGN_X_CENTER:
 							currentElementTreeNode.NextChildOffset.X += whiteSpaceAroundChild / 2
-						case CLAY_ALIGN_X_RIGHT:
+						case ALIGN_X_RIGHT:
 							currentElementTreeNode.NextChildOffset.X += whiteSpaceAroundChild
 						}
 					}
-					var childPosition Clay_Vector2 = Clay_Vector2{X: currentElementTreeNode.Position.X + currentElementTreeNode.NextChildOffset.X + scrollOffset.X, Y: currentElementTreeNode.Position.Y + currentElementTreeNode.NextChildOffset.Y + scrollOffset.Y}
+					var childPosition Vector2 = Vector2{X: currentElementTreeNode.Position.X + currentElementTreeNode.NextChildOffset.X + scrollOffset.X, Y: currentElementTreeNode.Position.Y + currentElementTreeNode.NextChildOffset.Y + scrollOffset.Y}
 					var newNodeIndex uint32 = uint32(int32(int64(dfsBuffer.Length) - 1 - int64(i)))
-					*(*Clay__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(dfsBuffer.InternalArray), unsafe.Sizeof(Clay__LayoutElementTreeNode{})*uintptr(newNodeIndex))) = Clay__LayoutElementTreeNode{LayoutElement: childElement, Position: Clay_Vector2{X: childPosition.X, Y: childPosition.Y}, NextChildOffset: Clay_Vector2{X: float32(childElement.LayoutConfig.Padding.Left), Y: float32(childElement.LayoutConfig.Padding.Top)}}
+					*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(dfsBuffer.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(newNodeIndex))) = __LayoutElementTreeNode{LayoutElement: childElement, Position: Vector2{X: childPosition.X, Y: childPosition.Y}, NextChildOffset: Vector2{X: float32(childElement.LayoutConfig.Padding.Left), Y: float32(childElement.LayoutConfig.Padding.Top)}}
 					*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), newNodeIndex)) = false
-					if layoutConfig.LayoutDirection == CLAY_LEFT_TO_RIGHT {
+					if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 						currentElementTreeNode.NextChildOffset.X += childElement.Dimensions.Width + float32(layoutConfig.ChildGap)
 					} else {
 						currentElementTreeNode.NextChildOffset.Y += childElement.Dimensions.Height + float32(layoutConfig.ChildGap)
@@ -3967,41 +3966,41 @@ func Clay__CalculateFinalLayout() {
 			}
 		}
 		if int64(root.ClipElementId) != 0 {
-			Clay__AddRenderCommand(Clay_RenderCommand{Id: Clay__HashNumber(rootElement.Id, uint32(int32(int64(rootElement.ChildrenOrTextContent.Children.Length)+11))).Id, CommandType: CLAY_RENDER_COMMAND_TYPE_SCISSOR_END})
+			__AddRenderCommand(RenderCommand{Id: __HashNumber(rootElement.Id, uint32(int32(int64(rootElement.ChildrenOrTextContent.Children.Length)+11))).Id, CommandType: RENDER_COMMAND_TYPE_SCISSOR_END})
 		}
 	}
 }
 
-var Clay__debugViewWidth uint32 = 400
-var Clay__debugViewHighlightColor Clay_Color = Clay_Color{R: 168, G: 66, B: 28, A: 100}
+var __debugViewWidth uint32 = 400
+var __debugViewHighlightColor Color = Color{R: 168, G: 66, B: 28, A: 100}
 
-func Clay__WarningArray_Allocate_Arena(capacity int32, arena *Clay_Arena) Clay__WarningArray {
+func __WarningArray_Allocate_Arena(capacity int32, arena *Arena) __WarningArray {
 	var (
-		totalSizeBytes  uint64             = uint64(uintptr(capacity) * unsafe.Sizeof(Clay_String{}))
-		array           Clay__WarningArray = Clay__WarningArray{Capacity: capacity, Length: 0}
-		nextAllocOffset uint64             = arena.NextAllocation + (64 - arena.NextAllocation%64)
+		totalSizeBytes  uint64         = uint64(uintptr(capacity) * unsafe.Sizeof(String{}))
+		array           __WarningArray = __WarningArray{Capacity: capacity, Length: 0}
+		nextAllocOffset uint64         = arena.NextAllocation + (64 - arena.NextAllocation%64)
 	)
 	if nextAllocOffset+totalSizeBytes <= arena.Capacity {
-		array.InternalArray = (*Clay__Warning)(unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset)))
+		array.InternalArray = (*__Warning)(unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset)))
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
 	} else {
-		Clay__currentContext.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Clay_Initialize()")}, UserData: Clay__currentContext.ErrorHandler.UserData})
+		__currentContext.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.ErrorHandler.UserData})
 	}
 	return array
 }
-func Clay__WarningArray_Add(array *Clay__WarningArray, item Clay__Warning) *Clay__Warning {
+func __WarningArray_Add(array *__WarningArray, item __Warning) *__Warning {
 	if int64(array.Length) < int64(array.Capacity) {
-		*(*Clay__Warning)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__Warning{})*uintptr(func() int32 {
+		*(*__Warning)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__Warning{})*uintptr(func() int32 {
 			p := &array.Length
 			x := *p
 			*p++
 			return x
 		}()))) = item
-		return (*Clay__Warning)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(Clay__Warning{})*uintptr(int64(array.Length)-1)))
+		return (*__Warning)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__Warning{})*uintptr(int64(array.Length)-1)))
 	}
-	return &CLAY__WARNING_DEFAULT
+	return &__WARNING_DEFAULT
 }
-func Clay__Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Clay_Arena) unsafe.Pointer {
+func __Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Arena) unsafe.Pointer {
 	var (
 		totalSizeBytes  uint64 = uint64(int64(capacity) * int64(itemSize))
 		nextAllocOffset uint64 = arena.NextAllocation + (64 - arena.NextAllocation%64)
@@ -4010,69 +4009,69 @@ func Clay__Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Clay_Are
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
 		return unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset))
 	} else {
-		Clay__currentContext.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Clay_Initialize()")}, UserData: Clay__currentContext.ErrorHandler.UserData})
+		__currentContext.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.ErrorHandler.UserData})
 	}
-	return unsafe.Pointer(uintptr(CLAY__NULL))
+	return unsafe.Pointer(uintptr(__NULL))
 }
-func Clay__Array_RangeCheck(index int32, length int32) bool {
+func __Array_RangeCheck(index int32, length int32) bool {
 	if int64(index) < int64(length) && int64(index) >= 0 {
 		return true
 	}
-	var context *Clay_Context = Clay_GetCurrentContext()
-	context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_INTERNAL_ERROR, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData})
+	var context *Context = GetCurrentContext()
+	context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData})
 	return false
 }
-func Clay__Array_AddCapacityCheck(length int32, capacity int32) bool {
+func __Array_AddCapacityCheck(length int32, capacity int32) bool {
 	if int64(length) < int64(capacity) {
 		return true
 	}
-	var context *Clay_Context = Clay_GetCurrentContext()
-	context.ErrorHandler.ErrorHandlerFunction(Clay_ErrorData{ErrorType: CLAY_ERROR_TYPE_INTERNAL_ERROR, ErrorText: Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData})
+	var context *Context = GetCurrentContext()
+	context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData})
 	return false
 }
-func Clay_MinMemorySize() uint32 {
+func MinMemorySize() uint32 {
 	var (
-		fakeContext    Clay_Context  = Clay_Context{MaxElementCount: Clay__defaultMaxElementCount, MaxMeasureTextCacheWordCount: Clay__defaultMaxMeasureTextWordCacheCount, InternalArena: Clay_Arena{Capacity: math.MaxUint64, Memory: nil}}
-		currentContext *Clay_Context = Clay_GetCurrentContext()
+		fakeContext    Context  = Context{MaxElementCount: __defaultMaxElementCount, MaxMeasureTextCacheWordCount: __defaultMaxMeasureTextWordCacheCount, InternalArena: Arena{Capacity: math.MaxUint64, Memory: nil}}
+		currentContext *Context = GetCurrentContext()
 	)
 	if currentContext != nil {
 		fakeContext.MaxElementCount = currentContext.MaxElementCount
 		fakeContext.MaxMeasureTextCacheWordCount = currentContext.MaxElementCount
 	}
-	Clay__Context_Allocate_Arena(&fakeContext.InternalArena)
-	Clay__InitializePersistentMemory(&fakeContext)
-	Clay__InitializeEphemeralMemory(&fakeContext)
+	__Context_Allocate_Arena(&fakeContext.InternalArena)
+	__InitializePersistentMemory(&fakeContext)
+	__InitializeEphemeralMemory(&fakeContext)
 	return uint32(fakeContext.InternalArena.NextAllocation + 128)
 }
-func Clay_CreateArenaWithCapacityAndMemory(capacity uint32, memory unsafe.Pointer) Clay_Arena {
-	var arena Clay_Arena = Clay_Arena{Capacity: uint64(capacity), Memory: (*byte)(memory)}
+func CreateArenaWithCapacityAndMemory(capacity uint32, memory unsafe.Pointer) Arena {
+	var arena Arena = Arena{Capacity: uint64(capacity), Memory: (*byte)(memory)}
 	return arena
 }
-func Clay_SetMeasureTextFunction(measureTextFunction func(text Clay_StringSlice, config *Clay_TextElementConfig, userData unsafe.Pointer) Clay_Dimensions, userData unsafe.Pointer) {
-	var context *Clay_Context = Clay_GetCurrentContext()
-	Clay__MeasureText = measureTextFunction
+func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData unsafe.Pointer) {
+	var context *Context = GetCurrentContext()
+	__MeasureText = measureTextFunction
 	context.MeasureTextUserData = userData
 }
-func Clay_SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Clay_Vector2, userData unsafe.Pointer) {
-	var context *Clay_Context = Clay_GetCurrentContext()
-	Clay__QueryScrollOffset = queryScrollOffsetFunction
+func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData unsafe.Pointer) {
+	var context *Context = GetCurrentContext()
+	__QueryScrollOffset = queryScrollOffsetFunction
 	context.QueryScrollOffsetUserData = userData
 }
-func Clay_SetLayoutDimensions(dimensions Clay_Dimensions) {
-	Clay_GetCurrentContext().LayoutDimensions = dimensions
+func SetLayoutDimensions(dimensions Dimensions) {
+	GetCurrentContext().LayoutDimensions = dimensions
 }
-func Clay_SetPointerState(position Clay_Vector2, isPointerDown bool) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func SetPointerState(position Vector2, isPointerDown bool) {
+	var context *Context = GetCurrentContext()
 	if context.BooleanWarnings.MaxElementsExceeded {
 		return
 	}
 	context.PointerInfo.Position = position
 	context.PointerOverIds.Length = 0
-	var dfsBuffer Clay__int32_tArray = context.LayoutElementChildrenBuffer
+	var dfsBuffer __int32_tArray = context.LayoutElementChildrenBuffer
 	for rootIndex := int32(int32(int64(context.LayoutElementTreeRoots.Length) - 1)); int64(rootIndex) >= 0; rootIndex-- {
 		dfsBuffer.Length = 0
-		var root *Clay__LayoutElementTreeRoot = Clay__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
-		Clay__int32_tArray_Add(&dfsBuffer, root.LayoutElementIndex)
+		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
+		__int32_tArray_Add(&dfsBuffer, root.LayoutElementIndex)
 		*context.TreeNodeVisited.InternalArray = false
 		var found bool = false
 		for int64(dfsBuffer.Length) > 0 {
@@ -4081,78 +4080,78 @@ func Clay_SetPointerState(position Clay_Vector2, isPointerDown bool) {
 				continue
 			}
 			*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), int64(dfsBuffer.Length)-1)) = true
-			var currentElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, Clay__int32_tArray_GetValue(&dfsBuffer, int32(int64(dfsBuffer.Length)-1)))
-			var mapItem *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(currentElement.Id)
-			var elementBox Clay_BoundingBox = mapItem.BoundingBox
+			var currentElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&dfsBuffer, int32(int64(dfsBuffer.Length)-1)))
+			var mapItem *LayoutElementHashMapItem = __GetHashMapItem(currentElement.Id)
+			var elementBox BoundingBox = mapItem.BoundingBox
 			elementBox.X -= root.PointerOffset.X
 			elementBox.Y -= root.PointerOffset.Y
 			if mapItem != nil {
-				if Clay__PointIsInsideRect(position, elementBox) {
+				if __PointIsInsideRect(position, elementBox) {
 					if mapItem.OnHoverFunction != nil {
 						mapItem.OnHoverFunction(mapItem.ElementId, context.PointerInfo, mapItem.HoverFunctionUserData)
 					}
-					Clay__ElementIdArray_Add(&context.PointerOverIds, mapItem.ElementId)
+					__ElementIdArray_Add(&context.PointerOverIds, mapItem.ElementId)
 					found = true
 					if int64(mapItem.IdAlias) != 0 {
-						Clay__ElementIdArray_Add(&context.PointerOverIds, Clay_ElementId{Id: mapItem.IdAlias})
+						__ElementIdArray_Add(&context.PointerOverIds, ElementId{Id: mapItem.IdAlias})
 					}
 				}
-				if Clay__ElementHasConfig(currentElement, CLAY__ELEMENT_CONFIG_TYPE_TEXT) {
+				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_TEXT) {
 					dfsBuffer.Length--
 					continue
 				}
 				for i := int32(int32(int64(currentElement.ChildrenOrTextContent.Children.Length) - 1)); int64(i) >= 0; i-- {
-					Clay__int32_tArray_Add(&dfsBuffer, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+					__int32_tArray_Add(&dfsBuffer, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 					*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), int64(dfsBuffer.Length)-1)) = false
 				}
 			} else {
 				dfsBuffer.Length--
 			}
 		}
-		var rootElement *Clay_LayoutElement = Clay_LayoutElementArray_Get(&context.LayoutElements, root.LayoutElementIndex)
-		if found && Clay__ElementHasConfig(rootElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING) && Clay__FindElementConfigWithType(rootElement, CLAY__ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig.PointerCaptureMode == CLAY_POINTER_CAPTURE_MODE_CAPTURE {
+		var rootElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, root.LayoutElementIndex)
+		if found && __ElementHasConfig(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING) && __FindElementConfigWithType(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig.PointerCaptureMode == POINTER_CAPTURE_MODE_CAPTURE {
 			break
 		}
 	}
 	if isPointerDown {
-		if context.PointerInfo.State == CLAY_POINTER_DATA_PRESSED_THIS_FRAME {
-			context.PointerInfo.State = CLAY_POINTER_DATA_PRESSED
-		} else if context.PointerInfo.State != CLAY_POINTER_DATA_PRESSED {
-			context.PointerInfo.State = CLAY_POINTER_DATA_PRESSED_THIS_FRAME
+		if context.PointerInfo.State == POINTER_DATA_PRESSED_THIS_FRAME {
+			context.PointerInfo.State = POINTER_DATA_PRESSED
+		} else if context.PointerInfo.State != POINTER_DATA_PRESSED {
+			context.PointerInfo.State = POINTER_DATA_PRESSED_THIS_FRAME
 		}
 	} else {
-		if context.PointerInfo.State == CLAY_POINTER_DATA_RELEASED_THIS_FRAME {
-			context.PointerInfo.State = CLAY_POINTER_DATA_RELEASED
-		} else if context.PointerInfo.State != CLAY_POINTER_DATA_RELEASED {
-			context.PointerInfo.State = CLAY_POINTER_DATA_RELEASED_THIS_FRAME
+		if context.PointerInfo.State == POINTER_DATA_RELEASED_THIS_FRAME {
+			context.PointerInfo.State = POINTER_DATA_RELEASED
+		} else if context.PointerInfo.State != POINTER_DATA_RELEASED {
+			context.PointerInfo.State = POINTER_DATA_RELEASED_THIS_FRAME
 		}
 	}
 }
-func Clay_Initialize(arena Clay_Arena, layoutDimensions Clay_Dimensions, errorHandler Clay_ErrorHandler) *Clay_Context {
-	var context *Clay_Context = Clay__Context_Allocate_Arena(&arena)
+func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHandler) *Context {
+	var context *Context = __Context_Allocate_Arena(&arena)
 	if context == nil {
 		return nil
 	}
-	var oldContext *Clay_Context = Clay_GetCurrentContext()
-	*context = Clay_Context{MaxElementCount: int32(func() int64 {
+	var oldContext *Context = GetCurrentContext()
+	*context = Context{MaxElementCount: int32(func() int64 {
 		if oldContext != nil {
 			return int64(oldContext.MaxElementCount)
 		}
-		return int64(Clay__defaultMaxElementCount)
+		return int64(__defaultMaxElementCount)
 	}()), MaxMeasureTextCacheWordCount: int32(func() int64 {
 		if oldContext != nil {
 			return int64(oldContext.MaxMeasureTextCacheWordCount)
 		}
-		return int64(Clay__defaultMaxMeasureTextWordCacheCount)
-	}()), ErrorHandler: func() Clay_ErrorHandler {
+		return int64(__defaultMaxMeasureTextWordCacheCount)
+	}()), ErrorHandler: func() ErrorHandler {
 		if errorHandler.ErrorHandlerFunction != nil {
 			return errorHandler
 		}
-		return Clay_ErrorHandler{ErrorHandlerFunction: Clay__ErrorHandlerFunctionDefault, UserData: nil}
+		return ErrorHandler{ErrorHandlerFunction: __ErrorHandlerFunctionDefault, UserData: nil}
 	}(), LayoutDimensions: layoutDimensions, InternalArena: arena}
-	Clay_SetCurrentContext(context)
-	Clay__InitializePersistentMemory(context)
-	Clay__InitializeEphemeralMemory(context)
+	SetCurrentContext(context)
+	__InitializePersistentMemory(context)
+	__InitializeEphemeralMemory(context)
 	for i := int32(0); int64(i) < int64(context.LayoutElementsHashMap.Capacity); i++ {
 		*(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(i))) = -1
 	}
@@ -4163,29 +4162,29 @@ func Clay_Initialize(arena Clay_Arena, layoutDimensions Clay_Dimensions, errorHa
 	context.LayoutDimensions = layoutDimensions
 	return context
 }
-func Clay_GetCurrentContext() *Clay_Context {
-	return Clay__currentContext
+func GetCurrentContext() *Context {
+	return __currentContext
 }
-func Clay_SetCurrentContext(context *Clay_Context) {
-	Clay__currentContext = context
+func SetCurrentContext(context *Context) {
+	__currentContext = context
 }
-func Clay_UpdateScrollContainers(enableDragScrolling bool, scrollDelta Clay_Vector2, deltaTime float32) {
+func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, deltaTime float32) {
 	var (
-		context                     *Clay_Context                      = Clay_GetCurrentContext()
-		isPointerActive             bool                               = enableDragScrolling && (context.PointerInfo.State == CLAY_POINTER_DATA_PRESSED || context.PointerInfo.State == CLAY_POINTER_DATA_PRESSED_THIS_FRAME)
-		highestPriorityElementIndex int32                              = -1
-		highestPriorityScrollData   *Clay__ScrollContainerDataInternal = (*Clay__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(CLAY__NULL)))
+		context                     *Context                       = GetCurrentContext()
+		isPointerActive             bool                           = enableDragScrolling && (context.PointerInfo.State == POINTER_DATA_PRESSED || context.PointerInfo.State == POINTER_DATA_PRESSED_THIS_FRAME)
+		highestPriorityElementIndex int32                          = -1
+		highestPriorityScrollData   *__ScrollContainerDataInternal = (*__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(__NULL)))
 	)
 	for i := int32(0); int64(i) < int64(context.ScrollContainerDatas.Length); i++ {
-		var scrollData *Clay__ScrollContainerDataInternal = Clay__ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+		var scrollData *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
 		if !scrollData.OpenThisFrame {
-			Clay__ScrollContainerDataInternalArray_RemoveSwapback(&context.ScrollContainerDatas, i)
+			__ScrollContainerDataInternalArray_RemoveSwapback(&context.ScrollContainerDatas, i)
 			continue
 		}
 		scrollData.OpenThisFrame = false
-		var hashMapItem *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(scrollData.ElementId)
+		var hashMapItem *LayoutElementHashMapItem = __GetHashMapItem(scrollData.ElementId)
 		if hashMapItem == nil {
-			Clay__ScrollContainerDataInternalArray_RemoveSwapback(&context.ScrollContainerDatas, i)
+			__ScrollContainerDataInternalArray_RemoveSwapback(&context.ScrollContainerDatas, i)
 			continue
 		}
 		if !isPointerActive && scrollData.PointerScrollActive {
@@ -4198,8 +4197,8 @@ func Clay_UpdateScrollContainers(enableDragScrolling bool, scrollDelta Clay_Vect
 				scrollData.ScrollMomentum.Y = (scrollData.ScrollPosition.Y - scrollData.ScrollOrigin.Y) / (scrollData.MomentumTime * 25)
 			}
 			scrollData.PointerScrollActive = false
-			scrollData.PointerOrigin = Clay_Vector2{}
-			scrollData.ScrollOrigin = Clay_Vector2{}
+			scrollData.PointerOrigin = Vector2{}
+			scrollData.ScrollOrigin = Vector2{}
 			scrollData.MomentumTime = 0
 		}
 		scrollData.ScrollPosition.X += scrollData.ScrollMomentum.X
@@ -4276,7 +4275,7 @@ func Clay_UpdateScrollContainers(enableDragScrolling bool, scrollDelta Clay_Vect
 			scrollData.ScrollPosition.Y = 0
 		}
 		for j := int32(0); int64(j) < int64(context.PointerOverIds.Length); j++ {
-			if int64(scrollData.LayoutElement.Id) == int64(Clay__ElementIdArray_Get(&context.PointerOverIds, j).Id) {
+			if int64(scrollData.LayoutElement.Id) == int64(__ElementIdArray_Get(&context.PointerOverIds, j).Id) {
 				highestPriorityElementIndex = j
 				highestPriorityScrollData = scrollData
 			}
@@ -4284,10 +4283,10 @@ func Clay_UpdateScrollContainers(enableDragScrolling bool, scrollDelta Clay_Vect
 	}
 	if int64(highestPriorityElementIndex) > -1 && highestPriorityScrollData != nil {
 		var (
-			scrollElement         *Clay_LayoutElement       = highestPriorityScrollData.LayoutElement
-			scrollConfig          *Clay_ScrollElementConfig = Clay__FindElementConfigWithType(scrollElement, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
-			canScrollVertically   bool                      = scrollConfig.Vertical && highestPriorityScrollData.ContentSize.Height > scrollElement.Dimensions.Height
-			canScrollHorizontally bool                      = scrollConfig.Horizontal && highestPriorityScrollData.ContentSize.Width > scrollElement.Dimensions.Width
+			scrollElement         *LayoutElement       = highestPriorityScrollData.LayoutElement
+			scrollConfig          *ScrollElementConfig = __FindElementConfigWithType(scrollElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+			canScrollVertically   bool                 = scrollConfig.Vertical && highestPriorityScrollData.ContentSize.Height > scrollElement.Dimensions.Height
+			canScrollHorizontally bool                 = scrollConfig.Horizontal && highestPriorityScrollData.ContentSize.Width > scrollElement.Dimensions.Width
 		)
 		if canScrollVertically {
 			highestPriorityScrollData.ScrollPosition.Y = highestPriorityScrollData.ScrollPosition.Y + scrollDelta.Y*10
@@ -4296,7 +4295,7 @@ func Clay_UpdateScrollContainers(enableDragScrolling bool, scrollDelta Clay_Vect
 			highestPriorityScrollData.ScrollPosition.X = highestPriorityScrollData.ScrollPosition.X + scrollDelta.X*10
 		}
 		if isPointerActive {
-			highestPriorityScrollData.ScrollMomentum = Clay_Vector2{}
+			highestPriorityScrollData.ScrollMomentum = Vector2{}
 			if !highestPriorityScrollData.PointerScrollActive {
 				highestPriorityScrollData.PointerOrigin = context.PointerInfo.Position
 				highestPriorityScrollData.ScrollOrigin = highestPriorityScrollData.ScrollPosition
@@ -4387,150 +4386,150 @@ func Clay_UpdateScrollContainers(enableDragScrolling bool, scrollDelta Clay_Vect
 		}
 	}
 }
-func Clay_BeginLayout() {
-	var context *Clay_Context = Clay_GetCurrentContext()
-	Clay__InitializeEphemeralMemory(context)
+func BeginLayout() {
+	var context *Context = GetCurrentContext()
+	__InitializeEphemeralMemory(context)
 	context.Generation++
 	context.DynamicElementIndex = 0
-	var rootDimensions Clay_Dimensions = Clay_Dimensions{Width: context.LayoutDimensions.Width, Height: context.LayoutDimensions.Height}
+	var rootDimensions Dimensions = Dimensions{Width: context.LayoutDimensions.Width, Height: context.LayoutDimensions.Height}
 	if context.DebugModeEnabled {
-		rootDimensions.Width -= float32(Clay__debugViewWidth)
+		rootDimensions.Width -= float32(__debugViewWidth)
 	}
-	context.BooleanWarnings = Clay_BooleanWarnings{MaxElementsExceeded: false}
-	Clay__OpenElement()
-	Clay__ConfigureOpenElement(Clay_ElementDeclaration{Id: Clay__HashString(Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay__RootContainer")}, 0, 0), Layout: Clay_LayoutConfig{Sizing: Clay_Sizing{Width: Clay_SizingAxis{Size: struct {
+	context.BooleanWarnings = BooleanWarnings{MaxElementsExceeded: false}
+	__OpenElement()
+	__ConfigureOpenElement(ElementDeclaration{Id: __HashString(String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0), Layout: LayoutConfig{Sizing: Sizing{Width: SizingAxis{Size: struct {
 		// union
-		MinMax  Clay_SizingMinMax
+		MinMax  SizingMinMax
 		Percent float32
-	}{MinMax: Clay_SizingMinMax{Min: rootDimensions.Width, Max: rootDimensions.Width}}, Type: CLAY__SIZING_TYPE_FIXED}, Height: Clay_SizingAxis{Size: struct {
+	}{MinMax: SizingMinMax{Min: rootDimensions.Width, Max: rootDimensions.Width}}, Type: __SIZING_TYPE_FIXED}, Height: SizingAxis{Size: struct {
 		// union
-		MinMax  Clay_SizingMinMax
+		MinMax  SizingMinMax
 		Percent float32
-	}{MinMax: Clay_SizingMinMax{Min: rootDimensions.Height, Max: rootDimensions.Height}}, Type: CLAY__SIZING_TYPE_FIXED}}}})
-	Clay__int32_tArray_Add(&context.OpenLayoutElementStack, 0)
-	Clay__LayoutElementTreeRootArray_Add(&context.LayoutElementTreeRoots, Clay__LayoutElementTreeRoot{})
+	}{MinMax: SizingMinMax{Min: rootDimensions.Height, Max: rootDimensions.Height}}, Type: __SIZING_TYPE_FIXED}}}})
+	__int32_tArray_Add(&context.OpenLayoutElementStack, 0)
+	__LayoutElementTreeRootArray_Add(&context.LayoutElementTreeRoots, __LayoutElementTreeRoot{})
 }
-func Clay_EndLayout() Clay_RenderCommandArray {
-	var context *Clay_Context = Clay_GetCurrentContext()
-	Clay__CloseElement()
+func EndLayout() RenderCommandArray {
+	var context *Context = GetCurrentContext()
+	__CloseElement()
 	var elementsExceededBeforeDebugView bool = context.BooleanWarnings.MaxElementsExceeded
 	if context.BooleanWarnings.MaxElementsExceeded {
-		var message Clay_String
+		var message String
 		if !elementsExceededBeforeDebugView {
-			message = Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded Clay__maxElementCount after adding the debug-view to the layout.")}
+			message = String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded __maxElementCount after adding the debug-view to the layout.")}
 		} else {
-			message = Clay_String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded Clay__maxElementCount")}
+			message = String{Length: int32(uint32((unsafe.Sizeof(string(0)) / unsafe.Sizeof(byte(0))) - unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded __maxElementCount")}
 		}
-		Clay__AddRenderCommand(Clay_RenderCommand{BoundingBox: Clay_BoundingBox{X: context.LayoutDimensions.Width/2 - 59*4, Y: context.LayoutDimensions.Height / 2, Width: 0, Height: 0}, RenderData: Clay_RenderData{Text: Clay_TextRenderData{StringContents: Clay_StringSlice{Length: message.Length, Chars: message.Chars, BaseChars: message.Chars}, TextColor: Clay_Color{R: 255, G: 0, B: 0, A: 255}, FontSize: 16}}, CommandType: CLAY_RENDER_COMMAND_TYPE_TEXT})
+		__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: context.LayoutDimensions.Width/2 - 59*4, Y: context.LayoutDimensions.Height / 2, Width: 0, Height: 0}, RenderData: RenderData{Text: TextRenderData{StringContents: StringSlice{Length: message.Length, Chars: message.Chars, BaseChars: message.Chars}, TextColor: Color{R: 255, G: 0, B: 0, A: 255}, FontSize: 16}}, CommandType: RENDER_COMMAND_TYPE_TEXT})
 	} else {
-		Clay__CalculateFinalLayout()
+		__CalculateFinalLayout()
 	}
 	return context.RenderCommands
 }
-func Clay_GetElementId(idString Clay_String) Clay_ElementId {
-	return Clay__HashString(idString, 0, 0)
+func GetElementId(idString String) ElementId {
+	return __HashString(idString, 0, 0)
 }
-func Clay_GetElementIdWithIndex(idString Clay_String, index uint32) Clay_ElementId {
-	return Clay__HashString(idString, index, 0)
+func GetElementIdWithIndex(idString String, index uint32) ElementId {
+	return __HashString(idString, index, 0)
 }
-func Clay_Hovered() bool {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func Hovered() bool {
+	var context *Context = GetCurrentContext()
 	if context.BooleanWarnings.MaxElementsExceeded {
 		return false
 	}
-	var openLayoutElement *Clay_LayoutElement = Clay__GetOpenLayoutElement()
+	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	if int64(openLayoutElement.Id) == 0 {
-		Clay__GenerateIdForAnonymousElement(openLayoutElement)
+		__GenerateIdForAnonymousElement(openLayoutElement)
 	}
 	for i := int32(0); int64(i) < int64(context.PointerOverIds.Length); i++ {
-		if int64(Clay__ElementIdArray_Get(&context.PointerOverIds, i).Id) == int64(openLayoutElement.Id) {
+		if int64(__ElementIdArray_Get(&context.PointerOverIds, i).Id) == int64(openLayoutElement.Id) {
 			return true
 		}
 	}
 	return false
 }
-func Clay_OnHover(onHoverFunction func(elementId Clay_ElementId, pointerInfo Clay_PointerData, userData int64), userData int64) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, userData int64), userData int64) {
+	var context *Context = GetCurrentContext()
 	if context.BooleanWarnings.MaxElementsExceeded {
 		return
 	}
-	var openLayoutElement *Clay_LayoutElement = Clay__GetOpenLayoutElement()
+	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	if int64(openLayoutElement.Id) == 0 {
-		Clay__GenerateIdForAnonymousElement(openLayoutElement)
+		__GenerateIdForAnonymousElement(openLayoutElement)
 	}
-	var hashMapItem *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(openLayoutElement.Id)
+	var hashMapItem *LayoutElementHashMapItem = __GetHashMapItem(openLayoutElement.Id)
 	hashMapItem.OnHoverFunction = onHoverFunction
 	hashMapItem.HoverFunctionUserData = userData
 }
-func Clay_PointerOver(elementId Clay_ElementId) bool {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func PointerOver(elementId ElementId) bool {
+	var context *Context = GetCurrentContext()
 	for i := int32(0); int64(i) < int64(context.PointerOverIds.Length); i++ {
-		if int64(Clay__ElementIdArray_Get(&context.PointerOverIds, i).Id) == int64(elementId.Id) {
+		if int64(__ElementIdArray_Get(&context.PointerOverIds, i).Id) == int64(elementId.Id) {
 			return true
 		}
 	}
 	return false
 }
-func Clay_GetScrollContainerData(id Clay_ElementId) Clay_ScrollContainerData {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func GetScrollContainerData(id ElementId) ScrollContainerData {
+	var context *Context = GetCurrentContext()
 	for i := int32(0); int64(i) < int64(context.ScrollContainerDatas.Length); i++ {
-		var scrollContainerData *Clay__ScrollContainerDataInternal = Clay__ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+		var scrollContainerData *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
 		if int64(scrollContainerData.ElementId) == int64(id.Id) {
-			return Clay_ScrollContainerData{ScrollPosition: &scrollContainerData.ScrollPosition, ScrollContainerDimensions: Clay_Dimensions{Width: scrollContainerData.BoundingBox.Width, Height: scrollContainerData.BoundingBox.Height}, ContentDimensions: scrollContainerData.ContentSize, Config: *Clay__FindElementConfigWithType(scrollContainerData.LayoutElement, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig, Found: true}
+			return ScrollContainerData{ScrollPosition: &scrollContainerData.ScrollPosition, ScrollContainerDimensions: Dimensions{Width: scrollContainerData.BoundingBox.Width, Height: scrollContainerData.BoundingBox.Height}, ContentDimensions: scrollContainerData.ContentSize, Config: *__FindElementConfigWithType(scrollContainerData.LayoutElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig, Found: true}
 		}
 	}
-	return Clay_ScrollContainerData{}
+	return ScrollContainerData{}
 }
-func Clay_GetElementData(id Clay_ElementId) Clay_ElementData {
-	var item *Clay_LayoutElementHashMapItem = Clay__GetHashMapItem(id.Id)
-	if item == &Clay_LayoutElementHashMapItem_DEFAULT {
-		return Clay_ElementData{}
+func GetElementData(id ElementId) ElementData {
+	var item *LayoutElementHashMapItem = __GetHashMapItem(id.Id)
+	if item == &LayoutElementHashMapItem_DEFAULT {
+		return ElementData{}
 	}
-	return Clay_ElementData{BoundingBox: item.BoundingBox, Found: true}
+	return ElementData{BoundingBox: item.BoundingBox, Found: true}
 }
-func Clay_SetDebugModeEnabled(enabled bool) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func SetDebugModeEnabled(enabled bool) {
+	var context *Context = GetCurrentContext()
 	context.DebugModeEnabled = enabled
 }
-func Clay_IsDebugModeEnabled() bool {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func IsDebugModeEnabled() bool {
+	var context *Context = GetCurrentContext()
 	return context.DebugModeEnabled
 }
-func Clay_SetCullingEnabled(enabled bool) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func SetCullingEnabled(enabled bool) {
+	var context *Context = GetCurrentContext()
 	context.DisableCulling = !enabled
 }
-func Clay_SetExternalScrollHandlingEnabled(enabled bool) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func SetExternalScrollHandlingEnabled(enabled bool) {
+	var context *Context = GetCurrentContext()
 	context.ExternalScrollHandlingEnabled = enabled
 }
-func Clay_GetMaxElementCount() int32 {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func GetMaxElementCount() int32 {
+	var context *Context = GetCurrentContext()
 	return context.MaxElementCount
 }
-func Clay_SetMaxElementCount(maxElementCount int32) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func SetMaxElementCount(maxElementCount int32) {
+	var context *Context = GetCurrentContext()
 	if context != nil {
 		context.MaxElementCount = maxElementCount
 	} else {
-		Clay__defaultMaxElementCount = maxElementCount
-		Clay__defaultMaxMeasureTextWordCacheCount = int32(int64(maxElementCount) * 2)
+		__defaultMaxElementCount = maxElementCount
+		__defaultMaxMeasureTextWordCacheCount = int32(int64(maxElementCount) * 2)
 	}
 }
-func Clay_GetMaxMeasureTextCacheWordCount() int32 {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func GetMaxMeasureTextCacheWordCount() int32 {
+	var context *Context = GetCurrentContext()
 	return context.MaxMeasureTextCacheWordCount
 }
-func Clay_SetMaxMeasureTextCacheWordCount(maxMeasureTextCacheWordCount int32) {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func SetMaxMeasureTextCacheWordCount(maxMeasureTextCacheWordCount int32) {
+	var context *Context = GetCurrentContext()
 	if context != nil {
-		Clay__currentContext.MaxMeasureTextCacheWordCount = maxMeasureTextCacheWordCount
+		__currentContext.MaxMeasureTextCacheWordCount = maxMeasureTextCacheWordCount
 	} else {
-		Clay__defaultMaxMeasureTextWordCacheCount = maxMeasureTextCacheWordCount
+		__defaultMaxMeasureTextWordCacheCount = maxMeasureTextCacheWordCount
 	}
 }
-func Clay_ResetMeasureTextCache() {
-	var context *Clay_Context = Clay_GetCurrentContext()
+func ResetMeasureTextCache() {
+	var context *Context = GetCurrentContext()
 	context.MeasureTextHashMapInternal.Length = 0
 	context.MeasureTextHashMapInternalFreeList.Length = 0
 	context.MeasureTextHashMap.Length = 0

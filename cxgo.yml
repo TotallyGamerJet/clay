@@ -36,3 +36,11 @@ files:
         new: 0
       - old: declaration.Scroll.Horizontal | declaration.Scroll.Vertical
         new: declaration.Scroll.Horizontal || declaration.Scroll.Vertical
+      - old: Clay__
+        new: __
+      - old: CLAY__
+        new: __
+      - old: Clay_
+        new:
+      - old: CLAY_
+        new:
