@@ -38,8 +38,8 @@ type Context struct {
 	DebugSelectedElementId             uint32
 	Generation                         uint32
 	ArenaResetOffset                   uint64
-	MeasureTextUserData                unsafe.Pointer
-	QueryScrollOffsetUserData          unsafe.Pointer
+	MeasureTextUserData                any
+	QueryScrollOffsetUserData          any
 	InternalArena                      Arena
 	LayoutElements                     LayoutElementArray
 	RenderCommands                     RenderCommandArray
@@ -2443,7 +2443,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	var lineWidth float32 = 0
 	var measuredWidth float32 = 0
 	var measuredHeight float32 = 0
-	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.MeasureTextUserData).Width
+	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.MeasureTextUserData.(unsafe.Pointer)).Width
 	var tempWord __MeasuredWord = __MeasuredWord{Next: -1}
 	var previousWord *__MeasuredWord = &tempWord
 	for end < text.Length {
@@ -2458,7 +2458,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		if int32(current) == ' ' || int32(current) == '\n' {
 			var (
 				length     int32      = end - start
-				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
+				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData.(unsafe.Pointer))
 			)
 			if measuredHeight > dimensions.Height {
 				measuredHeight = measuredHeight
@@ -2489,7 +2489,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		end++
 	}
 	if end-start > 0 {
-		var dimensions Dimensions = __MeasureText(StringSlice{Length: end - start, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
+		var dimensions Dimensions = __MeasureText(StringSlice{Length: end - start, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData.(unsafe.Pointer))
 		__AddMeasuredWord(__MeasuredWord{StartOffset: start, Length: end - start, Width: dimensions.Width, Next: -1}, previousWord)
 		lineWidth += dimensions.Width
 		if measuredHeight > dimensions.Height {
@@ -2910,7 +2910,7 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 			scrollOffset = __ScrollContainerDataInternalArray_Add(&context.ScrollContainerDatas, __ScrollContainerDataInternal{LayoutElement: openLayoutElement, ScrollOrigin: Vector2{X: -1, Y: -1}, ElementId: openLayoutElement.Id, OpenThisFrame: true})
 		}
 		if context.ExternalScrollHandlingEnabled {
-			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.QueryScrollOffsetUserData)
+			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.QueryScrollOffsetUserData.(unsafe.Pointer))
 		}
 	}
 	if !__MemCmp((*byte)(unsafe.Pointer(&declaration.Border.Width)), (*byte)(unsafe.Pointer(&__BorderWidth_DEFAULT)), int32(uint32(unsafe.Sizeof(BorderWidth{})))) {
@@ -3380,7 +3380,7 @@ func __CalculateFinalLayout() {
 			textElementData.WrappedLines.Length++
 			continue
 		}
-		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.MeasureTextUserData).Width
+		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.MeasureTextUserData.(unsafe.Pointer)).Width
 		_ = spaceWidth
 		var wordIndex int32 = measureTextCacheItem.MeasuredWordsStartIndex
 		for wordIndex != -1 {
@@ -4048,15 +4048,15 @@ func CreateArenaWithCapacityAndMemory(capacity uint32, memory unsafe.Pointer) Ar
 	var arena Arena = Arena{Capacity: uint64(capacity), Memory: (*byte)(memory)}
 	return arena
 }
-func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData unsafe.Pointer) {
+func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData any) {
 	var context *Context = GetCurrentContext()
 	__MeasureText = measureTextFunction
-	context.MeasureTextUserData = userData
+	context.MeasureTextUserData = userData.(any).(any)
 }
-func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData unsafe.Pointer) {
+func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData any) {
 	var context *Context = GetCurrentContext()
 	__QueryScrollOffset = queryScrollOffsetFunction
-	context.QueryScrollOffsetUserData = userData
+	context.QueryScrollOffsetUserData = userData.(any).(any)
 }
 func SetLayoutDimensions(dimensions Dimensions) {
 	GetCurrentContext().LayoutDimensions = dimensions
