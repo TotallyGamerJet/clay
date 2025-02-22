@@ -28,15 +28,15 @@ predef: |
 
 files:
   - name: clay.h
-#    idents:
-#      - name: Clay_ErrorHandler
-#        fields:
-#          - name: userData
-#            type: iface
-#      - name: Clay_ErrorData
-#        fields:
-#          - name: userData
-#            type: iface
+    idents:
+      - name: Clay_ErrorHandler
+        fields:
+          - name: userData
+            type: iface
+      - name: Clay_ErrorData
+        fields:
+          - name: userData
+            type: iface
     replace:
       - old: bool{}
         new: false
