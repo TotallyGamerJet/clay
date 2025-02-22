@@ -1,6 +1,7 @@
 root: ./
 out: ./
-
+int_size: 4
+use_go_int: false
 package: clay
 
 predef: |
@@ -27,6 +28,15 @@ predef: |
 
 files:
   - name: clay.h
+#    idents:
+#      - name: Clay_ErrorHandler
+#        fields:
+#          - name: userData
+#            type: iface
+#      - name: Clay_ErrorData
+#        fields:
+#          - name: userData
+#            type: iface
     replace:
       - old: bool{}
         new: false
