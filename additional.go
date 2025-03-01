@@ -13,3 +13,45 @@ func ToString(s string) String {
 func ID(label string) ElementId {
 	return __HashString(ToString(label), 0, 0)
 }
+
+func PaddingAll(padding uint16) Padding {
+	return Padding{
+		padding,
+		padding,
+		padding,
+		padding,
+	}
+}
+
+func SizingGrow(sz float32) SizingAxis {
+	return SizingAxis{
+		Size: struct {
+			MinMax  SizingMinMax
+			Percent float32
+		}{
+			MinMax: SizingMinMax{sz, sz},
+		},
+		Type: __SIZING_TYPE_GROW}
+}
+
+func SizingFixed(sz float32) SizingAxis {
+	return SizingAxis{
+		Size: struct {
+			MinMax  SizingMinMax
+			Percent float32
+		}{
+			MinMax: SizingMinMax{sz, sz},
+		},
+		Type: __SIZING_TYPE_FIXED}
+}
+
+// TODO: add generic iterator functions for types with [type]_GetValue functions that are converted into methods
+
+func UI(decl ElementDeclaration, children func()) {
+	__OpenElement()
+	__ConfigureOpenElement(decl)
+	defer __CloseElement()
+	if children != nil {
+		children()
+	}
+}
