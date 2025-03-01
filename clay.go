@@ -1,10 +1,9 @@
 package clay
 
 import (
+	"github.com/gotranspile/cxgo/runtime/libc"
 	"math"
 	"unsafe"
-
-	"github.com/gotranspile/cxgo/runtime/libc"
 )
 
 const __NULL = 0
@@ -494,9 +493,9 @@ func __boolArray_GetValue(array *__boolArray, index int32) bool {
 func __boolArray_Add(array *__boolArray, item bool) *bool {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}())) = item
 		return (*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), array.Length-1))
@@ -559,9 +558,9 @@ func __int32_tArray_GetValue(array *__int32_tArray, index int32) int32 {
 func __int32_tArray_Add(array *__int32_tArray, item int32) *int32 {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(array.Length-1)))
@@ -624,9 +623,9 @@ func __charArray_GetValue(array *__charArray, index int32) int8 {
 func __charArray_Add(array *__charArray, item int8) *byte {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}())) = byte(item)
 		return (*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), array.Length-1))
@@ -689,9 +688,9 @@ func __ElementIdArray_GetValue(array *__ElementIdArray, index int32) ElementId {
 func __ElementIdArray_Add(array *__ElementIdArray, item ElementId) *ElementId {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(array.Length-1)))
@@ -754,9 +753,9 @@ func __LayoutConfigArray_GetValue(array *__LayoutConfigArray, index int32) Layou
 func __LayoutConfigArray_Add(array *__LayoutConfigArray, item LayoutConfig) *LayoutConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(array.Length-1)))
@@ -819,9 +818,9 @@ func __TextElementConfigArray_GetValue(array *__TextElementConfigArray, index in
 func __TextElementConfigArray_Add(array *__TextElementConfigArray, item TextElementConfig) *TextElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(array.Length-1)))
@@ -884,9 +883,9 @@ func __ImageElementConfigArray_GetValue(array *__ImageElementConfigArray, index 
 func __ImageElementConfigArray_Add(array *__ImageElementConfigArray, item ImageElementConfig) *ImageElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(array.Length-1)))
@@ -949,9 +948,9 @@ func __FloatingElementConfigArray_GetValue(array *__FloatingElementConfigArray, 
 func __FloatingElementConfigArray_Add(array *__FloatingElementConfigArray, item FloatingElementConfig) *FloatingElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(array.Length-1)))
@@ -1014,9 +1013,9 @@ func __CustomElementConfigArray_GetValue(array *__CustomElementConfigArray, inde
 func __CustomElementConfigArray_Add(array *__CustomElementConfigArray, item CustomElementConfig) *CustomElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(array.Length-1)))
@@ -1079,9 +1078,9 @@ func __ScrollElementConfigArray_GetValue(array *__ScrollElementConfigArray, inde
 func __ScrollElementConfigArray_Add(array *__ScrollElementConfigArray, item ScrollElementConfig) *ScrollElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(array.Length-1)))
@@ -1144,9 +1143,9 @@ func __BorderElementConfigArray_GetValue(array *__BorderElementConfigArray, inde
 func __BorderElementConfigArray_Add(array *__BorderElementConfigArray, item BorderElementConfig) *BorderElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(array.Length-1)))
@@ -1209,9 +1208,9 @@ func __StringArray_GetValue(array *__StringArray, index int32) String {
 func __StringArray_Add(array *__StringArray, item String) *String {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(array.Length-1)))
@@ -1274,9 +1273,9 @@ func __SharedElementConfigArray_GetValue(array *__SharedElementConfigArray, inde
 func __SharedElementConfigArray_Add(array *__SharedElementConfigArray, item SharedElementConfig) *SharedElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(array.Length-1)))
@@ -1334,9 +1333,9 @@ func RenderCommandArray_GetValue(array *RenderCommandArray, index int32) RenderC
 func RenderCommandArray_Add(array *RenderCommandArray, item RenderCommand) *RenderCommand {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(array.Length-1)))
@@ -1426,9 +1425,9 @@ func __ElementConfigArray_GetValue(array *__ElementConfigArray, index int32) Ele
 func __ElementConfigArray_Add(array *__ElementConfigArray, item ElementConfig) *ElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(array.Length-1)))
@@ -1495,9 +1494,9 @@ func __WrappedTextLineArray_GetValue(array *__WrappedTextLineArray, index int32)
 func __WrappedTextLineArray_Add(array *__WrappedTextLineArray, item __WrappedTextLine) *__WrappedTextLine {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(array.Length-1)))
@@ -1566,9 +1565,9 @@ func __TextElementDataArray_GetValue(array *__TextElementDataArray, index int32)
 func __TextElementDataArray_Add(array *__TextElementDataArray, item __TextElementData) *__TextElementData {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(array.Length-1)))
@@ -1647,9 +1646,9 @@ func LayoutElementArray_GetValue(array *LayoutElementArray, index int32) LayoutE
 func LayoutElementArray_Add(array *LayoutElementArray, item LayoutElement) *LayoutElement {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(array.Length-1)))
@@ -1726,9 +1725,9 @@ func __ScrollContainerDataInternalArray_GetValue(array *__ScrollContainerDataInt
 func __ScrollContainerDataInternalArray_Add(array *__ScrollContainerDataInternalArray, item __ScrollContainerDataInternal) *__ScrollContainerDataInternal {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(array.Length-1)))
@@ -1795,9 +1794,9 @@ func __DebugElementDataArray_GetValue(array *__DebugElementDataArray, index int3
 func __DebugElementDataArray_Add(array *__DebugElementDataArray, item __DebugElementData) *__DebugElementData {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(array.Length-1)))
@@ -1871,9 +1870,9 @@ func __LayoutElementHashMapItemArray_GetValue(array *__LayoutElementHashMapItemA
 func __LayoutElementHashMapItemArray_Add(array *__LayoutElementHashMapItemArray, item LayoutElementHashMapItem) *LayoutElementHashMapItem {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(array.Length-1)))
@@ -1942,9 +1941,9 @@ func __MeasuredWordArray_GetValue(array *__MeasuredWordArray, index int32) __Mea
 func __MeasuredWordArray_Add(array *__MeasuredWordArray, item __MeasuredWord) *__MeasuredWord {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(array.Length-1)))
@@ -2015,9 +2014,9 @@ func __MeasureTextCacheItemArray_GetValue(array *__MeasureTextCacheItemArray, in
 func __MeasureTextCacheItemArray_Add(array *__MeasureTextCacheItemArray, item __MeasureTextCacheItem) *__MeasureTextCacheItem {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(array.Length-1)))
@@ -2085,9 +2084,9 @@ func __LayoutElementTreeNodeArray_GetValue(array *__LayoutElementTreeNodeArray, 
 func __LayoutElementTreeNodeArray_Add(array *__LayoutElementTreeNodeArray, item __LayoutElementTreeNode) *__LayoutElementTreeNode {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(array.Length-1)))
@@ -2157,9 +2156,9 @@ func __LayoutElementTreeRootArray_GetValue(array *__LayoutElementTreeRootArray, 
 func __LayoutElementTreeRootArray_Add(array *__LayoutElementTreeRootArray, item __LayoutElementTreeRoot) *__LayoutElementTreeRoot {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(array.Length-1)))
@@ -2429,7 +2428,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		measured = __MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, newItemIndex)
 	} else {
 		if context.MeasureTextHashMapInternal.Length == context.MeasureTextHashMapInternal.Capacity-1 {
-			if context.BooleanWarnings.MaxTextMeasureCacheExceeded {
+			if !context.BooleanWarnings.MaxTextMeasureCacheExceeded {
 				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData.(any)})
 				context.BooleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
@@ -2588,6 +2587,24 @@ func __ElementHasConfig(layoutElement *LayoutElement, type_ __ElementConfigType)
 	}
 	return false
 }
+func __UpdateAspectRatioBox(layoutElement *LayoutElement) {
+	for j := int32(0); j < layoutElement.ElementConfigs.Length; j++ {
+		var config *ElementConfig = __ElementConfigArraySlice_Get(&layoutElement.ElementConfigs, j)
+		if config.Type == __ELEMENT_CONFIG_TYPE_IMAGE {
+			var imageConfig *ImageElementConfig = config.Config.ImageElementConfig
+			if imageConfig.SourceDimensions.Width == 0 || imageConfig.SourceDimensions.Height == 0 {
+				break
+			}
+			var aspect float32 = imageConfig.SourceDimensions.Width / imageConfig.SourceDimensions.Height
+			if layoutElement.Dimensions.Width == 0 && layoutElement.Dimensions.Height != 0 {
+				layoutElement.Dimensions.Width = layoutElement.Dimensions.Height * aspect
+			} else if layoutElement.Dimensions.Width != 0 && layoutElement.Dimensions.Height == 0 {
+				layoutElement.Dimensions.Height = layoutElement.Dimensions.Height * (1 / aspect)
+			}
+			break
+		}
+	}
+}
 func __CloseElement() {
 	var context *Context = GetCurrentContext()
 	if context.BooleanWarnings.MaxElementsExceeded {
@@ -2745,6 +2762,7 @@ func __CloseElement() {
 	} else {
 		openLayoutElement.Dimensions.Height = 0
 	}
+	__UpdateAspectRatioBox(openLayoutElement)
 	var elementIsFloating bool = __ElementHasConfig(openLayoutElement, __ELEMENT_CONFIG_TYPE_FLOATING)
 	var closingElementIndex int32 = __int32_tArray_RemoveSwapback(&context.OpenLayoutElementStack, context.OpenLayoutElementStack.Length-1)
 	openLayoutElement = __GetOpenLayoutElement()
@@ -2883,7 +2901,7 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 				openLayoutElementId = __HashString(String{Length: int32(((len("__FloatingContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__FloatingContainer")}, uint32(context.LayoutElementTreeRoots.Length), 0)
 			}
 			__LayoutElementTreeRootArray_Add(&context.LayoutElementTreeRoots, __LayoutElementTreeRoot{LayoutElementIndex: __int32_tArray_GetValue(&context.OpenLayoutElementStack, context.OpenLayoutElementStack.Length-1), ParentId: floatingConfig.ParentId, ClipElementId: clipElementId, ZIndex: floatingConfig.ZIndex})
-			__AttachElementConfig(ElementConfigUnion{FloatingElementConfig: __StoreFloatingElementConfig(declaration.Floating)}, __ELEMENT_CONFIG_TYPE_FLOATING)
+			__AttachElementConfig(ElementConfigUnion{FloatingElementConfig: __StoreFloatingElementConfig(floatingConfig)}, __ELEMENT_CONFIG_TYPE_FLOATING)
 		}
 	}
 	if declaration.Custom.CustomData != nil {
@@ -3189,6 +3207,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 					if sizingAlongAxis {
 						innerContentSize += *childSize
 					}
+					__UpdateAspectRatioBox(childElement)
 				}
 			}
 			if sizingAlongAxis {
@@ -3308,27 +3327,27 @@ func __IntToString(integer int32) String {
 	}
 	for integer > 0 {
 		*(*byte)(unsafe.Add(unsafe.Pointer(chars), func() int32 {
-			p := &length
-			x := *p
-			*p++
+			p_ := &length
+			x := *p_
+			*p_++
 			return x
 		}())) = byte(int8(integer%10 + '0'))
 		integer /= 10
 	}
 	if sign < 0 {
 		*(*byte)(unsafe.Add(unsafe.Pointer(chars), func() int32 {
-			p := &length
-			x := *p
-			*p++
+			p_ := &length
+			x := *p_
+			*p_++
 			return x
 		}())) = '-'
 	}
 	for j, k := int32(0), int32(length-1); j < k; func() int32 {
 		j++
 		return func() int32 {
-			p := &k
-			x := *p
-			*p--
+			p_ := &k
+			x := *p_
+			*p_--
 			return x
 		}()
 	}() {
@@ -3992,9 +4011,9 @@ func __WarningArray_Allocate_Arena(capacity int32, arena *Arena) __WarningArray 
 func __WarningArray_Add(array *__WarningArray, item __Warning) *__Warning {
 	if array.Length < array.Capacity {
 		*(*__Warning)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__Warning{})*uintptr(func() int32 {
-			p := &array.Length
-			x := *p
-			*p++
+			p_ := &array.Length
+			x := *p_
+			*p_++
 			return x
 		}()))) = item
 		return (*__Warning)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__Warning{})*uintptr(array.Length-1)))
@@ -4037,7 +4056,7 @@ func MinMemorySize() uint32 {
 	)
 	if currentContext != nil {
 		fakeContext.MaxElementCount = currentContext.MaxElementCount
-		fakeContext.MaxMeasureTextCacheWordCount = currentContext.MaxElementCount
+		fakeContext.MaxMeasureTextCacheWordCount = currentContext.MaxMeasureTextCacheWordCount
 	}
 	__Context_Allocate_Arena(&fakeContext.InternalArena)
 	__InitializePersistentMemory(&fakeContext)
@@ -4083,11 +4102,13 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 			*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) = true
 			var currentElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&dfsBuffer, dfsBuffer.Length-1))
 			var mapItem *LayoutElementHashMapItem = __GetHashMapItem(currentElement.Id)
+			var clipElementId int32 = __int32_tArray_GetValue(&context.LayoutElementClipElementIds, int32(int64(uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray)))))
+			var clipItem *LayoutElementHashMapItem = __GetHashMapItem(uint32(clipElementId))
 			var elementBox BoundingBox = mapItem.BoundingBox
 			elementBox.X -= root.PointerOffset.X
 			elementBox.Y -= root.PointerOffset.Y
 			if mapItem != nil {
-				if __PointIsInsideRect(position, elementBox) {
+				if __PointIsInsideRect(position, elementBox) && (clipElementId == 0 || __PointIsInsideRect(position, clipItem.BoundingBox)) {
 					if mapItem.OnHoverFunction != nil {
 						mapItem.OnHoverFunction(mapItem.ElementId, context.PointerInfo, mapItem.HoverFunctionUserData)
 					}
