@@ -37,8 +37,8 @@ type Context struct {
 	DebugSelectedElementId             uint32
 	Generation                         uint32
 	ArenaResetOffset                   uint64
-	MeasureTextUserData                any
-	QueryScrollOffsetUserData          any
+	MeasureTextUserData                unsafe.Pointer
+	QueryScrollOffsetUserData          unsafe.Pointer
 	InternalArena                      Arena
 	LayoutElements                     LayoutElementArray
 	RenderCommands                     RenderCommandArray
@@ -415,11 +415,11 @@ const (
 type ErrorData struct {
 	ErrorType ErrorType
 	ErrorText String
-	UserData  any
+	UserData  unsafe.Pointer
 }
 type ErrorHandler struct {
 	ErrorHandlerFunction func(errorText ErrorData)
-	UserData             any
+	UserData             unsafe.Pointer
 }
 
 var LAYOUT_DEFAULT LayoutConfig = LayoutConfig{}
@@ -2382,7 +2382,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	if __MeasureText == nil {
 		if !context.BooleanWarnings.TextMeasurementFunctionNotSet {
 			context.BooleanWarnings.TextMeasurementFunctionNotSet = true
-			context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED, ErrorText: String{Length: int32(((len("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.")}, UserData: context.ErrorHandler.UserData.(any)})
+			context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED, ErrorText: String{Length: int32(((len("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.")}, UserData: context.ErrorHandler.UserData})
 		}
 		return &__MeasureTextCacheItem_DEFAULT
 	}
@@ -2429,7 +2429,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	} else {
 		if context.MeasureTextHashMapInternal.Length == context.MeasureTextHashMapInternal.Capacity-1 {
 			if !context.BooleanWarnings.MaxTextMeasureCacheExceeded {
-				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData.(any)})
+				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData})
 				context.BooleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
 			return &__MeasureTextCacheItem_DEFAULT
@@ -2442,13 +2442,13 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	var lineWidth float32 = 0
 	var measuredWidth float32 = 0
 	var measuredHeight float32 = 0
-	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.MeasureTextUserData.(unsafe.Pointer)).Width
+	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.MeasureTextUserData).Width
 	var tempWord __MeasuredWord = __MeasuredWord{Next: -1}
 	var previousWord *__MeasuredWord = &tempWord
 	for end < text.Length {
 		if context.MeasuredWords.Length == context.MeasuredWords.Capacity-1 {
 			if !context.BooleanWarnings.MaxTextMeasureCacheExceeded {
-				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).")}, UserData: context.ErrorHandler.UserData.(any)})
+				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).")}, UserData: context.ErrorHandler.UserData})
 				context.BooleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
 			return &__MeasureTextCacheItem_DEFAULT
@@ -2457,7 +2457,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		if int32(current) == ' ' || int32(current) == '\n' {
 			var (
 				length     int32      = end - start
-				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData.(unsafe.Pointer))
+				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
 			)
 			if measuredHeight > dimensions.Height {
 				measuredHeight = measuredHeight
@@ -2488,7 +2488,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		end++
 	}
 	if end-start > 0 {
-		var dimensions Dimensions = __MeasureText(StringSlice{Length: end - start, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData.(unsafe.Pointer))
+		var dimensions Dimensions = __MeasureText(StringSlice{Length: end - start, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
 		__AddMeasuredWord(__MeasuredWord{StartOffset: start, Length: end - start, Width: dimensions.Width, Next: -1}, previousWord)
 		lineWidth += dimensions.Width
 		if measuredHeight > dimensions.Height {
@@ -2534,7 +2534,7 @@ func __AddHashMapItem(elementId ElementId, layoutElement *LayoutElement, idAlias
 				hashItem.LayoutElement = layoutElement
 				hashItem.DebugData.Collision = false
 			} else {
-				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_DUPLICATE_ID, ErrorText: String{Length: int32(((len("An element with this ID was already previously declared during this layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.ErrorHandler.UserData.(any)})
+				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_DUPLICATE_ID, ErrorText: String{Length: int32(((len("An element with this ID was already previously declared during this layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.ErrorHandler.UserData})
 				if context.DebugModeEnabled {
 					hashItem.DebugData.Collision = true
 				}
@@ -2846,7 +2846,7 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 	)
 	openLayoutElement.LayoutConfig = __StoreLayoutConfig(declaration.Layout)
 	if declaration.Layout.Sizing.Width.Type == __SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Width.Size.Percent > 1 || declaration.Layout.Sizing.Height.Type == __SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Height.Size.Percent > 1 {
-		context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_PERCENTAGE_OVER_1, ErrorText: String{Length: int32(((len("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.")}, UserData: context.ErrorHandler.UserData.(any)})
+		context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_PERCENTAGE_OVER_1, ErrorText: String{Length: int32(((len("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.")}, UserData: context.ErrorHandler.UserData})
 	}
 	var openLayoutElementId ElementId = declaration.Id
 	openLayoutElement.ElementConfigs.InternalArray = (*ElementConfig)(unsafe.Add(unsafe.Pointer(context.ElementConfigs.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(context.ElementConfigs.Length)))
@@ -2890,7 +2890,7 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 			} else if declaration.Floating.AttachTo == ATTACH_TO_ELEMENT_WITH_ID {
 				var parentItem *LayoutElementHashMapItem = __GetHashMapItem(floatingConfig.ParentId)
 				if parentItem == nil {
-					context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{Length: int32(((len("A floating element was declared with a parentId, but no element with that ID was found.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.ErrorHandler.UserData.(any)})
+					context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{Length: int32(((len("A floating element was declared with a parentId, but no element with that ID was found.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.ErrorHandler.UserData})
 				} else {
 					clipElementId = uint32(__int32_tArray_GetValue(&context.LayoutElementClipElementIds, int32(int64(uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))))))
 				}
@@ -2928,7 +2928,7 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 			scrollOffset = __ScrollContainerDataInternalArray_Add(&context.ScrollContainerDatas, __ScrollContainerDataInternal{LayoutElement: openLayoutElement, ScrollOrigin: Vector2{X: -1, Y: -1}, ElementId: openLayoutElement.Id, OpenThisFrame: true})
 		}
 		if context.ExternalScrollHandlingEnabled {
-			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.QueryScrollOffsetUserData.(unsafe.Pointer))
+			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.QueryScrollOffsetUserData)
 		}
 	}
 	if !__MemCmp((*byte)(unsafe.Pointer(&declaration.Border.Width)), (*byte)(unsafe.Pointer(&__BorderWidth_DEFAULT)), int32(uint32(unsafe.Sizeof(BorderWidth{})))) {
@@ -3365,7 +3365,7 @@ func __AddRenderCommand(renderCommand RenderCommand) {
 	} else {
 		if !context.BooleanWarnings.MaxRenderCommandsExceeded {
 			context.BooleanWarnings.MaxRenderCommandsExceeded = true
-			context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData.(any)})
+			context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData})
 		}
 	}
 }
@@ -3399,7 +3399,7 @@ func __CalculateFinalLayout() {
 			textElementData.WrappedLines.Length++
 			continue
 		}
-		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.MeasureTextUserData.(unsafe.Pointer)).Width
+		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.MeasureTextUserData).Width
 		_ = spaceWidth
 		var wordIndex int32 = measureTextCacheItem.MeasuredWordsStartIndex
 		for wordIndex != -1 {
@@ -4004,7 +4004,7 @@ func __WarningArray_Allocate_Arena(capacity int32, arena *Arena) __WarningArray 
 		array.InternalArray = (*__Warning)(unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset)))
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
 	} else {
-		__currentContext.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.ErrorHandler.UserData.(any)})
+		__currentContext.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.ErrorHandler.UserData})
 	}
 	return array
 }
@@ -4029,7 +4029,7 @@ func __Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Arena) unsaf
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
 		return unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset))
 	} else {
-		__currentContext.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.ErrorHandler.UserData.(any)})
+		__currentContext.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.ErrorHandler.UserData})
 	}
 	return unsafe.Pointer(uintptr(__NULL))
 }
@@ -4038,7 +4038,7 @@ func __Array_RangeCheck(index int32, length int32) bool {
 		return true
 	}
 	var context *Context = GetCurrentContext()
-	context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData.(any)})
+	context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData})
 	return false
 }
 func __Array_AddCapacityCheck(length int32, capacity int32) bool {
@@ -4046,7 +4046,7 @@ func __Array_AddCapacityCheck(length int32, capacity int32) bool {
 		return true
 	}
 	var context *Context = GetCurrentContext()
-	context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData.(any)})
+	context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData})
 	return false
 }
 func MinMemorySize() uint32 {
@@ -4067,15 +4067,15 @@ func CreateArenaWithCapacityAndMemory(capacity uint32, memory unsafe.Pointer) Ar
 	var arena Arena = Arena{Capacity: uint64(capacity), Memory: (*byte)(memory)}
 	return arena
 }
-func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData any) {
+func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData unsafe.Pointer) {
 	var context *Context = GetCurrentContext()
 	__MeasureText = measureTextFunction
-	context.MeasureTextUserData = userData.(any).(any)
+	context.MeasureTextUserData = userData
 }
-func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData any) {
+func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData unsafe.Pointer) {
 	var context *Context = GetCurrentContext()
 	__QueryScrollOffset = queryScrollOffsetFunction
-	context.QueryScrollOffsetUserData = userData.(any).(any)
+	context.QueryScrollOffsetUserData = userData
 }
 func SetLayoutDimensions(dimensions Dimensions) {
 	GetCurrentContext().LayoutDimensions = dimensions
@@ -4169,7 +4169,7 @@ func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHand
 		if errorHandler.ErrorHandlerFunction != nil {
 			return errorHandler
 		}
-		return ErrorHandler{ErrorHandlerFunction: __ErrorHandlerFunctionDefault, UserData: 0}
+		return ErrorHandler{ErrorHandlerFunction: __ErrorHandlerFunctionDefault, UserData: nil}
 	}(), LayoutDimensions: layoutDimensions, InternalArena: arena}
 	SetCurrentContext(context)
 	__InitializePersistentMemory(context)

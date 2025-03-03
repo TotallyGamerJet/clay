@@ -45,6 +45,15 @@ func SizingFixed(sz float32) SizingAxis {
 		Type: __SIZING_TYPE_FIXED}
 }
 
+func CornerRadiusAll(radius float32) CornerRadius {
+	return CornerRadius{
+		radius,
+		radius,
+		radius,
+		radius,
+	}
+}
+
 // TODO: add generic iterator functions for types with [type]_GetValue functions that are converted into methods
 
 func UI(decl ElementDeclaration, children func()) {
@@ -54,4 +63,12 @@ func UI(decl ElementDeclaration, children func()) {
 	if children != nil {
 		children()
 	}
+}
+
+func Text(text String, config *TextElementConfig) {
+	__OpenTextElement(text, config)
+}
+
+func TextConfig(config TextElementConfig) *TextElementConfig {
+	return __StoreTextElementConfig(config)
 }

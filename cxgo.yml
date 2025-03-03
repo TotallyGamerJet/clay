@@ -29,28 +29,28 @@ predef: |
 files:
   - name: clay.h
     idents:
-      - name: Clay_ErrorHandler
-        fields:
-          - name: userData
-            type: iface
-      - name: Clay_ErrorData
-        fields:
-          - name: userData
-            type: iface
-      - name: Clay_Context
-        fields:
-          - name: measureTextUserData
-            type: iface
-          - name: queryScrollOffsetUserData
-            type: iface
-      - name: Clay_SetMeasureTextFunction
-        fields:
-          - name: userData
-            type: iface
-      - name: Clay_SetQueryScrollOffsetFunction
-        fields:
-          - name: userData
-            type: iface
+#      - name: Clay_ErrorHandler
+#        fields:
+#          - name: userData
+#            type: iface
+#      - name: Clay_ErrorData
+#        fields:
+#          - name: userData
+#            type: iface
+#      - name: Clay_Context
+#        fields:
+#          - name: measureTextUserData
+#            type: iface
+#          - name: queryScrollOffsetUserData
+#            type: iface
+#      - name: Clay_SetMeasureTextFunction
+#        fields:
+#          - name: userData
+#            type: iface
+#      - name: Clay_SetQueryScrollOffsetFunction
+#        fields:
+#          - name: userData
+#            type: iface
     replace:
       - old: bool{}
         new: false
