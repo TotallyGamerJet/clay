@@ -4,6 +4,7 @@ import (
 	"unsafe"
 
 	"github.com/totallygamerjet/clay"
+	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
 )
 
@@ -34,5 +35,9 @@ type Font struct {
 //	}
 
 func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
-	return clay.Dimensions{}
+	return clay.Dimensions{} // TODO: implement
+}
+
+func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, fonts []Font) {
+
 }

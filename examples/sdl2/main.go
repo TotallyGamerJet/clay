@@ -36,7 +36,7 @@ func main() {
 		panic(err)
 	}
 
-	fonts := [...]sdl2.Font{
+	fonts := []sdl2.Font{
 		sl.FONT_ID_BODY_16: {
 			sl.FONT_ID_BODY_16,
 			font,
@@ -122,7 +122,7 @@ loop:
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 
-		Clay_SDL2_Render(renderer, renderCommands, fonts)
+		sdl2.ClayRender(renderer, renderCommands, fonts)
 
 		renderer.Present()
 	}

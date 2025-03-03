@@ -45,7 +45,7 @@ func ClayVideoDemo_Initialize() ClayVideoDemo_Data {
 	return data
 }
 
-func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) {
+func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArray {
 	data.FrameArena.Offset = 0
 
 	clay.BeginLayout()
@@ -59,7 +59,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) {
 
 	clay.UI(clay.ElementDeclaration{
 		Id:              clay.ID("OuterContainer"),
-		BackgroundColor: clay.Color{43, 41, 51, 255},
+		BackgroundColor: clay.Color{R: 43, G: 41, B: 51, A: 255},
 		Layout: clay.LayoutConfig{
 			LayoutDirection: clay.TOP_TO_BOTTOM,
 			Sizing:          layoutExpand,
