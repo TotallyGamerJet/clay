@@ -4,7 +4,10 @@ go 1.24.0
 
 tool github.com/gotranspile/cxgo/cmd/cxgo
 
-require github.com/gotranspile/cxgo v0.5.0
+require (
+	github.com/gotranspile/cxgo v0.5.0
+	github.com/veandco/go-sdl2 v0.4.40
+)
 
 require (
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
