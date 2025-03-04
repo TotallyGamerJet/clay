@@ -7,7 +7,7 @@ func (s String) String() string {
 }
 
 func ToString(s string) String {
-	return String{Length: int32(len(s)), Chars: unsafe.SliceData([]byte(s))}
+	return String{Length: int32(len(s)), Chars: unsafe.StringData(s)}
 }
 
 func ID(label string) ElementId {
