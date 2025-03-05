@@ -63,7 +63,7 @@ func main() {
 	}
 	_ = sdl.GLSetAttribute(sdl.GL_MULTISAMPLESAMPLES, 4) //for antialiasing
 
-	var enableVsync = false
+	const enableVsync = false
 	if enableVsync {
 		renderer, _ = sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED|sdl.RENDERER_PRESENTVSYNC) //"SDL_RENDERER_ACCELERATED" is for antialiasing
 	} else {
