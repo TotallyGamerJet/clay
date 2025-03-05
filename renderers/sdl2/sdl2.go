@@ -1,6 +1,7 @@
 package sdl2
 
 import (
+	"strings"
 	"unsafe"
 
 	"github.com/totallygamerjet/clay"
@@ -14,18 +15,18 @@ type Font struct {
 }
 
 func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
-	//fonts := (*Font)(userData)
-	//font := unsafe.Slice(fonts, 1)[config.FontId].Font // TODO: idk if this the best way to create the slice
-	//chars := text.String()
+	fonts := *(*[]Font)(userData)
+	font := fonts[config.FontId].Font
+	chars := strings.Clone(text.String())
 
-	//width, height, err := font.SizeUTF8(chars)
-	//if err != nil {
-	//	panic(err)
-	//}
+	width, height, err := font.SizeUTF8(chars)
+	if err != nil {
+		panic(err)
+	}
 
 	return clay.Dimensions{
-		Width:  float32(0),
-		Height: float32(0),
+		Width:  float32(width),
+		Height: float32(height),
 	}
 }
 
