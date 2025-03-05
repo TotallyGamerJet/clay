@@ -1,8 +1,12 @@
 package shared_layouts
 
 import (
+	"unsafe"
+
 	"github.com/totallygamerjet/clay"
 )
+
+var COLOR_WHITE = clay.Color{255, 255, 255, 255}
 
 const FONT_ID_BODY_16 = 0
 
@@ -22,6 +26,13 @@ type ClayVideoDemo_Arena struct {
 	Offset int64
 	Memory []byte
 }
+
+func alloc[T any](arena ClayVideoDemo_Arena) *T {
+	prev := uintptr(arena.Offset)
+	arena.Offset = int64(prev + unsafe.Sizeof(*new(T)))
+	return (*T)(unsafe.Add(unsafe.Pointer(unsafe.SliceData(arena.Memory)), prev))
+}
+
 type ClayVideoDemo_Data struct {
 	SelectedDocumentIndex int32
 	YOffset               float32
@@ -43,6 +54,47 @@ func ClayVideoDemo_Initialize() ClayVideoDemo_Data {
 		FrameArena: ClayVideoDemo_Arena{Memory: make([]byte, 1024)},
 	}
 	return data
+}
+
+func RenderDropdownMenuItem(text clay.String) {
+	clay.UI(clay.ElementDeclaration{
+		Layout: clay.LayoutConfig{
+			Padding: clay.PaddingAll(16),
+		},
+	}, func() {
+		clay.Text(text, clay.TextConfig(clay.TextElementConfig{
+			FontId:    FONT_ID_BODY_16,
+			FontSize:  16,
+			TextColor: clay.Color{R: 255, G: 2255, B: 255, A: 255},
+		}))
+	})
+}
+
+func RenderHeaderButton(text clay.String) {
+	clay.UI(clay.ElementDeclaration{
+		Layout: clay.LayoutConfig{
+			Padding: clay.Padding{16, 16, 8, 8},
+		},
+		BackgroundColor: clay.Color{R: 140, G: 140, B: 140, A: 255},
+		CornerRadius:    clay.CornerRadiusAll(5),
+	}, func() {
+		clay.Text(text, clay.TextConfig(clay.TextElementConfig{
+			FontId:    FONT_ID_BODY_16,
+			FontSize:  16,
+			TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
+		}))
+	})
+}
+
+func HandleSidebarInteraction(elementId clay.ElementId, pointerData clay.PointerData, userData int64) {
+	clickData := (*SidebarClickData)(unsafe.Pointer(uintptr(userData)))
+	// If this button was clicked
+	if pointerData.State == clay.POINTER_DATA_PRESSED_THIS_FRAME {
+		if clickData.RequestedDocumentIndex >= 0 && uint32(clickData.RequestedDocumentIndex) < documents.Length {
+			// Select the corresponding document
+			*clickData.SelectedDocumentIndex = clickData.RequestedDocumentIndex
+		}
+	}
 }
 
 func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArray {
@@ -120,25 +172,24 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 							CornerRadius:    clay.CornerRadiusAll(8),
 						}, func() {
 							// Render dropdown items here
-							//RenderDropdownMenuItem(clay.ToString("New"))
-							//RenderDropdownMenuItem(clay.ToString("Open"))
-							//RenderDropdownMenuItem(clay.ToString("Close"))
+							RenderDropdownMenuItem(clay.ToString("New"))
+							RenderDropdownMenuItem(clay.ToString("Open"))
+							RenderDropdownMenuItem(clay.ToString("Close"))
 						})
 					})
 				}
-
-				//RenderHeaderButton(clay.ToString("Edit"))
-				clay.UI(clay.ElementDeclaration{
-					Layout: clay.LayoutConfig{
-						Sizing: clay.Sizing{
-							Width: clay.SizingGrow(0),
-						},
-					},
-				}, func() {})
-				//RenderHeaderButton(clay.ToString("Upload"))
-				//RenderHeaderButton(clay.ToString("Media"))
-				//RenderHeaderButton(clay.ToString("Support"))
 			})
+			RenderHeaderButton(clay.ToString("Edit"))
+			clay.UI(clay.ElementDeclaration{
+				Layout: clay.LayoutConfig{
+					Sizing: clay.Sizing{
+						Width: clay.SizingGrow(0),
+					},
+				},
+			}, func() {})
+			RenderHeaderButton(clay.ToString("Upload"))
+			RenderHeaderButton(clay.ToString("Media"))
+			RenderHeaderButton(clay.ToString("Support"))
 		})
 
 		clay.UI(clay.ElementDeclaration{
@@ -178,9 +229,51 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 							}))
 						})
 					} else {
-						// TODO: starting here...
+						clickData := alloc[SidebarClickData](data.FrameArena)
+						*clickData = SidebarClickData{RequestedDocumentIndex: int32(i), SelectedDocumentIndex: &data.SelectedDocumentIndex}
+						clay.UI(clay.ElementDeclaration{
+							Layout: sidebarButtonlayout,
+							BackgroundColor: clay.Color{R: 120, G: 120, B: 120, A: func() float32 {
+								if clay.Hovered() {
+									return 120
+								} else {
+									return 0
+								}
+							}()},
+							CornerRadius: clay.CornerRadiusAll(8),
+						}, func() {
+							clay.OnHover(HandleSidebarInteraction, int64(uintptr(unsafe.Pointer(clickData))))
+							clay.Text(document.Title, clay.TextConfig(clay.TextElementConfig{
+								FontId:    FONT_ID_BODY_16,
+								FontSize:  20,
+								TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
+							}))
+						})
 					}
 				}
+			})
+			clay.UI(clay.ElementDeclaration{
+				Id:              clay.ID("MainContent"),
+				BackgroundColor: contentBackgroundColor,
+				Scroll:          clay.ScrollElementConfig{Vertical: true},
+				Layout: clay.LayoutConfig{
+					LayoutDirection: clay.TOP_TO_BOTTOM,
+					ChildGap:        16,
+					Padding:         clay.PaddingAll(16),
+					Sizing:          layoutExpand,
+				},
+			}, func() {
+				selectedDocument := documents.Documents[data.SelectedDocumentIndex]
+				clay.Text(selectedDocument.Title, clay.TextConfig(clay.TextElementConfig{
+					FontId:    FONT_ID_BODY_16,
+					FontSize:  16,
+					TextColor: COLOR_WHITE,
+				}))
+				clay.Text(selectedDocument.Contents, clay.TextConfig(clay.TextElementConfig{
+					FontId:    FONT_ID_BODY_16,
+					FontSize:  24,
+					TextColor: COLOR_WHITE,
+				}))
 			})
 		})
 	})
@@ -191,64 +284,3 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 	}
 	return renderCommands
 }
-
-//Clay_RenderCommandArray ClayVideoDemo_CreateLayout(ClayVideoDemo_Data *data) {
-//    CLAY({ .id = CLAY_ID("OuterContainer"),
-//    }) {
-//        // Child elements go inside braces
-//
-//        CLAY({
-//            .id = CLAY_ID("LowerContent"),
-//            .layout = { .sizing = layoutExpand, .childGap = 16 }
-//        }) {
-//            CLAY({
-//            }) {
-//                for (int i = 0; i < documents.length; i++) {
-//                    if (i == data->selectedDocumentIndex) {
-//                    } else {
-//                        SidebarClickData *clickData = (SidebarClickData *)(data->frameArena.memory + data->frameArena.offset);
-//                        *clickData = (SidebarClickData) { .requestedDocumentIndex = i, .selectedDocumentIndex = &data->selectedDocumentIndex };
-//                        data->frameArena.offset += sizeof(SidebarClickData);
-//                        CLAY({ .layout = sidebarButtonLayout, .backgroundColor = (Clay_Color) { 120, 120, 120, Clay_Hovered() ? 120 : 0 }, .cornerRadius = CLAY_CORNER_RADIUS(8) }) {
-//                            Clay_OnHover(HandleSidebarInteraction, (intptr_t)clickData);
-//                            CLAY_TEXT(document.title, CLAY_TEXT_CONFIG({
-//                                .fontId = FONT_ID_BODY_16,
-//                                .fontSize = 20,
-//                                .textColor = { 255, 255, 255, 255 }
-//                            }));
-//                        }
-//                    }
-//                }
-//            }
-//
-//            CLAY({ .id = CLAY_ID("MainContent"),
-//                .backgroundColor = contentBackgroundColor,
-//                .scroll = { .vertical = true },
-//                .layout = {
-//                    .layoutDirection = CLAY_TOP_TO_BOTTOM,
-//                    .childGap = 16,
-//                    .padding = CLAY_PADDING_ALL(16),
-//                    .sizing = layoutExpand
-//                }
-//            }) {
-//                Document selectedDocument = documents.documents[data->selectedDocumentIndex];
-//                CLAY_TEXT(selectedDocument.title, CLAY_TEXT_CONFIG({
-//                    .fontId = FONT_ID_BODY_16,
-//                    .fontSize = 24,
-//                    .textColor = COLOR_WHITE
-//                }));
-//                CLAY_TEXT(selectedDocument.contents, CLAY_TEXT_CONFIG({
-//                    .fontId = FONT_ID_BODY_16,
-//                    .fontSize = 24,
-//                    .textColor = COLOR_WHITE
-//                }));
-//            }
-//        }
-//    }
-//
-//    Clay_RenderCommandArray renderCommands = Clay_EndLayout();
-//    for (int32_t i = 0; i < renderCommands.length; i++) {
-//        Clay_RenderCommandArray_Get(&renderCommands, i)->boundingBox.y += data->yOffset;
-//    }
-//    return renderCommands;
-//}
