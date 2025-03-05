@@ -120,14 +120,14 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 							CornerRadius:    clay.CornerRadiusAll(8),
 						}, func() {
 							// Render dropdown items here
-							RenderDropdownMenuItem(clay.ToString("New"))
-							RenderDropdownMenuItem(clay.ToString("Open"))
-							RenderDropdownMenuItem(clay.ToString("Close"))
+							//RenderDropdownMenuItem(clay.ToString("New"))
+							//RenderDropdownMenuItem(clay.ToString("Open"))
+							//RenderDropdownMenuItem(clay.ToString("Close"))
 						})
 					})
 				}
 
-				RenderHeaderButton(clay.ToString("Edit"))
+				//RenderHeaderButton(clay.ToString("Edit"))
 				clay.UI(clay.ElementDeclaration{
 					Layout: clay.LayoutConfig{
 						Sizing: clay.Sizing{
@@ -135,9 +135,9 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 						},
 					},
 				}, func() {})
-				RenderHeaderButton(clay.ToString("Upload"))
-				RenderHeaderButton(clay.ToString("Media"))
-				RenderHeaderButton(clay.ToString("Support"))
+				//RenderHeaderButton(clay.ToString("Upload"))
+				//RenderHeaderButton(clay.ToString("Media"))
+				//RenderHeaderButton(clay.ToString("Support"))
 			})
 		})
 
@@ -148,6 +148,12 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 			// TODO: starting here...
 		})
 	})
+
+	renderCommands := clay.EndLayout()
+	for i := int32(0); i < renderCommands.Length; i++ {
+		clay.RenderCommandArray_Get(&renderCommands, i).BoundingBox.Y += data.YOffset
+	}
+	return renderCommands
 }
 
 //Clay_RenderCommandArray ClayVideoDemo_CreateLayout(ClayVideoDemo_Data *data) {

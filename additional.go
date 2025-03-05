@@ -3,7 +3,11 @@ package clay
 import "unsafe"
 
 func (s String) String() string {
-	return string(unsafe.Slice(s.Chars, s.Length))
+	return unsafe.String(s.Chars, s.Length)
+}
+
+func (s StringSlice) String() string {
+	return unsafe.String(s.Chars, s.Length)
 }
 
 func ToString(s string) String {
