@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"log/slog"
+	"runtime/debug"
 	"unsafe"
 
 	"github.com/totallygamerjet/clay"
@@ -14,7 +16,7 @@ import (
 )
 
 func handleClayError(errorText clay.ErrorData) {
-	fmt.Println(errorText.ErrorText)
+	slog.Error(errorText.ErrorText.String(), "stacktrace", debug.Stack())
 }
 
 // TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
