@@ -2987,79 +2987,12 @@ func __InitializePersistentMemory(context *Context) {
 	context.DebugElementData = __DebugElementDataArray_Allocate_Arena(maxElementCount, arena)
 	context.ArenaResetOffset = arena.NextAllocation
 }
-func __CompressChildrenAlongAxis(xAxis bool, totalSizeToDistribute float32, resizableContainerBuffer __int32_tArray) {
-	var (
-		context           *Context       = GetCurrentContext()
-		largestContainers __int32_tArray = context.OpenClipElementStack
-	)
-	for totalSizeToDistribute > 0.1 {
-		largestContainers.Length = 0
-		var largestSize float32 = 0
-		var targetSize float32 = 0
-		for i := int32(0); i < resizableContainerBuffer.Length; i++ {
-			var (
-				childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, i))
-				childSize    float32
-			)
-			if xAxis {
-				childSize = childElement.Dimensions.Width
-			} else {
-				childSize = childElement.Dimensions.Height
-			}
-			if (childSize-largestSize) < 0.1 && (childSize-largestSize) > -0.1 {
-				__int32_tArray_Add(&largestContainers, __int32_tArray_GetValue(&resizableContainerBuffer, i))
-			} else if childSize > largestSize {
-				targetSize = largestSize
-				largestSize = childSize
-				largestContainers.Length = 0
-				__int32_tArray_Add(&largestContainers, __int32_tArray_GetValue(&resizableContainerBuffer, i))
-			} else if childSize > targetSize {
-				targetSize = childSize
-			}
-		}
-		if largestContainers.Length == 0 {
-			return
-		}
-		targetSize = (func() float32 {
-			if targetSize > ((largestSize * float32(largestContainers.Length)) - totalSizeToDistribute) {
-				return targetSize
-			}
-			return (largestSize * float32(largestContainers.Length)) - totalSizeToDistribute
-		}()) / float32(largestContainers.Length)
-		for childOffset := int32(0); childOffset < largestContainers.Length; childOffset++ {
-			var (
-				childIndex   int32          = __int32_tArray_GetValue(&largestContainers, childOffset)
-				childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childIndex)
-				childSize    *float32
-			)
-			if xAxis {
-				childSize = &childElement.Dimensions.Width
-			} else {
-				childSize = &childElement.Dimensions.Height
-			}
-			var childMinSize float32
-			if xAxis {
-				childMinSize = childElement.MinDimensions.Width
-			} else {
-				childMinSize = childElement.MinDimensions.Height
-			}
-			var oldChildSize float32 = *childSize
-			if childMinSize > targetSize {
-				*childSize = childMinSize
-			} else {
-				*childSize = targetSize
-			}
-			totalSizeToDistribute -= oldChildSize - *childSize
-			if *childSize == childMinSize {
-				for i := int32(0); i < resizableContainerBuffer.Length; i++ {
-					if __int32_tArray_GetValue(&resizableContainerBuffer, i) == childIndex {
-						__int32_tArray_RemoveSwapback(&resizableContainerBuffer, i)
-						break
-					}
-				}
-			}
-		}
-	}
+
+var __EPSILON float32 = 0.01
+
+func __FloatEqual(left float32, right float32) bool {
+	var subtracted float32 = left - right
+	return subtracted < __EPSILON && subtracted > -__EPSILON
 }
 func __SizeContainersAlongAxis(xAxis bool) {
 	var (
@@ -3135,7 +3068,6 @@ func __SizeContainersAlongAxis(xAxis bool) {
 				return int32(parent.LayoutConfig.Padding.Top) + int32(parent.LayoutConfig.Padding.Bottom)
 			}())
 			var innerContentSize float32 = 0
-			var growContainerContentSize float32 = 0
 			var totalPaddingAndChildGaps float32 = parentPadding
 			var sizingAlongAxis bool = xAxis && parentStyleConfig.LayoutDirection == LEFT_TO_RIGHT || !xAxis && parentStyleConfig.LayoutDirection == TOP_TO_BOTTOM
 			resizableContainerBuffer.Length = 0
@@ -3170,7 +3102,6 @@ func __SizeContainersAlongAxis(xAxis bool) {
 						innerContentSize += childSize
 					}
 					if childSizing.Type == __SIZING_TYPE_GROW {
-						growContainerContentSize += childSize
 						growContainerCount++
 					}
 					if childOffset > 0 {
@@ -3219,42 +3150,162 @@ func __SizeContainersAlongAxis(xAxis bool) {
 							continue
 						}
 					}
-					__CompressChildrenAlongAxis(xAxis, -sizeToDistribute, resizableContainerBuffer)
-				} else if sizeToDistribute > 0 && growContainerCount > 0 {
-					var targetSize float32 = (sizeToDistribute + growContainerContentSize) / float32(growContainerCount)
-					for childOffset := int32(0); childOffset < resizableContainerBuffer.Length; childOffset++ {
+					for sizeToDistribute < -__EPSILON && resizableContainerBuffer.Length > 0 {
 						var (
-							childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childOffset))
-							childSizing  SizingAxis
+							largest       float32 = 0
+							secondLargest float32 = 0
+							widthToAdd    float32 = sizeToDistribute
 						)
-						if xAxis {
-							childSizing = childElement.LayoutConfig.Sizing.Width
-						} else {
-							childSizing = childElement.LayoutConfig.Sizing.Height
-						}
-						if childSizing.Type == __SIZING_TYPE_GROW {
-							var childSize *float32
-							_ = childSize
+						for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
+							var (
+								child     *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+								childSize float32
+							)
 							if xAxis {
-								childSize = &childElement.Dimensions.Width
+								childSize = child.Dimensions.Width
 							} else {
-								childSize = &childElement.Dimensions.Height
+								childSize = child.Dimensions.Height
 							}
-							var minSize *float32
-							if xAxis {
-								minSize = &childElement.MinDimensions.Width
-							} else {
-								minSize = &childElement.MinDimensions.Height
-							}
-							if targetSize < *minSize {
-								growContainerContentSize -= *minSize
-								__int32_tArray_RemoveSwapback(&resizableContainerBuffer, childOffset)
-								growContainerCount--
-								targetSize = (sizeToDistribute + growContainerContentSize) / float32(growContainerCount)
-								childOffset = -1
+							if __FloatEqual(childSize, largest) {
 								continue
 							}
-							*childSize = targetSize
+							if childSize > largest {
+								secondLargest = largest
+								largest = childSize
+							}
+							if childSize < largest {
+								if secondLargest > childSize {
+									secondLargest = secondLargest
+								} else {
+									secondLargest = childSize
+								}
+								widthToAdd = secondLargest - largest
+							}
+						}
+						if widthToAdd > (sizeToDistribute / float32(resizableContainerBuffer.Length)) {
+							widthToAdd = widthToAdd
+						} else {
+							widthToAdd = sizeToDistribute / float32(resizableContainerBuffer.Length)
+						}
+						for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
+							var (
+								child     *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+								childSize *float32
+							)
+							if xAxis {
+								childSize = &child.Dimensions.Width
+							} else {
+								childSize = &child.Dimensions.Height
+							}
+							var minSize float32
+							if xAxis {
+								minSize = child.MinDimensions.Width
+							} else {
+								minSize = child.MinDimensions.Height
+							}
+							var previousWidth float32 = *childSize
+							if __FloatEqual(*childSize, largest) {
+								*childSize += widthToAdd
+								if *childSize <= minSize {
+									*childSize = minSize
+									__int32_tArray_RemoveSwapback(&resizableContainerBuffer, func() int32 {
+										p_ := &childIndex
+										x := *p_
+										*p_--
+										return x
+									}())
+								}
+								sizeToDistribute -= *childSize - previousWidth
+							}
+						}
+					}
+				} else if sizeToDistribute > 0 && growContainerCount > 0 {
+					for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
+						var (
+							child       *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+							childSizing __SizingType
+						)
+						if xAxis {
+							childSizing = child.LayoutConfig.Sizing.Width.Type
+						} else {
+							childSizing = child.LayoutConfig.Sizing.Height.Type
+						}
+						if childSizing != __SIZING_TYPE_GROW {
+							__int32_tArray_RemoveSwapback(&resizableContainerBuffer, func() int32 {
+								p_ := &childIndex
+								x := *p_
+								*p_--
+								return x
+							}())
+						}
+					}
+					for sizeToDistribute > __EPSILON && resizableContainerBuffer.Length > 0 {
+						var (
+							smallest       float32 = __MAXFLOAT
+							secondSmallest float32 = __MAXFLOAT
+							widthToAdd     float32 = sizeToDistribute
+						)
+						for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
+							var (
+								child     *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+								childSize float32
+							)
+							if xAxis {
+								childSize = child.Dimensions.Width
+							} else {
+								childSize = child.Dimensions.Height
+							}
+							if __FloatEqual(childSize, smallest) {
+								continue
+							}
+							if childSize < smallest {
+								secondSmallest = smallest
+								smallest = childSize
+							}
+							if childSize > smallest {
+								if secondSmallest < childSize {
+									secondSmallest = secondSmallest
+								} else {
+									secondSmallest = childSize
+								}
+								widthToAdd = secondSmallest - smallest
+							}
+						}
+						if widthToAdd < (sizeToDistribute / float32(resizableContainerBuffer.Length)) {
+							widthToAdd = widthToAdd
+						} else {
+							widthToAdd = sizeToDistribute / float32(resizableContainerBuffer.Length)
+						}
+						for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
+							var (
+								child     *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+								childSize *float32
+							)
+							if xAxis {
+								childSize = &child.Dimensions.Width
+							} else {
+								childSize = &child.Dimensions.Height
+							}
+							var maxSize float32
+							if xAxis {
+								maxSize = child.LayoutConfig.Sizing.Width.Size.MinMax.Max
+							} else {
+								maxSize = child.LayoutConfig.Sizing.Height.Size.MinMax.Max
+							}
+							var previousWidth float32 = *childSize
+							if __FloatEqual(*childSize, smallest) {
+								*childSize += widthToAdd
+								if *childSize >= maxSize {
+									*childSize = maxSize
+									__int32_tArray_RemoveSwapback(&resizableContainerBuffer, func() int32 {
+										p_ := &childIndex
+										x := *p_
+										*p_--
+										return x
+									}())
+								}
+								sizeToDistribute -= *childSize - previousWidth
+							}
 						}
 					}
 				}
@@ -4063,8 +4114,8 @@ func MinMemorySize() uint32 {
 	__InitializeEphemeralMemory(&fakeContext)
 	return uint32(fakeContext.InternalArena.NextAllocation + 128)
 }
-func CreateArenaWithCapacityAndMemory(capacity uint32, memory unsafe.Pointer) Arena {
-	var arena Arena = Arena{Capacity: uint64(capacity), Memory: (*byte)(memory)}
+func CreateArenaWithCapacityAndMemory(capacity uint64, memory unsafe.Pointer) Arena {
+	var arena Arena = Arena{Capacity: capacity, Memory: (*byte)(memory)}
 	return arena
 }
 func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData unsafe.Pointer) {

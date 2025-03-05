@@ -75,7 +75,7 @@ func main() {
 
 	totalMemorySize := clay.MinMemorySize()
 	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(totalMemorySize, unsafe.Pointer(unsafe.SliceData(memory)))
+	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
 	clay.Initialize(arena, clay.Dimensions{Width: screenWidth, Height: screenHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
 	clay.SetMeasureTextFunction(sdl2.MeasureText, unsafe.Pointer(&fonts))
