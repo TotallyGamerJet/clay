@@ -1,6 +1,7 @@
 package sdl2
 
 import (
+	"log/slog"
 	"strings"
 	"unsafe"
 
@@ -87,12 +88,43 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				panic(err)
 			}
 			surface.Free()
-		case clay.RENDER_COMMAND_TYPE_NONE:
-		case clay.RENDER_COMMAND_TYPE_BORDER:
-		case clay.RENDER_COMMAND_TYPE_IMAGE:
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
+			currentClippingRectangle := sdl.Rect{
+				X: int32(boundingBox.X),
+				Y: int32(boundingBox.Y),
+				W: int32(boundingBox.Width),
+				H: int32(boundingBox.Height),
+			}
+			if err := renderer.SetClipRect(&currentClippingRectangle); err != nil {
+				panic(err)
+			}
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
+			if err := renderer.SetClipRect(nil); err != nil {
+				panic(err)
+			}
+		case clay.RENDER_COMMAND_TYPE_IMAGE:
+			config := &renderCommand.RenderData.Image
+			texture, err := renderer.CreateTextureFromSurface((*sdl.Surface)(config.ImageData))
+			if err != nil {
+				panic(err)
+			}
+			destination := sdl.Rect{
+				X: int32(boundingBox.X),
+				Y: int32(boundingBox.Y),
+				W: int32(boundingBox.Width),
+				H: int32(boundingBox.Height),
+			}
+			if err := renderer.Copy(texture, nil, &destination); err != nil {
+				panic(err)
+			}
+			if err := texture.Destroy(); err != nil {
+				panic(err)
+			}
+		case clay.RENDER_COMMAND_TYPE_BORDER:
+		case clay.RENDER_COMMAND_TYPE_NONE:
 		case clay.RENDER_COMMAND_TYPE_CUSTOM:
+		default:
+			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}
 	}
 	//for (uint32_t i = 0; i < renderCommands.length; i++)
@@ -101,63 +133,6 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 	//        Clay_BoundingBox boundingBox = renderCommand->boundingBox;
 	//        switch (renderCommand->commandType)
 	//        {
-	//            case CLAY_RENDER_COMMAND_TYPE_TEXT: {
-	//                Clay_TextRenderData *config = &renderCommand->renderData.text;
-	//                char *cloned = (char *)calloc(config->stringContents.length + 1, 1);
-	//                memcpy(cloned, config->stringContents.chars, config->stringContents.length);
-	//                TTF_Font* font = fonts[config->fontId].font;
-	//                SDL_Surface *surface = TTF_RenderUTF8_Blended(font, cloned, (SDL_Color) {
-	//                        .r = (Uint8)config->textColor.r,
-	//                        .g = (Uint8)config->textColor.g,
-	//                        .b = (Uint8)config->textColor.b,
-	//                        .a = (Uint8)config->textColor.a,
-	//                });
-	//                SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-	//
-	//                SDL_Rect destination = (SDL_Rect){
-	//                        .x = boundingBox.x,
-	//                        .y = boundingBox.y,
-	//                        .w = boundingBox.width,
-	//                        .h = boundingBox.height,
-	//                };
-	//                SDL_RenderCopy(renderer, texture, NULL, &destination);
-	//
-	//                SDL_DestroyTexture(texture);
-	//                SDL_FreeSurface(surface);
-	//                free(cloned);
-	//                break;
-	//            }
-	//            case CLAY_RENDER_COMMAND_TYPE_SCISSOR_START: {
-	//                currentClippingRectangle = (SDL_Rect) {
-	//                        .x = boundingBox.x,
-	//                        .y = boundingBox.y,
-	//                        .w = boundingBox.width,
-	//                        .h = boundingBox.height,
-	//                };
-	//                SDL_RenderSetClipRect(renderer, &currentClippingRectangle);
-	//                break;
-	//            }
-	//            case CLAY_RENDER_COMMAND_TYPE_SCISSOR_END: {
-	//                SDL_RenderSetClipRect(renderer, NULL);
-	//                break;
-	//            }
-	//            case CLAY_RENDER_COMMAND_TYPE_IMAGE: {
-	//                Clay_ImageRenderData *config = &renderCommand->renderData.image;
-	//
-	//                SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, config->imageData);
-	//
-	//                SDL_Rect destination = (SDL_Rect){
-	//                    .x = boundingBox.x,
-	//                    .y = boundingBox.y,
-	//                    .w = boundingBox.width,
-	//                    .h = boundingBox.height,
-	//                };
-	//
-	//                SDL_RenderCopy(renderer, texture, NULL, &destination);
-	//
-	//                SDL_DestroyTexture(texture);
-	//                break;
-	//            }
 	//            case CLAY_RENDER_COMMAND_TYPE_BORDER: {
 	//                Clay_BorderRenderData *config = &renderCommand->renderData.border;
 	//                SDL_SetRenderDrawColor(renderer, CLAY_COLOR_TO_SDL_COLOR_ARGS(config->color));
