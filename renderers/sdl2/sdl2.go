@@ -59,7 +59,7 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
-			cloned := config.StringContents.String()
+			cloned := strings.Clone(config.StringContents.String())
 			font := fonts[config.FontId].Font
 			surface, err := font.RenderUTF8Blended(cloned, sdl.Color{
 				R: uint8(config.TextColor.R),
