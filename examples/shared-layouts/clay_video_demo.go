@@ -145,7 +145,43 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 			Id:     clay.ID("LowerContent"),
 			Layout: clay.LayoutConfig{Sizing: layoutExpand, ChildGap: 16},
 		}, func() {
-			// TODO: starting here...
+			clay.UI(clay.ElementDeclaration{
+				Id:              clay.ID("SideBar"),
+				BackgroundColor: contentBackgroundColor,
+				Layout: clay.LayoutConfig{
+					LayoutDirection: clay.TOP_TO_BOTTOM,
+					Padding:         clay.PaddingAll(16),
+					ChildGap:        8,
+					Sizing: clay.Sizing{
+						Width:  clay.SizingFixed(250),
+						Height: clay.SizingGrow(0),
+					},
+				},
+			}, func() {
+				for i := uint32(0); i < documents.Length; i++ {
+					document := documents.Documents[i]
+					sidebarButtonlayout := clay.LayoutConfig{
+						Sizing:  clay.Sizing{Width: clay.SizingGrow(0)},
+						Padding: clay.PaddingAll(16),
+					}
+
+					if i == uint32(data.SelectedDocumentIndex) {
+						clay.UI(clay.ElementDeclaration{
+							Layout:          sidebarButtonlayout,
+							BackgroundColor: clay.Color{R: 120, G: 120, B: 120, A: 255},
+							CornerRadius:    clay.CornerRadiusAll(8),
+						}, func() {
+							clay.Text(document.Title, clay.TextConfig(clay.TextElementConfig{
+								FontId:    FONT_ID_BODY_16,
+								FontSize:  16,
+								TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
+							}))
+						})
+					} else {
+						// TODO: starting here...
+					}
+				}
+			})
 		})
 	})
 
@@ -166,37 +202,9 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 //            .layout = { .sizing = layoutExpand, .childGap = 16 }
 //        }) {
 //            CLAY({
-//                .id = CLAY_ID("Sidebar"),
-//                .backgroundColor = contentBackgroundColor,
-//                .layout = {
-//                    .layoutDirection = CLAY_TOP_TO_BOTTOM,
-//                    .padding = CLAY_PADDING_ALL(16),
-//                    .childGap = 8,
-//                    .sizing = {
-//                        .width = CLAY_SIZING_FIXED(250),
-//                        .height = CLAY_SIZING_GROW(0)
-//                    }
-//                }
 //            }) {
 //                for (int i = 0; i < documents.length; i++) {
-//                    Document document = documents.documents[i];
-//                    Clay_LayoutConfig sidebarButtonLayout = {
-//                        .sizing = { .width = CLAY_SIZING_GROW(0) },
-//                        .padding = CLAY_PADDING_ALL(16)
-//                    };
-//
 //                    if (i == data->selectedDocumentIndex) {
-//                        CLAY({
-//                            .layout = sidebarButtonLayout,
-//                            .backgroundColor = {120, 120, 120, 255 },
-//                            .cornerRadius = CLAY_CORNER_RADIUS(8)
-//                        }) {
-//                            CLAY_TEXT(document.title, CLAY_TEXT_CONFIG({
-//                                .fontId = FONT_ID_BODY_16,
-//                                .fontSize = 20,
-//                                .textColor = { 255, 255, 255, 255 }
-//                            }));
-//                        }
 //                    } else {
 //                        SidebarClickData *clickData = (SidebarClickData *)(data->frameArena.memory + data->frameArena.offset);
 //                        *clickData = (SidebarClickData) { .requestedDocumentIndex = i, .selectedDocumentIndex = &data->selectedDocumentIndex };
