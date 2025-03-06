@@ -14,17 +14,6 @@ predef: |
 # TODO: figure out why Clay__RenderDebugLayoutElementsList causes a function doesn't return error
 # delete debug pragma region
 # comment out usages of Clay__RenderDebugView
-# replace the int32 one with this:
-#  typedef struct { int32_t capacity; int32_t length; int32_t *internalArray; } Clay__int32_tArray;
-#  typedef struct { int32_t length; int32_t *internalArray; } Clay__int32_tArraySlice;
-#  int32_t int32_t_DEFAULT = {0};
-#  Clay__int32_tArray Clay__int32_tArray_Allocate_Arena(int32_t capacity, Clay_Arena *arena) { return (Clay__int32_tArray){.capacity = capacity, .length = 0, .internalArray = (int32_t *)Clay__Array_Allocate_Arena(capacity, sizeof(int32_t), arena)}; }
-#  int32_t *Clay__int32_tArray_Get(Clay__int32_tArray *array, int32_t index) { return Clay__Array_RangeCheck(index, array->length) ? &array->internalArray[index] : &int32_t_DEFAULT; }
-#  int32_t Clay__int32_tArray_GetValue(Clay__int32_tArray *array, int32_t index) { return Clay__Array_RangeCheck(index, array->length) ? array->internalArray[index] : int32_t_DEFAULT; }
-#  int32_t *Clay__int32_tArray_Add(Clay__int32_tArray *array, int32_t item) { if (Clay__Array_AddCapacityCheck(array->length, array->capacity)) { array->internalArray[array->length++] = item; return &array->internalArray[array->length - 1]; } return &int32_t_DEFAULT; }
-#  int32_t *Clay__int32_tArraySlice_Get(Clay__int32_tArraySlice *slice, int32_t index) { return Clay__Array_RangeCheck(index, slice->length) ? &slice->internalArray[index] : &int32_t_DEFAULT; }
-#  int32_t Clay__int32_tArray_RemoveSwapback(Clay__int32_tArray *array, int32_t index) { if (Clay__Array_RangeCheck(index, array->length)) { array->length--; int32_t removed = array->internalArray[index]; array->internalArray[index] = array->internalArray[array->length]; return removed; } return int32_t_DEFAULT; }
-#  void Clay__int32_tArray_Set(Clay__int32_tArray *array, int32_t index, int32_t value) { if (Clay__Array_RangeCheck(index, array->capacity)) { array->internalArray[index] = value; array->length = index < array->length ? array->length : index + 1; } }
 
 files:
   - name: clay.h
