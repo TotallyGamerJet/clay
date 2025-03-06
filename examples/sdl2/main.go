@@ -10,7 +10,6 @@ import (
 	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
 	"github.com/totallygamerjet/clay/renderers/sdl2"
 
-	"github.com/veandco/go-sdl2/img"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
 )
@@ -29,9 +28,6 @@ func main() {
 	if err := ttf.Init(); err != nil {
 		panic(err)
 	}
-	if err := img.Init(img.INIT_PNG); err != nil {
-		panic(err)
-	}
 
 	font, err := ttf.OpenFont("resources/Roboto-Regular.ttf", 16)
 	if err != nil {
@@ -44,11 +40,6 @@ func main() {
 			font,
 		},
 	}
-
-	//sample_image, err := img.Load("resources/sample.png")
-	//if err != nil {
-	//	panic(err)
-	//}
 
 	var (
 		window   *sdl.Window
