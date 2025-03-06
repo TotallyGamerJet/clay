@@ -1,7 +1,9 @@
 package sdl2
 
 import (
+	"fmt"
 	"log/slog"
+	"math"
 	"strings"
 	"unsafe"
 
@@ -42,19 +44,19 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			if err := renderer.SetDrawColor(uint8(color.R), uint8(color.G), uint8(color.B), uint8(color.A)); err != nil {
 				panic(err)
 			}
-			rect := sdl.Rect{
-				X: int32(boundingBox.X),
-				Y: int32(boundingBox.Y),
-				W: int32(boundingBox.Width),
-				H: int32(boundingBox.Height),
+			rect := sdl.FRect{
+				X: boundingBox.X,
+				Y: boundingBox.Y,
+				W: boundingBox.Width,
+				H: boundingBox.Height,
 			}
 			if config.CornerRadius.TopLeft > 0 {
 				// TODO: SDL_RenderFillRoundedRect(renderer, rect, config->cornerRadius.topLeft, color);
-				if err := renderer.FillRect(&rect); err != nil {
+				if err := RenderFillRoundedRect(renderer, rect, config.CornerRadius.TopLeft, color); err != nil {
 					panic(err)
 				}
 			} else {
-				if err := renderer.FillRect(&rect); err != nil {
+				if err := renderer.FillRectF(&rect); err != nil {
 					panic(err)
 				}
 			}
@@ -198,4 +200,176 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}
 	}
+}
+
+const NUM_CIRCLE_SEGMENTS = 16
+
+func RenderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius float32, _color clay.Color) error {
+	color := sdl.Color{
+		R: uint8(_color.R),
+		G: uint8(_color.G),
+		B: uint8(_color.B),
+		A: uint8(_color.A),
+	}
+
+	indexCount, vertexCount := 0, int32(0)
+
+	maxRadius := min(rect.W, rect.H) / 2.0
+	clampedRadius := min(cornerRadius, maxRadius)
+
+	numCircleSegments := int(max(NUM_CIRCLE_SEGMENTS, clampedRadius*0.5)) // check if needs to be clamped
+
+	var vertices [512]sdl.Vertex
+	var indices [512]int32
+
+	//define center rectangle
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{}} //0 center TL
+	vertexCount++
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1}} //1 center TR
+	vertexCount++
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1, Y: 1}} //2 center BR
+	vertexCount++
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{Y: 1}} //3 center BL
+	vertexCount++
+
+	indices[indexCount] = 0
+	indexCount++
+	indices[indexCount] = 1
+	indexCount++
+	indices[indexCount] = 3
+	indexCount++
+	indices[indexCount] = 1
+	indexCount++
+	indices[indexCount] = 2
+	indexCount++
+	indices[indexCount] = 3
+	indexCount++
+
+	//define rounded corners as triangle fans
+	step := (math.Pi / 2) / float32(numCircleSegments)
+	for i := 0; i < numCircleSegments; i++ {
+		angle1 := float32(i) * step
+		angle2 := (float32(i) + 1) * step
+
+		for j := int32(0); j < 4; j++ {
+			var cx, cy, signX, signY float32
+
+			switch j {
+			case 0:
+				cx = rect.X + clampedRadius
+				cy = rect.Y + clampedRadius
+				signX = -1
+				signY = -1
+				break // Top-left
+			case 1:
+				cx = rect.X + rect.W - clampedRadius
+				cy = rect.Y + clampedRadius
+				signX = 1
+				signY = -1
+				break // Top-right
+			case 2:
+				cx = rect.X + rect.W - clampedRadius
+				cy = rect.Y + rect.H - clampedRadius
+				signX = 1
+				signY = 1
+				break // Bottom-right
+			case 3:
+				cx = rect.X + clampedRadius
+				cy = rect.Y + rect.H - clampedRadius
+				signX = -1
+				signY = 1
+				break // Bottom-left
+			default:
+				return fmt.Errorf("out of bounds index: %d", j)
+			}
+
+			vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: cx + float32(math.Cos(float64(angle1)))*clampedRadius*signX, Y: cy + float32(math.Sin(float64(angle1)))*clampedRadius*signY}, Color: color, TexCoord: sdl.FPoint{}}
+			vertexCount++
+			vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: cx + float32(math.Cos(float64(angle2)))*clampedRadius*signX, Y: cy + float32(math.Sin(float64(angle2)))*clampedRadius*signY}, Color: color, TexCoord: sdl.FPoint{}}
+			vertexCount++
+
+			indices[indexCount] = j // Connect to corresponding central rectangle vertex
+			indexCount++
+			indices[indexCount] = vertexCount - 2
+			indexCount++
+			indices[indexCount] = vertexCount - 1
+			indexCount++
+		}
+	}
+	//Define edge rectangles
+	// Top edge
+	vertices[vertexCount] = sdl.Vertex{sdl.FPoint{rect.X + clampedRadius, rect.Y}, color, sdl.FPoint{0, 0}} //TL
+	vertexCount++
+	vertices[vertexCount] = sdl.Vertex{sdl.FPoint{rect.X + rect.W - clampedRadius, rect.Y}, color, sdl.FPoint{1, 0}} //TR
+	vertexCount++
+
+	indices[indexCount] = 0
+	indexCount++
+	indices[indexCount] = vertexCount - 2 //TL
+	indexCount++
+	indices[indexCount] = vertexCount - 1 //TR
+	indexCount++
+	indices[indexCount] = 1
+	indexCount++
+	indices[indexCount] = 0
+	indexCount++
+	indices[indexCount] = vertexCount - 1 //TR
+	indexCount++
+	// Right edge
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{rect.X + rect.W, rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{1, 0}} //RT
+	vertexCount++
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{rect.X + rect.W, rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{1, 1}} //RB
+	vertexCount++
+
+	indices[indexCount] = 1
+	indexCount++
+	indices[indexCount] = vertexCount - 2 //RT
+	indexCount++
+	indices[indexCount] = vertexCount - 1 //RB
+	indexCount++
+	indices[indexCount] = 2
+	indexCount++
+	indices[indexCount] = 1
+	indexCount++
+	indices[indexCount] = vertexCount - 1 //RB
+	indexCount++
+	// Bottom edge
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{rect.X + rect.W - clampedRadius, rect.Y + rect.H}, Color: color, TexCoord: sdl.FPoint{1, 1}} //BR
+	vertexCount++
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{rect.X + clampedRadius, rect.Y + rect.H}, Color: color, TexCoord: sdl.FPoint{0, 1}} //BL
+	vertexCount++
+
+	indices[indexCount] = 2
+	indexCount++
+	indices[indexCount] = vertexCount - 2 //BR
+	indexCount++
+	indices[indexCount] = vertexCount - 1 //BL
+	indexCount++
+	indices[indexCount] = 3
+	indexCount++
+	indices[indexCount] = 2
+	indexCount++
+	indices[indexCount] = vertexCount - 1 //BL
+	indexCount++
+	// Left edge
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{Y: 1}} //LB
+	vertexCount++
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{}} //LT
+	vertexCount++
+
+	indices[indexCount] = 3
+	indexCount++
+	indices[indexCount] = vertexCount - 2 //LB
+	indexCount++
+	indices[indexCount] = vertexCount - 1 //LT
+	indexCount++
+	indices[indexCount] = 0
+	indexCount++
+	indices[indexCount] = 3
+	indexCount++
+	indices[indexCount] = vertexCount - 1 //LT
+	indexCount++
+
+	// Render everything
+	return renderer.RenderGeometry(nil, vertices[:vertexCount], indices[:indexCount])
 }
