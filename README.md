@@ -6,7 +6,7 @@ This is a Go port of the C layout library ([Clay](https://github.com/nicbarker/c
 
 * Be entirely Go (no Cgo)
 * Idiomatic Go public API
-* No [unsafe]() in the public API
+* No [unsafe](https://pkg.go.dev/unsafe) in the public API
 * Be fast
 
 ## Generate clay.go
