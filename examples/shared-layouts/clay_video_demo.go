@@ -6,7 +6,7 @@ import (
 	"github.com/totallygamerjet/clay"
 )
 
-var COLOR_WHITE = clay.Color{255, 255, 255, 255}
+var COLOR_WHITE = clay.Color{R: 255, G: 255, B: 255, A: 255}
 
 const FONT_ID_BODY_16 = 0
 
@@ -73,7 +73,7 @@ func RenderDropdownMenuItem(text clay.String) {
 func RenderHeaderButton(text clay.String) {
 	clay.UI()(clay.ElementDeclaration{
 		Layout: clay.LayoutConfig{
-			Padding: clay.Padding{16, 16, 8, 8},
+			Padding: clay.Padding{Left: 16, Right: 16, Top: 8, Bottom: 8},
 		},
 		BackgroundColor: clay.Color{R: 140, G: 140, B: 140, A: 255},
 		CornerRadius:    clay.CornerRadiusAll(5),

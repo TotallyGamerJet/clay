@@ -36,8 +36,8 @@ func main() {
 
 	fonts := []sdl2.Font{
 		sl.FONT_ID_BODY_16: {
-			sl.FONT_ID_BODY_16,
-			font,
+			FontId: sl.FONT_ID_BODY_16,
+			Font:   font,
 		},
 	}
 
