@@ -121,96 +121,81 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				panic(err)
 			}
 		case clay.RENDER_COMMAND_TYPE_BORDER:
+			panic("not implemented")
+			//Clay_BorderRenderData *config = &renderCommand->renderData.border;
+			//SDL_SetRenderDrawColor(renderer, CLAY_COLOR_TO_SDL_COLOR_ARGS(config->color));
+			//
+			//if(boundingBox.width > 0 & boundingBox.height > 0){
+			//   const float maxRadius = SDL_min(boundingBox.width, boundingBox.height) / 2.0f;
+			//
+			//   if (config->width.left > 0) {
+			//	   const float clampedRadiusTop = SDL_min((float)config->cornerRadius.topLeft, maxRadius);
+			//	   const float clampedRadiusBottom = SDL_min((float)config->cornerRadius.bottomLeft, maxRadius);
+			//	   SDL_FRect rect = {
+			//		   boundingBox.x,
+			//		   boundingBox.y + clampedRadiusTop,
+			//		   (float)config->width.left,
+			//		   (float)boundingBox.height - clampedRadiusTop - clampedRadiusBottom
+			//	   };
+			//	   SDL_RenderFillRectF(renderer, &rect);
+			//   }
+			//
+			//   if (config->width.right > 0) {
+			//	   const float clampedRadiusTop = SDL_min((float)config->cornerRadius.topRight, maxRadius);
+			//	   const float clampedRadiusBottom = SDL_min((float)config->cornerRadius.bottomRight, maxRadius);
+			//	   SDL_FRect rect = {
+			//		   boundingBox.x + boundingBox.width - config->width.right,
+			//		   boundingBox.y + clampedRadiusTop,
+			//		   (float)config->width.right,
+			//		   (float)boundingBox.height - clampedRadiusTop - clampedRadiusBottom
+			//	   };
+			//	   SDL_RenderFillRectF(renderer, &rect);
+			//   }
+			//
+			//   if (config->width.top > 0) {
+			//	   const float clampedRadiusLeft = SDL_min((float)config->cornerRadius.topLeft, maxRadius);
+			//	   const float clampedRadiusRight = SDL_min((float)config->cornerRadius.topRight, maxRadius);
+			//	   SDL_FRect rect = {
+			//		   boundingBox.x + clampedRadiusLeft,
+			//		   boundingBox.y,
+			//		   boundingBox.width - clampedRadiusLeft - clampedRadiusRight,
+			//		   (float)config->width.top };
+			//	   SDL_RenderFillRectF(renderer, &rect);
+			//   }
+			//
+			//   if (config->width.bottom > 0) {
+			//	   const float clampedRadiusLeft = SDL_min((float)config->cornerRadius.bottomLeft, maxRadius);
+			//	   const float clampedRadiusRight = SDL_min((float)config->cornerRadius.bottomRight, maxRadius);
+			//	   SDL_FRect rect = {
+			//		   boundingBox.x + clampedRadiusLeft,
+			//		   boundingBox.y + boundingBox.height - config->width.bottom,
+			//		   boundingBox.width - clampedRadiusLeft - clampedRadiusRight,
+			//		   (float)config->width.bottom
+			//	   };
+			//	   SDL_RenderFillRectF(renderer, &rect);
+			//   }
+			//
+			//   //corner index: 0->3 topLeft -> CW -> bottonLeft
+			//   if (config->width.top > 0 & config->cornerRadius.topLeft > 0) {
+			//	   SDL_RenderCornerBorder(renderer, &boundingBox, config, 0, config->color);
+			//   }
+			//
+			//   if (config->width.top > 0 & config->cornerRadius.topRight> 0) {
+			//	   SDL_RenderCornerBorder(renderer, &boundingBox, config, 1, config->color);
+			//   }
+			//
+			//   if (config->width.bottom > 0 & config->cornerRadius.bottomLeft > 0) {
+			//	   SDL_RenderCornerBorder(renderer, &boundingBox, config, 2, config->color);
+			//   }
+			//
+			//   if (config->width.bottom > 0 & config->cornerRadius.bottomLeft > 0) {
+			//	   SDL_RenderCornerBorder(renderer, &boundingBox, config, 3, config->color);
+			//   }
+			//}
 		case clay.RENDER_COMMAND_TYPE_NONE:
 		case clay.RENDER_COMMAND_TYPE_CUSTOM:
 		default:
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}
 	}
-	//for (uint32_t i = 0; i < renderCommands.length; i++)
-	//    {
-	//        Clay_RenderCommand *renderCommand = Clay_RenderCommandArray_Get(&renderCommands, i);
-	//        Clay_BoundingBox boundingBox = renderCommand->boundingBox;
-	//        switch (renderCommand->commandType)
-	//        {
-	//            case CLAY_RENDER_COMMAND_TYPE_BORDER: {
-	//                Clay_BorderRenderData *config = &renderCommand->renderData.border;
-	//                SDL_SetRenderDrawColor(renderer, CLAY_COLOR_TO_SDL_COLOR_ARGS(config->color));
-	//
-	//                if(boundingBox.width > 0 & boundingBox.height > 0){
-	//                    const float maxRadius = SDL_min(boundingBox.width, boundingBox.height) / 2.0f;
-	//
-	//                    if (config->width.left > 0) {
-	//                        const float clampedRadiusTop = SDL_min((float)config->cornerRadius.topLeft, maxRadius);
-	//                        const float clampedRadiusBottom = SDL_min((float)config->cornerRadius.bottomLeft, maxRadius);
-	//                        SDL_FRect rect = {
-	//                            boundingBox.x,
-	//                            boundingBox.y + clampedRadiusTop,
-	//                            (float)config->width.left,
-	//                            (float)boundingBox.height - clampedRadiusTop - clampedRadiusBottom
-	//                        };
-	//                        SDL_RenderFillRectF(renderer, &rect);
-	//                    }
-	//
-	//                    if (config->width.right > 0) {
-	//                        const float clampedRadiusTop = SDL_min((float)config->cornerRadius.topRight, maxRadius);
-	//                        const float clampedRadiusBottom = SDL_min((float)config->cornerRadius.bottomRight, maxRadius);
-	//                        SDL_FRect rect = {
-	//                            boundingBox.x + boundingBox.width - config->width.right,
-	//                            boundingBox.y + clampedRadiusTop,
-	//                            (float)config->width.right,
-	//                            (float)boundingBox.height - clampedRadiusTop - clampedRadiusBottom
-	//                        };
-	//                        SDL_RenderFillRectF(renderer, &rect);
-	//                    }
-	//
-	//                    if (config->width.top > 0) {
-	//                        const float clampedRadiusLeft = SDL_min((float)config->cornerRadius.topLeft, maxRadius);
-	//                        const float clampedRadiusRight = SDL_min((float)config->cornerRadius.topRight, maxRadius);
-	//                        SDL_FRect rect = {
-	//                            boundingBox.x + clampedRadiusLeft,
-	//                            boundingBox.y,
-	//                            boundingBox.width - clampedRadiusLeft - clampedRadiusRight,
-	//                            (float)config->width.top };
-	//                        SDL_RenderFillRectF(renderer, &rect);
-	//                    }
-	//
-	//                    if (config->width.bottom > 0) {
-	//                        const float clampedRadiusLeft = SDL_min((float)config->cornerRadius.bottomLeft, maxRadius);
-	//                        const float clampedRadiusRight = SDL_min((float)config->cornerRadius.bottomRight, maxRadius);
-	//                        SDL_FRect rect = {
-	//                            boundingBox.x + clampedRadiusLeft,
-	//                            boundingBox.y + boundingBox.height - config->width.bottom,
-	//                            boundingBox.width - clampedRadiusLeft - clampedRadiusRight,
-	//                            (float)config->width.bottom
-	//                        };
-	//                        SDL_RenderFillRectF(renderer, &rect);
-	//                    }
-	//
-	//                    //corner index: 0->3 topLeft -> CW -> bottonLeft
-	//                    if (config->width.top > 0 & config->cornerRadius.topLeft > 0) {
-	//                        SDL_RenderCornerBorder(renderer, &boundingBox, config, 0, config->color);
-	//                    }
-	//
-	//                    if (config->width.top > 0 & config->cornerRadius.topRight> 0) {
-	//                        SDL_RenderCornerBorder(renderer, &boundingBox, config, 1, config->color);
-	//                    }
-	//
-	//                    if (config->width.bottom > 0 & config->cornerRadius.bottomLeft > 0) {
-	//                        SDL_RenderCornerBorder(renderer, &boundingBox, config, 2, config->color);
-	//                    }
-	//
-	//                    if (config->width.bottom > 0 & config->cornerRadius.bottomLeft > 0) {
-	//                        SDL_RenderCornerBorder(renderer, &boundingBox, config, 3, config->color);
-	//                    }
-	//                }
-	//
-	//                break;
-	//            }
-	//            default: {
-	//                fprintf(stderr, "Error: unhandled render command: %d\n", renderCommand->commandType);
-	//                exit(1);
-	//            }
-	//        }
-	//    }
 }
