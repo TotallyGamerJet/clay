@@ -57,7 +57,7 @@ func ClayVideoDemo_Initialize() ClayVideoDemo_Data {
 }
 
 func RenderDropdownMenuItem(text clay.String) {
-	clay.UI(clay.ElementDeclaration{
+	clay.UI()(clay.ElementDeclaration{
 		Layout: clay.LayoutConfig{
 			Padding: clay.PaddingAll(16),
 		},
@@ -71,7 +71,7 @@ func RenderDropdownMenuItem(text clay.String) {
 }
 
 func RenderHeaderButton(text clay.String) {
-	clay.UI(clay.ElementDeclaration{
+	clay.UI()(clay.ElementDeclaration{
 		Layout: clay.LayoutConfig{
 			Padding: clay.Padding{16, 16, 8, 8},
 		},
@@ -109,7 +109,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 
 	contentBackgroundColor := clay.Color{R: 90, G: 90, B: 90, A: 255}
 
-	clay.UI(clay.ElementDeclaration{
+	clay.UI()(clay.ElementDeclaration{
 		Id:              clay.ID("OuterContainer"),
 		BackgroundColor: clay.Color{R: 43, G: 41, B: 51, A: 255},
 		Layout: clay.LayoutConfig{
@@ -119,7 +119,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 			ChildGap:        16,
 		},
 	}, func() {
-		clay.UI(clay.ElementDeclaration{
+		clay.UI()(clay.ElementDeclaration{
 			Id: clay.ID("HeaderBar"),
 			Layout: clay.LayoutConfig{
 				Sizing: clay.Sizing{
@@ -135,7 +135,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 			BackgroundColor: contentBackgroundColor,
 			CornerRadius:    clay.CornerRadiusAll(5),
 		}, func() {
-			clay.UI(clay.ElementDeclaration{
+			clay.UI()(clay.ElementDeclaration{
 				Id:              clay.ID("FileButton"),
 				Layout:          clay.LayoutConfig{Padding: clay.Padding{Left: 16, Right: 16, Top: 8, Bottom: 8}},
 				BackgroundColor: clay.Color{R: 150, G: 150, B: 150, A: 255},
@@ -151,7 +151,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 					clay.PointerOver(clay.GetElementId(clay.ToString("FileMenu")))
 
 				if fileMenuVisible { // Below has been changed slightly to fix the small bug where the menu would dismiss when mousing over the top gap
-					clay.UI(clay.ElementDeclaration{
+					clay.UI()(clay.ElementDeclaration{
 						Id: clay.ID("FileMenu"),
 						Floating: clay.FloatingElementConfig{
 							AttachTo: clay.ATTACH_TO_PARENT,
@@ -161,7 +161,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 						},
 						Layout: clay.LayoutConfig{Padding: clay.Padding{Top: 8, Bottom: 8}},
 					}, func() {
-						clay.UI(clay.ElementDeclaration{
+						clay.UI()(clay.ElementDeclaration{
 							Layout: clay.LayoutConfig{
 								LayoutDirection: clay.TOP_TO_BOTTOM,
 								Sizing: clay.Sizing{
@@ -180,7 +180,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 				}
 			})
 			RenderHeaderButton(clay.ToString("Edit"))
-			clay.UI(clay.ElementDeclaration{
+			clay.UI()(clay.ElementDeclaration{
 				Layout: clay.LayoutConfig{
 					Sizing: clay.Sizing{
 						Width: clay.SizingGrow(0),
@@ -192,11 +192,11 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 			RenderHeaderButton(clay.ToString("Support"))
 		})
 
-		clay.UI(clay.ElementDeclaration{
+		clay.UI()(clay.ElementDeclaration{
 			Id:     clay.ID("LowerContent"),
 			Layout: clay.LayoutConfig{Sizing: layoutExpand, ChildGap: 16},
 		}, func() {
-			clay.UI(clay.ElementDeclaration{
+			clay.UI()(clay.ElementDeclaration{
 				Id:              clay.ID("SideBar"),
 				BackgroundColor: contentBackgroundColor,
 				Layout: clay.LayoutConfig{
@@ -217,7 +217,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 					}
 
 					if i == uint32(data.SelectedDocumentIndex) {
-						clay.UI(clay.ElementDeclaration{
+						clay.UI()(clay.ElementDeclaration{
 							Layout:          sidebarButtonlayout,
 							BackgroundColor: clay.Color{R: 120, G: 120, B: 120, A: 255},
 							CornerRadius:    clay.CornerRadiusAll(8),
@@ -231,7 +231,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 					} else {
 						clickData := alloc[SidebarClickData](data.FrameArena)
 						*clickData = SidebarClickData{RequestedDocumentIndex: int32(i), SelectedDocumentIndex: &data.SelectedDocumentIndex}
-						clay.UI(clay.ElementDeclaration{
+						clay.UI()(clay.ElementDeclaration{
 							Layout: sidebarButtonlayout,
 							BackgroundColor: clay.Color{R: 120, G: 120, B: 120, A: func() float32 {
 								if clay.Hovered() {
@@ -252,7 +252,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 					}
 				}
 			})
-			clay.UI(clay.ElementDeclaration{
+			clay.UI()(clay.ElementDeclaration{
 				Id:              clay.ID("MainContent"),
 				BackgroundColor: contentBackgroundColor,
 				Scroll:          clay.ScrollElementConfig{Vertical: true},

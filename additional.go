@@ -60,12 +60,14 @@ func CornerRadiusAll(radius float32) CornerRadius {
 
 // TODO: add generic iterator functions for types with [type]_GetValue functions that are converted into methods
 
-func UI(decl ElementDeclaration, children func()) {
+func UI() func(decl ElementDeclaration, children func()) {
 	__OpenElement()
-	__ConfigureOpenElement(decl)
-	defer __CloseElement()
-	if children != nil {
-		children()
+	return func(decl ElementDeclaration, children func()) {
+		__ConfigureOpenElement(decl)
+		defer __CloseElement()
+		if children != nil {
+			children()
+		}
 	}
 }
 
