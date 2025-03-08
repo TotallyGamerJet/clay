@@ -9,10 +9,17 @@ import (
 	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
 	sdl3 "github.com/totallygamerjet/clay/renderers/sdl3"
 
+	_ "embed"
+
 	sdl "github.com/Zyko0/go-sdl3"
 	"github.com/Zyko0/go-sdl3/bin/binsdl"
 	"github.com/Zyko0/go-sdl3/bin/binttf"
 	"github.com/Zyko0/go-sdl3/ttf"
+)
+
+var (
+	//go:embed resources/Roboto-Regular.ttf
+	RobotoTTF []byte
 )
 
 func handleClayError(errorText clay.ErrorData) {
@@ -62,10 +69,19 @@ func main() {
 	}
 	_ = textEngine
 
-	font, err := ttf.OpenFont("resources/Roboto-Regular.ttf", 16)
+	stream, err := sdl.IOFromConstMem(RobotoTTF)
 	if err != nil {
 		panic(err)
 	}
+
+	font, err := ttf.OpenFontIO(stream, false, 16)
+	if err != nil {
+		panic(err)
+	}
+	/*font, err := ttf.OpenFont("resources/Roboto-Regular.ttf", 16)
+	if err != nil {
+		panic(err)
+	}*/
 
 	rendererData := &sdl3.RendererData{
 		Renderer:   renderer,
