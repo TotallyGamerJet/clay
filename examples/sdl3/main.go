@@ -8,9 +8,11 @@ import (
 
 	"github.com/totallygamerjet/clay"
 	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
-	sdl2 "github.com/totallygamerjet/clay/renderers/sdl3"
+	sdl3 "github.com/totallygamerjet/clay/renderers/sdl3"
 
 	sdl "github.com/Zyko0/go-sdl3"
+	"github.com/Zyko0/go-sdl3/bin/binsdl"
+	"github.com/Zyko0/go-sdl3/bin/binttf"
 	"github.com/Zyko0/go-sdl3/ttf"
 )
 
@@ -21,12 +23,14 @@ func handleClayError(errorText clay.ErrorData) {
 // TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
 
 func main() {
-	if err := sdl.LoadLibrary(sdl.Path()); err != nil {
+	/*if err := sdl.LoadLibrary(sdl.Path()); err != nil {
 		panic(err)
 	}
 	if err := ttf.LoadLibrary(ttf.Path()); err != nil {
 		panic(err)
-	}
+	}*/
+	defer binsdl.Load().Unload()
+	defer binttf.Load().Unload()
 
 	if err := sdl.Init(sdl.INIT_VIDEO); err != nil {
 		panic(err)
@@ -41,7 +45,7 @@ func main() {
 		panic(err)
 	}
 
-	fonts := []sdl2.Font{
+	fonts := []sdl3.Font{
 		sl.FONT_ID_BODY_16: {
 			FontId: sl.FONT_ID_BODY_16,
 			Font:   font,
@@ -53,13 +57,10 @@ func main() {
 		renderer *sdl.Renderer
 	)
 
-	sdl.SetHint(sdl.HINT_RENDER_DRIVER, "opengl")
-
 	window, renderer, err = sdl.CreateWindowAndRenderer("SDL", 800, 600, sdl.WINDOW_RESIZABLE)
 	if err != nil {
 		panic(err)
 	}
-	_ = sdl.GL_SetAttribute(sdl.GL_MULTISAMPLESAMPLES, 4) //for antialiasing
 
 	const enableVsync = false
 	if enableVsync {
@@ -74,7 +75,7 @@ func main() {
 	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
 	clay.Initialize(arena, clay.Dimensions{Width: screenWidth, Height: screenHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
-	clay.SetMeasureTextFunction(sdl2.MeasureText, unsafe.Pointer(&fonts))
+	clay.SetMeasureTextFunction(sdl3.MeasureText, unsafe.Pointer(&fonts))
 
 	var NOW = sdl.GetPerformanceCounter()
 	var LAST uint64 = 0
@@ -118,7 +119,7 @@ loop:
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 
-		sdl2.ClayRender(renderer, renderCommands, fonts)
+		sdl3.ClayRender(renderer, renderCommands, fonts)
 
 		renderer.Present()
 	}
