@@ -1,4 +1,4 @@
-package sdl2
+package sdl3
 
 import (
 	"fmt"
@@ -12,14 +12,15 @@ import (
 	"github.com/totallygamerjet/clay"
 )
 
-type Font struct {
-	FontId uint32
-	Font   *ttf.Font
+type RendererData struct {
+	Renderer   *sdl.Renderer
+	TextEngine *ttf.TextEngine
+	Fonts      []*ttf.Font
 }
 
 func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
-	fonts := *(*[]Font)(userData)
-	font := fonts[config.FontId].Font
+	fonts := *(*[]*ttf.Font)(userData)
+	font := fonts[config.FontId]
 
 	width, height, err := font.StringSize(text.String())
 	if err != nil {
@@ -32,61 +33,50 @@ func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData
 	}
 }
 
-func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, fonts []Font) {
+func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArray) {
+	renderer := rendererData.Renderer
+	fonts := rendererData.Fonts
+	textEngine := rendererData.TextEngine
 	for i := int32(0); i < renderCommands.Length; i++ {
 		renderCommand := clay.RenderCommandArray_Get(&renderCommands, i)
 		boundingBox := renderCommand.BoundingBox
+		rect := sdl.FRect{
+			X: boundingBox.X,
+			Y: boundingBox.Y,
+			W: boundingBox.Width,
+			H: boundingBox.Height,
+		}
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
-			color := config.BackgroundColor
-			if err := renderer.SetDrawColor(uint8(color.R), uint8(color.G), uint8(color.B), uint8(color.A)); err != nil {
-				panic(err)
-			}
-			rect := sdl.FRect{
-				X: boundingBox.X,
-				Y: boundingBox.Y,
-				W: boundingBox.Width,
-				H: boundingBox.Height,
-			}
+			renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
+			renderer.SetDrawColor(
+				uint8(config.BackgroundColor.R),
+				uint8(config.BackgroundColor.G),
+				uint8(config.BackgroundColor.B),
+				uint8(config.BackgroundColor.A),
+			)
 			if config.CornerRadius.TopLeft > 0 {
-				// TODO: SDL_RenderFillRoundedRect(renderer, rect, config->cornerRadius.topLeft, color);
-				if err := RenderFillRoundedRect(renderer, rect, config.CornerRadius.TopLeft, color); err != nil {
-					panic(err)
-				}
+				RenderFillRoundedRect(renderer, rect, config.CornerRadius.TopLeft, config.BackgroundColor)
 			} else {
-				if err := renderer.RenderFillRect(&rect); err != nil {
-					panic(err)
-				}
+				renderer.RenderFillRect(&rect)
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
 			cloned := strings.Clone(config.StringContents.String())
-			font := fonts[config.FontId].Font
-			surface, err := font.RenderTextBlended(cloned, sdl.Color{
-				R: uint8(config.TextColor.R),
-				G: uint8(config.TextColor.G),
-				B: uint8(config.TextColor.B),
-				A: uint8(config.TextColor.A),
-			})
+			font := fonts[config.FontId]
+			text, err := textEngine.CreateText(font, cloned)
 			if err != nil {
 				panic(err)
 			}
-			texture, err := renderer.CreateTextureFromSurface(surface)
-			if err != nil {
-				panic(err)
-			}
-			destination := sdl.FRect{
-				X: boundingBox.X,
-				Y: boundingBox.Y,
-				W: boundingBox.Width,
-				H: boundingBox.Height,
-			}
-			if err := renderer.RenderTexture(texture, nil, &destination); err != nil {
-				panic(err)
-			}
-			texture.Destroy()
-			surface.Destroy()
+			text.SetColor(
+				uint8(config.TextColor.R),
+				uint8(config.TextColor.G),
+				uint8(config.TextColor.B),
+				uint8(config.TextColor.A),
+			)
+			text.DrawRenderer(rect.X, rect.Y)
+			text.Destroy()
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
 			currentClippingRectangle := sdl.Rect{
 				X: int32(boundingBox.X),
@@ -108,10 +98,10 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				panic(err)
 			}
 			destination := sdl.FRect{
-				X: boundingBox.X,
-				Y: boundingBox.Y,
-				W: boundingBox.Width,
-				H: boundingBox.Height,
+				X: rect.X,
+				Y: rect.Y,
+				W: rect.W,
+				H: rect.H,
 			}
 			if err := renderer.RenderTexture(texture, nil, &destination); err != nil {
 				panic(err)
@@ -201,18 +191,18 @@ const NUM_CIRCLE_SEGMENTS = 16
 
 func RenderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius float32, _color clay.Color) error {
 	color := sdl.FColor{
-		R: _color.R,
-		G: _color.G,
-		B: _color.B,
-		A: _color.A,
+		R: _color.R / 255,
+		G: _color.G / 255,
+		B: _color.B / 255,
+		A: _color.A / 255,
 	}
 
 	indexCount, vertexCount := 0, int32(0)
 
-	maxRadius := min(rect.W, rect.H) / 2.0
-	clampedRadius := min(cornerRadius, maxRadius)
+	minRadius := min(rect.W, rect.H) / 2.0
+	clampedRadius := min(cornerRadius, minRadius)
 
-	numCircleSegments := int(max(NUM_CIRCLE_SEGMENTS, clampedRadius*0.5)) // check if needs to be clamped
+	numCircleSegments := max(NUM_CIRCLE_SEGMENTS, int(clampedRadius*0.5)) // check if needs to be clamped
 
 	var vertices [512]sdl.Vertex
 	var indices [512]int32
@@ -255,25 +245,21 @@ func RenderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius 
 				cy = rect.Y + clampedRadius
 				signX = -1
 				signY = -1
-				break // Top-left
 			case 1:
 				cx = rect.X + rect.W - clampedRadius
 				cy = rect.Y + clampedRadius
 				signX = 1
 				signY = -1
-				break // Top-right
 			case 2:
 				cx = rect.X + rect.W - clampedRadius
 				cy = rect.Y + rect.H - clampedRadius
 				signX = 1
 				signY = 1
-				break // Bottom-right
 			case 3:
 				cx = rect.X + clampedRadius
 				cy = rect.Y + rect.H - clampedRadius
 				signX = -1
 				signY = 1
-				break // Bottom-left
 			default:
 				return fmt.Errorf("out of bounds index: %d", j)
 			}

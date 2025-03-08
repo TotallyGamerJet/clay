@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"runtime/debug"
 	"unsafe"
@@ -23,6 +22,9 @@ func handleClayError(errorText clay.ErrorData) {
 // TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
 
 func main() {
+	const (
+		winWidth, winHeight = 800, 600
+	)
 	/*if err := sdl.LoadLibrary(sdl.Path()); err != nil {
 		panic(err)
 	}
@@ -40,88 +42,91 @@ func main() {
 		panic(err)
 	}
 
+	var (
+		window   *sdl.Window
+		renderer *sdl.Renderer
+		err      error
+	)
+
+	window, renderer, err = sdl.CreateWindowAndRenderer("SDL", winWidth, winHeight, sdl.WINDOW_RESIZABLE)
+	if err != nil {
+		panic(err)
+	}
+	if err := window.SetResizable(true); err != nil {
+		panic(err)
+	}
+
+	textEngine, err := ttf.CreateRendererTextEngine(renderer)
+	if err != nil {
+		panic(err)
+	}
+	_ = textEngine
+
 	font, err := ttf.OpenFont("resources/Roboto-Regular.ttf", 16)
 	if err != nil {
 		panic(err)
 	}
 
-	fonts := []sdl3.Font{
-		sl.FONT_ID_BODY_16: {
-			FontId: sl.FONT_ID_BODY_16,
-			Font:   font,
+	rendererData := &sdl3.RendererData{
+		Renderer:   renderer,
+		TextEngine: textEngine,
+		Fonts: []*ttf.Font{
+			font,
 		},
 	}
 
-	var (
-		window   *sdl.Window
-		renderer *sdl.Renderer
-	)
-
-	window, renderer, err = sdl.CreateWindowAndRenderer("SDL", 800, 600, sdl.WINDOW_RESIZABLE)
-	if err != nil {
-		panic(err)
-	}
-
-	const enableVsync = false
-	if enableVsync {
-		renderer.SetVSync(1)
-	}
-	_ = renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND) //for alpha blending
-
-	const screenWidth, screenHeight = 800, 600
-
+	// Initialize Clay
 	totalMemorySize := clay.MinMemorySize()
 	memory := make([]byte, totalMemorySize)
 	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
-	clay.Initialize(arena, clay.Dimensions{Width: screenWidth, Height: screenHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
+	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
+	clay.SetMeasureTextFunction(sdl3.MeasureText, unsafe.Pointer(&rendererData.Fonts))
 
-	clay.SetMeasureTextFunction(sdl3.MeasureText, unsafe.Pointer(&fonts))
-
-	var NOW = sdl.GetPerformanceCounter()
-	var LAST uint64 = 0
-	var deltaTime float64 = 0
 	var demoData = sl.ClayVideoDemo_Initialize()
 
-loop:
-	for {
-		scrollDelta := clay.Vector2{}
+	sdl.RunLoop(func() error {
 		var event sdl.Event
 		for sdl.PollEvent(&event) {
 			switch event.Type {
 			case sdl.EVENT_QUIT:
-				break loop
+				return sdl.EndLoop
+			case sdl.EVENT_WINDOW_RESIZED:
+				e := event.WindowEvent()
+				clay.SetLayoutDimensions(clay.Dimensions{
+					Width:  float32(e.Data1),
+					Height: float32(e.Data2),
+				})
+			case sdl.EVENT_MOUSE_MOTION:
+				e := event.MouseMotionEvent()
+				clay.SetPointerState(clay.Vector2{
+					X: e.X,
+					Y: e.Y,
+				}, e.State&sdl.ButtonMask(sdl.BUTTON_LEFT) != 0)
+			case sdl.EVENT_MOUSE_BUTTON_DOWN:
+				e := event.MouseButtonEvent()
+				clay.SetPointerState(clay.Vector2{
+					X: e.X,
+					Y: e.Y,
+				}, e.Button == uint8(sdl.BUTTON_LEFT))
 			case sdl.EVENT_MOUSE_WHEEL:
 				e := event.MouseWheelEvent()
-				scrollDelta.X = float32(e.X)
-				scrollDelta.Y = float32(e.Y)
+				scrollDelta := clay.Vector2{
+					X: e.X,
+					Y: e.Y,
+				}
+				clay.UpdateScrollContainers(true, scrollDelta, 0.01)
 			}
 		}
 
-		LAST = NOW
-		NOW = sdl.GetPerformanceCounter()
-		deltaTime = (float64)((NOW-LAST)*1000) / (float64)(sdl.GetPerformanceFrequency())
-		fmt.Println(deltaTime)
-
-		mouseState, mouseX, mouseY := sdl.GetMouseState()
-		var mousePosition = clay.Vector2{X: float32(mouseX), Y: float32(mouseY)}
-		clay.SetPointerState(mousePosition, mouseState&sdl.ButtonMask(1) != 0)
-
-		clay.UpdateScrollContainers(
-			true,
-			clay.Vector2{X: scrollDelta.X, Y: scrollDelta.Y},
-			float32(deltaTime),
-		)
-
-		windowWidth, windowHeight, _ := window.Size()
-		clay.SetLayoutDimensions(clay.Dimensions{Width: float32(windowWidth), Height: float32(windowHeight)})
-
 		renderCommands := sl.ClayVideoDemo_CreateLayout(&demoData)
+
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 
-		sdl3.ClayRender(renderer, renderCommands, fonts)
+		sdl3.ClayRender(rendererData, renderCommands)
 
 		renderer.Present()
-	}
 
+		return nil
+	})
 }
