@@ -5,14 +5,14 @@ go 1.24.0
 tool github.com/gotranspile/cxgo/cmd/cxgo
 
 require (
-	github.com/Zyko0/go-sdl3 v0.0.0-20250308115800-b2920bf79e1d
+	github.com/Zyko0/go-sdl3 v0.0.0-20250308153408-111c61204c42
 	github.com/ebitengine/purego v0.9.0-alpha.2.0.20250124174847-29f0104e3c2b
 	github.com/gotranspile/cxgo v0.5.0
 	github.com/veandco/go-sdl2 v0.4.40
 )
 
 require (
-	github.com/Zyko0/purego-gen v0.0.0-20250217230141-c752cce82336 // indirect
+	github.com/Zyko0/purego-gen v0.0.0-20250308152853-097c3ba1e28a // indirect
 	github.com/bmatcuk/doublestar v1.3.4 // indirect
 	github.com/chewxy/math32 v1.10.1 // indirect
 	github.com/emicklei/dot v1.6.2 // indirect

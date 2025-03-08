@@ -6,8 +6,12 @@ github.com/Zyko0/go-sdl3 v0.0.0-20250308115634-92f09df6b978 h1:oet+5JPmpkN1wrVG/
 github.com/Zyko0/go-sdl3 v0.0.0-20250308115634-92f09df6b978/go.mod h1:Uck92vyjidubUn+MpQrUmMbdxzAd5AyTOmmIz+K9L40=
 github.com/Zyko0/go-sdl3 v0.0.0-20250308115800-b2920bf79e1d h1:0VaZvr7WK450vLfL3QvpiCZfyioy4ROfWDWamRKpyS4=
 github.com/Zyko0/go-sdl3 v0.0.0-20250308115800-b2920bf79e1d/go.mod h1:Uck92vyjidubUn+MpQrUmMbdxzAd5AyTOmmIz+K9L40=
+github.com/Zyko0/go-sdl3 v0.0.0-20250308153408-111c61204c42 h1:QTkjt62eT6pTTjcZALOkCggf12SBWiaEFj/DomSTUc4=
+github.com/Zyko0/go-sdl3 v0.0.0-20250308153408-111c61204c42/go.mod h1:y9Xormjz/GWcAeGbl+Z2zOaKtKfeeZ+5x8UiojyFFdg=
 github.com/Zyko0/purego-gen v0.0.0-20250217230141-c752cce82336 h1:ixEhUXV50zGYqU6AK2hxCEgbsKWYMNMbSuyUntmsE8c=
 github.com/Zyko0/purego-gen v0.0.0-20250217230141-c752cce82336/go.mod h1:yJn8avSZmgophSwHMUDhlEIzdkB9uUTEctszmQmjxDo=
+github.com/Zyko0/purego-gen v0.0.0-20250308152853-097c3ba1e28a h1:N5RnQ3/z1/HjCivGNfRbID/3QreOQ6Dulr3FAOgULqc=
+github.com/Zyko0/purego-gen v0.0.0-20250308152853-097c3ba1e28a/go.mod h1:yJn8avSZmgophSwHMUDhlEIzdkB9uUTEctszmQmjxDo=
 github.com/bmatcuk/doublestar v1.3.4 h1:gPypJ5xD31uhX6Tf54sDPUOBXTqKH4c9aPY66CyQrS0=
 github.com/bmatcuk/doublestar v1.3.4/go.mod h1:wiQtGV+rzVYxB7WIlirSN++5HPtPlXEo9MEoZQC/PmE=
 github.com/chewxy/math32 v1.10.1 h1:LFpeY0SLJXeaiej/eIp2L40VYfscTvKh/FSEZ68uMkU=
