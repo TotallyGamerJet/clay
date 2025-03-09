@@ -11,9 +11,9 @@ import (
 
 	_ "embed"
 
-	"github.com/Zyko0/go-sdl3/sdl"
 	"github.com/Zyko0/go-sdl3/bin/binsdl"
 	"github.com/Zyko0/go-sdl3/bin/binttf"
+	"github.com/Zyko0/go-sdl3/sdl"
 	"github.com/Zyko0/go-sdl3/ttf"
 )
 
@@ -30,7 +30,7 @@ func handleClayError(errorText clay.ErrorData) {
 
 func main() {
 	const (
-		winWidth, winHeight = 800, 600
+		winWidth, winHeight = 640, 480
 	)
 	/*if err := sdl.LoadLibrary(sdl.Path()); err != nil {
 		panic(err)
@@ -74,7 +74,7 @@ func main() {
 		panic(err)
 	}
 
-	font, err := ttf.OpenFontIO(stream, false, 16)
+	font, err := ttf.OpenFontIO(stream, false, 24)
 	if err != nil {
 		panic(err)
 	}
