@@ -5,7 +5,7 @@ go 1.24.0
 tool github.com/gotranspile/cxgo/cmd/cxgo
 
 require (
-	github.com/Zyko0/go-sdl3 v0.0.0-20250308153408-111c61204c42
+	github.com/Zyko0/go-sdl3 v0.0.0-20250309102339-186b3895f342
 	github.com/ebitengine/purego v0.9.0-alpha.2.0.20250124174847-29f0104e3c2b
 	github.com/gotranspile/cxgo v0.5.0
 	github.com/veandco/go-sdl2 v0.4.40
