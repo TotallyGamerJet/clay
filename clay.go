@@ -1,10 +1,9 @@
 package clay
 
 import (
+	"github.com/gotranspile/cxgo/runtime/libc"
 	"math"
 	"unsafe"
-
-	"github.com/gotranspile/cxgo/runtime/libc"
 )
 
 const __NULL = 0
@@ -2893,8 +2892,7 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 				if parentItem == nil {
 					context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{Length: int32(((len("A floating element was declared with a parentId, but no element with that ID was found.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.ErrorHandler.UserData})
 				} else {
-					idx := int32(int64((uintptr(unsafe.Pointer(parentItem.LayoutElement)) - uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))) / unsafe.Sizeof(LayoutElement{})))
-					clipElementId = uint32(__int32_tArray_GetValue(&context.LayoutElementClipElementIds, idx))
+					clipElementId = uint32(__int32_tArray_GetValue(&context.LayoutElementClipElementIds, int32(int64(uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))))))
 				}
 			} else if declaration.Floating.AttachTo == ATTACH_TO_ROOT {
 				floatingConfig.ParentId = __HashString(String{Length: int32(((len("__RootContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0).Id
@@ -4155,8 +4153,7 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 			*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) = true
 			var currentElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&dfsBuffer, dfsBuffer.Length-1))
 			var mapItem *LayoutElementHashMapItem = __GetHashMapItem(currentElement.Id)
-			idx := int32(int64((uintptr(unsafe.Pointer(currentElement)) - uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))) / unsafe.Sizeof(LayoutElement{})))
-			var clipElementId int32 = __int32_tArray_GetValue(&context.LayoutElementClipElementIds, idx)
+			var clipElementId int32 = __int32_tArray_GetValue(&context.LayoutElementClipElementIds, int32(int64(uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray)))))
 			var clipItem *LayoutElementHashMapItem = __GetHashMapItem(uint32(clipElementId))
 			var elementBox BoundingBox = mapItem.BoundingBox
 			elementBox.X -= root.PointerOffset.X
