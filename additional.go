@@ -1,6 +1,9 @@
 package clay
 
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
 
 func (s String) String() string {
 	return unsafe.String(s.Chars, s.Length)
@@ -8,6 +11,13 @@ func (s String) String() string {
 
 func (s StringSlice) String() string {
 	return unsafe.String(s.Chars, s.Length)
+}
+
+// confirm that ErrorData implements error type
+var _ error = ErrorData{}
+
+func (e ErrorData) Error() string {
+	return fmt.Sprintf("%s (code: %d)", e.ErrorText, e.ErrorType)
 }
 
 func ToString(s string) String {
