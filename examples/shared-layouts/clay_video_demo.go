@@ -27,7 +27,7 @@ type ClayVideoDemo_Arena struct {
 	Memory []byte
 }
 
-func alloc[T any](arena ClayVideoDemo_Arena) *T {
+func alloc[T any](arena *ClayVideoDemo_Arena) *T {
 	prev := uintptr(arena.Offset)
 	arena.Offset = int64(prev + unsafe.Sizeof(*new(T)))
 	return (*T)(unsafe.Add(unsafe.Pointer(unsafe.SliceData(arena.Memory)), prev))
@@ -65,7 +65,7 @@ func RenderDropdownMenuItem(text clay.String) {
 		clay.Text(text, clay.TextConfig(clay.TextElementConfig{
 			FontId:    FONT_ID_BODY_16,
 			FontSize:  16,
-			TextColor: clay.Color{R: 255, G: 2255, B: 255, A: 255},
+			TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
 		}))
 	})
 }
@@ -224,12 +224,12 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 						}, func() {
 							clay.Text(document.Title, clay.TextConfig(clay.TextElementConfig{
 								FontId:    FONT_ID_BODY_16,
-								FontSize:  16,
+								FontSize:  20,
 								TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
 							}))
 						})
 					} else {
-						clickData := alloc[SidebarClickData](data.FrameArena)
+						clickData := alloc[SidebarClickData](&data.FrameArena)
 						*clickData = SidebarClickData{RequestedDocumentIndex: int32(i), SelectedDocumentIndex: &data.SelectedDocumentIndex}
 						clay.UI()(clay.ElementDeclaration{
 							Layout: sidebarButtonlayout,
@@ -266,7 +266,7 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 				selectedDocument := documents.Documents[data.SelectedDocumentIndex]
 				clay.Text(selectedDocument.Title, clay.TextConfig(clay.TextElementConfig{
 					FontId:    FONT_ID_BODY_16,
-					FontSize:  16,
+					FontSize:  24,
 					TextColor: COLOR_WHITE,
 				}))
 				clay.Text(selectedDocument.Contents, clay.TextConfig(clay.TextElementConfig{
