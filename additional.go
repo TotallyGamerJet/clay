@@ -81,8 +81,8 @@ func UI() func(decl ElementDeclaration, children func()) {
 	}
 }
 
-func Text(text String, config *TextElementConfig) {
-	__OpenTextElement(text, config)
+func Text(text string, config *TextElementConfig) {
+	__OpenTextElement(ToString(text), config)
 }
 
 func TextConfig(config TextElementConfig) *TextElementConfig {
