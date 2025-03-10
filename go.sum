@@ -10,6 +10,8 @@ github.com/Zyko0/go-sdl3 v0.0.0-20250308153408-111c61204c42 h1:QTkjt62eT6pTTjcZA
 github.com/Zyko0/go-sdl3 v0.0.0-20250308153408-111c61204c42/go.mod h1:y9Xormjz/GWcAeGbl+Z2zOaKtKfeeZ+5x8UiojyFFdg=
 github.com/Zyko0/go-sdl3 v0.0.0-20250309102339-186b3895f342 h1:Y3gxvIoGLRsmGbjU8rhsjuWmZXPlHbSW5dij3huN6rw=
 github.com/Zyko0/go-sdl3 v0.0.0-20250309102339-186b3895f342/go.mod h1:y9Xormjz/GWcAeGbl+Z2zOaKtKfeeZ+5x8UiojyFFdg=
+github.com/Zyko0/go-sdl3 v0.0.0-20250310120051-295d3d8333ec h1:b+scwXryZS28tAUNIwqKl4sAC/Vp2XMMGADSDcJSnzc=
+github.com/Zyko0/go-sdl3 v0.0.0-20250310120051-295d3d8333ec/go.mod h1:y9Xormjz/GWcAeGbl+Z2zOaKtKfeeZ+5x8UiojyFFdg=
 github.com/Zyko0/purego-gen v0.0.0-20250217230141-c752cce82336 h1:ixEhUXV50zGYqU6AK2hxCEgbsKWYMNMbSuyUntmsE8c=
 github.com/Zyko0/purego-gen v0.0.0-20250217230141-c752cce82336/go.mod h1:yJn8avSZmgophSwHMUDhlEIzdkB9uUTEctszmQmjxDo=
 github.com/Zyko0/purego-gen v0.0.0-20250308152853-097c3ba1e28a h1:N5RnQ3/z1/HjCivGNfRbID/3QreOQ6Dulr3FAOgULqc=
