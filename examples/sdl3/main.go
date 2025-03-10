@@ -6,6 +6,7 @@ import (
 	"unsafe"
 
 	"github.com/totallygamerjet/clay"
+	"github.com/totallygamerjet/clay/examples/fonts"
 	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
 	sdl3 "github.com/totallygamerjet/clay/renderers/sdl3"
 
@@ -15,11 +16,6 @@ import (
 	"github.com/Zyko0/go-sdl3/bin/binttf"
 	"github.com/Zyko0/go-sdl3/sdl"
 	"github.com/Zyko0/go-sdl3/ttf"
-)
-
-var (
-	//go:embed resources/Roboto-Regular.ttf
-	RobotoTTF []byte
 )
 
 func handleClayError(errorText clay.ErrorData) {
@@ -62,9 +58,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	_ = textEngine
 
-	stream, err := sdl.IOFromConstMem(RobotoTTF)
+	stream, err := sdl.IOFromConstMem(fonts.RobotoRegularTTF)
 	if err != nil {
 		panic(err)
 	}
