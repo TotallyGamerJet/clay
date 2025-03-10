@@ -10,8 +10,6 @@ import (
 	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
 	sdl3 "github.com/totallygamerjet/clay/renderers/sdl3"
 
-	_ "embed"
-
 	"github.com/Zyko0/go-sdl3/bin/binsdl"
 	"github.com/Zyko0/go-sdl3/bin/binttf"
 	"github.com/Zyko0/go-sdl3/sdl"
