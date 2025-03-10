@@ -8,15 +8,15 @@ import (
 
 	"github.com/totallygamerjet/clay"
 	"github.com/totallygamerjet/clay/examples/fonts"
-	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
+	"github.com/totallygamerjet/clay/examples/videodemo"
 	"github.com/totallygamerjet/clay/renderers/sdl2"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
 )
 
-func handleClayError(errorText clay.ErrorData) {
-	slog.Error(errorText.ErrorText.String(), "stacktrace", debug.Stack())
+func handleClayError(errorData clay.ErrorData) {
+	slog.Error(errorData.ErrorText.String(), "stacktrace", debug.Stack())
 }
 
 // TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
@@ -44,8 +44,8 @@ func main() {
 	}
 
 	fonts := []sdl2.Font{
-		sl.FONT_ID_BODY_16: {
-			FontId: sl.FONT_ID_BODY_16,
+		videodemo.FontIdBody16: {
+			FontId: videodemo.FontIdBody16,
 			Font:   font,
 		},
 	}
@@ -83,7 +83,7 @@ func main() {
 	var NOW = sdl.GetPerformanceCounter()
 	var LAST uint64 = 0
 	var deltaTime float64 = 0
-	var demoData = sl.ClayVideoDemo_Initialize()
+	var demoData = videodemo.Initialize()
 
 loop:
 	for {
@@ -120,7 +120,7 @@ loop:
 		windowWidth, windowHeight := window.GetSize()
 		clay.SetLayoutDimensions(clay.Dimensions{Width: float32(windowWidth), Height: float32(windowHeight)})
 
-		renderCommands := sl.ClayVideoDemo_CreateLayout(&demoData)
+		renderCommands := videodemo.CreateLayout(&demoData)
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 

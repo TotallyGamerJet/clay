@@ -7,8 +7,8 @@ import (
 
 	"github.com/totallygamerjet/clay"
 	"github.com/totallygamerjet/clay/examples/fonts"
-	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
-	sdl3 "github.com/totallygamerjet/clay/renderers/sdl3"
+	"github.com/totallygamerjet/clay/examples/videodemo"
+	"github.com/totallygamerjet/clay/renderers/sdl3"
 
 	"github.com/Zyko0/go-sdl3/bin/binsdl"
 	"github.com/Zyko0/go-sdl3/bin/binttf"
@@ -16,8 +16,8 @@ import (
 	"github.com/Zyko0/go-sdl3/ttf"
 )
 
-func handleClayError(errorText clay.ErrorData) {
-	slog.Error(errorText.ErrorText.String(), "stacktrace", debug.Stack())
+func handleClayError(errorData clay.ErrorData) {
+	slog.Error(errorData.ErrorText.String(), "stacktrace", debug.Stack())
 }
 
 // TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
@@ -82,7 +82,7 @@ func main() {
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(sdl3.MeasureText, unsafe.Pointer(&rendererData.Fonts))
 
-	var demoData = sl.ClayVideoDemo_Initialize()
+	var demoData = videodemo.Initialize()
 
 	sdl.RunLoop(func() error {
 		var event sdl.Event
@@ -111,7 +111,7 @@ func main() {
 			Y: float32(y),
 		}, state&sdl.BUTTON_LEFT != 0)
 
-		renderCommands := sl.ClayVideoDemo_CreateLayout(&demoData)
+		renderCommands := videodemo.CreateLayout(&demoData)
 
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
