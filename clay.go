@@ -1,9 +1,10 @@
 package clay
 
 import (
-	"github.com/gotranspile/cxgo/runtime/libc"
 	"math"
 	"unsafe"
+
+	"github.com/gotranspile/cxgo/runtime/libc"
 )
 
 const __NULL = 0
@@ -4499,10 +4500,10 @@ func EndLayout() RenderCommandArray {
 	}
 	return context.RenderCommands
 }
-func GetElementId(idString String) ElementId {
+func getElementId(idString String) ElementId {
 	return __HashString(idString, 0, 0)
 }
-func GetElementIdWithIndex(idString String, index uint32) ElementId {
+func getElementIdWithIndex(idString String, index uint32) ElementId {
 	return __HashString(idString, index, 0)
 }
 func Hovered() bool {

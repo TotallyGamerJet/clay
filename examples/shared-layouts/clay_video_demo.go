@@ -147,8 +147,8 @@ func ClayVideoDemo_CreateLayout(data *ClayVideoDemo_Data) clay.RenderCommandArra
 					TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
 				}))
 
-				fileMenuVisible := clay.PointerOver(clay.GetElementId(clay.ToString("FileButton"))) ||
-					clay.PointerOver(clay.GetElementId(clay.ToString("FileMenu")))
+				fileMenuVisible := clay.PointerOver(clay.GetElementId("FileButton")) ||
+					clay.PointerOver(clay.GetElementId("FileMenu"))
 
 				if fileMenuVisible { // Below has been changed slightly to fix the small bug where the menu would dismiss when mousing over the top gap
 					clay.UI()(clay.ElementDeclaration{
