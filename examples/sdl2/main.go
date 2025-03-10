@@ -7,6 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/totallygamerjet/clay"
+	"github.com/totallygamerjet/clay/examples/fonts"
 	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
 	"github.com/totallygamerjet/clay/renderers/sdl2"
 
@@ -29,7 +30,15 @@ func main() {
 		panic(err)
 	}
 
-	font, err := ttf.OpenFont("resources/Roboto-Regular.ttf", 16)
+	stream, err := sdl.RWFromMem(fonts.RobotoRegularTTF)
+	if err != nil {
+		panic(err)
+	}
+
+	font, err := ttf.OpenFontRW(stream, 1, 16)
+	if err != nil {
+		panic(err)
+	}
 	if err != nil {
 		panic(err)
 	}
