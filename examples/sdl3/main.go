@@ -32,12 +32,7 @@ func main() {
 	const (
 		winWidth, winHeight = 640, 480
 	)
-	/*if err := sdl.LoadLibrary(sdl.Path()); err != nil {
-		panic(err)
-	}
-	if err := ttf.LoadLibrary(ttf.Path()); err != nil {
-		panic(err)
-	}*/
+
 	defer binsdl.Load().Unload()
 	defer binttf.Load().Unload()
 
@@ -74,14 +69,10 @@ func main() {
 		panic(err)
 	}
 
-	font, err := ttf.OpenFontIO(stream, false, 24)
+	font, err := ttf.OpenFontIO(stream, false, 16)
 	if err != nil {
 		panic(err)
 	}
-	/*font, err := ttf.OpenFont("resources/Roboto-Regular.ttf", 16)
-	if err != nil {
-		panic(err)
-	}*/
 
 	rendererData := &sdl3.RendererData{
 		Renderer:   renderer,
@@ -112,18 +103,6 @@ func main() {
 					Width:  float32(e.Data1),
 					Height: float32(e.Data2),
 				})
-			case sdl.EVENT_MOUSE_MOTION:
-				e := event.MouseMotionEvent()
-				clay.SetPointerState(clay.Vector2{
-					X: e.X,
-					Y: e.Y,
-				}, e.State&sdl.ButtonMask(sdl.BUTTON_LEFT) != 0)
-			case sdl.EVENT_MOUSE_BUTTON_DOWN:
-				e := event.MouseButtonEvent()
-				clay.SetPointerState(clay.Vector2{
-					X: e.X,
-					Y: e.Y,
-				}, e.Button == uint8(sdl.BUTTON_LEFT))
 			case sdl.EVENT_MOUSE_WHEEL:
 				e := event.MouseWheelEvent()
 				scrollDelta := clay.Vector2{
@@ -133,6 +112,11 @@ func main() {
 				clay.UpdateScrollContainers(true, scrollDelta, 0.01)
 			}
 		}
+		state, x, y := sdl.GetMouseState()
+		clay.SetPointerState(clay.Vector2{
+			X: float32(x),
+			Y: float32(y),
+		}, state&sdl.BUTTON_LEFT != 0)
 
 		renderCommands := sl.ClayVideoDemo_CreateLayout(&demoData)
 
