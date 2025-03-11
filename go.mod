@@ -7,6 +7,7 @@ tool github.com/gotranspile/cxgo/cmd/cxgo
 require (
 	github.com/Zyko0/go-sdl3 v0.0.0-20250310120051-295d3d8333ec
 	github.com/ebitengine/purego v0.9.0-alpha.2.0.20250124174847-29f0104e3c2b
+	github.com/gen2brain/raylib-go/raylib v0.0.0-20250215042252-db8e47f0e5c5
 	github.com/gotranspile/cxgo v0.5.0
 	github.com/veandco/go-sdl2 v0.4.40
 )
@@ -20,7 +21,8 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
 	github.com/spf13/cobra v1.8.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/sys v0.7.0 // indirect
+	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842 // indirect
+	golang.org/x/sys v0.20.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	lukechampine.com/uint128 v1.3.0 // indirect
 	modernc.org/cc/v3 v3.41.0 // indirect
