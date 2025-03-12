@@ -97,7 +97,7 @@ func main() {
 
 	font := &text.GoTextFace{
 		Source: source,
-		Size:   16,
+		Size:   16 * ebiten.Monitor().DeviceScaleFactor(),
 	}
 
 	rendererData := &ebitengine.RendererData{
