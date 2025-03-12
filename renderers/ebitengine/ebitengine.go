@@ -20,6 +20,8 @@ var (
 )
 
 func init() {
+	// Creating a sub-image to avoid bleeding edges
+	// https://github.com/hajimehoshi/ebiten/blob/1a4237213c92be1b9c16176887d992eb4183751b/vector/util.go#L26-L29
 	img := ebiten.NewImage(3, 3)
 	img.Fill(color.White)
 	whiteImage = img.SubImage(image.Rect(1, 1, 2, 2)).(*ebiten.Image)
