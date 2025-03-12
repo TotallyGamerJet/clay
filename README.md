@@ -10,6 +10,12 @@ This is a Go port of the C layout library ([Clay](https://github.com/nicbarker/c
 * No [unsafe](https://pkg.go.dev/unsafe) in the public API
 * Be fast
 
+## Renderers
+Clay includes multiple prebuilt renderers:
+
+* SDL2 - [veandco/go-sdl2](https://github.com/veandco/go-sdl2)
+* SDL3 - [Zyko0/go-sdl3](https://github.com/Zyko0/go-sdl3)
+
 ## Generate clay.go
 
 Everything in `clay.go` is generated from the main project's `clay.h` file using [CxGo](https://github.com/gotranspile/cxgo).
