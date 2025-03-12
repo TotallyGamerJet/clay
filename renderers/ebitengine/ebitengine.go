@@ -44,7 +44,7 @@ func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData 
 	}
 }
 
-func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArray) {
+func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArray) error {
 	screen := rendererData.Screen
 	fonts := rendererData.Fonts
 	for i := int32(0); i < renderCommands.Length; i++ {
@@ -54,7 +54,9 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
 			if config.CornerRadius.TopLeft > 0 {
-				RenderFillRoundedRect(screen, boundingBox, config.CornerRadius.TopLeft, config.BackgroundColor)
+				if err := renderFillRoundedRect(screen, boundingBox, config.CornerRadius.TopLeft, config.BackgroundColor); err != nil {
+					return err
+				}
 			} else {
 				vector.DrawFilledRect(
 					screen,
@@ -105,11 +107,13 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}
 	}
+
+	return nil
 }
 
 const NUM_CIRCLE_SEGMENTS = 16
 
-func RenderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRadius float32, _color clay.Color) error {
+func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRadius float32, _color clay.Color) error {
 	r := _color.R / 255
 	g := _color.G / 255
 	b := _color.B / 255
