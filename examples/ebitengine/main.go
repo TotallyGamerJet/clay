@@ -10,7 +10,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/totallygamerjet/clay"
 	"github.com/totallygamerjet/clay/examples/fonts"
-	sl "github.com/totallygamerjet/clay/examples/shared-layouts"
+	"github.com/totallygamerjet/clay/examples/videodemo"
 	"github.com/totallygamerjet/clay/renderers/ebitengine"
 )
 
@@ -25,7 +25,7 @@ const (
 )
 
 type App struct {
-	demoData     sl.ClayVideoDemo_Data
+	demoData     videodemo.Data
 	cmds         clay.RenderCommandArray
 	rendererData *ebitengine.RendererData
 
@@ -33,7 +33,7 @@ type App struct {
 	height float64
 }
 
-func New(demoData sl.ClayVideoDemo_Data, rendererData *ebitengine.RendererData) *App {
+func New(demoData videodemo.Data, rendererData *ebitengine.RendererData) *App {
 	return &App{
 		demoData:     demoData,
 		rendererData: rendererData,
@@ -55,7 +55,7 @@ func (a *App) Update() error {
 		Y: float32(y),
 	}, ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft))
 
-	a.cmds = sl.ClayVideoDemo_CreateLayout(&a.demoData)
+	a.cmds = videodemo.CreateLayout(&a.demoData)
 
 	return nil
 }
@@ -113,7 +113,7 @@ func main() {
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(ebitengine.MeasureText, unsafe.Pointer(&rendererData.Fonts))
 
-	var demoData = sl.ClayVideoDemo_Initialize()
+	var demoData = videodemo.Initialize()
 
 	app := New(demoData, rendererData)
 
