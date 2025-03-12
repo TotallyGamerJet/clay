@@ -74,10 +74,10 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 
 			opts := &text.DrawOptions{}
 			opts.ColorScale.Scale(
-				config.TextColor.R,
-				config.TextColor.G,
-				config.TextColor.B,
-				config.TextColor.A,
+				config.TextColor.R/255,
+				config.TextColor.G/255,
+				config.TextColor.B/255,
+				config.TextColor.A/255,
 			)
 			opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
 			text.Draw(screen, cloned, font, opts)

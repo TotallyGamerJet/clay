@@ -29,8 +29,8 @@ type App struct {
 	cmds         clay.RenderCommandArray
 	rendererData *ebitengine.RendererData
 
-	width  int
-	height int
+	width  float64
+	height float64
 }
 
 func New(demoData sl.ClayVideoDemo_Data, rendererData *ebitengine.RendererData) *App {
@@ -65,7 +65,14 @@ func (a *App) Draw(screen *ebiten.Image) {
 	ebitengine.ClayRender(a.rendererData, a.cmds)
 }
 
-func (a *App) Layout(outsideWidth, outsideHeight int) (int, int) {
+func (a *App) Layout(_, _ int) (int, int) {
+	panic("Layout should not be called")
+}
+
+func (a *App) LayoutF(outsideWidth, outsideHeight float64) (float64, float64) {
+	s := ebiten.Monitor().DeviceScaleFactor()
+	outsideWidth *= s
+	outsideHeight *= s
 	if outsideWidth != a.width || outsideHeight != a.height {
 		clay.SetLayoutDimensions(clay.Dimensions{
 			Width:  float32(outsideWidth),
