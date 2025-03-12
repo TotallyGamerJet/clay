@@ -22,6 +22,7 @@ func handleClayError(errorText clay.ErrorData) {
 
 const (
 	winWidth, winHeight = 640, 480
+	fontSize            = 16
 )
 
 type App struct {
@@ -29,15 +30,10 @@ type App struct {
 	cmds         clay.RenderCommandArray
 	rendererData *ebitengine.RendererData
 
-	width  float64
-	height float64
-}
-
-func New(demoData videodemo.Data, rendererData *ebitengine.RendererData) *App {
-	return &App{
-		demoData:     demoData,
-		rendererData: rendererData,
-	}
+	fontSource  *text.GoTextFaceSource
+	scaleFactor float64
+	width       float64
+	height      float64
 }
 
 func (a *App) Update() error {
@@ -71,6 +67,12 @@ func (a *App) Layout(_, _ int) (int, int) {
 
 func (a *App) LayoutF(outsideWidth, outsideHeight float64) (float64, float64) {
 	s := ebiten.Monitor().DeviceScaleFactor()
+	if s != a.scaleFactor {
+		a.rendererData.Fonts[0] = &text.GoTextFace{
+			Source: a.fontSource,
+			Size:   fontSize * a.scaleFactor,
+		}
+	}
 	outsideWidth *= s
 	outsideHeight *= s
 	if outsideWidth != a.width || outsideHeight != a.height {
@@ -95,15 +97,19 @@ func main() {
 		panic(err)
 	}
 
-	font := &text.GoTextFace{
-		Source: source,
-		Size:   16 * ebiten.Monitor().DeviceScaleFactor(),
-	}
-
-	rendererData := &ebitengine.RendererData{
-		Fonts: []text.Face{
-			font,
+	scaleFactor := ebiten.Monitor().DeviceScaleFactor()
+	app := &App{
+		rendererData: &ebitengine.RendererData{
+			Fonts: []text.Face{
+				&text.GoTextFace{
+					Source: source,
+					Size:   fontSize * scaleFactor,
+				},
+			},
 		},
+
+		fontSource:  source,
+		scaleFactor: scaleFactor,
 	}
 
 	// Initialize Clay
@@ -111,11 +117,9 @@ func main() {
 	memory := make([]byte, totalMemorySize)
 	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
-	clay.SetMeasureTextFunction(ebitengine.MeasureText, unsafe.Pointer(&rendererData.Fonts))
+	clay.SetMeasureTextFunction(ebitengine.MeasureText, unsafe.Pointer(&app.rendererData.Fonts))
 
-	var demoData = videodemo.Initialize()
-
-	app := New(demoData, rendererData)
+	app.demoData = videodemo.Initialize()
 
 	if err := ebiten.RunGame(app); err != nil {
 		panic(err)
