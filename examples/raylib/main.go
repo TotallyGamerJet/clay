@@ -7,16 +7,10 @@ import (
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/totallygamerjet/clay"
+	"github.com/totallygamerjet/clay/_layouts/fulldemo"
 	fonts2 "github.com/totallygamerjet/clay/examples/fonts"
 	"github.com/totallygamerjet/clay/renderers/raylib"
 )
-
-const (
-	FONT_ID_BODY_24 = 0
-	FONT_ID_BODY_16 = 1
-)
-
-const profileText = "Profile Page one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen"
 
 var (
 	profilePicture   rl.Texture2D
@@ -36,11 +30,11 @@ func main() {
 	profilePicture = rl.LoadTexture("resources/profile-picture.png")
 
 	fonts := []rl.Font{
-		FONT_ID_BODY_24: rl.LoadFontFromMemory(".ttf", fonts2.RobotoRegularTTF, 48, nil),
-		FONT_ID_BODY_16: rl.LoadFontFromMemory(".ttf", fonts2.RobotoMonoMediumTTF, 32, nil),
+		fulldemo.FontIdBody24: rl.LoadFontFromMemory(".ttf", fonts2.RobotoRegularTTF, 48, nil),
+		fulldemo.FontIdBody16: rl.LoadFontFromMemory(".ttf", fonts2.RobotoMonoMediumTTF, 32, nil),
 	}
-	rl.SetTextureFilter(fonts[FONT_ID_BODY_24].Texture, rl.FilterBilinear)
-	rl.SetTextureFilter(fonts[FONT_ID_BODY_16].Texture, rl.FilterBilinear)
+	rl.SetTextureFilter(fonts[fulldemo.FontIdBody24].Texture, rl.FilterBilinear)
+	rl.SetTextureFilter(fonts[fulldemo.FontIdBody16].Texture, rl.FilterBilinear)
 	clay.SetMeasureTextFunction(raylib.MeasureText, unsafe.Pointer(&fonts))
 
 	for !rl.WindowShouldClose() {
@@ -57,7 +51,7 @@ func main() {
 
 func updateDrawFrame(fonts []rl.Font) {
 
-	renderCommands := createLayout()
+	renderCommands := fulldemo.CreateLayout(unsafe.Pointer(&profilePicture))
 
 	rl.BeginDrawing()
 	defer rl.EndDrawing()
@@ -121,33 +115,14 @@ func updateDrawFrame(fonts []rl.Font) {
 //    //----------------------------------------------------------------------------------
 //}
 
-func createLayout() clay.RenderCommandArray {
-	clay.BeginLayout()
-
-	clay.UI()(clay.ElementDeclaration{Id: clay.ID("OuterContainer"), Layout: clay.LayoutConfig{Sizing: clay.Sizing{Width: clay.SizingGrow(0), Height: clay.SizingGrow(0)}, Padding: clay.PaddingAll(16), ChildGap: 16}, BackgroundColor: clay.Color{R: 200, G: 200, B: 200, A: 255}}, func() {
-		clay.UI()(clay.ElementDeclaration{Id: clay.ID("SideBar"), Layout: clay.LayoutConfig{LayoutDirection: clay.TOP_TO_BOTTOM, Sizing: clay.Sizing{Width: clay.SizingFixed(300), Height: clay.SizingGrow(0)}, Padding: clay.PaddingAll(16), ChildGap: 16}, BackgroundColor: clay.Color{R: 150, G: 150, B: 255, A: 255}}, func() {
-			clay.UI()(clay.ElementDeclaration{Id: clay.ID("ProfilePictureOuter"), Layout: clay.LayoutConfig{Sizing: clay.Sizing{Width: clay.SizingGrow(0)}, Padding: clay.PaddingAll(8), ChildGap: 8, ChildAlignment: clay.ChildAlignment{Y: clay.ALIGN_Y_CENTER}}, BackgroundColor: clay.Color{R: 130, G: 130, B: 255, A: 255}}, func() {
-				clay.UI()(clay.ElementDeclaration{Id: clay.ID("ProfilePicture"), Layout: clay.LayoutConfig{Sizing: clay.Sizing{Width: clay.SizingFixed(60), Height: clay.SizingFixed(60)}}, Image: clay.ImageElementConfig{ImageData: unsafe.Pointer(&profilePicture), SourceDimensions: clay.Dimensions{Width: 60, Height: 60}}}, func() {})
-				clay.Text(profileText, clay.TextConfig(clay.TextElementConfig{FontSize: 24, TextColor: clay.Color{A: 255}, TextAlignment: clay.TEXT_ALIGN_RIGHT}))
-			})
-			clay.UI()(clay.ElementDeclaration{Id: clay.ID("SidebarBlob1"), Layout: clay.LayoutConfig{Sizing: clay.Sizing{Width: clay.SizingGrow(0), Height: clay.SizingFixed(50)}}, BackgroundColor: clay.Color{R: 110, G: 110, B: 255, A: 255}}, func() {})
-			clay.UI()(clay.ElementDeclaration{Id: clay.ID("SidebarBlob2"), Layout: clay.LayoutConfig{Sizing: clay.Sizing{Width: clay.SizingGrow(0), Height: clay.SizingFixed(50)}}, BackgroundColor: clay.Color{R: 110, G: 110, B: 255, A: 255}}, func() {})
-			clay.UI()(clay.ElementDeclaration{Id: clay.ID("SidebarBlob3"), Layout: clay.LayoutConfig{Sizing: clay.Sizing{Width: clay.SizingGrow(0), Height: clay.SizingFixed(50)}}, BackgroundColor: clay.Color{R: 110, G: 110, B: 255, A: 255}}, func() {})
-			clay.UI()(clay.ElementDeclaration{Id: clay.ID("SidebarBlob4"), Layout: clay.LayoutConfig{Sizing: clay.Sizing{Width: clay.SizingGrow(0), Height: clay.SizingFixed(50)}}, BackgroundColor: clay.Color{R: 110, G: 110, B: 255, A: 255}}, func() {})
-		})
-	})
-
-	return clay.EndLayout()
-}
-
 //Clay_RenderCommandArray CreateLayout(void) {
 //    Clay_BeginLayout();
 //    CLAY({ .id = CLAY_ID("OuterContainer"), .layout = { .sizing = { .width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0) }, .padding = { 16, 16, 16, 16 }, .childGap = 16 }, .backgroundColor = {200, 200, 200, 255} }) {
 //        CLAY({ .id = CLAY_ID("RightPanel"), .layout = { .layoutDirection = CLAY_TOP_TO_BOTTOM, .sizing = { .width = CLAY_SIZING_GROW(0), .height = CLAY_SIZING_GROW(0) }, .childGap = 16 }}) {
 //            CLAY({ .layout = { .sizing = { .width = CLAY_SIZING_GROW(0) }, .childAlignment = { .x = CLAY_ALIGN_X_RIGHT }, .padding = {8, 8, 8, 8 }, .childGap = 8 }, .backgroundColor =  {180, 180, 180, 255} }) {
-//                RenderHeaderButton(CLAY_STRING("Header Item 1"));
-//                RenderHeaderButton(CLAY_STRING("Header Item 2"));
-//                RenderHeaderButton(CLAY_STRING("Header Item 3"));
+//               RenderHeaderButton(CLAY_STRING("Header Item 1"));
+//               RenderHeaderButton(CLAY_STRING("Header Item 2"));
+//               RenderHeaderButton(CLAY_STRING("Header Item 3"));
 //            }
 //            CLAY({.id = CLAY_ID("MainContent"),
 //                .layout = { .layoutDirection = CLAY_TOP_TO_BOTTOM, .padding = {16, 16, 16, 16}, .childGap = 16, .sizing = { .width = CLAY_SIZING_GROW(0) } },

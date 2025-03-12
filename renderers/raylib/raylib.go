@@ -100,15 +100,31 @@ func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData
 	//lineTextWidth := float32(0)
 	//
 	//textHeight := config.FontSize
-	//fonts := (*Font)(userData)
+	//fonts := *(*[]rl.Font)(userData)
 	//fontToUse := fonts[config.FontId]
 	//
 	//// Font failed to load, likely the fonts are in the wrong place relative to the execution dir.
 	//// RayLib ships with a default font, so we can continue with that built in one.
-	//if fontToUse.glyphs == nil {
-	//	fontToUse = rl.GetDefaultFont()
+	//if fontToUse.Chars == nil {
+	//	fontToUse = rl.GetFontDefault()
 	//}
-	// TODO: implement
+	//scaleFactor := float32(config.FontSize) / float32(fontToUse.BaseSize)
+	//
+	//str := text.String()
+	//for i := 0; i < len(str); i++ {
+	//	if str[i] == '\n' {
+	//		maxTextWidth = max(maxTextWidth, lineTextWidth)
+	//		lineTextWidth = 0
+	//		continue
+	//	}
+	//	index := str[i] - 32
+	//	chars := unsafe.Slice(fontToUse.Chars, fontToUse.CharsCount)
+	//	if chars[index].AdvanceX != 0 {
+	//		lineTextWidth += float32(chars[index].AdvanceX)
+	//	} else {
+	//		lineTextWidth += fontToUse.Recs.Width + fontToUse.
+	//	}
+	//}
 	return clay.Dimensions{}
 }
 

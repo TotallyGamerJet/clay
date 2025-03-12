@@ -7,8 +7,9 @@ import (
 	"unsafe"
 
 	"github.com/totallygamerjet/clay"
+	"github.com/totallygamerjet/clay/_layouts/fulldemo"
+	"github.com/totallygamerjet/clay/_layouts/videodemo"
 	"github.com/totallygamerjet/clay/examples/fonts"
-	"github.com/totallygamerjet/clay/examples/videodemo"
 	"github.com/totallygamerjet/clay/renderers/sdl2"
 
 	"github.com/veandco/go-sdl2/sdl"
@@ -44,7 +45,11 @@ func main() {
 	}
 
 	fonts := []sdl2.Font{
-		videodemo.FontIdBody16: {
+		fulldemo.FontIdBody24: {
+			FontId: videodemo.FontIdBody16,
+			Font:   font,
+		},
+		fulldemo.FontIdBody16: {
 			FontId: videodemo.FontIdBody16,
 			Font:   font,
 		},
@@ -83,8 +88,8 @@ func main() {
 	var NOW = sdl.GetPerformanceCounter()
 	var LAST uint64 = 0
 	var deltaTime float64 = 0
-	var demoData = videodemo.Initialize()
-
+	//var demoData = videodemo.Initialize()
+	//sdl.CreateRGBSurfaceFrom()
 loop:
 	for {
 		scrollDelta := clay.Vector2{}
@@ -120,7 +125,7 @@ loop:
 		windowWidth, windowHeight := window.GetSize()
 		clay.SetLayoutDimensions(clay.Dimensions{Width: float32(windowWidth), Height: float32(windowHeight)})
 
-		renderCommands := videodemo.CreateLayout(&demoData)
+		renderCommands := fulldemo.CreateLayout(nil)
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 

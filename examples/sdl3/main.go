@@ -6,8 +6,8 @@ import (
 	"unsafe"
 
 	"github.com/totallygamerjet/clay"
+	"github.com/totallygamerjet/clay/_layouts/videodemo"
 	"github.com/totallygamerjet/clay/examples/fonts"
-	"github.com/totallygamerjet/clay/examples/videodemo"
 	"github.com/totallygamerjet/clay/renderers/sdl3"
 
 	"github.com/Zyko0/go-sdl3/bin/binsdl"
