@@ -28,8 +28,9 @@ func init() {
 }
 
 type RendererData struct {
-	Screen *ebiten.Image
-	Fonts  []text.Face
+	Screen      *ebiten.Image
+	Fonts       []text.Face
+	ScaleFactor float64
 }
 
 func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
@@ -38,9 +39,10 @@ func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData 
 	font := fonts[config.FontId]
 
 	width, height := text.Measure(txt.String(), font, font.Metrics().HLineGap)
+	scaleFactor := ebiten.Monitor().DeviceScaleFactor() // should we be passing the scaleFactor like we do in the renderer?
 	return clay.Dimensions{
-		Width:  float32(width),
-		Height: float32(height),
+		Width:  float32(width / scaleFactor),
+		Height: float32(height / scaleFactor),
 	}
 }
 
@@ -50,11 +52,16 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 	for i := int32(0); i < renderCommands.Length; i++ {
 		renderCommand := clay.RenderCommandArray_Get(&renderCommands, i)
 		boundingBox := renderCommand.BoundingBox
+		boundingBox.X *= float32(rendererData.ScaleFactor)
+		boundingBox.Y *= float32(rendererData.ScaleFactor)
+		boundingBox.Width *= float32(rendererData.ScaleFactor)
+		boundingBox.Height *= float32(rendererData.ScaleFactor)
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
 			if config.CornerRadius.TopLeft > 0 {
-				if err := renderFillRoundedRect(screen, boundingBox, config.CornerRadius.TopLeft, config.BackgroundColor); err != nil {
+				cornerRadius := config.CornerRadius.TopLeft * float32(rendererData.ScaleFactor)
+				if err := renderFillRoundedRect(screen, boundingBox, cornerRadius, config.BackgroundColor); err != nil {
 					return err
 				}
 			} else {
@@ -64,10 +71,10 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 					boundingBox.Y,
 					boundingBox.Width, boundingBox.Height,
 					color.RGBA{
-						uint8(config.BackgroundColor.R),
-						uint8(config.BackgroundColor.G),
-						uint8(config.BackgroundColor.B),
-						uint8(config.BackgroundColor.A),
+						R: uint8(config.BackgroundColor.R),
+						G: uint8(config.BackgroundColor.G),
+						B: uint8(config.BackgroundColor.B),
+						A: uint8(config.BackgroundColor.A),
 					}, true,
 				)
 			}
@@ -111,7 +118,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 	return nil
 }
 
-const NUM_CIRCLE_SEGMENTS = 16
+const numCircleSegments = 16
 
 func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRadius float32, _color clay.Color) error {
 	r := _color.R / 255
@@ -124,7 +131,7 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 	minRadius := min(rect.Width, rect.Height) / 2.0
 	clampedRadius := min(cornerRadius, minRadius)
 
-	numCircleSegments := max(NUM_CIRCLE_SEGMENTS, int(clampedRadius*0.5)) // check if needs to be clamped
+	numCircleSegments := max(numCircleSegments, int(clampedRadius*0.5)) // check if it needs to be clamped
 
 	var vertices [512]ebiten.Vertex
 	var indices [512]uint16

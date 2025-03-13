@@ -30,10 +30,9 @@ type App struct {
 	cmds         clay.RenderCommandArray
 	rendererData *ebitengine.RendererData
 
-	fontSource  *text.GoTextFaceSource
-	scaleFactor float64
-	width       float64
-	height      float64
+	fontSource *text.GoTextFaceSource
+	width      float64
+	height     float64
 }
 
 func (a *App) Update() error {
@@ -47,8 +46,8 @@ func (a *App) Update() error {
 
 	x, y := ebiten.CursorPosition()
 	clay.SetPointerState(clay.Vector2{
-		X: float32(x),
-		Y: float32(y),
+		X: float32(x) / float32(a.rendererData.ScaleFactor),
+		Y: float32(y) / float32(a.rendererData.ScaleFactor),
 	}, ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft))
 
 	a.cmds = videodemo.CreateLayout(&a.demoData)
@@ -58,29 +57,23 @@ func (a *App) Update() error {
 
 func (a *App) Draw(screen *ebiten.Image) {
 	a.rendererData.Screen = screen
-	ebitengine.ClayRender(a.rendererData, a.cmds)
+	_ = ebitengine.ClayRender(a.rendererData, a.cmds)
 }
 
 func (a *App) Layout(_, _ int) (int, int) {
-	panic("Layout should not be called")
+	panic("use Ebitengine >=v2.5.0")
 }
 
 func (a *App) LayoutF(outsideWidth, outsideHeight float64) (float64, float64) {
+	clay.SetLayoutDimensions(clay.Dimensions{
+		Width:  float32(outsideWidth),
+		Height: float32(outsideHeight),
+	})
+
 	s := ebiten.Monitor().DeviceScaleFactor()
-	if s != a.scaleFactor {
-		a.rendererData.Fonts[0] = &text.GoTextFace{
-			Source: a.fontSource,
-			Size:   fontSize * a.scaleFactor,
-		}
-	}
+	a.rendererData.ScaleFactor = s
 	outsideWidth *= s
 	outsideHeight *= s
-	if outsideWidth != a.width || outsideHeight != a.height {
-		clay.SetLayoutDimensions(clay.Dimensions{
-			Width:  float32(outsideWidth),
-			Height: float32(outsideHeight),
-		})
-	}
 	a.width = outsideWidth
 	a.height = outsideHeight
 
@@ -108,8 +101,7 @@ func main() {
 			},
 		},
 
-		fontSource:  source,
-		scaleFactor: scaleFactor,
+		fontSource: source,
 	}
 
 	// Initialize Clay
