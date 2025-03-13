@@ -15,6 +15,7 @@ Clay includes multiple prebuilt renderers:
 
 * SDL2 - [veandco/go-sdl2](https://github.com/veandco/go-sdl2)
 * SDL3 - [Zyko0/go-sdl3](https://github.com/Zyko0/go-sdl3)
+* Ebitengine - [hajimehoshi/ebiten](https://github.com/hajimehoshi/ebiten)
 
 ## Generate clay.go
 
