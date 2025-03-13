@@ -116,9 +116,9 @@ func main() {
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 
-		sdl3.ClayRender(rendererData, renderCommands)
+		_ = sdl3.ClayRender(rendererData, renderCommands)
 
-		renderer.Present()
+		_ = renderer.Present()
 
 		return nil
 	})

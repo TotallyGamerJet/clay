@@ -124,7 +124,7 @@ loop:
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 
-		sdl2.ClayRender(renderer, renderCommands, fonts)
+		_ = sdl2.ClayRender(renderer, renderCommands, fonts)
 
 		renderer.Present()
 	}

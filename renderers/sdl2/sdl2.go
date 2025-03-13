@@ -24,7 +24,7 @@ func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData
 
 	width, height, err := font.SizeUTF8(chars)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("sdl2: failed to measure text: %w", err))
 	}
 
 	return clay.Dimensions{
@@ -33,7 +33,7 @@ func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData
 	}
 }
 
-func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, fonts []Font) {
+func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, fonts []Font) error {
 	for i := int32(0); i < renderCommands.Length; i++ {
 		renderCommand := clay.RenderCommandArray_Get(&renderCommands, i)
 		boundingBox := renderCommand.BoundingBox
@@ -42,7 +42,7 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			config := &renderCommand.RenderData.Rectangle
 			color := config.BackgroundColor
 			if err := renderer.SetDrawColor(uint8(color.R), uint8(color.G), uint8(color.B), uint8(color.A)); err != nil {
-				panic(err)
+				return err
 			}
 			rect := sdl.FRect{
 				X: boundingBox.X,
@@ -51,13 +51,12 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				H: boundingBox.Height,
 			}
 			if config.CornerRadius.TopLeft > 0 {
-				// TODO: SDL_RenderFillRoundedRect(renderer, rect, config->cornerRadius.topLeft, color);
-				if err := RenderFillRoundedRect(renderer, rect, config.CornerRadius.TopLeft, color); err != nil {
-					panic(err)
+				if err := renderFillRoundedRect(renderer, rect, config.CornerRadius.TopLeft, color); err != nil {
+					return err
 				}
 			} else {
 				if err := renderer.FillRectF(&rect); err != nil {
-					panic(err)
+					return err
 				}
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
@@ -71,11 +70,11 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				A: uint8(config.TextColor.A),
 			})
 			if err != nil {
-				panic(err)
+				return err
 			}
 			texture, err := renderer.CreateTextureFromSurface(surface)
 			if err != nil {
-				panic(err)
+				return err
 			}
 			destination := sdl.Rect{
 				X: int32(boundingBox.X),
@@ -84,10 +83,10 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				H: int32(boundingBox.Height),
 			}
 			if err := renderer.Copy(texture, nil, &destination); err != nil {
-				panic(err)
+				return err
 			}
 			if err := texture.Destroy(); err != nil {
-				panic(err)
+				return err
 			}
 			surface.Free()
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
@@ -98,17 +97,17 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				H: int32(boundingBox.Height),
 			}
 			if err := renderer.SetClipRect(&currentClippingRectangle); err != nil {
-				panic(err)
+				return err
 			}
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
 			if err := renderer.SetClipRect(nil); err != nil {
-				panic(err)
+				return err
 			}
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
 			texture, err := renderer.CreateTextureFromSurface((*sdl.Surface)(config.ImageData))
 			if err != nil {
-				panic(err)
+				return err
 			}
 			destination := sdl.Rect{
 				X: int32(boundingBox.X),
@@ -117,10 +116,10 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				H: int32(boundingBox.Height),
 			}
 			if err := renderer.Copy(texture, nil, &destination); err != nil {
-				panic(err)
+				return err
 			}
 			if err := texture.Destroy(); err != nil {
-				panic(err)
+				return err
 			}
 		case clay.RENDER_COMMAND_TYPE_BORDER:
 			panic("not implemented")
@@ -200,11 +199,12 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}
 	}
+	return nil
 }
 
-const NUM_CIRCLE_SEGMENTS = 16
+const numCircleSegments = 16
 
-func RenderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius float32, _color clay.Color) error {
+func renderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius float32, _color clay.Color) error {
 	color := sdl.Color{
 		R: uint8(_color.R),
 		G: uint8(_color.G),
@@ -217,7 +217,7 @@ func RenderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius 
 	maxRadius := min(rect.W, rect.H) / 2.0
 	clampedRadius := min(cornerRadius, maxRadius)
 
-	numCircleSegments := int(max(NUM_CIRCLE_SEGMENTS, clampedRadius*0.5)) // check if needs to be clamped
+	numCircleSegments := int(max(numCircleSegments, clampedRadius*0.5)) // check if needs to be clamped
 
 	var vertices [512]sdl.Vertex
 	var indices [512]int32

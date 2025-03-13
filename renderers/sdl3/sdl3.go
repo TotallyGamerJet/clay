@@ -24,7 +24,7 @@ func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData
 
 	width, height, err := font.StringSize(text.String())
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("sdl3: failed to measure text: %w", err))
 	}
 
 	return clay.Dimensions{
@@ -33,7 +33,7 @@ func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData
 	}
 }
 
-func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArray) {
+func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArray) error {
 	renderer := rendererData.Renderer
 	fonts := rendererData.Fonts
 	textEngine := rendererData.TextEngine
@@ -57,7 +57,10 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 				uint8(config.BackgroundColor.A),
 			)
 			if config.CornerRadius.TopLeft > 0 {
-				RenderFillRoundedRect(renderer, rect, config.CornerRadius.TopLeft, config.BackgroundColor)
+				err := renderFillRoundedRect(renderer, rect, config.CornerRadius.TopLeft, config.BackgroundColor)
+				if err != nil {
+					return err
+				}
 			} else {
 				renderer.RenderFillRect(&rect)
 			}
@@ -67,7 +70,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 			font := fonts[config.FontId]
 			text, err := textEngine.CreateText(font, cloned)
 			if err != nil {
-				panic(err)
+				return err
 			}
 			text.SetColor(
 				uint8(config.TextColor.R),
@@ -85,17 +88,17 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 				H: int32(boundingBox.Height),
 			}
 			if err := renderer.SetClipRect(&currentClippingRectangle); err != nil {
-				panic(err)
+				return err
 			}
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
 			if err := renderer.SetClipRect(nil); err != nil {
-				panic(err)
+				return err
 			}
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
 			texture, err := renderer.CreateTextureFromSurface((*sdl.Surface)(config.ImageData))
 			if err != nil {
-				panic(err)
+				return err
 			}
 			destination := sdl.FRect{
 				X: rect.X,
@@ -104,7 +107,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 				H: rect.H,
 			}
 			if err := renderer.RenderTexture(texture, nil, &destination); err != nil {
-				panic(err)
+				return err
 			}
 			texture.Destroy()
 		case clay.RENDER_COMMAND_TYPE_BORDER:
@@ -185,11 +188,12 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}
 	}
+	return nil
 }
 
-const NUM_CIRCLE_SEGMENTS = 16
+const numCircleSegments = 16
 
-func RenderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius float32, _color clay.Color) error {
+func renderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius float32, _color clay.Color) error {
 	color := sdl.FColor{
 		R: _color.R / 255,
 		G: _color.G / 255,
@@ -202,7 +206,7 @@ func RenderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius 
 	minRadius := min(rect.W, rect.H) / 2.0
 	clampedRadius := min(cornerRadius, minRadius)
 
-	numCircleSegments := max(NUM_CIRCLE_SEGMENTS, int(clampedRadius*0.5)) // check if needs to be clamped
+	numCircleSegments := max(numCircleSegments, int(clampedRadius*0.5)) // check if needs to be clamped
 
 	var vertices [512]sdl.Vertex
 	var indices [512]int32
