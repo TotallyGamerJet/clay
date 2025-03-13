@@ -523,7 +523,7 @@ func __boolArray_Set(array *__boolArray, index int32, value bool) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -588,7 +588,7 @@ func __int32_tArray_Set(array *__int32_tArray, index int32, value int32) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -653,7 +653,7 @@ func __charArray_Set(array *__charArray, index int32, value int8) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)) = byte(value)
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -718,7 +718,7 @@ func __ElementIdArray_Set(array *__ElementIdArray, index int32, value ElementId)
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -783,7 +783,7 @@ func __LayoutConfigArray_Set(array *__LayoutConfigArray, index int32, value Layo
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -848,7 +848,7 @@ func __TextElementConfigArray_Set(array *__TextElementConfigArray, index int32, 
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -913,7 +913,7 @@ func __ImageElementConfigArray_Set(array *__ImageElementConfigArray, index int32
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -978,7 +978,7 @@ func __FloatingElementConfigArray_Set(array *__FloatingElementConfigArray, index
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1043,7 +1043,7 @@ func __CustomElementConfigArray_Set(array *__CustomElementConfigArray, index int
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1108,7 +1108,7 @@ func __ScrollElementConfigArray_Set(array *__ScrollElementConfigArray, index int
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1173,7 +1173,7 @@ func __BorderElementConfigArray_Set(array *__BorderElementConfigArray, index int
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1238,7 +1238,7 @@ func __StringArray_Set(array *__StringArray, index int32, value String) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1303,7 +1303,7 @@ func __SharedElementConfigArray_Set(array *__SharedElementConfigArray, index int
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1363,7 +1363,7 @@ func RenderCommandArray_Set(array *RenderCommandArray, index int32, value Render
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1455,7 +1455,7 @@ func __ElementConfigArray_Set(array *__ElementConfigArray, index int32, value El
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1524,7 +1524,7 @@ func __WrappedTextLineArray_Set(array *__WrappedTextLineArray, index int32, valu
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1595,7 +1595,7 @@ func __TextElementDataArray_Set(array *__TextElementDataArray, index int32, valu
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1676,7 +1676,7 @@ func LayoutElementArray_Set(array *LayoutElementArray, index int32, value Layout
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1755,7 +1755,7 @@ func __ScrollContainerDataInternalArray_Set(array *__ScrollContainerDataInternal
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1824,7 +1824,7 @@ func __DebugElementDataArray_Set(array *__DebugElementDataArray, index int32, va
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1900,7 +1900,7 @@ func __LayoutElementHashMapItemArray_Set(array *__LayoutElementHashMapItemArray,
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -1971,7 +1971,7 @@ func __MeasuredWordArray_Set(array *__MeasuredWordArray, index int32, value __Me
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -2044,7 +2044,7 @@ func __MeasureTextCacheItemArray_Set(array *__MeasureTextCacheItemArray, index i
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -2114,7 +2114,7 @@ func __LayoutElementTreeNodeArray_Set(array *__LayoutElementTreeNodeArray, index
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -2186,7 +2186,7 @@ func __LayoutElementTreeRootArray_Set(array *__LayoutElementTreeRootArray, index
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index))) = value
 		if index < array.Length {
-			array.Length = array.Length
+			/* (001) */
 		} else {
 			array.Length = index + 1
 		}
@@ -2462,7 +2462,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
 			)
 			if measuredHeight > dimensions.Height {
-				measuredHeight = measuredHeight
+				/* (002) */
 			} else {
 				measuredHeight = dimensions.Height
 			}
@@ -2480,7 +2480,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 				if lineWidth > measuredWidth {
 					measuredWidth = lineWidth
 				} else {
-					measuredWidth = measuredWidth
+					/* (003) */
 				}
 				measured.ContainsNewlines = true
 				lineWidth = 0
@@ -2494,7 +2494,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		__AddMeasuredWord(__MeasuredWord{StartOffset: start, Length: end - start, Width: dimensions.Width, Next: -1}, previousWord)
 		lineWidth += dimensions.Width
 		if measuredHeight > dimensions.Height {
-			measuredHeight = measuredHeight
+			/* (002) */
 		} else {
 			measuredHeight = dimensions.Height
 		}
@@ -2502,7 +2502,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	if lineWidth > measuredWidth {
 		measuredWidth = lineWidth
 	} else {
-		measuredWidth = measuredWidth
+		/* (003) */
 	}
 	measured.MeasuredWordsStartIndex = tempWord.Next
 	measured.UnwrappedDimensions.Width = measuredWidth
@@ -2635,7 +2635,7 @@ func __CloseElement() {
 			)
 			openLayoutElement.Dimensions.Width += child.Dimensions.Width
 			if openLayoutElement.Dimensions.Height > (child.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)) {
-				openLayoutElement.Dimensions.Height = openLayoutElement.Dimensions.Height
+				/* (004) */
 			} else {
 				openLayoutElement.Dimensions.Height = child.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)
 			}
@@ -2644,7 +2644,7 @@ func __CloseElement() {
 			}
 			if !elementHasScrollVertical {
 				if openLayoutElement.MinDimensions.Height > (child.MinDimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)) {
-					openLayoutElement.MinDimensions.Height = openLayoutElement.MinDimensions.Height
+					/* (005) */
 				} else {
 					openLayoutElement.MinDimensions.Height = child.MinDimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)
 				}
@@ -2668,7 +2668,7 @@ func __CloseElement() {
 			)
 			openLayoutElement.Dimensions.Height += child.Dimensions.Height
 			if openLayoutElement.Dimensions.Width > (child.Dimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)) {
-				openLayoutElement.Dimensions.Width = openLayoutElement.Dimensions.Width
+				/* (006) */
 			} else {
 				openLayoutElement.Dimensions.Width = child.Dimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)
 			}
@@ -2677,7 +2677,7 @@ func __CloseElement() {
 			}
 			if !elementHasScrollHorizontal {
 				if openLayoutElement.MinDimensions.Width > (child.MinDimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)) {
-					openLayoutElement.MinDimensions.Width = openLayoutElement.MinDimensions.Width
+					/* (007) */
 				} else {
 					openLayoutElement.MinDimensions.Width = child.MinDimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)
 				}
@@ -2705,7 +2705,7 @@ func __CloseElement() {
 			return layoutConfig.Sizing.Width.Size.MinMax.Min
 		}()) < layoutConfig.Sizing.Width.Size.MinMax.Max {
 			if openLayoutElement.Dimensions.Width > layoutConfig.Sizing.Width.Size.MinMax.Min {
-				openLayoutElement.Dimensions.Width = openLayoutElement.Dimensions.Width
+				/* (006) */
 			} else {
 				openLayoutElement.Dimensions.Width = layoutConfig.Sizing.Width.Size.MinMax.Min
 			}
@@ -2719,7 +2719,7 @@ func __CloseElement() {
 			return layoutConfig.Sizing.Width.Size.MinMax.Min
 		}()) < layoutConfig.Sizing.Width.Size.MinMax.Max {
 			if openLayoutElement.MinDimensions.Width > layoutConfig.Sizing.Width.Size.MinMax.Min {
-				openLayoutElement.MinDimensions.Width = openLayoutElement.MinDimensions.Width
+				/* (007) */
 			} else {
 				openLayoutElement.MinDimensions.Width = layoutConfig.Sizing.Width.Size.MinMax.Min
 			}
@@ -2740,7 +2740,7 @@ func __CloseElement() {
 			return layoutConfig.Sizing.Height.Size.MinMax.Min
 		}()) < layoutConfig.Sizing.Height.Size.MinMax.Max {
 			if openLayoutElement.Dimensions.Height > layoutConfig.Sizing.Height.Size.MinMax.Min {
-				openLayoutElement.Dimensions.Height = openLayoutElement.Dimensions.Height
+				/* (004) */
 			} else {
 				openLayoutElement.Dimensions.Height = layoutConfig.Sizing.Height.Size.MinMax.Min
 			}
@@ -2754,7 +2754,7 @@ func __CloseElement() {
 			return layoutConfig.Sizing.Height.Size.MinMax.Min
 		}()) < layoutConfig.Sizing.Height.Size.MinMax.Max {
 			if openLayoutElement.MinDimensions.Height > layoutConfig.Sizing.Height.Size.MinMax.Min {
-				openLayoutElement.MinDimensions.Height = openLayoutElement.MinDimensions.Height
+				/* (005) */
 			} else {
 				openLayoutElement.MinDimensions.Height = layoutConfig.Sizing.Height.Size.MinMax.Min
 			}
@@ -3029,7 +3029,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 			return rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min
 		}()) < rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Max {
 			if rootElement.Dimensions.Width > rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min {
-				rootElement.Dimensions.Width = rootElement.Dimensions.Width
+				/* (008) */
 			} else {
 				rootElement.Dimensions.Width = rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min
 			}
@@ -3043,7 +3043,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 			return rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min
 		}()) < rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Max {
 			if rootElement.Dimensions.Height > rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min {
-				rootElement.Dimensions.Height = rootElement.Dimensions.Height
+				/* (009) */
 			} else {
 				rootElement.Dimensions.Height = rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min
 			}
@@ -3114,7 +3114,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 					if childSize > innerContentSize {
 						innerContentSize = childSize
 					} else {
-						innerContentSize = innerContentSize
+						/* (010) */
 					}
 				}
 			}
@@ -3177,7 +3177,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 							}
 							if childSize < largest {
 								if secondLargest > childSize {
-									secondLargest = secondLargest
+									/* (011) */
 								} else {
 									secondLargest = childSize
 								}
@@ -3185,7 +3185,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 							}
 						}
 						if widthToAdd > (sizeToDistribute / float32(resizableContainerBuffer.Length)) {
-							widthToAdd = widthToAdd
+							/* (012) */
 						} else {
 							widthToAdd = sizeToDistribute / float32(resizableContainerBuffer.Length)
 						}
@@ -3266,7 +3266,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 							}
 							if childSize > smallest {
 								if secondSmallest < childSize {
-									secondSmallest = secondSmallest
+									/* (013) */
 								} else {
 									secondSmallest = childSize
 								}
@@ -3274,7 +3274,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 							}
 						}
 						if widthToAdd < (sizeToDistribute / float32(resizableContainerBuffer.Length)) {
-							widthToAdd = widthToAdd
+							/* (012) */
 						} else {
 							widthToAdd = sizeToDistribute / float32(resizableContainerBuffer.Length)
 						}
@@ -3336,7 +3336,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 						var scrollElementConfig *ScrollElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
 						if xAxis && scrollElementConfig.Horizontal || !xAxis && scrollElementConfig.Vertical {
 							if maxSize > innerContentSize {
-								maxSize = maxSize
+								/* (014) */
 							} else {
 								maxSize = innerContentSize
 							}
@@ -3351,7 +3351,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 						}()) {
 							*childSize = childSizing.Size.MinMax.Min
 						} else if (*childSize) < maxSize {
-							*childSize = *childSize
+							/* (015) */
 						} else {
 							*childSize = maxSize
 						}
@@ -3882,7 +3882,7 @@ func __CalculateFinalLayout() {
 							var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 							contentSize.Width += childElement.Dimensions.Width
 							if contentSize.Height > childElement.Dimensions.Height {
-								contentSize.Height = contentSize.Height
+								/* (016) */
 							} else {
 								contentSize.Height = childElement.Dimensions.Height
 							}
@@ -3906,7 +3906,7 @@ func __CalculateFinalLayout() {
 						for i := int32(0); i < int32(currentElement.ChildrenOrTextContent.Children.Length); i++ {
 							var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 							if contentSize.Width > childElement.Dimensions.Width {
-								contentSize.Width = contentSize.Width
+								/* (017) */
 							} else {
 								contentSize.Width = childElement.Dimensions.Width
 							}
@@ -4304,7 +4304,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 				}
 				return 0
 			}()) {
-				scrollData.ScrollPosition.X = scrollData.ScrollPosition.X
+				/* (018) */
 			} else if (scrollData.ContentSize.Width - scrollData.LayoutElement.Dimensions.Width) > 0 {
 				scrollData.ScrollPosition.X = -(scrollData.ContentSize.Width - scrollData.LayoutElement.Dimensions.Width)
 			} else {
@@ -4340,7 +4340,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 				}
 				return 0
 			}()) {
-				scrollData.ScrollPosition.Y = scrollData.ScrollPosition.Y
+				/* (019) */
 			} else if (scrollData.ContentSize.Height - scrollData.LayoutElement.Dimensions.Height) > 0 {
 				scrollData.ScrollPosition.Y = -(scrollData.ContentSize.Height - scrollData.LayoutElement.Dimensions.Height)
 			} else {
@@ -4390,7 +4390,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 						return 0
 					}()) > (-(highestPriorityScrollData.ContentSize.Width - highestPriorityScrollData.BoundingBox.Width)) {
 						if highestPriorityScrollData.ScrollPosition.X < 0 {
-							highestPriorityScrollData.ScrollPosition.X = highestPriorityScrollData.ScrollPosition.X
+							/* (020) */
 						} else {
 							highestPriorityScrollData.ScrollPosition.X = 0
 						}
@@ -4409,7 +4409,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 						return 0
 					}()) > (-(highestPriorityScrollData.ContentSize.Height - highestPriorityScrollData.BoundingBox.Height)) {
 						if highestPriorityScrollData.ScrollPosition.Y < 0 {
-							highestPriorityScrollData.ScrollPosition.Y = highestPriorityScrollData.ScrollPosition.Y
+							/* (021) */
 						} else {
 							highestPriorityScrollData.ScrollPosition.Y = 0
 						}
@@ -4435,7 +4435,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 				return 0
 			}()) > (-(highestPriorityScrollData.ContentSize.Height - scrollElement.Dimensions.Height)) {
 				if highestPriorityScrollData.ScrollPosition.Y < 0 {
-					highestPriorityScrollData.ScrollPosition.Y = highestPriorityScrollData.ScrollPosition.Y
+					/* (021) */
 				} else {
 					highestPriorityScrollData.ScrollPosition.Y = 0
 				}
@@ -4451,7 +4451,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 				return 0
 			}()) > (-(highestPriorityScrollData.ContentSize.Width - scrollElement.Dimensions.Width)) {
 				if highestPriorityScrollData.ScrollPosition.X < 0 {
-					highestPriorityScrollData.ScrollPosition.X = highestPriorityScrollData.ScrollPosition.X
+					/* (020) */
 				} else {
 					highestPriorityScrollData.ScrollPosition.X = 0
 				}

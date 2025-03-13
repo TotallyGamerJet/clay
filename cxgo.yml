@@ -66,3 +66,50 @@ files:
         new:
       - old: CLAY_
         new:
+      # below are to fix self-assignment errors given by `go vet`
+      - old: array.Length = array.Length
+        new: /* (001) */
+      - old: measuredHeight = measuredHeight
+        new: /* (002) */
+      - old: measuredWidth = measuredWidth
+        new: /* (003) */
+      - old: openLayoutElement.Dimensions.Height = openLayoutElement.Dimensions.Height
+        new: /* (004) */
+      - old: openLayoutElement.MinDimensions.Height = openLayoutElement.MinDimensions.Height
+        new: /* (005) */
+      - old: openLayoutElement.Dimensions.Width = openLayoutElement.Dimensions.Width
+        new: /* (006) */
+      - old: openLayoutElement.MinDimensions.Width = openLayoutElement.MinDimensions.Width
+        new: /* (007) */
+      - old: rootElement.Dimensions.Width = rootElement.Dimensions.Width
+        new: /* (008) */
+      - old: rootElement.Dimensions.Height = rootElement.Dimensions.Height
+        new: /* (009) */
+      - old: innerContentSize = innerContentSize
+        new: /* (010) */
+      - old: secondLargest = secondLargest
+        new: /* (011) */
+      - old: widthToAdd = widthToAdd
+        new: /* (012) */
+      - old: secondSmallest = secondSmallest
+        new: /* (013) */
+      - old: maxSize = maxSize
+        new: /* (014) */
+      - old: "*childSize = *childSize"
+        new: /* (015) */
+      - old: contentSize.Height = contentSize.Height
+        new: /* (016) */
+      - old: contentSize.Width = contentSize.Width
+        new: /* (017) */
+      - old: scrollData.ScrollPosition.X = scrollData.ScrollPosition.X
+        new: /* (018) */
+      - old: scrollData.ScrollPosition.Y = scrollData.ScrollPosition.Y
+        new: /* (019) */
+      - old: |
+          highestPriorityScrollData.ScrollPosition.X = highestPriorityScrollData.ScrollPosition.X
+
+        new: /* (020) */
+      - old: |
+          highestPriorityScrollData.ScrollPosition.Y = highestPriorityScrollData.ScrollPosition.Y
+
+        new: /* (021) */
