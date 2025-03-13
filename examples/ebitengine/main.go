@@ -26,13 +26,14 @@ const (
 )
 
 type App struct {
-	demoData     videodemo.Data
-	cmds         clay.RenderCommandArray
-	rendererData *ebitengine.RendererData
+	demoData videodemo.Data
+	cmds     clay.RenderCommandArray
 
-	fontSource *text.GoTextFaceSource
-	width      float64
-	height     float64
+	fonts       []text.Face
+	fontSource  *text.GoTextFaceSource
+	scaleFactor float32
+	width       float64
+	height      float64
 }
 
 func (a *App) Update() error {
@@ -46,8 +47,8 @@ func (a *App) Update() error {
 
 	x, y := ebiten.CursorPosition()
 	clay.SetPointerState(clay.Vector2{
-		X: float32(x) / float32(a.rendererData.ScaleFactor),
-		Y: float32(y) / float32(a.rendererData.ScaleFactor),
+		X: float32(x) / a.scaleFactor,
+		Y: float32(y) / a.scaleFactor,
 	}, ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft))
 
 	a.cmds = videodemo.CreateLayout(&a.demoData)
@@ -56,8 +57,7 @@ func (a *App) Update() error {
 }
 
 func (a *App) Draw(screen *ebiten.Image) {
-	a.rendererData.Screen = screen
-	_ = ebitengine.ClayRender(a.rendererData, a.cmds)
+	_ = ebitengine.ClayRender(screen, a.scaleFactor, a.cmds, a.fonts)
 }
 
 func (a *App) Layout(_, _ int) (int, int) {
@@ -71,7 +71,7 @@ func (a *App) LayoutF(outsideWidth, outsideHeight float64) (float64, float64) {
 	})
 
 	s := ebiten.Monitor().DeviceScaleFactor()
-	a.rendererData.ScaleFactor = s
+	a.scaleFactor = float32(s)
 	outsideWidth *= s
 	outsideHeight *= s
 	a.width = outsideWidth
@@ -92,12 +92,10 @@ func main() {
 
 	scaleFactor := ebiten.Monitor().DeviceScaleFactor()
 	app := &App{
-		rendererData: &ebitengine.RendererData{
-			Fonts: []text.Face{
-				&text.GoTextFace{
-					Source: source,
-					Size:   fontSize * scaleFactor,
-				},
+		fonts: []text.Face{
+			&text.GoTextFace{
+				Source: source,
+				Size:   fontSize * scaleFactor,
 			},
 		},
 
@@ -109,7 +107,7 @@ func main() {
 	memory := make([]byte, totalMemorySize)
 	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
-	clay.SetMeasureTextFunction(ebitengine.MeasureText, unsafe.Pointer(&app.rendererData.Fonts))
+	clay.SetMeasureTextFunction(ebitengine.MeasureText, unsafe.Pointer(&app.fonts))
 
 	app.demoData = videodemo.Initialize()
 

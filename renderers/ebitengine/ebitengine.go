@@ -27,12 +27,6 @@ func init() {
 	whiteImage = img.SubImage(image.Rect(1, 1, 2, 2)).(*ebiten.Image)
 }
 
-type RendererData struct {
-	Screen      *ebiten.Image
-	Fonts       []text.Face
-	ScaleFactor float64
-}
-
 func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
 	fonts := *(*[]text.Face)(userData)
 
@@ -46,21 +40,20 @@ func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData 
 	}
 }
 
-func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArray) error {
-	screen := rendererData.Screen
-	fonts := rendererData.Fonts
+func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.RenderCommandArray, fonts []text.Face) error {
+	fullScreen := screen
 	for i := int32(0); i < renderCommands.Length; i++ {
 		renderCommand := clay.RenderCommandArray_Get(&renderCommands, i)
 		boundingBox := renderCommand.BoundingBox
-		boundingBox.X *= float32(rendererData.ScaleFactor)
-		boundingBox.Y *= float32(rendererData.ScaleFactor)
-		boundingBox.Width *= float32(rendererData.ScaleFactor)
-		boundingBox.Height *= float32(rendererData.ScaleFactor)
+		boundingBox.X *= scaleFactor
+		boundingBox.Y *= scaleFactor
+		boundingBox.Width *= scaleFactor
+		boundingBox.Height *= scaleFactor
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
 			if config.CornerRadius.TopLeft > 0 {
-				cornerRadius := config.CornerRadius.TopLeft * float32(rendererData.ScaleFactor)
+				cornerRadius := config.CornerRadius.TopLeft * scaleFactor
 				if err := renderFillRoundedRect(screen, boundingBox, cornerRadius, config.BackgroundColor); err != nil {
 					return err
 				}
@@ -93,13 +86,13 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 			opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
 			text.Draw(screen, cloned, font, opts)
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
-			screen = rendererData.Screen.SubImage(image.Rect(
+			screen = screen.SubImage(image.Rect(
 				int(boundingBox.X), int(boundingBox.Y),
 				int(boundingBox.X+boundingBox.Width),
 				int(boundingBox.Y+boundingBox.Height),
 			)).(*ebiten.Image)
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
-			screen = rendererData.Screen
+			screen = fullScreen
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
 			img := (*ebiten.Image)(config.ImageData)
