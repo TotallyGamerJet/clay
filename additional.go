@@ -2,6 +2,7 @@ package clay
 
 import (
 	"fmt"
+	"iter"
 	"unsafe"
 )
 
@@ -95,4 +96,15 @@ func GetElementId(idString string) ElementId {
 
 func GetElementIdWithIndex(idString string, index uint32) ElementId {
 	return getElementIdWithIndex(toString(idString), index)
+}
+
+func (r *RenderCommandArray) Iter() iter.Seq[RenderCommand] {
+	return func(yield func(RenderCommand) bool) {
+		cmds := unsafe.Slice(r.InternalArray, r.Length)
+		for _, v := range cmds {
+			if !yield(v) {
+				return
+			}
+		}
+	}
 }

@@ -34,8 +34,7 @@ func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData
 }
 
 func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, fonts []Font) error {
-	for i := int32(0); i < renderCommands.Length; i++ {
-		renderCommand := clay.RenderCommandArray_Get(&renderCommands, i)
+	for renderCommand := range renderCommands.Iter() {
 		boundingBox := renderCommand.BoundingBox
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:

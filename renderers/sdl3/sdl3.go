@@ -37,8 +37,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 	renderer := rendererData.Renderer
 	fonts := rendererData.Fonts
 	textEngine := rendererData.TextEngine
-	for i := int32(0); i < renderCommands.Length; i++ {
-		renderCommand := clay.RenderCommandArray_Get(&renderCommands, i)
+	for renderCommand := range renderCommands.Iter() {
 		boundingBox := renderCommand.BoundingBox
 		rect := sdl.FRect{
 			X: boundingBox.X,
