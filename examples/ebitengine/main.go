@@ -2,8 +2,6 @@ package main
 
 import (
 	"bytes"
-	"log/slog"
-	"runtime/debug"
 	"unsafe"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -14,8 +12,8 @@ import (
 	"github.com/totallygamerjet/clay/renderers/ebitengine"
 )
 
-func handleClayError(errorText clay.ErrorData) {
-	slog.Error(errorText.ErrorText.String(), "stacktrace", debug.Stack())
+func handleClayError(errorData clay.ErrorData) {
+	panic(errorData)
 }
 
 // TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes

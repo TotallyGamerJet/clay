@@ -66,6 +66,10 @@ files:
         new:
       - old: CLAY_
         new:
+      - old: uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))
+        new: (uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray)))/ unsafe.Sizeof(LayoutElement{})
+      - old: uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))
+        new: (uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))) / unsafe.Sizeof(LayoutElement{})
       # below are to fix self-assignment errors given by `go vet`
       - old: array.Length = array.Length
         new: /* (001) */
