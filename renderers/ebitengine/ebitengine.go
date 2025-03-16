@@ -42,8 +42,7 @@ func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData 
 
 func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.RenderCommandArray, fonts []text.Face) error {
 	fullScreen := screen
-	for i := int32(0); i < renderCommands.Length; i++ {
-		renderCommand := clay.RenderCommandArray_Get(&renderCommands, i)
+	for renderCommand := range renderCommands.Iter() {
 		boundingBox := renderCommand.BoundingBox
 		boundingBox.X *= scaleFactor
 		boundingBox.Y *= scaleFactor
