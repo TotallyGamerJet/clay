@@ -4,12 +4,12 @@ import (
 	"bytes"
 	"unsafe"
 
+	"github.com/TotallyGamerJet/clay"
+	"github.com/TotallyGamerJet/clay/examples/fonts"
+	"github.com/TotallyGamerJet/clay/examples/videodemo"
+	"github.com/TotallyGamerJet/clay/renderers/ebitengine"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
-	"github.com/totallygamerjet/clay"
-	"github.com/totallygamerjet/clay/examples/fonts"
-	"github.com/totallygamerjet/clay/examples/videodemo"
-	"github.com/totallygamerjet/clay/renderers/ebitengine"
 )
 
 func handleClayError(errorData clay.ErrorData) {

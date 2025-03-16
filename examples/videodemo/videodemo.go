@@ -3,7 +3,7 @@ package videodemo
 import (
 	"unsafe"
 
-	"github.com/totallygamerjet/clay"
+	"github.com/TotallyGamerJet/clay"
 )
 
 var white = clay.Color{R: 255, G: 255, B: 255, A: 255}

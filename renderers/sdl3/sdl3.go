@@ -7,9 +7,9 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/TotallyGamerJet/clay"
 	"github.com/Zyko0/go-sdl3/sdl"
 	"github.com/Zyko0/go-sdl3/ttf"
-	"github.com/totallygamerjet/clay"
 )
 
 type RendererData struct {

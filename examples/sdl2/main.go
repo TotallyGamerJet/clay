@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/totallygamerjet/clay"
-	"github.com/totallygamerjet/clay/examples/fonts"
-	"github.com/totallygamerjet/clay/examples/videodemo"
-	"github.com/totallygamerjet/clay/renderers/sdl2"
+	"github.com/TotallyGamerJet/clay"
+	"github.com/TotallyGamerJet/clay/examples/fonts"
+	"github.com/TotallyGamerJet/clay/examples/videodemo"
+	"github.com/TotallyGamerJet/clay/renderers/sdl2"
 
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"

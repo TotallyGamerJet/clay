@@ -9,10 +9,10 @@ import (
 	"strings"
 	"unsafe"
 
+	"github.com/TotallyGamerJet/clay"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
-	"github.com/totallygamerjet/clay"
 )
 
 var (
