@@ -1,4 +1,4 @@
-module github.com/totallygamerjet/clay
+module github.com/TotallyGamerJet/clay
 
 go 1.24.0
 
