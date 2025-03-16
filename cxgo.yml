@@ -44,6 +44,149 @@ files:
 #        fields:
 #          - name: userData
 #            type: iface
+      # lowercase global variables
+#      - name: LAYOUT_DEFAULT
+#        rename: layout_DEFAULT
+#      - name: ElementId_DEFAULT
+#        rename: elementId_DEFAULT
+#      - name: LayoutConfig_DEFAULT
+#        rename: layoutConfig_DEFAULT
+#      - name: TextElementConfig_DEFAULT
+#        rename: textElementConfig_DEFAULT
+#      - name: ImageElementConfig_DEFAULT
+#        rename: imageElementConfig_DEFAULT
+#      - name: FloatingElementConfig_DEFAULT
+#        rename: floatingElementConfig_DEFAULT
+#      - name: CustomElementConfig_DEFAULT
+#        rename: customElementConfig_DEFAULT
+#      - name: ScrollElementConfig_DEFAULT
+#        rename: scrollElementConfig_DEFAULT
+#      - name: BorderElementConfig_DEFAULT
+#        rename: borderElementConfig_DEFAULT
+#      - name: String_DEFAULT
+#        rename: string_DEFAULT
+#      - name: SharedElementConfig_DEFAULT
+#        rename: sharedElementConfig_DEFAULT
+#      - name: RenderCommand_DEFAULT
+#        rename: renderCommand_DEFAULT
+#      - name: ElementConfig_DEFAULT
+#        rename: elementConfig_DEFAULT
+#      - name: LayoutElement_DEFAULT
+#        rename: layoutElement_DEFAULT
+#      - name: LayoutElementHashMapItem_DEFAULT
+#        rename: layoutElementHashMapItem_DEFAULT
+      # unexport fields for Clay_Context
+      - name: Clay_Context
+        fields:
+          - name: maxElementCount
+            rename: maxElementCount
+          - name: maxMeasureTextCacheWordCount
+            rename: maxMeasureTextCacheWordCount
+          - name: warningsEnabled
+            rename: warningsEnabled
+          - name: errorHandler
+            rename: errorHandler
+          - name: booleanWarnings
+            rename: booleanWarnings
+          - name: warnings
+            rename: warnings
+          - name: pointerInfo
+            rename: pointerInfo
+          - name: layoutDimensions
+            rename: layoutDimensions
+          - name: dynamicElementIndexBaseHash
+            rename: dynamicElementIndexBaseHash
+          - name: dynamicElementIndex
+            rename: dynamicElementIndex
+          - name: debugModeEnabled
+            rename: debugModeEnabled
+          - name: disableCulling
+            rename: disableCulling
+          - name: externalScrollHandlingEnabled
+            rename: externalScrollHandlingEnabled
+          - name: debugSelectedElementId
+            rename: debugSelectedElementId
+          - name: generation
+            rename: generation
+          - name: arenaResetOffset
+            rename: arenaResetOffset
+          - name: measureTextUserData
+            rename: measureTextUserData
+          - name: queryScrollOffsetUserData
+            rename: queryScrollOffsetUserData
+          - name: internalArena
+            rename: internalArena
+          - name: layoutElements
+            rename: layoutElements
+          - name: renderCommands
+            rename: renderCommands
+          - name: openLayoutElementStack
+            rename: openLayoutElementStack
+          - name: layoutElementChildren
+            rename: layoutElementChildren
+          - name: layoutElementChildrenBuffer
+            rename: layoutElementChildrenBuffer
+          - name: textElementData
+            rename: textElementData
+          - name: imageElementPointers
+            rename: imageElementPointers
+          - name: reusableElementIndexBuffer
+            rename: reusableElementIndexBuffer
+          - name: layoutElementClipElementIds
+            rename: layoutElementClipElementIds
+          - name: layoutConfigs
+            rename: layoutConfigs
+          - name: elementConfigs
+            rename: elementConfigs
+          - name: textElementConfigs
+            rename: textElementConfigs
+          - name: imageElementConfigs
+            rename: imageElementConfigs
+          - name: floatingElementConfigs
+            rename: floatingElementConfigs
+          - name: scrollElementConfigs
+            rename: scrollElementConfigs
+          - name: customElementConfigs
+            rename: customElementConfigs
+          - name: borderElementConfigs
+            rename: borderElementConfigs
+          - name: sharedElementConfigs
+            rename: sharedElementConfigs
+          - name: layoutElementIdStrings
+            rename: layoutElementIdStrings
+          - name: wrappedTextLines
+            rename: wrappedTextLines
+          - name: layoutElementTreeNodeArray1
+            rename: layoutElementTreeNodeArray1
+          - name: layoutElementTreeRoots
+            rename: layoutElementTreeRoots
+          - name: layoutElementsHashMapInternal
+            rename: layoutElementsHashMapInternal
+          - name: layoutElementsHashMap
+            rename: layoutElementsHashMap
+          - name: measureTextHashMapInternal
+            rename: measureTextHashMapInternal
+          - name: measureTextHashMapInternalFreeList
+            rename: measureTextHashMapInternalFreeList
+          - name: measureTextHashMap
+            rename: measureTextHashMap
+          - name: measuredWords
+            rename: measuredWords
+          - name: measuredWordsFreeList
+            rename: measuredWordsFreeList
+          - name: openClipElementStack
+            rename: openClipElementStack
+          - name: pointerOverIds
+            rename: pointerOverIds
+          - name: scrollContainerDatas
+            rename: scrollContainerDatas
+          - name: treeNodeVisited
+            rename: treeNodeVisited
+          - name: dynamicStringData
+            rename: dynamicStringData
+          - name: debugElementData
+            rename: debugElementData
+
     replace:
       - old: package clay
         new: |
@@ -66,10 +209,10 @@ files:
         new:
       - old: CLAY_
         new:
-      - old: uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))
-        new: (uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray)))/ unsafe.Sizeof(LayoutElement{})
-      - old: uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))
-        new: (uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray))) / unsafe.Sizeof(LayoutElement{})
+      - old: uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray))
+        new: (uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray)))/ unsafe.Sizeof(LayoutElement{})
+      - old: uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray))
+        new: (uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray))) / unsafe.Sizeof(LayoutElement{})
       # below are to fix self-assignment errors given by `go vet`
       - old: array.Length = array.Length
         new: /* (001) */

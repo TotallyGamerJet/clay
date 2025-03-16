@@ -23,60 +23,60 @@ type StringSlice struct {
 	BaseChars *byte
 }
 type Context struct {
-	MaxElementCount                    int32
-	MaxMeasureTextCacheWordCount       int32
-	WarningsEnabled                    bool
-	ErrorHandler                       ErrorHandler
-	BooleanWarnings                    BooleanWarnings
-	Warnings                           __WarningArray
-	PointerInfo                        PointerData
-	LayoutDimensions                   Dimensions
-	DynamicElementIndexBaseHash        ElementId
-	DynamicElementIndex                uint32
-	DebugModeEnabled                   bool
-	DisableCulling                     bool
-	ExternalScrollHandlingEnabled      bool
-	DebugSelectedElementId             uint32
-	Generation                         uint32
-	ArenaResetOffset                   uint64
-	MeasureTextUserData                unsafe.Pointer
-	QueryScrollOffsetUserData          unsafe.Pointer
-	InternalArena                      Arena
-	LayoutElements                     LayoutElementArray
-	RenderCommands                     RenderCommandArray
-	OpenLayoutElementStack             __int32_tArray
-	LayoutElementChildren              __int32_tArray
-	LayoutElementChildrenBuffer        __int32_tArray
-	TextElementData                    __TextElementDataArray
-	ImageElementPointers               __int32_tArray
-	ReusableElementIndexBuffer         __int32_tArray
-	LayoutElementClipElementIds        __int32_tArray
-	LayoutConfigs                      __LayoutConfigArray
-	ElementConfigs                     __ElementConfigArray
-	TextElementConfigs                 __TextElementConfigArray
-	ImageElementConfigs                __ImageElementConfigArray
-	FloatingElementConfigs             __FloatingElementConfigArray
-	ScrollElementConfigs               __ScrollElementConfigArray
-	CustomElementConfigs               __CustomElementConfigArray
-	BorderElementConfigs               __BorderElementConfigArray
-	SharedElementConfigs               __SharedElementConfigArray
-	LayoutElementIdStrings             __StringArray
-	WrappedTextLines                   __WrappedTextLineArray
-	LayoutElementTreeNodeArray1        __LayoutElementTreeNodeArray
-	LayoutElementTreeRoots             __LayoutElementTreeRootArray
-	LayoutElementsHashMapInternal      __LayoutElementHashMapItemArray
-	LayoutElementsHashMap              __int32_tArray
-	MeasureTextHashMapInternal         __MeasureTextCacheItemArray
-	MeasureTextHashMapInternalFreeList __int32_tArray
-	MeasureTextHashMap                 __int32_tArray
-	MeasuredWords                      __MeasuredWordArray
-	MeasuredWordsFreeList              __int32_tArray
-	OpenClipElementStack               __int32_tArray
-	PointerOverIds                     __ElementIdArray
-	ScrollContainerDatas               __ScrollContainerDataInternalArray
-	TreeNodeVisited                    __boolArray
-	DynamicStringData                  __charArray
-	DebugElementData                   __DebugElementDataArray
+	maxElementCount                    int32
+	maxMeasureTextCacheWordCount       int32
+	warningsEnabled                    bool
+	errorHandler                       ErrorHandler
+	booleanWarnings                    BooleanWarnings
+	warnings                           __WarningArray
+	pointerInfo                        PointerData
+	layoutDimensions                   Dimensions
+	dynamicElementIndexBaseHash        ElementId
+	dynamicElementIndex                uint32
+	debugModeEnabled                   bool
+	disableCulling                     bool
+	externalScrollHandlingEnabled      bool
+	debugSelectedElementId             uint32
+	generation                         uint32
+	arenaResetOffset                   uint64
+	measureTextUserData                unsafe.Pointer
+	queryScrollOffsetUserData          unsafe.Pointer
+	internalArena                      Arena
+	layoutElements                     LayoutElementArray
+	renderCommands                     RenderCommandArray
+	openLayoutElementStack             __int32_tArray
+	layoutElementChildren              __int32_tArray
+	layoutElementChildrenBuffer        __int32_tArray
+	textElementData                    __TextElementDataArray
+	imageElementPointers               __int32_tArray
+	reusableElementIndexBuffer         __int32_tArray
+	layoutElementClipElementIds        __int32_tArray
+	layoutConfigs                      __LayoutConfigArray
+	elementConfigs                     __ElementConfigArray
+	textElementConfigs                 __TextElementConfigArray
+	imageElementConfigs                __ImageElementConfigArray
+	floatingElementConfigs             __FloatingElementConfigArray
+	scrollElementConfigs               __ScrollElementConfigArray
+	customElementConfigs               __CustomElementConfigArray
+	borderElementConfigs               __BorderElementConfigArray
+	sharedElementConfigs               __SharedElementConfigArray
+	layoutElementIdStrings             __StringArray
+	wrappedTextLines                   __WrappedTextLineArray
+	layoutElementTreeNodeArray1        __LayoutElementTreeNodeArray
+	layoutElementTreeRoots             __LayoutElementTreeRootArray
+	layoutElementsHashMapInternal      __LayoutElementHashMapItemArray
+	layoutElementsHashMap              __int32_tArray
+	measureTextHashMapInternal         __MeasureTextCacheItemArray
+	measureTextHashMapInternalFreeList __int32_tArray
+	measureTextHashMap                 __int32_tArray
+	measuredWords                      __MeasuredWordArray
+	measuredWordsFreeList              __int32_tArray
+	openClipElementStack               __int32_tArray
+	pointerOverIds                     __ElementIdArray
+	scrollContainerDatas               __ScrollContainerDataInternalArray
+	treeNodeVisited                    __boolArray
+	dynamicStringData                  __charArray
+	debugElementData                   __DebugElementDataArray
 }
 type Arena struct {
 	NextAllocation uint64
@@ -2217,68 +2217,68 @@ var __QueryScrollOffset func(elementId uint32, userData unsafe.Pointer) Vector2
 
 func __GetOpenLayoutElement() *LayoutElement {
 	var context *Context = GetCurrentContext()
-	return LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.OpenLayoutElementStack, context.OpenLayoutElementStack.Length-1))
+	return LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1))
 }
 func __GetParentElementId() uint32 {
 	var context *Context = GetCurrentContext()
-	return LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.OpenLayoutElementStack, context.OpenLayoutElementStack.Length-2)).Id
+	return LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-2)).Id
 }
 func __StoreLayoutConfig(config LayoutConfig) *LayoutConfig {
-	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &LAYOUT_DEFAULT
 	}
-	return __LayoutConfigArray_Add(&GetCurrentContext().LayoutConfigs, config)
+	return __LayoutConfigArray_Add(&GetCurrentContext().layoutConfigs, config)
 }
 func __StoreTextElementConfig(config TextElementConfig) *TextElementConfig {
-	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &TextElementConfig_DEFAULT
 	}
-	return __TextElementConfigArray_Add(&GetCurrentContext().TextElementConfigs, config)
+	return __TextElementConfigArray_Add(&GetCurrentContext().textElementConfigs, config)
 }
 func __StoreImageElementConfig(config ImageElementConfig) *ImageElementConfig {
-	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &ImageElementConfig_DEFAULT
 	}
-	return __ImageElementConfigArray_Add(&GetCurrentContext().ImageElementConfigs, config)
+	return __ImageElementConfigArray_Add(&GetCurrentContext().imageElementConfigs, config)
 }
 func __StoreFloatingElementConfig(config FloatingElementConfig) *FloatingElementConfig {
-	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &FloatingElementConfig_DEFAULT
 	}
-	return __FloatingElementConfigArray_Add(&GetCurrentContext().FloatingElementConfigs, config)
+	return __FloatingElementConfigArray_Add(&GetCurrentContext().floatingElementConfigs, config)
 }
 func __StoreCustomElementConfig(config CustomElementConfig) *CustomElementConfig {
-	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &CustomElementConfig_DEFAULT
 	}
-	return __CustomElementConfigArray_Add(&GetCurrentContext().CustomElementConfigs, config)
+	return __CustomElementConfigArray_Add(&GetCurrentContext().customElementConfigs, config)
 }
 func __StoreScrollElementConfig(config ScrollElementConfig) *ScrollElementConfig {
-	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &ScrollElementConfig_DEFAULT
 	}
-	return __ScrollElementConfigArray_Add(&GetCurrentContext().ScrollElementConfigs, config)
+	return __ScrollElementConfigArray_Add(&GetCurrentContext().scrollElementConfigs, config)
 }
 func __StoreBorderElementConfig(config BorderElementConfig) *BorderElementConfig {
-	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &BorderElementConfig_DEFAULT
 	}
-	return __BorderElementConfigArray_Add(&GetCurrentContext().BorderElementConfigs, config)
+	return __BorderElementConfigArray_Add(&GetCurrentContext().borderElementConfigs, config)
 }
 func __StoreSharedElementConfig(config SharedElementConfig) *SharedElementConfig {
-	if GetCurrentContext().BooleanWarnings.MaxElementsExceeded {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &SharedElementConfig_DEFAULT
 	}
-	return __SharedElementConfigArray_Add(&GetCurrentContext().SharedElementConfigs, config)
+	return __SharedElementConfigArray_Add(&GetCurrentContext().sharedElementConfigs, config)
 }
 func __AttachElementConfig(config ElementConfigUnion, type_ __ElementConfigType) ElementConfig {
 	var context *Context = GetCurrentContext()
-	if context.BooleanWarnings.MaxElementsExceeded {
+	if context.booleanWarnings.MaxElementsExceeded {
 		return ElementConfig{}
 	}
 	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	openLayoutElement.ElementConfigs.Length++
-	return *__ElementConfigArray_Add(&context.ElementConfigs, ElementConfig{Type: type_, Config: config})
+	return *__ElementConfigArray_Add(&context.elementConfigs, ElementConfig{Type: type_, Config: config})
 }
 func __FindElementConfigWithType(element *LayoutElement, type_ __ElementConfigType) ElementConfigUnion {
 	for i := int32(0); i < element.ElementConfigs.Length; i++ {
@@ -2368,50 +2368,50 @@ func __HashTextWithConfig(text *String, config *TextElementConfig) uint32 {
 }
 func __AddMeasuredWord(word __MeasuredWord, previousWord *__MeasuredWord) *__MeasuredWord {
 	var context *Context = GetCurrentContext()
-	if context.MeasuredWordsFreeList.Length > 0 {
-		var newItemIndex uint32 = uint32(__int32_tArray_GetValue(&context.MeasuredWordsFreeList, context.MeasuredWordsFreeList.Length-1))
-		context.MeasuredWordsFreeList.Length--
-		__MeasuredWordArray_Set(&context.MeasuredWords, int32(newItemIndex), word)
+	if context.measuredWordsFreeList.Length > 0 {
+		var newItemIndex uint32 = uint32(__int32_tArray_GetValue(&context.measuredWordsFreeList, context.measuredWordsFreeList.Length-1))
+		context.measuredWordsFreeList.Length--
+		__MeasuredWordArray_Set(&context.measuredWords, int32(newItemIndex), word)
 		previousWord.Next = int32(newItemIndex)
-		return __MeasuredWordArray_Get(&context.MeasuredWords, int32(newItemIndex))
+		return __MeasuredWordArray_Get(&context.measuredWords, int32(newItemIndex))
 	} else {
-		previousWord.Next = context.MeasuredWords.Length
-		return __MeasuredWordArray_Add(&context.MeasuredWords, word)
+		previousWord.Next = context.measuredWords.Length
+		return __MeasuredWordArray_Add(&context.measuredWords, word)
 	}
 }
 func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureTextCacheItem {
 	var context *Context = GetCurrentContext()
 	if __MeasureText == nil {
-		if !context.BooleanWarnings.TextMeasurementFunctionNotSet {
-			context.BooleanWarnings.TextMeasurementFunctionNotSet = true
-			context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED, ErrorText: String{Length: int32(((len("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.")}, UserData: context.ErrorHandler.UserData})
+		if !context.booleanWarnings.TextMeasurementFunctionNotSet {
+			context.booleanWarnings.TextMeasurementFunctionNotSet = true
+			context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED, ErrorText: String{Length: int32(((len("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.")}, UserData: context.errorHandler.UserData})
 		}
 		return &__MeasureTextCacheItem_DEFAULT
 	}
 	var id uint32 = __HashTextWithConfig(text, config)
-	var hashBucket uint32 = id % uint32(context.MaxMeasureTextCacheWordCount/32)
+	var hashBucket uint32 = id % uint32(context.maxMeasureTextCacheWordCount/32)
 	var elementIndexPrevious int32 = 0
-	var elementIndex int32 = *(*int32)(unsafe.Add(unsafe.Pointer(context.MeasureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
+	var elementIndex int32 = *(*int32)(unsafe.Add(unsafe.Pointer(context.measureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
 	for elementIndex != 0 {
-		var hashEntry *__MeasureTextCacheItem = __MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndex)
+		var hashEntry *__MeasureTextCacheItem = __MeasureTextCacheItemArray_Get(&context.measureTextHashMapInternal, elementIndex)
 		if hashEntry.Id == id {
-			hashEntry.Generation = context.Generation
+			hashEntry.Generation = context.generation
 			return hashEntry
 		}
-		if context.Generation-hashEntry.Generation > 2 {
+		if context.generation-hashEntry.Generation > 2 {
 			var nextWordIndex int32 = hashEntry.MeasuredWordsStartIndex
 			for nextWordIndex != -1 {
-				var measuredWord *__MeasuredWord = __MeasuredWordArray_Get(&context.MeasuredWords, nextWordIndex)
-				__int32_tArray_Add(&context.MeasuredWordsFreeList, nextWordIndex)
+				var measuredWord *__MeasuredWord = __MeasuredWordArray_Get(&context.measuredWords, nextWordIndex)
+				__int32_tArray_Add(&context.measuredWordsFreeList, nextWordIndex)
 				nextWordIndex = measuredWord.Next
 			}
 			var nextIndex int32 = hashEntry.NextIndex
-			__MeasureTextCacheItemArray_Set(&context.MeasureTextHashMapInternal, elementIndex, __MeasureTextCacheItem{MeasuredWordsStartIndex: -1})
-			__int32_tArray_Add(&context.MeasureTextHashMapInternalFreeList, elementIndex)
+			__MeasureTextCacheItemArray_Set(&context.measureTextHashMapInternal, elementIndex, __MeasureTextCacheItem{MeasuredWordsStartIndex: -1})
+			__int32_tArray_Add(&context.measureTextHashMapInternalFreeList, elementIndex)
 			if elementIndexPrevious == 0 {
-				*(*int32)(unsafe.Add(unsafe.Pointer(context.MeasureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = nextIndex
+				*(*int32)(unsafe.Add(unsafe.Pointer(context.measureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = nextIndex
 			} else {
-				var previousHashEntry *__MeasureTextCacheItem = __MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndexPrevious)
+				var previousHashEntry *__MeasureTextCacheItem = __MeasureTextCacheItemArray_Get(&context.measureTextHashMapInternal, elementIndexPrevious)
 				previousHashEntry.NextIndex = nextIndex
 			}
 			elementIndex = nextIndex
@@ -2421,37 +2421,37 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		}
 	}
 	var newItemIndex int32 = 0
-	var newCacheItem __MeasureTextCacheItem = __MeasureTextCacheItem{MeasuredWordsStartIndex: -1, Id: id, Generation: context.Generation}
+	var newCacheItem __MeasureTextCacheItem = __MeasureTextCacheItem{MeasuredWordsStartIndex: -1, Id: id, Generation: context.generation}
 	var measured *__MeasureTextCacheItem = nil
-	if context.MeasureTextHashMapInternalFreeList.Length > 0 {
-		newItemIndex = __int32_tArray_GetValue(&context.MeasureTextHashMapInternalFreeList, context.MeasureTextHashMapInternalFreeList.Length-1)
-		context.MeasureTextHashMapInternalFreeList.Length--
-		__MeasureTextCacheItemArray_Set(&context.MeasureTextHashMapInternal, newItemIndex, newCacheItem)
-		measured = __MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, newItemIndex)
+	if context.measureTextHashMapInternalFreeList.Length > 0 {
+		newItemIndex = __int32_tArray_GetValue(&context.measureTextHashMapInternalFreeList, context.measureTextHashMapInternalFreeList.Length-1)
+		context.measureTextHashMapInternalFreeList.Length--
+		__MeasureTextCacheItemArray_Set(&context.measureTextHashMapInternal, newItemIndex, newCacheItem)
+		measured = __MeasureTextCacheItemArray_Get(&context.measureTextHashMapInternal, newItemIndex)
 	} else {
-		if context.MeasureTextHashMapInternal.Length == context.MeasureTextHashMapInternal.Capacity-1 {
-			if !context.BooleanWarnings.MaxTextMeasureCacheExceeded {
-				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData})
-				context.BooleanWarnings.MaxTextMeasureCacheExceeded = true
+		if context.measureTextHashMapInternal.Length == context.measureTextHashMapInternal.Capacity-1 {
+			if !context.booleanWarnings.MaxTextMeasureCacheExceeded {
+				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.")}, UserData: context.errorHandler.UserData})
+				context.booleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
 			return &__MeasureTextCacheItem_DEFAULT
 		}
-		measured = __MeasureTextCacheItemArray_Add(&context.MeasureTextHashMapInternal, newCacheItem)
-		newItemIndex = context.MeasureTextHashMapInternal.Length - 1
+		measured = __MeasureTextCacheItemArray_Add(&context.measureTextHashMapInternal, newCacheItem)
+		newItemIndex = context.measureTextHashMapInternal.Length - 1
 	}
 	var start int32 = 0
 	var end int32 = 0
 	var lineWidth float32 = 0
 	var measuredWidth float32 = 0
 	var measuredHeight float32 = 0
-	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.MeasureTextUserData).Width
+	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.measureTextUserData).Width
 	var tempWord __MeasuredWord = __MeasuredWord{Next: -1}
 	var previousWord *__MeasuredWord = &tempWord
 	for end < text.Length {
-		if context.MeasuredWords.Length == context.MeasuredWords.Capacity-1 {
-			if !context.BooleanWarnings.MaxTextMeasureCacheExceeded {
-				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).")}, UserData: context.ErrorHandler.UserData})
-				context.BooleanWarnings.MaxTextMeasureCacheExceeded = true
+		if context.measuredWords.Length == context.measuredWords.Capacity-1 {
+			if !context.booleanWarnings.MaxTextMeasureCacheExceeded {
+				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).")}, UserData: context.errorHandler.UserData})
+				context.booleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
 			return &__MeasureTextCacheItem_DEFAULT
 		}
@@ -2459,7 +2459,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		if int32(current) == ' ' || int32(current) == '\n' {
 			var (
 				length     int32      = end - start
-				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
+				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData)
 			)
 			if measuredHeight > dimensions.Height {
 				/* (002) */
@@ -2490,7 +2490,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		end++
 	}
 	if end-start > 0 {
-		var dimensions Dimensions = __MeasureText(StringSlice{Length: end - start, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.MeasureTextUserData)
+		var dimensions Dimensions = __MeasureText(StringSlice{Length: end - start, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData)
 		__AddMeasuredWord(__MeasuredWord{StartOffset: start, Length: end - start, Width: dimensions.Width, Next: -1}, previousWord)
 		lineWidth += dimensions.Width
 		if measuredHeight > dimensions.Height {
@@ -2508,9 +2508,9 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	measured.UnwrappedDimensions.Width = measuredWidth
 	measured.UnwrappedDimensions.Height = measuredHeight
 	if elementIndexPrevious != 0 {
-		__MeasureTextCacheItemArray_Get(&context.MeasureTextHashMapInternal, elementIndexPrevious).NextIndex = newItemIndex
+		__MeasureTextCacheItemArray_Get(&context.measureTextHashMapInternal, elementIndexPrevious).NextIndex = newItemIndex
 	} else {
-		*(*int32)(unsafe.Add(unsafe.Pointer(context.MeasureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = newItemIndex
+		*(*int32)(unsafe.Add(unsafe.Pointer(context.measureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = newItemIndex
 	}
 	return measured
 }
@@ -2519,25 +2519,25 @@ func __PointIsInsideRect(point Vector2, rect BoundingBox) bool {
 }
 func __AddHashMapItem(elementId ElementId, layoutElement *LayoutElement, idAlias uint32) *LayoutElementHashMapItem {
 	var context *Context = GetCurrentContext()
-	if context.LayoutElementsHashMapInternal.Length == context.LayoutElementsHashMapInternal.Capacity-1 {
+	if context.layoutElementsHashMapInternal.Length == context.layoutElementsHashMapInternal.Capacity-1 {
 		return nil
 	}
-	var item LayoutElementHashMapItem = LayoutElementHashMapItem{ElementId: elementId, LayoutElement: layoutElement, NextIndex: -1, Generation: context.Generation + 1, IdAlias: idAlias}
-	var hashBucket uint32 = elementId.Id % uint32(context.LayoutElementsHashMap.Capacity)
+	var item LayoutElementHashMapItem = LayoutElementHashMapItem{ElementId: elementId, LayoutElement: layoutElement, NextIndex: -1, Generation: context.generation + 1, IdAlias: idAlias}
+	var hashBucket uint32 = elementId.Id % uint32(context.layoutElementsHashMap.Capacity)
 	var hashItemPrevious int32 = -1
-	var hashItemIndex int32 = *(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
+	var hashItemIndex int32 = *(*int32)(unsafe.Add(unsafe.Pointer(context.layoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
 	for hashItemIndex != -1 {
-		var hashItem *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, hashItemIndex)
+		var hashItem *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Get(&context.layoutElementsHashMapInternal, hashItemIndex)
 		if hashItem.ElementId.Id == elementId.Id {
 			item.NextIndex = hashItem.NextIndex
-			if hashItem.Generation <= context.Generation {
+			if hashItem.Generation <= context.generation {
 				hashItem.ElementId = elementId
-				hashItem.Generation = context.Generation + 1
+				hashItem.Generation = context.generation + 1
 				hashItem.LayoutElement = layoutElement
 				hashItem.DebugData.Collision = false
 			} else {
-				context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_DUPLICATE_ID, ErrorText: String{Length: int32(((len("An element with this ID was already previously declared during this layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.ErrorHandler.UserData})
-				if context.DebugModeEnabled {
+				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_DUPLICATE_ID, ErrorText: String{Length: int32(((len("An element with this ID was already previously declared during this layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.errorHandler.UserData})
+				if context.debugModeEnabled {
 					hashItem.DebugData.Collision = true
 				}
 			}
@@ -2546,23 +2546,23 @@ func __AddHashMapItem(elementId ElementId, layoutElement *LayoutElement, idAlias
 		hashItemPrevious = hashItemIndex
 		hashItemIndex = hashItem.NextIndex
 	}
-	var hashItem *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Add(&context.LayoutElementsHashMapInternal, item)
-	hashItem.DebugData = __DebugElementDataArray_Add(&context.DebugElementData, __DebugElementData{Collision: false})
+	var hashItem *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Add(&context.layoutElementsHashMapInternal, item)
+	hashItem.DebugData = __DebugElementDataArray_Add(&context.debugElementData, __DebugElementData{Collision: false})
 	if hashItemPrevious != -1 {
-		__LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, hashItemPrevious).NextIndex = context.LayoutElementsHashMapInternal.Length - 1
+		__LayoutElementHashMapItemArray_Get(&context.layoutElementsHashMapInternal, hashItemPrevious).NextIndex = context.layoutElementsHashMapInternal.Length - 1
 	} else {
-		*(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = context.LayoutElementsHashMapInternal.Length - 1
+		*(*int32)(unsafe.Add(unsafe.Pointer(context.layoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket))) = context.layoutElementsHashMapInternal.Length - 1
 	}
 	return hashItem
 }
 func __GetHashMapItem(id uint32) *LayoutElementHashMapItem {
 	var (
 		context      *Context = GetCurrentContext()
-		hashBucket   uint32   = id % uint32(context.LayoutElementsHashMap.Capacity)
-		elementIndex int32    = *(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
+		hashBucket   uint32   = id % uint32(context.layoutElementsHashMap.Capacity)
+		elementIndex int32    = *(*int32)(unsafe.Add(unsafe.Pointer(context.layoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
 	)
 	for elementIndex != -1 {
-		var hashEntry *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Get(&context.LayoutElementsHashMapInternal, elementIndex)
+		var hashEntry *LayoutElementHashMapItem = __LayoutElementHashMapItemArray_Get(&context.layoutElementsHashMapInternal, elementIndex)
 		if hashEntry.ElementId.Id == id {
 			return hashEntry
 		}
@@ -2573,12 +2573,12 @@ func __GetHashMapItem(id uint32) *LayoutElementHashMapItem {
 func __GenerateIdForAnonymousElement(openLayoutElement *LayoutElement) ElementId {
 	var (
 		context       *Context       = GetCurrentContext()
-		parentElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.OpenLayoutElementStack, context.OpenLayoutElementStack.Length-2))
+		parentElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-2))
 		elementId     ElementId      = __HashNumber(uint32(parentElement.ChildrenOrTextContent.Children.Length), parentElement.Id)
 	)
 	openLayoutElement.Id = elementId.Id
 	__AddHashMapItem(elementId, openLayoutElement, 0)
-	__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
+	__StringArray_Add(&context.layoutElementIdStrings, elementId.StringId)
 	return elementId
 }
 func __ElementHasConfig(layoutElement *LayoutElement, type_ __ElementConfigType) bool {
@@ -2609,7 +2609,7 @@ func __UpdateAspectRatioBox(layoutElement *LayoutElement) {
 }
 func __CloseElement() {
 	var context *Context = GetCurrentContext()
-	if context.BooleanWarnings.MaxElementsExceeded {
+	if context.booleanWarnings.MaxElementsExceeded {
 		return
 	}
 	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
@@ -2621,17 +2621,17 @@ func __CloseElement() {
 		if config.Type == __ELEMENT_CONFIG_TYPE_SCROLL {
 			elementHasScrollHorizontal = config.Config.ScrollElementConfig.Horizontal
 			elementHasScrollVertical = config.Config.ScrollElementConfig.Vertical
-			context.OpenClipElementStack.Length--
+			context.openClipElementStack.Length--
 			break
 		}
 	}
-	openLayoutElement.ChildrenOrTextContent.Children.Elements = (*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementChildren.InternalArray), unsafe.Sizeof(int32(0))*uintptr(context.LayoutElementChildren.Length)))
+	openLayoutElement.ChildrenOrTextContent.Children.Elements = (*int32)(unsafe.Add(unsafe.Pointer(context.layoutElementChildren.InternalArray), unsafe.Sizeof(int32(0))*uintptr(context.layoutElementChildren.Length)))
 	if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 		openLayoutElement.Dimensions.Width = float32(int32(layoutConfig.Padding.Left) + int32(layoutConfig.Padding.Right))
 		for i := int32(0); i < int32(openLayoutElement.ChildrenOrTextContent.Children.Length); i++ {
 			var (
-				childIndex int32          = __int32_tArray_GetValue(&context.LayoutElementChildrenBuffer, context.LayoutElementChildrenBuffer.Length-int32(openLayoutElement.ChildrenOrTextContent.Children.Length)+i)
-				child      *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childIndex)
+				childIndex int32          = __int32_tArray_GetValue(&context.layoutElementChildrenBuffer, context.layoutElementChildrenBuffer.Length-int32(openLayoutElement.ChildrenOrTextContent.Children.Length)+i)
+				child      *LayoutElement = LayoutElementArray_Get(&context.layoutElements, childIndex)
 			)
 			openLayoutElement.Dimensions.Width += child.Dimensions.Width
 			if openLayoutElement.Dimensions.Height > (child.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)) {
@@ -2649,7 +2649,7 @@ func __CloseElement() {
 					openLayoutElement.MinDimensions.Height = child.MinDimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)
 				}
 			}
-			__int32_tArray_Add(&context.LayoutElementChildren, childIndex)
+			__int32_tArray_Add(&context.layoutElementChildren, childIndex)
 		}
 		var childGap float32 = float32((func() int32 {
 			if (int32(openLayoutElement.ChildrenOrTextContent.Children.Length) - 1) > 0 {
@@ -2663,8 +2663,8 @@ func __CloseElement() {
 		openLayoutElement.Dimensions.Height = float32(int32(layoutConfig.Padding.Top) + int32(layoutConfig.Padding.Bottom))
 		for i := int32(0); i < int32(openLayoutElement.ChildrenOrTextContent.Children.Length); i++ {
 			var (
-				childIndex int32          = __int32_tArray_GetValue(&context.LayoutElementChildrenBuffer, context.LayoutElementChildrenBuffer.Length-int32(openLayoutElement.ChildrenOrTextContent.Children.Length)+i)
-				child      *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childIndex)
+				childIndex int32          = __int32_tArray_GetValue(&context.layoutElementChildrenBuffer, context.layoutElementChildrenBuffer.Length-int32(openLayoutElement.ChildrenOrTextContent.Children.Length)+i)
+				child      *LayoutElement = LayoutElementArray_Get(&context.layoutElements, childIndex)
 			)
 			openLayoutElement.Dimensions.Height += child.Dimensions.Height
 			if openLayoutElement.Dimensions.Width > (child.Dimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)) {
@@ -2682,7 +2682,7 @@ func __CloseElement() {
 					openLayoutElement.MinDimensions.Width = child.MinDimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)
 				}
 			}
-			__int32_tArray_Add(&context.LayoutElementChildren, childIndex)
+			__int32_tArray_Add(&context.layoutElementChildren, childIndex)
 		}
 		var childGap float32 = float32((func() int32 {
 			if (int32(openLayoutElement.ChildrenOrTextContent.Children.Length) - 1) > 0 {
@@ -2693,7 +2693,7 @@ func __CloseElement() {
 		openLayoutElement.Dimensions.Height += childGap
 		openLayoutElement.MinDimensions.Height += childGap
 	}
-	context.LayoutElementChildrenBuffer.Length -= int32(openLayoutElement.ChildrenOrTextContent.Children.Length)
+	context.layoutElementChildrenBuffer.Length -= int32(openLayoutElement.ChildrenOrTextContent.Children.Length)
 	if layoutConfig.Sizing.Width.Type != __SIZING_TYPE_PERCENT {
 		if layoutConfig.Sizing.Width.Size.MinMax.Max <= 0 {
 			layoutConfig.Sizing.Width.Size.MinMax.Max = __MAXFLOAT
@@ -2766,11 +2766,11 @@ func __CloseElement() {
 	}
 	__UpdateAspectRatioBox(openLayoutElement)
 	var elementIsFloating bool = __ElementHasConfig(openLayoutElement, __ELEMENT_CONFIG_TYPE_FLOATING)
-	var closingElementIndex int32 = __int32_tArray_RemoveSwapback(&context.OpenLayoutElementStack, context.OpenLayoutElementStack.Length-1)
+	var closingElementIndex int32 = __int32_tArray_RemoveSwapback(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1)
 	openLayoutElement = __GetOpenLayoutElement()
-	if !elementIsFloating && context.OpenLayoutElementStack.Length > 1 {
+	if !elementIsFloating && context.openLayoutElementStack.Length > 1 {
 		openLayoutElement.ChildrenOrTextContent.Children.Length++
-		__int32_tArray_Add(&context.LayoutElementChildrenBuffer, closingElementIndex)
+		__int32_tArray_Add(&context.layoutElementChildrenBuffer, closingElementIndex)
 	}
 }
 func __MemCmp(s1 *byte, s2 *byte, length int32) bool {
@@ -2783,39 +2783,39 @@ func __MemCmp(s1 *byte, s2 *byte, length int32) bool {
 }
 func __OpenElement() {
 	var context *Context = GetCurrentContext()
-	if context.LayoutElements.Length == context.LayoutElements.Capacity-1 || context.BooleanWarnings.MaxElementsExceeded {
-		context.BooleanWarnings.MaxElementsExceeded = true
+	if context.layoutElements.Length == context.layoutElements.Capacity-1 || context.booleanWarnings.MaxElementsExceeded {
+		context.booleanWarnings.MaxElementsExceeded = true
 		return
 	}
 	var layoutElement LayoutElement = LayoutElement{}
-	LayoutElementArray_Add(&context.LayoutElements, layoutElement)
-	__int32_tArray_Add(&context.OpenLayoutElementStack, context.LayoutElements.Length-1)
-	if context.OpenClipElementStack.Length > 0 {
-		__int32_tArray_Set(&context.LayoutElementClipElementIds, context.LayoutElements.Length-1, __int32_tArray_GetValue(&context.OpenClipElementStack, context.OpenClipElementStack.Length-1))
+	LayoutElementArray_Add(&context.layoutElements, layoutElement)
+	__int32_tArray_Add(&context.openLayoutElementStack, context.layoutElements.Length-1)
+	if context.openClipElementStack.Length > 0 {
+		__int32_tArray_Set(&context.layoutElementClipElementIds, context.layoutElements.Length-1, __int32_tArray_GetValue(&context.openClipElementStack, context.openClipElementStack.Length-1))
 	} else {
-		__int32_tArray_Set(&context.LayoutElementClipElementIds, context.LayoutElements.Length-1, 0)
+		__int32_tArray_Set(&context.layoutElementClipElementIds, context.layoutElements.Length-1, 0)
 	}
 }
 func __OpenTextElement(text String, textConfig *TextElementConfig) {
 	var context *Context = GetCurrentContext()
-	if context.LayoutElements.Length == context.LayoutElements.Capacity-1 || context.BooleanWarnings.MaxElementsExceeded {
-		context.BooleanWarnings.MaxElementsExceeded = true
+	if context.layoutElements.Length == context.layoutElements.Capacity-1 || context.booleanWarnings.MaxElementsExceeded {
+		context.booleanWarnings.MaxElementsExceeded = true
 		return
 	}
 	var parentElement *LayoutElement = __GetOpenLayoutElement()
 	var layoutElement LayoutElement = LayoutElement{}
-	var textElement *LayoutElement = LayoutElementArray_Add(&context.LayoutElements, layoutElement)
-	if context.OpenClipElementStack.Length > 0 {
-		__int32_tArray_Set(&context.LayoutElementClipElementIds, context.LayoutElements.Length-1, __int32_tArray_GetValue(&context.OpenClipElementStack, context.OpenClipElementStack.Length-1))
+	var textElement *LayoutElement = LayoutElementArray_Add(&context.layoutElements, layoutElement)
+	if context.openClipElementStack.Length > 0 {
+		__int32_tArray_Set(&context.layoutElementClipElementIds, context.layoutElements.Length-1, __int32_tArray_GetValue(&context.openClipElementStack, context.openClipElementStack.Length-1))
 	} else {
-		__int32_tArray_Set(&context.LayoutElementClipElementIds, context.LayoutElements.Length-1, 0)
+		__int32_tArray_Set(&context.layoutElementClipElementIds, context.layoutElements.Length-1, 0)
 	}
-	__int32_tArray_Add(&context.LayoutElementChildrenBuffer, context.LayoutElements.Length-1)
+	__int32_tArray_Add(&context.layoutElementChildrenBuffer, context.layoutElements.Length-1)
 	var textMeasured *__MeasureTextCacheItem = __MeasureTextCached(&text, textConfig)
 	var elementId ElementId = __HashNumber(uint32(parentElement.ChildrenOrTextContent.Children.Length), parentElement.Id)
 	textElement.Id = elementId.Id
 	__AddHashMapItem(elementId, textElement, 0)
-	__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
+	__StringArray_Add(&context.layoutElementIdStrings, elementId.StringId)
 	var textDimensions Dimensions = Dimensions{Width: textMeasured.UnwrappedDimensions.Width, Height: func() float32 {
 		if int32(textConfig.LineHeight) > 0 {
 			return float32(textConfig.LineHeight)
@@ -2824,21 +2824,21 @@ func __OpenTextElement(text String, textConfig *TextElementConfig) {
 	}()}
 	textElement.Dimensions = textDimensions
 	textElement.MinDimensions = Dimensions{Width: textMeasured.UnwrappedDimensions.Height, Height: textDimensions.Height}
-	textElement.ChildrenOrTextContent.TextElementData = __TextElementDataArray_Add(&context.TextElementData, __TextElementData{Text: text, PreferredDimensions: textMeasured.UnwrappedDimensions, ElementIndex: context.LayoutElements.Length - 1})
-	textElement.ElementConfigs = __ElementConfigArraySlice{Length: 1, InternalArray: __ElementConfigArray_Add(&context.ElementConfigs, ElementConfig{Type: __ELEMENT_CONFIG_TYPE_TEXT, Config: ElementConfigUnion{TextElementConfig: textConfig}})}
+	textElement.ChildrenOrTextContent.TextElementData = __TextElementDataArray_Add(&context.textElementData, __TextElementData{Text: text, PreferredDimensions: textMeasured.UnwrappedDimensions, ElementIndex: context.layoutElements.Length - 1})
+	textElement.ElementConfigs = __ElementConfigArraySlice{Length: 1, InternalArray: __ElementConfigArray_Add(&context.elementConfigs, ElementConfig{Type: __ELEMENT_CONFIG_TYPE_TEXT, Config: ElementConfigUnion{TextElementConfig: textConfig}})}
 	textElement.LayoutConfig = &LAYOUT_DEFAULT
 	parentElement.ChildrenOrTextContent.Children.Length++
 }
 func __AttachId(elementId ElementId) ElementId {
 	var context *Context = GetCurrentContext()
-	if context.BooleanWarnings.MaxElementsExceeded {
+	if context.booleanWarnings.MaxElementsExceeded {
 		return ElementId_DEFAULT
 	}
 	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	var idAlias uint32 = openLayoutElement.Id
 	openLayoutElement.Id = elementId.Id
 	__AddHashMapItem(elementId, openLayoutElement, idAlias)
-	__StringArray_Add(&context.LayoutElementIdStrings, elementId.StringId)
+	__StringArray_Add(&context.layoutElementIdStrings, elementId.StringId)
 	return elementId
 }
 func __ConfigureOpenElement(declaration ElementDeclaration) {
@@ -2848,10 +2848,10 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 	)
 	openLayoutElement.LayoutConfig = __StoreLayoutConfig(declaration.Layout)
 	if declaration.Layout.Sizing.Width.Type == __SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Width.Size.Percent > 1 || declaration.Layout.Sizing.Height.Type == __SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Height.Size.Percent > 1 {
-		context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_PERCENTAGE_OVER_1, ErrorText: String{Length: int32(((len("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.")}, UserData: context.ErrorHandler.UserData})
+		context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_PERCENTAGE_OVER_1, ErrorText: String{Length: int32(((len("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.")}, UserData: context.errorHandler.UserData})
 	}
 	var openLayoutElementId ElementId = declaration.Id
-	openLayoutElement.ElementConfigs.InternalArray = (*ElementConfig)(unsafe.Add(unsafe.Pointer(context.ElementConfigs.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(context.ElementConfigs.Length)))
+	openLayoutElement.ElementConfigs.InternalArray = (*ElementConfig)(unsafe.Add(unsafe.Pointer(context.elementConfigs.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(context.elementConfigs.Length)))
 	var sharedConfig *SharedElementConfig = nil
 	if declaration.BackgroundColor.A > 0 {
 		sharedConfig = __StoreSharedElementConfig(SharedElementConfig{BackgroundColor: declaration.BackgroundColor})
@@ -2875,34 +2875,34 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 	}
 	if declaration.Image.ImageData != nil {
 		__AttachElementConfig(ElementConfigUnion{ImageElementConfig: __StoreImageElementConfig(declaration.Image)}, __ELEMENT_CONFIG_TYPE_IMAGE)
-		__int32_tArray_Add(&context.ImageElementPointers, context.LayoutElements.Length-1)
+		__int32_tArray_Add(&context.imageElementPointers, context.layoutElements.Length-1)
 	}
 	if declaration.Floating.AttachTo != ATTACH_TO_NONE {
 		var (
 			floatingConfig     FloatingElementConfig = declaration.Floating
-			hierarchicalParent *LayoutElement        = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.OpenLayoutElementStack, context.OpenLayoutElementStack.Length-2))
+			hierarchicalParent *LayoutElement        = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-2))
 		)
 		if hierarchicalParent != nil {
 			var clipElementId uint32 = 0
 			if declaration.Floating.AttachTo == ATTACH_TO_PARENT {
 				floatingConfig.ParentId = hierarchicalParent.Id
-				if context.OpenClipElementStack.Length > 0 {
-					clipElementId = uint32(__int32_tArray_GetValue(&context.OpenClipElementStack, context.OpenClipElementStack.Length-1))
+				if context.openClipElementStack.Length > 0 {
+					clipElementId = uint32(__int32_tArray_GetValue(&context.openClipElementStack, context.openClipElementStack.Length-1))
 				}
 			} else if declaration.Floating.AttachTo == ATTACH_TO_ELEMENT_WITH_ID {
 				var parentItem *LayoutElementHashMapItem = __GetHashMapItem(floatingConfig.ParentId)
 				if parentItem == nil {
-					context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{Length: int32(((len("A floating element was declared with a parentId, but no element with that ID was found.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.ErrorHandler.UserData})
+					context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{Length: int32(((len("A floating element was declared with a parentId, but no element with that ID was found.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.errorHandler.UserData})
 				} else {
-					clipElementId = uint32(__int32_tArray_GetValue(&context.LayoutElementClipElementIds, int32(int64((uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray)))/unsafe.Sizeof(LayoutElement{})))))
+					clipElementId = uint32(__int32_tArray_GetValue(&context.layoutElementClipElementIds, int32(int64((uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray)))/unsafe.Sizeof(LayoutElement{})))))
 				}
 			} else if declaration.Floating.AttachTo == ATTACH_TO_ROOT {
 				floatingConfig.ParentId = __HashString(String{Length: int32(((len("__RootContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0).Id
 			}
 			if openLayoutElementId.Id == 0 {
-				openLayoutElementId = __HashString(String{Length: int32(((len("__FloatingContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__FloatingContainer")}, uint32(context.LayoutElementTreeRoots.Length), 0)
+				openLayoutElementId = __HashString(String{Length: int32(((len("__FloatingContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__FloatingContainer")}, uint32(context.layoutElementTreeRoots.Length), 0)
 			}
-			__LayoutElementTreeRootArray_Add(&context.LayoutElementTreeRoots, __LayoutElementTreeRoot{LayoutElementIndex: __int32_tArray_GetValue(&context.OpenLayoutElementStack, context.OpenLayoutElementStack.Length-1), ParentId: floatingConfig.ParentId, ClipElementId: clipElementId, ZIndex: floatingConfig.ZIndex})
+			__LayoutElementTreeRootArray_Add(&context.layoutElementTreeRoots, __LayoutElementTreeRoot{LayoutElementIndex: __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1), ParentId: floatingConfig.ParentId, ClipElementId: clipElementId, ZIndex: floatingConfig.ZIndex})
 			__AttachElementConfig(ElementConfigUnion{FloatingElementConfig: __StoreFloatingElementConfig(floatingConfig)}, __ELEMENT_CONFIG_TYPE_FLOATING)
 		}
 	}
@@ -2916,10 +2916,10 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 	}
 	if declaration.Scroll.Horizontal || declaration.Scroll.Vertical {
 		__AttachElementConfig(ElementConfigUnion{ScrollElementConfig: __StoreScrollElementConfig(declaration.Scroll)}, __ELEMENT_CONFIG_TYPE_SCROLL)
-		__int32_tArray_Add(&context.OpenClipElementStack, int32(openLayoutElement.Id))
+		__int32_tArray_Add(&context.openClipElementStack, int32(openLayoutElement.Id))
 		var scrollOffset *__ScrollContainerDataInternal = (*__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(__NULL)))
-		for i := int32(0); i < context.ScrollContainerDatas.Length; i++ {
-			var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+		for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
+			var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 			if openLayoutElement.Id == mapping.ElementId {
 				scrollOffset = mapping
 				scrollOffset.LayoutElement = openLayoutElement
@@ -2927,10 +2927,10 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 			}
 		}
 		if scrollOffset == nil {
-			scrollOffset = __ScrollContainerDataInternalArray_Add(&context.ScrollContainerDatas, __ScrollContainerDataInternal{LayoutElement: openLayoutElement, ScrollOrigin: Vector2{X: -1, Y: -1}, ElementId: openLayoutElement.Id, OpenThisFrame: true})
+			scrollOffset = __ScrollContainerDataInternalArray_Add(&context.scrollContainerDatas, __ScrollContainerDataInternal{LayoutElement: openLayoutElement, ScrollOrigin: Vector2{X: -1, Y: -1}, ElementId: openLayoutElement.Id, OpenThisFrame: true})
 		}
-		if context.ExternalScrollHandlingEnabled {
-			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.QueryScrollOffsetUserData)
+		if context.externalScrollHandlingEnabled {
+			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.queryScrollOffsetUserData)
 		}
 	}
 	if !__MemCmp((*byte)(unsafe.Pointer(&declaration.Border.Width)), (*byte)(unsafe.Pointer(&__BorderWidth_DEFAULT)), int32(uint32(unsafe.Sizeof(BorderWidth{})))) {
@@ -2939,55 +2939,55 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 }
 func __InitializeEphemeralMemory(context *Context) {
 	var (
-		maxElementCount int32  = context.MaxElementCount
-		arena           *Arena = &context.InternalArena
+		maxElementCount int32  = context.maxElementCount
+		arena           *Arena = &context.internalArena
 	)
-	arena.NextAllocation = context.ArenaResetOffset
-	context.LayoutElementChildrenBuffer = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElements = LayoutElementArray_Allocate_Arena(maxElementCount, arena)
-	context.Warnings = __WarningArray_Allocate_Arena(100, arena)
-	context.LayoutConfigs = __LayoutConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.ElementConfigs = __ElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.TextElementConfigs = __TextElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.ImageElementConfigs = __ImageElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.FloatingElementConfigs = __FloatingElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.ScrollElementConfigs = __ScrollElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.CustomElementConfigs = __CustomElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.BorderElementConfigs = __BorderElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.SharedElementConfigs = __SharedElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementIdStrings = __StringArray_Allocate_Arena(maxElementCount, arena)
-	context.WrappedTextLines = __WrappedTextLineArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementTreeNodeArray1 = __LayoutElementTreeNodeArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementTreeRoots = __LayoutElementTreeRootArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementChildren = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.OpenLayoutElementStack = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.TextElementData = __TextElementDataArray_Allocate_Arena(maxElementCount, arena)
-	context.ImageElementPointers = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.RenderCommands = RenderCommandArray_Allocate_Arena(maxElementCount, arena)
-	context.TreeNodeVisited = __boolArray_Allocate_Arena(maxElementCount, arena)
-	context.TreeNodeVisited.Length = context.TreeNodeVisited.Capacity
-	context.OpenClipElementStack = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.ReusableElementIndexBuffer = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementClipElementIds = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.DynamicStringData = __charArray_Allocate_Arena(maxElementCount, arena)
+	arena.NextAllocation = context.arenaResetOffset
+	context.layoutElementChildrenBuffer = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.layoutElements = LayoutElementArray_Allocate_Arena(maxElementCount, arena)
+	context.warnings = __WarningArray_Allocate_Arena(100, arena)
+	context.layoutConfigs = __LayoutConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.elementConfigs = __ElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.textElementConfigs = __TextElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.imageElementConfigs = __ImageElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.floatingElementConfigs = __FloatingElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.scrollElementConfigs = __ScrollElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.customElementConfigs = __CustomElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.borderElementConfigs = __BorderElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.sharedElementConfigs = __SharedElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.layoutElementIdStrings = __StringArray_Allocate_Arena(maxElementCount, arena)
+	context.wrappedTextLines = __WrappedTextLineArray_Allocate_Arena(maxElementCount, arena)
+	context.layoutElementTreeNodeArray1 = __LayoutElementTreeNodeArray_Allocate_Arena(maxElementCount, arena)
+	context.layoutElementTreeRoots = __LayoutElementTreeRootArray_Allocate_Arena(maxElementCount, arena)
+	context.layoutElementChildren = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.openLayoutElementStack = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.textElementData = __TextElementDataArray_Allocate_Arena(maxElementCount, arena)
+	context.imageElementPointers = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.renderCommands = RenderCommandArray_Allocate_Arena(maxElementCount, arena)
+	context.treeNodeVisited = __boolArray_Allocate_Arena(maxElementCount, arena)
+	context.treeNodeVisited.Length = context.treeNodeVisited.Capacity
+	context.openClipElementStack = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.reusableElementIndexBuffer = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.layoutElementClipElementIds = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.dynamicStringData = __charArray_Allocate_Arena(maxElementCount, arena)
 }
 func __InitializePersistentMemory(context *Context) {
 	var (
-		maxElementCount              int32  = context.MaxElementCount
-		maxMeasureTextCacheWordCount int32  = context.MaxMeasureTextCacheWordCount
-		arena                        *Arena = &context.InternalArena
+		maxElementCount              int32  = context.maxElementCount
+		maxMeasureTextCacheWordCount int32  = context.maxMeasureTextCacheWordCount
+		arena                        *Arena = &context.internalArena
 	)
-	context.ScrollContainerDatas = __ScrollContainerDataInternalArray_Allocate_Arena(10, arena)
-	context.LayoutElementsHashMapInternal = __LayoutElementHashMapItemArray_Allocate_Arena(maxElementCount, arena)
-	context.LayoutElementsHashMap = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.MeasureTextHashMapInternal = __MeasureTextCacheItemArray_Allocate_Arena(maxElementCount, arena)
-	context.MeasureTextHashMapInternalFreeList = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.MeasuredWordsFreeList = __int32_tArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
-	context.MeasureTextHashMap = __int32_tArray_Allocate_Arena(maxElementCount, arena)
-	context.MeasuredWords = __MeasuredWordArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
-	context.PointerOverIds = __ElementIdArray_Allocate_Arena(maxElementCount, arena)
-	context.DebugElementData = __DebugElementDataArray_Allocate_Arena(maxElementCount, arena)
-	context.ArenaResetOffset = arena.NextAllocation
+	context.scrollContainerDatas = __ScrollContainerDataInternalArray_Allocate_Arena(10, arena)
+	context.layoutElementsHashMapInternal = __LayoutElementHashMapItemArray_Allocate_Arena(maxElementCount, arena)
+	context.layoutElementsHashMap = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.measureTextHashMapInternal = __MeasureTextCacheItemArray_Allocate_Arena(maxElementCount, arena)
+	context.measureTextHashMapInternalFreeList = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.measuredWordsFreeList = __int32_tArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
+	context.measureTextHashMap = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.measuredWords = __MeasuredWordArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
+	context.pointerOverIds = __ElementIdArray_Allocate_Arena(maxElementCount, arena)
+	context.debugElementData = __DebugElementDataArray_Allocate_Arena(maxElementCount, arena)
+	context.arenaResetOffset = arena.NextAllocation
 }
 
 var __EPSILON float32 = 0.01
@@ -2999,13 +2999,13 @@ func __FloatEqual(left float32, right float32) bool {
 func __SizeContainersAlongAxis(xAxis bool) {
 	var (
 		context                  *Context       = GetCurrentContext()
-		bfsBuffer                __int32_tArray = context.LayoutElementChildrenBuffer
-		resizableContainerBuffer __int32_tArray = context.OpenLayoutElementStack
+		bfsBuffer                __int32_tArray = context.layoutElementChildrenBuffer
+		resizableContainerBuffer __int32_tArray = context.openLayoutElementStack
 	)
-	for rootIndex := int32(0); rootIndex < context.LayoutElementTreeRoots.Length; rootIndex++ {
+	for rootIndex := int32(0); rootIndex < context.layoutElementTreeRoots.Length; rootIndex++ {
 		bfsBuffer.Length = 0
-		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
-		var rootElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, root.LayoutElementIndex)
+		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.layoutElementTreeRoots, rootIndex)
+		var rootElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, root.LayoutElementIndex)
 		__int32_tArray_Add(&bfsBuffer, root.LayoutElementIndex)
 		if __ElementHasConfig(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING) {
 			var (
@@ -3053,7 +3053,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 		for i := int32(0); i < bfsBuffer.Length; i++ {
 			var (
 				parentIndex        int32          = __int32_tArray_GetValue(&bfsBuffer, i)
-				parent             *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, parentIndex)
+				parent             *LayoutElement = LayoutElementArray_Get(&context.layoutElements, parentIndex)
 				parentStyleConfig  *LayoutConfig  = parent.LayoutConfig
 				growContainerCount int32          = 0
 				parentSize         float32
@@ -3077,7 +3077,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 			for childOffset := int32(0); childOffset < int32(parent.ChildrenOrTextContent.Children.Length); childOffset++ {
 				var (
 					childElementIndex int32          = *(*int32)(unsafe.Add(unsafe.Pointer(parent.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(childOffset)))
-					childElement      *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childElementIndex)
+					childElement      *LayoutElement = LayoutElementArray_Get(&context.layoutElements, childElementIndex)
 					childSizing       SizingAxis
 				)
 				if xAxis {
@@ -3121,7 +3121,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 			for childOffset := int32(0); childOffset < int32(parent.ChildrenOrTextContent.Children.Length); childOffset++ {
 				var (
 					childElementIndex int32          = *(*int32)(unsafe.Add(unsafe.Pointer(parent.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(childOffset)))
-					childElement      *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, childElementIndex)
+					childElement      *LayoutElement = LayoutElementArray_Get(&context.layoutElements, childElementIndex)
 					childSizing       SizingAxis
 				)
 				if xAxis {
@@ -3160,7 +3160,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 						)
 						for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
 							var (
-								child     *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+								child     *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
 								childSize float32
 							)
 							if xAxis {
@@ -3191,7 +3191,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 						}
 						for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
 							var (
-								child     *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+								child     *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
 								childSize *float32
 							)
 							if xAxis {
@@ -3224,7 +3224,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 				} else if sizeToDistribute > 0 && growContainerCount > 0 {
 					for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
 						var (
-							child       *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+							child       *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
 							childSizing __SizingType
 						)
 						if xAxis {
@@ -3249,7 +3249,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 						)
 						for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
 							var (
-								child     *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+								child     *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
 								childSize float32
 							)
 							if xAxis {
@@ -3280,7 +3280,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 						}
 						for childIndex := int32(0); childIndex < resizableContainerBuffer.Length; childIndex++ {
 							var (
-								child     *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
+								child     *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childIndex))
 								childSize *float32
 							)
 							if xAxis {
@@ -3314,7 +3314,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 			} else {
 				for childOffset := int32(0); childOffset < resizableContainerBuffer.Length; childOffset++ {
 					var (
-						childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childOffset))
+						childElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&resizableContainerBuffer, childOffset))
 						childSizing  SizingAxis
 					)
 					if xAxis {
@@ -3372,7 +3372,7 @@ func __IntToString(integer int32) String {
 		return String{Length: 1, Chars: libc.CString("0")}
 	}
 	var context *Context = GetCurrentContext()
-	var chars *byte = ((*byte)(unsafe.Add(unsafe.Pointer(context.DynamicStringData.InternalArray), context.DynamicStringData.Length)))
+	var chars *byte = ((*byte)(unsafe.Add(unsafe.Pointer(context.dynamicStringData.InternalArray), context.dynamicStringData.Length)))
 	var length int32 = 0
 	var sign int32 = integer
 	if integer < 0 {
@@ -3408,34 +3408,34 @@ func __IntToString(integer int32) String {
 		*(*byte)(unsafe.Add(unsafe.Pointer(chars), j)) = *(*byte)(unsafe.Add(unsafe.Pointer(chars), k))
 		*(*byte)(unsafe.Add(unsafe.Pointer(chars), k)) = byte(temp)
 	}
-	context.DynamicStringData.Length += length
+	context.dynamicStringData.Length += length
 	return String{Length: length, Chars: chars}
 }
 func __AddRenderCommand(renderCommand RenderCommand) {
 	var context *Context = GetCurrentContext()
-	if context.RenderCommands.Length < context.RenderCommands.Capacity-1 {
-		RenderCommandArray_Add(&context.RenderCommands, renderCommand)
+	if context.renderCommands.Length < context.renderCommands.Capacity-1 {
+		RenderCommandArray_Add(&context.renderCommands, renderCommand)
 	} else {
-		if !context.BooleanWarnings.MaxRenderCommandsExceeded {
-			context.BooleanWarnings.MaxRenderCommandsExceeded = true
-			context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.")}, UserData: context.ErrorHandler.UserData})
+		if !context.booleanWarnings.MaxRenderCommandsExceeded {
+			context.booleanWarnings.MaxRenderCommandsExceeded = true
+			context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.")}, UserData: context.errorHandler.UserData})
 		}
 	}
 }
 func __ElementIsOffscreen(boundingBox *BoundingBox) bool {
 	var context *Context = GetCurrentContext()
-	if context.DisableCulling {
+	if context.disableCulling {
 		return false
 	}
-	return boundingBox.X > context.LayoutDimensions.Width || boundingBox.Y > context.LayoutDimensions.Height || boundingBox.X+boundingBox.Width < 0 || boundingBox.Y+boundingBox.Height < 0
+	return boundingBox.X > context.layoutDimensions.Width || boundingBox.Y > context.layoutDimensions.Height || boundingBox.X+boundingBox.Width < 0 || boundingBox.Y+boundingBox.Height < 0
 }
 func __CalculateFinalLayout() {
 	var context *Context = GetCurrentContext()
 	__SizeContainersAlongAxis(true)
-	for textElementIndex := int32(0); textElementIndex < context.TextElementData.Length; textElementIndex++ {
-		var textElementData *__TextElementData = __TextElementDataArray_Get(&context.TextElementData, textElementIndex)
-		textElementData.WrappedLines = __WrappedTextLineArraySlice{Length: 0, InternalArray: (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(context.WrappedTextLines.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(context.WrappedTextLines.Length)))}
-		var containerElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, textElementData.ElementIndex)
+	for textElementIndex := int32(0); textElementIndex < context.textElementData.Length; textElementIndex++ {
+		var textElementData *__TextElementData = __TextElementDataArray_Get(&context.textElementData, textElementIndex)
+		textElementData.WrappedLines = __WrappedTextLineArraySlice{Length: 0, InternalArray: (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(context.wrappedTextLines.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(context.wrappedTextLines.Length)))}
+		var containerElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, textElementData.ElementIndex)
 		var textConfig *TextElementConfig = __FindElementConfigWithType(containerElement, __ELEMENT_CONFIG_TYPE_TEXT).TextElementConfig
 		var measureTextCacheItem *__MeasureTextCacheItem = __MeasureTextCached(&textElementData.Text, textConfig)
 		var lineWidth float32 = 0
@@ -3448,26 +3448,26 @@ func __CalculateFinalLayout() {
 		var lineLengthChars int32 = 0
 		var lineStartOffset int32 = 0
 		if !measureTextCacheItem.ContainsNewlines && textElementData.PreferredDimensions.Width <= containerElement.Dimensions.Width {
-			__WrappedTextLineArray_Add(&context.WrappedTextLines, __WrappedTextLine{Dimensions: containerElement.Dimensions, Line: textElementData.Text})
+			__WrappedTextLineArray_Add(&context.wrappedTextLines, __WrappedTextLine{Dimensions: containerElement.Dimensions, Line: textElementData.Text})
 			textElementData.WrappedLines.Length++
 			continue
 		}
-		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.MeasureTextUserData).Width
+		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.measureTextUserData).Width
 		_ = spaceWidth
 		var wordIndex int32 = measureTextCacheItem.MeasuredWordsStartIndex
 		for wordIndex != -1 {
-			if context.WrappedTextLines.Length > context.WrappedTextLines.Capacity-1 {
+			if context.wrappedTextLines.Length > context.wrappedTextLines.Capacity-1 {
 				break
 			}
-			var measuredWord *__MeasuredWord = __MeasuredWordArray_Get(&context.MeasuredWords, wordIndex)
+			var measuredWord *__MeasuredWord = __MeasuredWordArray_Get(&context.measuredWords, wordIndex)
 			if lineLengthChars == 0 && lineWidth+measuredWord.Width > containerElement.Dimensions.Width {
-				__WrappedTextLineArray_Add(&context.WrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: measuredWord.Width, Height: lineHeight}, Line: String{Length: measuredWord.Length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), measuredWord.StartOffset))}})
+				__WrappedTextLineArray_Add(&context.wrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: measuredWord.Width, Height: lineHeight}, Line: String{Length: measuredWord.Length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), measuredWord.StartOffset))}})
 				textElementData.WrappedLines.Length++
 				wordIndex = measuredWord.Next
 				lineStartOffset = measuredWord.StartOffset + measuredWord.Length
 			} else if measuredWord.Length == 0 || lineWidth+measuredWord.Width > containerElement.Dimensions.Width {
 				var finalCharIsSpace bool = *(*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), lineStartOffset+lineLengthChars-1)) == ' '
-				__WrappedTextLineArray_Add(&context.WrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth + (func() float32 {
+				__WrappedTextLineArray_Add(&context.wrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth + (func() float32 {
 					if finalCharIsSpace {
 						return -spaceWidth
 					}
@@ -3492,14 +3492,14 @@ func __CalculateFinalLayout() {
 			}
 		}
 		if lineLengthChars > 0 {
-			__WrappedTextLineArray_Add(&context.WrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth, Height: lineHeight}, Line: String{Length: lineLengthChars, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), lineStartOffset))}})
+			__WrappedTextLineArray_Add(&context.wrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth, Height: lineHeight}, Line: String{Length: lineLengthChars, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), lineStartOffset))}})
 			textElementData.WrappedLines.Length++
 		}
 		containerElement.Dimensions.Height = lineHeight * float32(textElementData.WrappedLines.Length)
 	}
-	for i := int32(0); i < context.ImageElementPointers.Length; i++ {
+	for i := int32(0); i < context.imageElementPointers.Length; i++ {
 		var (
-			imageElement *LayoutElement      = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&context.ImageElementPointers, i))
+			imageElement *LayoutElement      = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.imageElementPointers, i))
 			config       *ImageElementConfig = __FindElementConfigWithType(imageElement, __ELEMENT_CONFIG_TYPE_IMAGE).ImageElementConfig
 		)
 		imageElement.Dimensions.Height = (config.SourceDimensions.Height / (func() float32 {
@@ -3509,27 +3509,27 @@ func __CalculateFinalLayout() {
 			return 1
 		}())) * imageElement.Dimensions.Width
 	}
-	var dfsBuffer __LayoutElementTreeNodeArray = context.LayoutElementTreeNodeArray1
+	var dfsBuffer __LayoutElementTreeNodeArray = context.layoutElementTreeNodeArray1
 	dfsBuffer.Length = 0
-	for i := int32(0); i < context.LayoutElementTreeRoots.Length; i++ {
-		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, i)
-		*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length)) = false
-		__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: LayoutElementArray_Get(&context.LayoutElements, root.LayoutElementIndex)})
+	for i := int32(0); i < context.layoutElementTreeRoots.Length; i++ {
+		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.layoutElementTreeRoots, i)
+		*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length)) = false
+		__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: LayoutElementArray_Get(&context.layoutElements, root.LayoutElementIndex)})
 	}
 	for dfsBuffer.Length > 0 {
 		var (
 			currentElementTreeNode *__LayoutElementTreeNode = __LayoutElementTreeNodeArray_Get(&dfsBuffer, dfsBuffer.Length-1)
 			currentElement         *LayoutElement           = currentElementTreeNode.LayoutElement
 		)
-		if !*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) {
-			*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) = true
+		if !*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length-1)) {
+			*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length-1)) = true
 			if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_TEXT) || int32(currentElement.ChildrenOrTextContent.Children.Length) == 0 {
 				dfsBuffer.Length--
 				continue
 			}
 			for i := int32(0); i < int32(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-				*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length)) = false
-				__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))})
+				*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length)) = false
+				__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))})
 			}
 			continue
 		}
@@ -3538,7 +3538,7 @@ func __CalculateFinalLayout() {
 		if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 			for j := int32(0); j < int32(currentElement.ChildrenOrTextContent.Children.Length); j++ {
 				var (
-					childElement           *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(j))))
+					childElement           *LayoutElement = LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(j))))
 					childHeightWithPadding float32        = (func() float32 {
 						if (childElement.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)) > currentElement.Dimensions.Height {
 							return childElement.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)
@@ -3564,7 +3564,7 @@ func __CalculateFinalLayout() {
 		} else if layoutConfig.LayoutDirection == TOP_TO_BOTTOM {
 			var contentHeight float32 = float32(int32(layoutConfig.Padding.Top) + int32(layoutConfig.Padding.Bottom))
 			for j := int32(0); j < int32(currentElement.ChildrenOrTextContent.Children.Length); j++ {
-				var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(j))))
+				var childElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(j))))
 				contentHeight += childElement.Dimensions.Height
 			}
 			contentHeight += float32((func() int32 {
@@ -3590,26 +3590,26 @@ func __CalculateFinalLayout() {
 		}
 	}
 	__SizeContainersAlongAxis(false)
-	var sortMax int32 = context.LayoutElementTreeRoots.Length - 1
+	var sortMax int32 = context.layoutElementTreeRoots.Length - 1
 	for sortMax > 0 {
 		for i := int32(0); i < sortMax; i++ {
 			var (
-				current __LayoutElementTreeRoot = *__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, i)
-				next    __LayoutElementTreeRoot = *__LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, i+1)
+				current __LayoutElementTreeRoot = *__LayoutElementTreeRootArray_Get(&context.layoutElementTreeRoots, i)
+				next    __LayoutElementTreeRoot = *__LayoutElementTreeRootArray_Get(&context.layoutElementTreeRoots, i+1)
 			)
 			if int32(next.ZIndex) < int32(current.ZIndex) {
-				__LayoutElementTreeRootArray_Set(&context.LayoutElementTreeRoots, i, next)
-				__LayoutElementTreeRootArray_Set(&context.LayoutElementTreeRoots, i+1, current)
+				__LayoutElementTreeRootArray_Set(&context.layoutElementTreeRoots, i, next)
+				__LayoutElementTreeRootArray_Set(&context.layoutElementTreeRoots, i+1, current)
 			}
 		}
 		sortMax--
 	}
-	context.RenderCommands.Length = 0
+	context.renderCommands.Length = 0
 	dfsBuffer.Length = 0
-	for rootIndex := int32(0); rootIndex < context.LayoutElementTreeRoots.Length; rootIndex++ {
+	for rootIndex := int32(0); rootIndex < context.layoutElementTreeRoots.Length; rootIndex++ {
 		dfsBuffer.Length = 0
-		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
-		var rootElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, root.LayoutElementIndex)
+		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.layoutElementTreeRoots, rootIndex)
+		var rootElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, root.LayoutElementIndex)
 		var rootPosition Vector2 = Vector2{}
 		var parentHashMapItem *LayoutElementHashMapItem = __GetHashMapItem(root.ParentId)
 		if __ElementHasConfig(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING) && parentHashMapItem != nil {
@@ -3704,10 +3704,10 @@ func __CalculateFinalLayout() {
 		if root.ClipElementId != 0 {
 			var clipHashMapItem *LayoutElementHashMapItem = __GetHashMapItem(root.ClipElementId)
 			if clipHashMapItem != nil {
-				if context.ExternalScrollHandlingEnabled {
+				if context.externalScrollHandlingEnabled {
 					var scrollConfig *ScrollElementConfig = __FindElementConfigWithType(clipHashMapItem.LayoutElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
-					for i := int32(0); i < context.ScrollContainerDatas.Length; i++ {
-						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+					for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
+						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 						if mapping.LayoutElement == clipHashMapItem.LayoutElement {
 							root.PointerOffset = mapping.ScrollPosition
 							if scrollConfig.Horizontal {
@@ -3724,7 +3724,7 @@ func __CalculateFinalLayout() {
 			}
 		}
 		__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: rootElement, Position: rootPosition, NextChildOffset: Vector2{X: float32(rootElement.LayoutConfig.Padding.Left), Y: float32(rootElement.LayoutConfig.Padding.Top)}})
-		*context.TreeNodeVisited.InternalArray = false
+		*context.treeNodeVisited.InternalArray = false
 		for dfsBuffer.Length > 0 {
 			var (
 				currentElementTreeNode *__LayoutElementTreeNode = __LayoutElementTreeNodeArray_Get(&dfsBuffer, dfsBuffer.Length-1)
@@ -3732,8 +3732,8 @@ func __CalculateFinalLayout() {
 				layoutConfig           *LayoutConfig            = currentElement.LayoutConfig
 				scrollOffset           Vector2                  = Vector2{}
 			)
-			if !*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) {
-				*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) = true
+			if !*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length-1)) {
+				*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length-1)) = true
 				var currentElementBoundingBox BoundingBox = BoundingBox{X: currentElementTreeNode.Position.X, Y: currentElementTreeNode.Position.Y, Width: currentElement.Dimensions.Width, Height: currentElement.Dimensions.Height}
 				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_FLOATING) {
 					var (
@@ -3748,8 +3748,8 @@ func __CalculateFinalLayout() {
 				var scrollContainerData *__ScrollContainerDataInternal = (*__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(__NULL)))
 				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_SCROLL) {
 					var scrollConfig *ScrollElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
-					for i := int32(0); i < context.ScrollContainerDatas.Length; i++ {
-						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+					for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
+						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 						if mapping.LayoutElement == currentElement {
 							scrollContainerData = mapping
 							mapping.BoundingBox = currentElementBoundingBox
@@ -3759,7 +3759,7 @@ func __CalculateFinalLayout() {
 							if scrollConfig.Vertical {
 								scrollOffset.Y = mapping.ScrollPosition.Y
 							}
-							if context.ExternalScrollHandlingEnabled {
+							if context.externalScrollHandlingEnabled {
 								scrollOffset = Vector2{}
 							}
 							break
@@ -3856,7 +3856,7 @@ func __CalculateFinalLayout() {
 							}
 							__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: currentElementBoundingBox.X + offset, Y: currentElementBoundingBox.Y + yPosition, Width: wrappedLine.Dimensions.Width, Height: wrappedLine.Dimensions.Height}, RenderData: RenderData{Text: TextRenderData{StringContents: StringSlice{Length: wrappedLine.Line.Length, Chars: wrappedLine.Line.Chars, BaseChars: currentElement.ChildrenOrTextContent.TextElementData.Text.Chars}, TextColor: textElementConfig.TextColor, FontId: textElementConfig.FontId, FontSize: textElementConfig.FontSize, LetterSpacing: textElementConfig.LetterSpacing, LineHeight: textElementConfig.LineHeight}}, UserData: sharedConfig.UserData, Id: __HashNumber(uint32(lineIndex), currentElement.Id).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_TEXT})
 							yPosition += finalLineHeight
-							if !context.DisableCulling && currentElementBoundingBox.Y+yPosition > context.LayoutDimensions.Height {
+							if !context.disableCulling && currentElementBoundingBox.Y+yPosition > context.layoutDimensions.Height {
 								break
 							}
 						}
@@ -3879,7 +3879,7 @@ func __CalculateFinalLayout() {
 					var contentSize Dimensions = Dimensions{}
 					if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 						for i := int32(0); i < int32(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-							var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+							var childElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 							contentSize.Width += childElement.Dimensions.Width
 							if contentSize.Height > childElement.Dimensions.Height {
 								/* (016) */
@@ -3904,7 +3904,7 @@ func __CalculateFinalLayout() {
 						currentElementTreeNode.NextChildOffset.X += extraSpace
 					} else {
 						for i := int32(0); i < int32(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-							var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+							var childElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 							if contentSize.Width > childElement.Dimensions.Width {
 								/* (017) */
 							} else {
@@ -3939,8 +3939,8 @@ func __CalculateFinalLayout() {
 				)
 				if scrollConfig != nil {
 					closeScrollElement = true
-					for i := int32(0); i < context.ScrollContainerDatas.Length; i++ {
-						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+					for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
+						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 						if mapping.LayoutElement == currentElement {
 							if scrollConfig.Horizontal {
 								scrollOffset.X = mapping.ScrollPosition.X
@@ -3948,7 +3948,7 @@ func __CalculateFinalLayout() {
 							if scrollConfig.Vertical {
 								scrollOffset.Y = mapping.ScrollPosition.Y
 							}
-							if context.ExternalScrollHandlingEnabled {
+							if context.externalScrollHandlingEnabled {
 								scrollOffset = Vector2{}
 							}
 							break
@@ -3977,7 +3977,7 @@ func __CalculateFinalLayout() {
 							)
 							if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 								for i := int32(0); i < int32(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-									var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+									var childElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 									if i > 0 {
 										__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: currentElementBoundingBox.X + borderOffset.X + scrollOffset.X, Y: currentElementBoundingBox.Y + scrollOffset.Y, Width: float32(borderConfig.Width.BetweenChildren), Height: currentElement.Dimensions.Height}, RenderData: RenderData{Rectangle: RectangleRenderData{BackgroundColor: borderConfig.Color}}, UserData: sharedConfig.UserData, Id: __HashNumber(currentElement.Id, uint32(int32(currentElement.ChildrenOrTextContent.Children.Length)+1+i)).Id, CommandType: RENDER_COMMAND_TYPE_RECTANGLE})
 									}
@@ -3985,7 +3985,7 @@ func __CalculateFinalLayout() {
 								}
 							} else {
 								for i := int32(0); i < int32(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-									var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+									var childElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 									if i > 0 {
 										__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: currentElementBoundingBox.X + scrollOffset.X, Y: currentElementBoundingBox.Y + borderOffset.Y + scrollOffset.Y, Width: currentElement.Dimensions.Width, Height: float32(borderConfig.Width.BetweenChildren)}, RenderData: RenderData{Rectangle: RectangleRenderData{BackgroundColor: borderConfig.Color}}, UserData: sharedConfig.UserData, Id: __HashNumber(currentElement.Id, uint32(int32(currentElement.ChildrenOrTextContent.Children.Length)+1+i)).Id, CommandType: RENDER_COMMAND_TYPE_RECTANGLE})
 									}
@@ -4004,7 +4004,7 @@ func __CalculateFinalLayout() {
 			if !__ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_TEXT) {
 				dfsBuffer.Length += int32(currentElement.ChildrenOrTextContent.Children.Length)
 				for i := int32(0); i < int32(currentElement.ChildrenOrTextContent.Children.Length); i++ {
-					var childElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
+					var childElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
 					if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 						currentElementTreeNode.NextChildOffset.Y = float32(currentElement.LayoutConfig.Padding.Top)
 						var whiteSpaceAroundChild float32 = currentElement.Dimensions.Height - float32(int32(layoutConfig.Padding.Top)+int32(layoutConfig.Padding.Bottom)) - childElement.Dimensions.Height
@@ -4029,7 +4029,7 @@ func __CalculateFinalLayout() {
 					var childPosition Vector2 = Vector2{X: currentElementTreeNode.Position.X + currentElementTreeNode.NextChildOffset.X + scrollOffset.X, Y: currentElementTreeNode.Position.Y + currentElementTreeNode.NextChildOffset.Y + scrollOffset.Y}
 					var newNodeIndex uint32 = uint32(dfsBuffer.Length - 1 - i)
 					*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(dfsBuffer.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(newNodeIndex))) = __LayoutElementTreeNode{LayoutElement: childElement, Position: Vector2{X: childPosition.X, Y: childPosition.Y}, NextChildOffset: Vector2{X: float32(childElement.LayoutConfig.Padding.Left), Y: float32(childElement.LayoutConfig.Padding.Top)}}
-					*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), newNodeIndex)) = false
+					*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), newNodeIndex)) = false
 					if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
 						currentElementTreeNode.NextChildOffset.X += childElement.Dimensions.Width + float32(layoutConfig.ChildGap)
 					} else {
@@ -4057,7 +4057,7 @@ func __WarningArray_Allocate_Arena(capacity int32, arena *Arena) __WarningArray 
 		array.InternalArray = (*__Warning)(unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset)))
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
 	} else {
-		__currentContext.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.ErrorHandler.UserData})
+		__currentContext.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.errorHandler.UserData})
 	}
 	return array
 }
@@ -4082,7 +4082,7 @@ func __Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Arena) unsaf
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
 		return unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset))
 	} else {
-		__currentContext.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.ErrorHandler.UserData})
+		__currentContext.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.errorHandler.UserData})
 	}
 	return unsafe.Pointer(uintptr(__NULL))
 }
@@ -4091,7 +4091,7 @@ func __Array_RangeCheck(index int32, length int32) bool {
 		return true
 	}
 	var context *Context = GetCurrentContext()
-	context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData})
+	context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.errorHandler.UserData})
 	return false
 }
 func __Array_AddCapacityCheck(length int32, capacity int32) bool {
@@ -4099,22 +4099,22 @@ func __Array_AddCapacityCheck(length int32, capacity int32) bool {
 		return true
 	}
 	var context *Context = GetCurrentContext()
-	context.ErrorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.ErrorHandler.UserData})
+	context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.errorHandler.UserData})
 	return false
 }
 func MinMemorySize() uint32 {
 	var (
-		fakeContext    Context  = Context{MaxElementCount: __defaultMaxElementCount, MaxMeasureTextCacheWordCount: __defaultMaxMeasureTextWordCacheCount, InternalArena: Arena{Capacity: math.MaxUint64, Memory: nil}}
+		fakeContext    Context  = Context{maxElementCount: __defaultMaxElementCount, maxMeasureTextCacheWordCount: __defaultMaxMeasureTextWordCacheCount, internalArena: Arena{Capacity: math.MaxUint64, Memory: nil}}
 		currentContext *Context = GetCurrentContext()
 	)
 	if currentContext != nil {
-		fakeContext.MaxElementCount = currentContext.MaxElementCount
-		fakeContext.MaxMeasureTextCacheWordCount = currentContext.MaxMeasureTextCacheWordCount
+		fakeContext.maxElementCount = currentContext.maxElementCount
+		fakeContext.maxMeasureTextCacheWordCount = currentContext.maxMeasureTextCacheWordCount
 	}
-	__Context_Allocate_Arena(&fakeContext.InternalArena)
+	__Context_Allocate_Arena(&fakeContext.internalArena)
 	__InitializePersistentMemory(&fakeContext)
 	__InitializeEphemeralMemory(&fakeContext)
-	return uint32(fakeContext.InternalArena.NextAllocation + 128)
+	return uint32(fakeContext.internalArena.NextAllocation + 128)
 }
 func CreateArenaWithCapacityAndMemory(capacity uint64, memory unsafe.Pointer) Arena {
 	var arena Arena = Arena{Capacity: capacity, Memory: (*byte)(memory)}
@@ -4123,39 +4123,39 @@ func CreateArenaWithCapacityAndMemory(capacity uint64, memory unsafe.Pointer) Ar
 func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData unsafe.Pointer) {
 	var context *Context = GetCurrentContext()
 	__MeasureText = measureTextFunction
-	context.MeasureTextUserData = userData
+	context.measureTextUserData = userData
 }
 func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData unsafe.Pointer) {
 	var context *Context = GetCurrentContext()
 	__QueryScrollOffset = queryScrollOffsetFunction
-	context.QueryScrollOffsetUserData = userData
+	context.queryScrollOffsetUserData = userData
 }
 func SetLayoutDimensions(dimensions Dimensions) {
-	GetCurrentContext().LayoutDimensions = dimensions
+	GetCurrentContext().layoutDimensions = dimensions
 }
 func SetPointerState(position Vector2, isPointerDown bool) {
 	var context *Context = GetCurrentContext()
-	if context.BooleanWarnings.MaxElementsExceeded {
+	if context.booleanWarnings.MaxElementsExceeded {
 		return
 	}
-	context.PointerInfo.Position = position
-	context.PointerOverIds.Length = 0
-	var dfsBuffer __int32_tArray = context.LayoutElementChildrenBuffer
-	for rootIndex := int32(context.LayoutElementTreeRoots.Length - 1); rootIndex >= 0; rootIndex-- {
+	context.pointerInfo.Position = position
+	context.pointerOverIds.Length = 0
+	var dfsBuffer __int32_tArray = context.layoutElementChildrenBuffer
+	for rootIndex := int32(context.layoutElementTreeRoots.Length - 1); rootIndex >= 0; rootIndex-- {
 		dfsBuffer.Length = 0
-		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.LayoutElementTreeRoots, rootIndex)
+		var root *__LayoutElementTreeRoot = __LayoutElementTreeRootArray_Get(&context.layoutElementTreeRoots, rootIndex)
 		__int32_tArray_Add(&dfsBuffer, root.LayoutElementIndex)
-		*context.TreeNodeVisited.InternalArray = false
+		*context.treeNodeVisited.InternalArray = false
 		var found bool = false
 		for dfsBuffer.Length > 0 {
-			if *(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) {
+			if *(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length-1)) {
 				dfsBuffer.Length--
 				continue
 			}
-			*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) = true
-			var currentElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, __int32_tArray_GetValue(&dfsBuffer, dfsBuffer.Length-1))
+			*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length-1)) = true
+			var currentElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&dfsBuffer, dfsBuffer.Length-1))
 			var mapItem *LayoutElementHashMapItem = __GetHashMapItem(currentElement.Id)
-			var clipElementId int32 = __int32_tArray_GetValue(&context.LayoutElementClipElementIds, int32(int64((uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.LayoutElements.InternalArray)))/unsafe.Sizeof(LayoutElement{}))))
+			var clipElementId int32 = __int32_tArray_GetValue(&context.layoutElementClipElementIds, int32(int64((uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray)))/unsafe.Sizeof(LayoutElement{}))))
 			var clipItem *LayoutElementHashMapItem = __GetHashMapItem(uint32(clipElementId))
 			var elementBox BoundingBox = mapItem.BoundingBox
 			elementBox.X -= root.PointerOffset.X
@@ -4163,12 +4163,12 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 			if mapItem != nil {
 				if __PointIsInsideRect(position, elementBox) && (clipElementId == 0 || __PointIsInsideRect(position, clipItem.BoundingBox)) {
 					if mapItem.OnHoverFunction != nil {
-						mapItem.OnHoverFunction(mapItem.ElementId, context.PointerInfo, mapItem.HoverFunctionUserData)
+						mapItem.OnHoverFunction(mapItem.ElementId, context.pointerInfo, mapItem.HoverFunctionUserData)
 					}
-					__ElementIdArray_Add(&context.PointerOverIds, mapItem.ElementId)
+					__ElementIdArray_Add(&context.pointerOverIds, mapItem.ElementId)
 					found = true
 					if mapItem.IdAlias != 0 {
-						__ElementIdArray_Add(&context.PointerOverIds, ElementId{Id: mapItem.IdAlias})
+						__ElementIdArray_Add(&context.pointerOverIds, ElementId{Id: mapItem.IdAlias})
 					}
 				}
 				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_TEXT) {
@@ -4177,28 +4177,28 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 				}
 				for i := int32(int32(currentElement.ChildrenOrTextContent.Children.Length) - 1); i >= 0; i-- {
 					__int32_tArray_Add(&dfsBuffer, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
-					*(*bool)(unsafe.Add(unsafe.Pointer(context.TreeNodeVisited.InternalArray), dfsBuffer.Length-1)) = false
+					*(*bool)(unsafe.Add(unsafe.Pointer(context.treeNodeVisited.InternalArray), dfsBuffer.Length-1)) = false
 				}
 			} else {
 				dfsBuffer.Length--
 			}
 		}
-		var rootElement *LayoutElement = LayoutElementArray_Get(&context.LayoutElements, root.LayoutElementIndex)
+		var rootElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, root.LayoutElementIndex)
 		if found && __ElementHasConfig(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING) && __FindElementConfigWithType(rootElement, __ELEMENT_CONFIG_TYPE_FLOATING).FloatingElementConfig.PointerCaptureMode == POINTER_CAPTURE_MODE_CAPTURE {
 			break
 		}
 	}
 	if isPointerDown {
-		if context.PointerInfo.State == POINTER_DATA_PRESSED_THIS_FRAME {
-			context.PointerInfo.State = POINTER_DATA_PRESSED
-		} else if context.PointerInfo.State != POINTER_DATA_PRESSED {
-			context.PointerInfo.State = POINTER_DATA_PRESSED_THIS_FRAME
+		if context.pointerInfo.State == POINTER_DATA_PRESSED_THIS_FRAME {
+			context.pointerInfo.State = POINTER_DATA_PRESSED
+		} else if context.pointerInfo.State != POINTER_DATA_PRESSED {
+			context.pointerInfo.State = POINTER_DATA_PRESSED_THIS_FRAME
 		}
 	} else {
-		if context.PointerInfo.State == POINTER_DATA_RELEASED_THIS_FRAME {
-			context.PointerInfo.State = POINTER_DATA_RELEASED
-		} else if context.PointerInfo.State != POINTER_DATA_RELEASED {
-			context.PointerInfo.State = POINTER_DATA_RELEASED_THIS_FRAME
+		if context.pointerInfo.State == POINTER_DATA_RELEASED_THIS_FRAME {
+			context.pointerInfo.State = POINTER_DATA_RELEASED
+		} else if context.pointerInfo.State != POINTER_DATA_RELEASED {
+			context.pointerInfo.State = POINTER_DATA_RELEASED_THIS_FRAME
 		}
 	}
 }
@@ -4208,33 +4208,33 @@ func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHand
 		return nil
 	}
 	var oldContext *Context = GetCurrentContext()
-	*context = Context{MaxElementCount: func() int32 {
+	*context = Context{maxElementCount: func() int32 {
 		if oldContext != nil {
-			return oldContext.MaxElementCount
+			return oldContext.maxElementCount
 		}
 		return __defaultMaxElementCount
-	}(), MaxMeasureTextCacheWordCount: func() int32 {
+	}(), maxMeasureTextCacheWordCount: func() int32 {
 		if oldContext != nil {
-			return oldContext.MaxMeasureTextCacheWordCount
+			return oldContext.maxMeasureTextCacheWordCount
 		}
 		return __defaultMaxMeasureTextWordCacheCount
-	}(), ErrorHandler: func() ErrorHandler {
+	}(), errorHandler: func() ErrorHandler {
 		if errorHandler.ErrorHandlerFunction != nil {
 			return errorHandler
 		}
 		return ErrorHandler{ErrorHandlerFunction: __ErrorHandlerFunctionDefault, UserData: nil}
-	}(), LayoutDimensions: layoutDimensions, InternalArena: arena}
+	}(), layoutDimensions: layoutDimensions, internalArena: arena}
 	SetCurrentContext(context)
 	__InitializePersistentMemory(context)
 	__InitializeEphemeralMemory(context)
-	for i := int32(0); i < context.LayoutElementsHashMap.Capacity; i++ {
-		*(*int32)(unsafe.Add(unsafe.Pointer(context.LayoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(i))) = -1
+	for i := int32(0); i < context.layoutElementsHashMap.Capacity; i++ {
+		*(*int32)(unsafe.Add(unsafe.Pointer(context.layoutElementsHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(i))) = -1
 	}
-	for i := int32(0); i < context.MeasureTextHashMap.Capacity; i++ {
-		*(*int32)(unsafe.Add(unsafe.Pointer(context.MeasureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(i))) = 0
+	for i := int32(0); i < context.measureTextHashMap.Capacity; i++ {
+		*(*int32)(unsafe.Add(unsafe.Pointer(context.measureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(i))) = 0
 	}
-	context.MeasureTextHashMapInternal.Length = 1
-	context.LayoutDimensions = layoutDimensions
+	context.measureTextHashMapInternal.Length = 1
+	context.layoutDimensions = layoutDimensions
 	return context
 }
 func GetCurrentContext() *Context {
@@ -4246,20 +4246,20 @@ func SetCurrentContext(context *Context) {
 func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, deltaTime float32) {
 	var (
 		context                     *Context                       = GetCurrentContext()
-		isPointerActive             bool                           = enableDragScrolling && (context.PointerInfo.State == POINTER_DATA_PRESSED || context.PointerInfo.State == POINTER_DATA_PRESSED_THIS_FRAME)
+		isPointerActive             bool                           = enableDragScrolling && (context.pointerInfo.State == POINTER_DATA_PRESSED || context.pointerInfo.State == POINTER_DATA_PRESSED_THIS_FRAME)
 		highestPriorityElementIndex int32                          = -1
 		highestPriorityScrollData   *__ScrollContainerDataInternal = (*__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(__NULL)))
 	)
-	for i := int32(0); i < context.ScrollContainerDatas.Length; i++ {
-		var scrollData *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+	for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
+		var scrollData *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 		if !scrollData.OpenThisFrame {
-			__ScrollContainerDataInternalArray_RemoveSwapback(&context.ScrollContainerDatas, i)
+			__ScrollContainerDataInternalArray_RemoveSwapback(&context.scrollContainerDatas, i)
 			continue
 		}
 		scrollData.OpenThisFrame = false
 		var hashMapItem *LayoutElementHashMapItem = __GetHashMapItem(scrollData.ElementId)
 		if hashMapItem == nil {
-			__ScrollContainerDataInternalArray_RemoveSwapback(&context.ScrollContainerDatas, i)
+			__ScrollContainerDataInternalArray_RemoveSwapback(&context.scrollContainerDatas, i)
 			continue
 		}
 		if !isPointerActive && scrollData.PointerScrollActive {
@@ -4349,8 +4349,8 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 		} else {
 			scrollData.ScrollPosition.Y = 0
 		}
-		for j := int32(0); j < context.PointerOverIds.Length; j++ {
-			if scrollData.LayoutElement.Id == __ElementIdArray_Get(&context.PointerOverIds, j).Id {
+		for j := int32(0); j < context.pointerOverIds.Length; j++ {
+			if scrollData.LayoutElement.Id == __ElementIdArray_Get(&context.pointerOverIds, j).Id {
 				highestPriorityElementIndex = j
 				highestPriorityScrollData = scrollData
 			}
@@ -4372,7 +4372,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 		if isPointerActive {
 			highestPriorityScrollData.ScrollMomentum = Vector2{}
 			if !highestPriorityScrollData.PointerScrollActive {
-				highestPriorityScrollData.PointerOrigin = context.PointerInfo.Position
+				highestPriorityScrollData.PointerOrigin = context.pointerInfo.Position
 				highestPriorityScrollData.ScrollOrigin = highestPriorityScrollData.ScrollPosition
 				highestPriorityScrollData.PointerScrollActive = true
 			} else {
@@ -4382,7 +4382,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 				)
 				if canScrollHorizontally {
 					var oldXScrollPosition float32 = highestPriorityScrollData.ScrollPosition.X
-					highestPriorityScrollData.ScrollPosition.X = highestPriorityScrollData.ScrollOrigin.X + (context.PointerInfo.Position.X - highestPriorityScrollData.PointerOrigin.X)
+					highestPriorityScrollData.ScrollPosition.X = highestPriorityScrollData.ScrollOrigin.X + (context.pointerInfo.Position.X - highestPriorityScrollData.PointerOrigin.X)
 					if (func() float32 {
 						if highestPriorityScrollData.ScrollPosition.X < 0 {
 							return highestPriorityScrollData.ScrollPosition.X
@@ -4401,7 +4401,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 				}
 				if canScrollVertically {
 					var oldYScrollPosition float32 = highestPriorityScrollData.ScrollPosition.Y
-					highestPriorityScrollData.ScrollPosition.Y = highestPriorityScrollData.ScrollOrigin.Y + (context.PointerInfo.Position.Y - highestPriorityScrollData.PointerOrigin.Y)
+					highestPriorityScrollData.ScrollPosition.Y = highestPriorityScrollData.ScrollOrigin.Y + (context.pointerInfo.Position.Y - highestPriorityScrollData.PointerOrigin.Y)
 					if (func() float32 {
 						if highestPriorityScrollData.ScrollPosition.Y < 0 {
 							return highestPriorityScrollData.ScrollPosition.Y
@@ -4420,7 +4420,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 				}
 				if scrollDeltaX > -0.1 && scrollDeltaX < 0.1 && scrollDeltaY > -0.1 && scrollDeltaY < 0.1 && highestPriorityScrollData.MomentumTime > 0.15 {
 					highestPriorityScrollData.MomentumTime = 0
-					highestPriorityScrollData.PointerOrigin = context.PointerInfo.Position
+					highestPriorityScrollData.PointerOrigin = context.pointerInfo.Position
 					highestPriorityScrollData.ScrollOrigin = highestPriorityScrollData.ScrollPosition
 				} else {
 					highestPriorityScrollData.MomentumTime += deltaTime
@@ -4464,13 +4464,13 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 func BeginLayout() {
 	var context *Context = GetCurrentContext()
 	__InitializeEphemeralMemory(context)
-	context.Generation++
-	context.DynamicElementIndex = 0
-	var rootDimensions Dimensions = Dimensions{Width: context.LayoutDimensions.Width, Height: context.LayoutDimensions.Height}
-	if context.DebugModeEnabled {
+	context.generation++
+	context.dynamicElementIndex = 0
+	var rootDimensions Dimensions = Dimensions{Width: context.layoutDimensions.Width, Height: context.layoutDimensions.Height}
+	if context.debugModeEnabled {
 		rootDimensions.Width -= float32(__debugViewWidth)
 	}
-	context.BooleanWarnings = BooleanWarnings{MaxElementsExceeded: false}
+	context.booleanWarnings = BooleanWarnings{MaxElementsExceeded: false}
 	__OpenElement()
 	__ConfigureOpenElement(ElementDeclaration{Id: __HashString(String{Length: int32(((len("__RootContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0), Layout: LayoutConfig{Sizing: Sizing{Width: SizingAxis{Size: struct {
 		// union
@@ -4481,25 +4481,25 @@ func BeginLayout() {
 		MinMax  SizingMinMax
 		Percent float32
 	}{MinMax: SizingMinMax{Min: rootDimensions.Height, Max: rootDimensions.Height}}, Type: __SIZING_TYPE_FIXED}}}})
-	__int32_tArray_Add(&context.OpenLayoutElementStack, 0)
-	__LayoutElementTreeRootArray_Add(&context.LayoutElementTreeRoots, __LayoutElementTreeRoot{})
+	__int32_tArray_Add(&context.openLayoutElementStack, 0)
+	__LayoutElementTreeRootArray_Add(&context.layoutElementTreeRoots, __LayoutElementTreeRoot{})
 }
 func EndLayout() RenderCommandArray {
 	var context *Context = GetCurrentContext()
 	__CloseElement()
-	var elementsExceededBeforeDebugView bool = context.BooleanWarnings.MaxElementsExceeded
-	if context.BooleanWarnings.MaxElementsExceeded {
+	var elementsExceededBeforeDebugView bool = context.booleanWarnings.MaxElementsExceeded
+	if context.booleanWarnings.MaxElementsExceeded {
 		var message String
 		if !elementsExceededBeforeDebugView {
 			message = String{Length: int32(((len("Clay Error: Layout elements exceeded __maxElementCount after adding the debug-view to the layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded __maxElementCount after adding the debug-view to the layout.")}
 		} else {
 			message = String{Length: int32(((len("Clay Error: Layout elements exceeded __maxElementCount") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded __maxElementCount")}
 		}
-		__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: context.LayoutDimensions.Width/2 - 59*4, Y: context.LayoutDimensions.Height / 2, Width: 0, Height: 0}, RenderData: RenderData{Text: TextRenderData{StringContents: StringSlice{Length: message.Length, Chars: message.Chars, BaseChars: message.Chars}, TextColor: Color{R: 255, G: 0, B: 0, A: 255}, FontSize: 16}}, CommandType: RENDER_COMMAND_TYPE_TEXT})
+		__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: context.layoutDimensions.Width/2 - 59*4, Y: context.layoutDimensions.Height / 2, Width: 0, Height: 0}, RenderData: RenderData{Text: TextRenderData{StringContents: StringSlice{Length: message.Length, Chars: message.Chars, BaseChars: message.Chars}, TextColor: Color{R: 255, G: 0, B: 0, A: 255}, FontSize: 16}}, CommandType: RENDER_COMMAND_TYPE_TEXT})
 	} else {
 		__CalculateFinalLayout()
 	}
-	return context.RenderCommands
+	return context.renderCommands
 }
 func getElementId(idString String) ElementId {
 	return __HashString(idString, 0, 0)
@@ -4509,15 +4509,15 @@ func getElementIdWithIndex(idString String, index uint32) ElementId {
 }
 func Hovered() bool {
 	var context *Context = GetCurrentContext()
-	if context.BooleanWarnings.MaxElementsExceeded {
+	if context.booleanWarnings.MaxElementsExceeded {
 		return false
 	}
 	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	if openLayoutElement.Id == 0 {
 		__GenerateIdForAnonymousElement(openLayoutElement)
 	}
-	for i := int32(0); i < context.PointerOverIds.Length; i++ {
-		if __ElementIdArray_Get(&context.PointerOverIds, i).Id == openLayoutElement.Id {
+	for i := int32(0); i < context.pointerOverIds.Length; i++ {
+		if __ElementIdArray_Get(&context.pointerOverIds, i).Id == openLayoutElement.Id {
 			return true
 		}
 	}
@@ -4525,7 +4525,7 @@ func Hovered() bool {
 }
 func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, userData int64), userData int64) {
 	var context *Context = GetCurrentContext()
-	if context.BooleanWarnings.MaxElementsExceeded {
+	if context.booleanWarnings.MaxElementsExceeded {
 		return
 	}
 	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
@@ -4538,8 +4538,8 @@ func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, 
 }
 func PointerOver(elementId ElementId) bool {
 	var context *Context = GetCurrentContext()
-	for i := int32(0); i < context.PointerOverIds.Length; i++ {
-		if __ElementIdArray_Get(&context.PointerOverIds, i).Id == elementId.Id {
+	for i := int32(0); i < context.pointerOverIds.Length; i++ {
+		if __ElementIdArray_Get(&context.pointerOverIds, i).Id == elementId.Id {
 			return true
 		}
 	}
@@ -4547,8 +4547,8 @@ func PointerOver(elementId ElementId) bool {
 }
 func GetScrollContainerData(id ElementId) ScrollContainerData {
 	var context *Context = GetCurrentContext()
-	for i := int32(0); i < context.ScrollContainerDatas.Length; i++ {
-		var scrollContainerData *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.ScrollContainerDatas, i)
+	for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
+		var scrollContainerData *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 		if scrollContainerData.ElementId == id.Id {
 			return ScrollContainerData{ScrollPosition: &scrollContainerData.ScrollPosition, ScrollContainerDimensions: Dimensions{Width: scrollContainerData.BoundingBox.Width, Height: scrollContainerData.BoundingBox.Height}, ContentDimensions: scrollContainerData.ContentSize, Config: *__FindElementConfigWithType(scrollContainerData.LayoutElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig, Found: true}
 		}
@@ -4564,28 +4564,28 @@ func GetElementData(id ElementId) ElementData {
 }
 func SetDebugModeEnabled(enabled bool) {
 	var context *Context = GetCurrentContext()
-	context.DebugModeEnabled = enabled
+	context.debugModeEnabled = enabled
 }
 func IsDebugModeEnabled() bool {
 	var context *Context = GetCurrentContext()
-	return context.DebugModeEnabled
+	return context.debugModeEnabled
 }
 func SetCullingEnabled(enabled bool) {
 	var context *Context = GetCurrentContext()
-	context.DisableCulling = !enabled
+	context.disableCulling = !enabled
 }
 func SetExternalScrollHandlingEnabled(enabled bool) {
 	var context *Context = GetCurrentContext()
-	context.ExternalScrollHandlingEnabled = enabled
+	context.externalScrollHandlingEnabled = enabled
 }
 func GetMaxElementCount() int32 {
 	var context *Context = GetCurrentContext()
-	return context.MaxElementCount
+	return context.maxElementCount
 }
 func SetMaxElementCount(maxElementCount int32) {
 	var context *Context = GetCurrentContext()
 	if context != nil {
-		context.MaxElementCount = maxElementCount
+		context.maxElementCount = maxElementCount
 	} else {
 		__defaultMaxElementCount = maxElementCount
 		__defaultMaxMeasureTextWordCacheCount = maxElementCount * 2
@@ -4593,25 +4593,25 @@ func SetMaxElementCount(maxElementCount int32) {
 }
 func GetMaxMeasureTextCacheWordCount() int32 {
 	var context *Context = GetCurrentContext()
-	return context.MaxMeasureTextCacheWordCount
+	return context.maxMeasureTextCacheWordCount
 }
 func SetMaxMeasureTextCacheWordCount(maxMeasureTextCacheWordCount int32) {
 	var context *Context = GetCurrentContext()
 	if context != nil {
-		__currentContext.MaxMeasureTextCacheWordCount = maxMeasureTextCacheWordCount
+		__currentContext.maxMeasureTextCacheWordCount = maxMeasureTextCacheWordCount
 	} else {
 		__defaultMaxMeasureTextWordCacheCount = maxMeasureTextCacheWordCount
 	}
 }
 func ResetMeasureTextCache() {
 	var context *Context = GetCurrentContext()
-	context.MeasureTextHashMapInternal.Length = 0
-	context.MeasureTextHashMapInternalFreeList.Length = 0
-	context.MeasureTextHashMap.Length = 0
-	context.MeasuredWords.Length = 0
-	context.MeasuredWordsFreeList.Length = 0
-	for i := int32(0); i < context.MeasureTextHashMap.Capacity; i++ {
-		*(*int32)(unsafe.Add(unsafe.Pointer(context.MeasureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(i))) = 0
+	context.measureTextHashMapInternal.Length = 0
+	context.measureTextHashMapInternalFreeList.Length = 0
+	context.measureTextHashMap.Length = 0
+	context.measuredWords.Length = 0
+	context.measuredWordsFreeList.Length = 0
+	for i := int32(0); i < context.measureTextHashMap.Capacity; i++ {
+		*(*int32)(unsafe.Add(unsafe.Pointer(context.measureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(i))) = 0
 	}
-	context.MeasureTextHashMapInternal.Length = 1
+	context.measureTextHashMapInternal.Length = 1
 }
