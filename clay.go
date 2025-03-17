@@ -3,13 +3,16 @@
 package clay
 
 import (
-	"github.com/gotranspile/cxgo/runtime/libc"
 	"math"
 	"unsafe"
+
+	"github.com/gotranspile/cxgo/runtime/libc"
 )
 
-const __NULL = 0
-const __MAXFLOAT = 3.4028234663852886e+38
+const (
+	__NULL     = 0
+	__MAXFLOAT = 3.4028234663852886e+38
+)
 
 var __ELEMENT_DEFINITION_LATCH uint8
 
@@ -424,20 +427,24 @@ type ErrorHandler struct {
 	UserData             unsafe.Pointer
 }
 
-var LAYOUT_DEFAULT LayoutConfig = LayoutConfig{}
-var __Color_DEFAULT Color = Color{}
-var __CornerRadius_DEFAULT CornerRadius = CornerRadius{}
-var __BorderWidth_DEFAULT BorderWidth = BorderWidth{}
-var __currentContext *Context
-var __defaultMaxElementCount int32 = 8192
-var __defaultMaxMeasureTextWordCacheCount int32 = 16384
+var (
+	LAYOUT_DEFAULT                        LayoutConfig = LayoutConfig{}
+	__Color_DEFAULT                       Color        = Color{}
+	__CornerRadius_DEFAULT                CornerRadius = CornerRadius{}
+	__BorderWidth_DEFAULT                 BorderWidth  = BorderWidth{}
+	__currentContext                      *Context
+	__defaultMaxElementCount              int32 = 8192
+	__defaultMaxMeasureTextWordCacheCount int32 = 16384
+)
 
 func __ErrorHandlerFunctionDefault(errorText ErrorData) {
 	_ = errorText
 }
 
-var __SPACECHAR String = String{Length: 1, Chars: libc.CString(" ")}
-var __STRING_DEFAULT String = String{}
+var (
+	__SPACECHAR      String = String{Length: 1, Chars: libc.CString(" ")}
+	__STRING_DEFAULT String = String{}
+)
 
 type BooleanWarnings struct {
 	MaxElementsExceeded           bool
@@ -480,18 +487,21 @@ var _Bool_DEFAULT bool = false
 func __boolArray_Allocate_Arena(capacity int32, arena *Arena) __boolArray {
 	return __boolArray{Capacity: capacity, Length: 0, InternalArray: (*bool)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(bool(false))), arena))}
 }
+
 func __boolArray_Get(array *__boolArray, index int32) *bool {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index))
 	}
 	return &_Bool_DEFAULT
 }
+
 func __boolArray_GetValue(array *__boolArray, index int32) bool {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index))
 	}
 	return _Bool_DEFAULT
 }
+
 func __boolArray_Add(array *__boolArray, item bool) *bool {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), func() int32 {
@@ -504,12 +514,14 @@ func __boolArray_Add(array *__boolArray, item bool) *bool {
 	}
 	return &_Bool_DEFAULT
 }
+
 func __boolArraySlice_Get(slice *__boolArraySlice, index int32) *bool {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*bool)(unsafe.Add(unsafe.Pointer(slice.InternalArray), index))
 	}
 	return &_Bool_DEFAULT
 }
+
 func __boolArray_RemoveSwapback(array *__boolArray, index int32) bool {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -519,6 +531,7 @@ func __boolArray_RemoveSwapback(array *__boolArray, index int32) bool {
 	}
 	return _Bool_DEFAULT
 }
+
 func __boolArray_Set(array *__boolArray, index int32, value bool) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*bool)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)) = value
@@ -545,18 +558,21 @@ var int32_t_DEFAULT int32 = 0
 func __int32_tArray_Allocate_Arena(capacity int32, arena *Arena) __int32_tArray {
 	return __int32_tArray{Capacity: capacity, Length: 0, InternalArray: (*int32)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(int32(0))), arena))}
 }
+
 func __int32_tArray_Get(array *__int32_tArray, index int32) *int32 {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index)))
 	}
 	return &int32_t_DEFAULT
 }
+
 func __int32_tArray_GetValue(array *__int32_tArray, index int32) int32 {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index)))
 	}
 	return int32_t_DEFAULT
 }
+
 func __int32_tArray_Add(array *__int32_tArray, item int32) *int32 {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(func() int32 {
@@ -569,12 +585,14 @@ func __int32_tArray_Add(array *__int32_tArray, item int32) *int32 {
 	}
 	return &int32_t_DEFAULT
 }
+
 func __int32_tArraySlice_Get(slice *__int32_tArraySlice, index int32) *int32 {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*int32)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index)))
 	}
 	return &int32_t_DEFAULT
 }
+
 func __int32_tArray_RemoveSwapback(array *__int32_tArray, index int32) int32 {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -584,6 +602,7 @@ func __int32_tArray_RemoveSwapback(array *__int32_tArray, index int32) int32 {
 	}
 	return int32_t_DEFAULT
 }
+
 func __int32_tArray_Set(array *__int32_tArray, index int32, value int32) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*int32)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(int32(0))*uintptr(index))) = value
@@ -610,18 +629,21 @@ var char_DEFAULT int8 = 0
 func __charArray_Allocate_Arena(capacity int32, arena *Arena) __charArray {
 	return __charArray{Capacity: capacity, Length: 0, InternalArray: (*byte)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(int8(0))), arena))}
 }
+
 func __charArray_Get(array *__charArray, index int32) *byte {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index))
 	}
 	return (*byte)(unsafe.Pointer(&char_DEFAULT))
 }
+
 func __charArray_GetValue(array *__charArray, index int32) int8 {
 	if __Array_RangeCheck(index, array.Length) {
 		return int8(*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)))
 	}
 	return char_DEFAULT
 }
+
 func __charArray_Add(array *__charArray, item int8) *byte {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), func() int32 {
@@ -634,12 +656,14 @@ func __charArray_Add(array *__charArray, item int8) *byte {
 	}
 	return (*byte)(unsafe.Pointer(&char_DEFAULT))
 }
+
 func __charArraySlice_Get(slice *__charArraySlice, index int32) *byte {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*byte)(unsafe.Add(unsafe.Pointer(slice.InternalArray), index))
 	}
 	return (*byte)(unsafe.Pointer(&char_DEFAULT))
 }
+
 func __charArray_RemoveSwapback(array *__charArray, index int32) int8 {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -649,6 +673,7 @@ func __charArray_RemoveSwapback(array *__charArray, index int32) int8 {
 	}
 	return char_DEFAULT
 }
+
 func __charArray_Set(array *__charArray, index int32, value int8) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*byte)(unsafe.Add(unsafe.Pointer(array.InternalArray), index)) = byte(value)
@@ -675,18 +700,21 @@ var ElementId_DEFAULT ElementId = ElementId{}
 func __ElementIdArray_Allocate_Arena(capacity int32, arena *Arena) __ElementIdArray {
 	return __ElementIdArray{Capacity: capacity, Length: 0, InternalArray: (*ElementId)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ElementId{})), arena))}
 }
+
 func __ElementIdArray_Get(array *__ElementIdArray, index int32) *ElementId {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
 	return &ElementId_DEFAULT
 }
+
 func __ElementIdArray_GetValue(array *__ElementIdArray, index int32) ElementId {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
 	return ElementId_DEFAULT
 }
+
 func __ElementIdArray_Add(array *__ElementIdArray, item ElementId) *ElementId {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(func() int32 {
@@ -699,12 +727,14 @@ func __ElementIdArray_Add(array *__ElementIdArray, item ElementId) *ElementId {
 	}
 	return &ElementId_DEFAULT
 }
+
 func __ElementIdArraySlice_Get(slice *__ElementIdArraySlice, index int32) *ElementId {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*ElementId)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
 	return &ElementId_DEFAULT
 }
+
 func __ElementIdArray_RemoveSwapback(array *__ElementIdArray, index int32) ElementId {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -714,6 +744,7 @@ func __ElementIdArray_RemoveSwapback(array *__ElementIdArray, index int32) Eleme
 	}
 	return ElementId_DEFAULT
 }
+
 func __ElementIdArray_Set(array *__ElementIdArray, index int32, value ElementId) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index))) = value
@@ -740,18 +771,21 @@ var LayoutConfig_DEFAULT LayoutConfig = LayoutConfig{}
 func __LayoutConfigArray_Allocate_Arena(capacity int32, arena *Arena) __LayoutConfigArray {
 	return __LayoutConfigArray{Capacity: capacity, Length: 0, InternalArray: (*LayoutConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(LayoutConfig{})), arena))}
 }
+
 func __LayoutConfigArray_Get(array *__LayoutConfigArray, index int32) *LayoutConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index)))
 	}
 	return &LayoutConfig_DEFAULT
 }
+
 func __LayoutConfigArray_GetValue(array *__LayoutConfigArray, index int32) LayoutConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index)))
 	}
 	return LayoutConfig_DEFAULT
 }
+
 func __LayoutConfigArray_Add(array *__LayoutConfigArray, item LayoutConfig) *LayoutConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(func() int32 {
@@ -764,12 +798,14 @@ func __LayoutConfigArray_Add(array *__LayoutConfigArray, item LayoutConfig) *Lay
 	}
 	return &LayoutConfig_DEFAULT
 }
+
 func __LayoutConfigArraySlice_Get(slice *__LayoutConfigArraySlice, index int32) *LayoutConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*LayoutConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index)))
 	}
 	return &LayoutConfig_DEFAULT
 }
+
 func __LayoutConfigArray_RemoveSwapback(array *__LayoutConfigArray, index int32) LayoutConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -779,6 +815,7 @@ func __LayoutConfigArray_RemoveSwapback(array *__LayoutConfigArray, index int32)
 	}
 	return LayoutConfig_DEFAULT
 }
+
 func __LayoutConfigArray_Set(array *__LayoutConfigArray, index int32, value LayoutConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*LayoutConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutConfig{})*uintptr(index))) = value
@@ -805,18 +842,21 @@ var TextElementConfig_DEFAULT TextElementConfig = TextElementConfig{}
 func __TextElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __TextElementConfigArray {
 	return __TextElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*TextElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(TextElementConfig{})), arena))}
 }
+
 func __TextElementConfigArray_Get(array *__TextElementConfigArray, index int32) *TextElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index)))
 	}
 	return &TextElementConfig_DEFAULT
 }
+
 func __TextElementConfigArray_GetValue(array *__TextElementConfigArray, index int32) TextElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index)))
 	}
 	return TextElementConfig_DEFAULT
 }
+
 func __TextElementConfigArray_Add(array *__TextElementConfigArray, item TextElementConfig) *TextElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(func() int32 {
@@ -829,12 +869,14 @@ func __TextElementConfigArray_Add(array *__TextElementConfigArray, item TextElem
 	}
 	return &TextElementConfig_DEFAULT
 }
+
 func __TextElementConfigArraySlice_Get(slice *__TextElementConfigArraySlice, index int32) *TextElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*TextElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index)))
 	}
 	return &TextElementConfig_DEFAULT
 }
+
 func __TextElementConfigArray_RemoveSwapback(array *__TextElementConfigArray, index int32) TextElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -844,6 +886,7 @@ func __TextElementConfigArray_RemoveSwapback(array *__TextElementConfigArray, in
 	}
 	return TextElementConfig_DEFAULT
 }
+
 func __TextElementConfigArray_Set(array *__TextElementConfigArray, index int32, value TextElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index))) = value
@@ -870,18 +913,21 @@ var ImageElementConfig_DEFAULT ImageElementConfig = ImageElementConfig{}
 func __ImageElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __ImageElementConfigArray {
 	return __ImageElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*ImageElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ImageElementConfig{})), arena))}
 }
+
 func __ImageElementConfigArray_Get(array *__ImageElementConfigArray, index int32) *ImageElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index)))
 	}
 	return &ImageElementConfig_DEFAULT
 }
+
 func __ImageElementConfigArray_GetValue(array *__ImageElementConfigArray, index int32) ImageElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index)))
 	}
 	return ImageElementConfig_DEFAULT
 }
+
 func __ImageElementConfigArray_Add(array *__ImageElementConfigArray, item ImageElementConfig) *ImageElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(func() int32 {
@@ -894,12 +940,14 @@ func __ImageElementConfigArray_Add(array *__ImageElementConfigArray, item ImageE
 	}
 	return &ImageElementConfig_DEFAULT
 }
+
 func __ImageElementConfigArraySlice_Get(slice *__ImageElementConfigArraySlice, index int32) *ImageElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*ImageElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index)))
 	}
 	return &ImageElementConfig_DEFAULT
 }
+
 func __ImageElementConfigArray_RemoveSwapback(array *__ImageElementConfigArray, index int32) ImageElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -909,6 +957,7 @@ func __ImageElementConfigArray_RemoveSwapback(array *__ImageElementConfigArray, 
 	}
 	return ImageElementConfig_DEFAULT
 }
+
 func __ImageElementConfigArray_Set(array *__ImageElementConfigArray, index int32, value ImageElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ImageElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ImageElementConfig{})*uintptr(index))) = value
@@ -935,18 +984,21 @@ var FloatingElementConfig_DEFAULT FloatingElementConfig = FloatingElementConfig{
 func __FloatingElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __FloatingElementConfigArray {
 	return __FloatingElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*FloatingElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(FloatingElementConfig{})), arena))}
 }
+
 func __FloatingElementConfigArray_Get(array *__FloatingElementConfigArray, index int32) *FloatingElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index)))
 	}
 	return &FloatingElementConfig_DEFAULT
 }
+
 func __FloatingElementConfigArray_GetValue(array *__FloatingElementConfigArray, index int32) FloatingElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index)))
 	}
 	return FloatingElementConfig_DEFAULT
 }
+
 func __FloatingElementConfigArray_Add(array *__FloatingElementConfigArray, item FloatingElementConfig) *FloatingElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(func() int32 {
@@ -959,12 +1011,14 @@ func __FloatingElementConfigArray_Add(array *__FloatingElementConfigArray, item 
 	}
 	return &FloatingElementConfig_DEFAULT
 }
+
 func __FloatingElementConfigArraySlice_Get(slice *__FloatingElementConfigArraySlice, index int32) *FloatingElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index)))
 	}
 	return &FloatingElementConfig_DEFAULT
 }
+
 func __FloatingElementConfigArray_RemoveSwapback(array *__FloatingElementConfigArray, index int32) FloatingElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -974,6 +1028,7 @@ func __FloatingElementConfigArray_RemoveSwapback(array *__FloatingElementConfigA
 	}
 	return FloatingElementConfig_DEFAULT
 }
+
 func __FloatingElementConfigArray_Set(array *__FloatingElementConfigArray, index int32, value FloatingElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*FloatingElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(FloatingElementConfig{})*uintptr(index))) = value
@@ -1000,18 +1055,21 @@ var CustomElementConfig_DEFAULT CustomElementConfig = CustomElementConfig{}
 func __CustomElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __CustomElementConfigArray {
 	return __CustomElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*CustomElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(CustomElementConfig{})), arena))}
 }
+
 func __CustomElementConfigArray_Get(array *__CustomElementConfigArray, index int32) *CustomElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index)))
 	}
 	return &CustomElementConfig_DEFAULT
 }
+
 func __CustomElementConfigArray_GetValue(array *__CustomElementConfigArray, index int32) CustomElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index)))
 	}
 	return CustomElementConfig_DEFAULT
 }
+
 func __CustomElementConfigArray_Add(array *__CustomElementConfigArray, item CustomElementConfig) *CustomElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(func() int32 {
@@ -1024,12 +1082,14 @@ func __CustomElementConfigArray_Add(array *__CustomElementConfigArray, item Cust
 	}
 	return &CustomElementConfig_DEFAULT
 }
+
 func __CustomElementConfigArraySlice_Get(slice *__CustomElementConfigArraySlice, index int32) *CustomElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*CustomElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index)))
 	}
 	return &CustomElementConfig_DEFAULT
 }
+
 func __CustomElementConfigArray_RemoveSwapback(array *__CustomElementConfigArray, index int32) CustomElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1039,6 +1099,7 @@ func __CustomElementConfigArray_RemoveSwapback(array *__CustomElementConfigArray
 	}
 	return CustomElementConfig_DEFAULT
 }
+
 func __CustomElementConfigArray_Set(array *__CustomElementConfigArray, index int32, value CustomElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*CustomElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(CustomElementConfig{})*uintptr(index))) = value
@@ -1065,18 +1126,21 @@ var ScrollElementConfig_DEFAULT ScrollElementConfig = ScrollElementConfig{Horizo
 func __ScrollElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __ScrollElementConfigArray {
 	return __ScrollElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*ScrollElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ScrollElementConfig{})), arena))}
 }
+
 func __ScrollElementConfigArray_Get(array *__ScrollElementConfigArray, index int32) *ScrollElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
 	}
 	return &ScrollElementConfig_DEFAULT
 }
+
 func __ScrollElementConfigArray_GetValue(array *__ScrollElementConfigArray, index int32) ScrollElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
 	}
 	return ScrollElementConfig_DEFAULT
 }
+
 func __ScrollElementConfigArray_Add(array *__ScrollElementConfigArray, item ScrollElementConfig) *ScrollElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(func() int32 {
@@ -1089,12 +1153,14 @@ func __ScrollElementConfigArray_Add(array *__ScrollElementConfigArray, item Scro
 	}
 	return &ScrollElementConfig_DEFAULT
 }
+
 func __ScrollElementConfigArraySlice_Get(slice *__ScrollElementConfigArraySlice, index int32) *ScrollElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
 	}
 	return &ScrollElementConfig_DEFAULT
 }
+
 func __ScrollElementConfigArray_RemoveSwapback(array *__ScrollElementConfigArray, index int32) ScrollElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1104,6 +1170,7 @@ func __ScrollElementConfigArray_RemoveSwapback(array *__ScrollElementConfigArray
 	}
 	return ScrollElementConfig_DEFAULT
 }
+
 func __ScrollElementConfigArray_Set(array *__ScrollElementConfigArray, index int32, value ScrollElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index))) = value
@@ -1130,18 +1197,21 @@ var BorderElementConfig_DEFAULT BorderElementConfig = BorderElementConfig{}
 func __BorderElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __BorderElementConfigArray {
 	return __BorderElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*BorderElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(BorderElementConfig{})), arena))}
 }
+
 func __BorderElementConfigArray_Get(array *__BorderElementConfigArray, index int32) *BorderElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index)))
 	}
 	return &BorderElementConfig_DEFAULT
 }
+
 func __BorderElementConfigArray_GetValue(array *__BorderElementConfigArray, index int32) BorderElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index)))
 	}
 	return BorderElementConfig_DEFAULT
 }
+
 func __BorderElementConfigArray_Add(array *__BorderElementConfigArray, item BorderElementConfig) *BorderElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(func() int32 {
@@ -1154,12 +1224,14 @@ func __BorderElementConfigArray_Add(array *__BorderElementConfigArray, item Bord
 	}
 	return &BorderElementConfig_DEFAULT
 }
+
 func __BorderElementConfigArraySlice_Get(slice *__BorderElementConfigArraySlice, index int32) *BorderElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*BorderElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index)))
 	}
 	return &BorderElementConfig_DEFAULT
 }
+
 func __BorderElementConfigArray_RemoveSwapback(array *__BorderElementConfigArray, index int32) BorderElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1169,6 +1241,7 @@ func __BorderElementConfigArray_RemoveSwapback(array *__BorderElementConfigArray
 	}
 	return BorderElementConfig_DEFAULT
 }
+
 func __BorderElementConfigArray_Set(array *__BorderElementConfigArray, index int32, value BorderElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*BorderElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(BorderElementConfig{})*uintptr(index))) = value
@@ -1195,18 +1268,21 @@ var String_DEFAULT String = String{}
 func __StringArray_Allocate_Arena(capacity int32, arena *Arena) __StringArray {
 	return __StringArray{Capacity: capacity, Length: 0, InternalArray: (*String)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(String{})), arena))}
 }
+
 func __StringArray_Get(array *__StringArray, index int32) *String {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index)))
 	}
 	return &String_DEFAULT
 }
+
 func __StringArray_GetValue(array *__StringArray, index int32) String {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index)))
 	}
 	return String_DEFAULT
 }
+
 func __StringArray_Add(array *__StringArray, item String) *String {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(func() int32 {
@@ -1219,12 +1295,14 @@ func __StringArray_Add(array *__StringArray, item String) *String {
 	}
 	return &String_DEFAULT
 }
+
 func __StringArraySlice_Get(slice *__StringArraySlice, index int32) *String {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*String)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(String{})*uintptr(index)))
 	}
 	return &String_DEFAULT
 }
+
 func __StringArray_RemoveSwapback(array *__StringArray, index int32) String {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1234,6 +1312,7 @@ func __StringArray_RemoveSwapback(array *__StringArray, index int32) String {
 	}
 	return String_DEFAULT
 }
+
 func __StringArray_Set(array *__StringArray, index int32, value String) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*String)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(String{})*uintptr(index))) = value
@@ -1260,18 +1339,21 @@ var SharedElementConfig_DEFAULT SharedElementConfig = SharedElementConfig{}
 func __SharedElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __SharedElementConfigArray {
 	return __SharedElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*SharedElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(SharedElementConfig{})), arena))}
 }
+
 func __SharedElementConfigArray_Get(array *__SharedElementConfigArray, index int32) *SharedElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index)))
 	}
 	return &SharedElementConfig_DEFAULT
 }
+
 func __SharedElementConfigArray_GetValue(array *__SharedElementConfigArray, index int32) SharedElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index)))
 	}
 	return SharedElementConfig_DEFAULT
 }
+
 func __SharedElementConfigArray_Add(array *__SharedElementConfigArray, item SharedElementConfig) *SharedElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(func() int32 {
@@ -1284,12 +1366,14 @@ func __SharedElementConfigArray_Add(array *__SharedElementConfigArray, item Shar
 	}
 	return &SharedElementConfig_DEFAULT
 }
+
 func __SharedElementConfigArraySlice_Get(slice *__SharedElementConfigArraySlice, index int32) *SharedElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*SharedElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index)))
 	}
 	return &SharedElementConfig_DEFAULT
 }
+
 func __SharedElementConfigArray_RemoveSwapback(array *__SharedElementConfigArray, index int32) SharedElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1299,6 +1383,7 @@ func __SharedElementConfigArray_RemoveSwapback(array *__SharedElementConfigArray
 	}
 	return SharedElementConfig_DEFAULT
 }
+
 func __SharedElementConfigArray_Set(array *__SharedElementConfigArray, index int32, value SharedElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*SharedElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(SharedElementConfig{})*uintptr(index))) = value
@@ -1320,18 +1405,21 @@ var RenderCommand_DEFAULT RenderCommand = RenderCommand{}
 func RenderCommandArray_Allocate_Arena(capacity int32, arena *Arena) RenderCommandArray {
 	return RenderCommandArray{Capacity: capacity, Length: 0, InternalArray: (*RenderCommand)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(RenderCommand{})), arena))}
 }
+
 func RenderCommandArray_Get(array *RenderCommandArray, index int32) *RenderCommand {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index)))
 	}
 	return &RenderCommand_DEFAULT
 }
+
 func RenderCommandArray_GetValue(array *RenderCommandArray, index int32) RenderCommand {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index)))
 	}
 	return RenderCommand_DEFAULT
 }
+
 func RenderCommandArray_Add(array *RenderCommandArray, item RenderCommand) *RenderCommand {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(func() int32 {
@@ -1344,12 +1432,14 @@ func RenderCommandArray_Add(array *RenderCommandArray, item RenderCommand) *Rend
 	}
 	return &RenderCommand_DEFAULT
 }
+
 func RenderCommandArraySlice_Get(slice *RenderCommandArraySlice, index int32) *RenderCommand {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*RenderCommand)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index)))
 	}
 	return &RenderCommand_DEFAULT
 }
+
 func RenderCommandArray_RemoveSwapback(array *RenderCommandArray, index int32) RenderCommand {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1359,6 +1449,7 @@ func RenderCommandArray_RemoveSwapback(array *RenderCommandArray, index int32) R
 	}
 	return RenderCommand_DEFAULT
 }
+
 func RenderCommandArray_Set(array *RenderCommandArray, index int32, value RenderCommand) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*RenderCommand)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(RenderCommand{})*uintptr(index))) = value
@@ -1412,18 +1503,21 @@ var ElementConfig_DEFAULT ElementConfig = ElementConfig{}
 func __ElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __ElementConfigArray {
 	return __ElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*ElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ElementConfig{})), arena))}
 }
+
 func __ElementConfigArray_Get(array *__ElementConfigArray, index int32) *ElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index)))
 	}
 	return &ElementConfig_DEFAULT
 }
+
 func __ElementConfigArray_GetValue(array *__ElementConfigArray, index int32) ElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index)))
 	}
 	return ElementConfig_DEFAULT
 }
+
 func __ElementConfigArray_Add(array *__ElementConfigArray, item ElementConfig) *ElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(func() int32 {
@@ -1436,12 +1530,14 @@ func __ElementConfigArray_Add(array *__ElementConfigArray, item ElementConfig) *
 	}
 	return &ElementConfig_DEFAULT
 }
+
 func __ElementConfigArraySlice_Get(slice *__ElementConfigArraySlice, index int32) *ElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*ElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index)))
 	}
 	return &ElementConfig_DEFAULT
 }
+
 func __ElementConfigArray_RemoveSwapback(array *__ElementConfigArray, index int32) ElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1451,6 +1547,7 @@ func __ElementConfigArray_RemoveSwapback(array *__ElementConfigArray, index int3
 	}
 	return ElementConfig_DEFAULT
 }
+
 func __ElementConfigArray_Set(array *__ElementConfigArray, index int32, value ElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(index))) = value
@@ -1481,18 +1578,21 @@ var __WrappedTextLine_DEFAULT __WrappedTextLine = __WrappedTextLine{}
 func __WrappedTextLineArray_Allocate_Arena(capacity int32, arena *Arena) __WrappedTextLineArray {
 	return __WrappedTextLineArray{Capacity: capacity, Length: 0, InternalArray: (*__WrappedTextLine)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__WrappedTextLine{})), arena))}
 }
+
 func __WrappedTextLineArray_Get(array *__WrappedTextLineArray, index int32) *__WrappedTextLine {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index)))
 	}
 	return &__WrappedTextLine_DEFAULT
 }
+
 func __WrappedTextLineArray_GetValue(array *__WrappedTextLineArray, index int32) __WrappedTextLine {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index)))
 	}
 	return __WrappedTextLine_DEFAULT
 }
+
 func __WrappedTextLineArray_Add(array *__WrappedTextLineArray, item __WrappedTextLine) *__WrappedTextLine {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(func() int32 {
@@ -1505,12 +1605,14 @@ func __WrappedTextLineArray_Add(array *__WrappedTextLineArray, item __WrappedTex
 	}
 	return &__WrappedTextLine_DEFAULT
 }
+
 func __WrappedTextLineArraySlice_Get(slice *__WrappedTextLineArraySlice, index int32) *__WrappedTextLine {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index)))
 	}
 	return &__WrappedTextLine_DEFAULT
 }
+
 func __WrappedTextLineArray_RemoveSwapback(array *__WrappedTextLineArray, index int32) __WrappedTextLine {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1520,6 +1622,7 @@ func __WrappedTextLineArray_RemoveSwapback(array *__WrappedTextLineArray, index 
 	}
 	return __WrappedTextLine_DEFAULT
 }
+
 func __WrappedTextLineArray_Set(array *__WrappedTextLineArray, index int32, value __WrappedTextLine) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__WrappedTextLine)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__WrappedTextLine{})*uintptr(index))) = value
@@ -1552,18 +1655,21 @@ var __TextElementData_DEFAULT __TextElementData = __TextElementData{}
 func __TextElementDataArray_Allocate_Arena(capacity int32, arena *Arena) __TextElementDataArray {
 	return __TextElementDataArray{Capacity: capacity, Length: 0, InternalArray: (*__TextElementData)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__TextElementData{})), arena))}
 }
+
 func __TextElementDataArray_Get(array *__TextElementDataArray, index int32) *__TextElementData {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index)))
 	}
 	return &__TextElementData_DEFAULT
 }
+
 func __TextElementDataArray_GetValue(array *__TextElementDataArray, index int32) __TextElementData {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index)))
 	}
 	return __TextElementData_DEFAULT
 }
+
 func __TextElementDataArray_Add(array *__TextElementDataArray, item __TextElementData) *__TextElementData {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(func() int32 {
@@ -1576,12 +1682,14 @@ func __TextElementDataArray_Add(array *__TextElementDataArray, item __TextElemen
 	}
 	return &__TextElementData_DEFAULT
 }
+
 func __TextElementDataArraySlice_Get(slice *__TextElementDataArraySlice, index int32) *__TextElementData {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*__TextElementData)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index)))
 	}
 	return &__TextElementData_DEFAULT
 }
+
 func __TextElementDataArray_RemoveSwapback(array *__TextElementDataArray, index int32) __TextElementData {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1591,6 +1699,7 @@ func __TextElementDataArray_RemoveSwapback(array *__TextElementDataArray, index 
 	}
 	return __TextElementData_DEFAULT
 }
+
 func __TextElementDataArray_Set(array *__TextElementDataArray, index int32, value __TextElementData) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__TextElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__TextElementData{})*uintptr(index))) = value
@@ -1633,18 +1742,21 @@ var LayoutElement_DEFAULT LayoutElement = LayoutElement{}
 func LayoutElementArray_Allocate_Arena(capacity int32, arena *Arena) LayoutElementArray {
 	return LayoutElementArray{Capacity: capacity, Length: 0, InternalArray: (*LayoutElement)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(LayoutElement{})), arena))}
 }
+
 func LayoutElementArray_Get(array *LayoutElementArray, index int32) *LayoutElement {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index)))
 	}
 	return &LayoutElement_DEFAULT
 }
+
 func LayoutElementArray_GetValue(array *LayoutElementArray, index int32) LayoutElement {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index)))
 	}
 	return LayoutElement_DEFAULT
 }
+
 func LayoutElementArray_Add(array *LayoutElementArray, item LayoutElement) *LayoutElement {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(func() int32 {
@@ -1657,12 +1769,14 @@ func LayoutElementArray_Add(array *LayoutElementArray, item LayoutElement) *Layo
 	}
 	return &LayoutElement_DEFAULT
 }
+
 func LayoutElementArraySlice_Get(slice *LayoutElementArraySlice, index int32) *LayoutElement {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*LayoutElement)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index)))
 	}
 	return &LayoutElement_DEFAULT
 }
+
 func LayoutElementArray_RemoveSwapback(array *LayoutElementArray, index int32) LayoutElement {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1672,6 +1786,7 @@ func LayoutElementArray_RemoveSwapback(array *LayoutElementArray, index int32) L
 	}
 	return LayoutElement_DEFAULT
 }
+
 func LayoutElementArray_Set(array *LayoutElementArray, index int32, value LayoutElement) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*LayoutElement)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElement{})*uintptr(index))) = value
@@ -1712,18 +1827,21 @@ var __ScrollContainerDataInternal_DEFAULT __ScrollContainerDataInternal = __Scro
 func __ScrollContainerDataInternalArray_Allocate_Arena(capacity int32, arena *Arena) __ScrollContainerDataInternalArray {
 	return __ScrollContainerDataInternalArray{Capacity: capacity, Length: 0, InternalArray: (*__ScrollContainerDataInternal)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__ScrollContainerDataInternal{})), arena))}
 }
+
 func __ScrollContainerDataInternalArray_Get(array *__ScrollContainerDataInternalArray, index int32) *__ScrollContainerDataInternal {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index)))
 	}
 	return &__ScrollContainerDataInternal_DEFAULT
 }
+
 func __ScrollContainerDataInternalArray_GetValue(array *__ScrollContainerDataInternalArray, index int32) __ScrollContainerDataInternal {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index)))
 	}
 	return __ScrollContainerDataInternal_DEFAULT
 }
+
 func __ScrollContainerDataInternalArray_Add(array *__ScrollContainerDataInternalArray, item __ScrollContainerDataInternal) *__ScrollContainerDataInternal {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(func() int32 {
@@ -1736,12 +1854,14 @@ func __ScrollContainerDataInternalArray_Add(array *__ScrollContainerDataInternal
 	}
 	return &__ScrollContainerDataInternal_DEFAULT
 }
+
 func __ScrollContainerDataInternalArraySlice_Get(slice *__ScrollContainerDataInternalArraySlice, index int32) *__ScrollContainerDataInternal {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index)))
 	}
 	return &__ScrollContainerDataInternal_DEFAULT
 }
+
 func __ScrollContainerDataInternalArray_RemoveSwapback(array *__ScrollContainerDataInternalArray, index int32) __ScrollContainerDataInternal {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1751,6 +1871,7 @@ func __ScrollContainerDataInternalArray_RemoveSwapback(array *__ScrollContainerD
 	}
 	return __ScrollContainerDataInternal_DEFAULT
 }
+
 func __ScrollContainerDataInternalArray_Set(array *__ScrollContainerDataInternalArray, index int32, value __ScrollContainerDataInternal) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__ScrollContainerDataInternal)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__ScrollContainerDataInternal{})*uintptr(index))) = value
@@ -1781,18 +1902,21 @@ var __DebugElementData_DEFAULT __DebugElementData = __DebugElementData{Collision
 func __DebugElementDataArray_Allocate_Arena(capacity int32, arena *Arena) __DebugElementDataArray {
 	return __DebugElementDataArray{Capacity: capacity, Length: 0, InternalArray: (*__DebugElementData)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__DebugElementData{})), arena))}
 }
+
 func __DebugElementDataArray_Get(array *__DebugElementDataArray, index int32) *__DebugElementData {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index)))
 	}
 	return &__DebugElementData_DEFAULT
 }
+
 func __DebugElementDataArray_GetValue(array *__DebugElementDataArray, index int32) __DebugElementData {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index)))
 	}
 	return __DebugElementData_DEFAULT
 }
+
 func __DebugElementDataArray_Add(array *__DebugElementDataArray, item __DebugElementData) *__DebugElementData {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(func() int32 {
@@ -1805,12 +1929,14 @@ func __DebugElementDataArray_Add(array *__DebugElementDataArray, item __DebugEle
 	}
 	return &__DebugElementData_DEFAULT
 }
+
 func __DebugElementDataArraySlice_Get(slice *__DebugElementDataArraySlice, index int32) *__DebugElementData {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*__DebugElementData)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index)))
 	}
 	return &__DebugElementData_DEFAULT
 }
+
 func __DebugElementDataArray_RemoveSwapback(array *__DebugElementDataArray, index int32) __DebugElementData {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1820,6 +1946,7 @@ func __DebugElementDataArray_RemoveSwapback(array *__DebugElementDataArray, inde
 	}
 	return __DebugElementData_DEFAULT
 }
+
 func __DebugElementDataArray_Set(array *__DebugElementDataArray, index int32, value __DebugElementData) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__DebugElementData)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__DebugElementData{})*uintptr(index))) = value
@@ -1857,18 +1984,21 @@ var LayoutElementHashMapItem_DEFAULT LayoutElementHashMapItem = LayoutElementHas
 func __LayoutElementHashMapItemArray_Allocate_Arena(capacity int32, arena *Arena) __LayoutElementHashMapItemArray {
 	return __LayoutElementHashMapItemArray{Capacity: capacity, Length: 0, InternalArray: (*LayoutElementHashMapItem)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(LayoutElementHashMapItem{})), arena))}
 }
+
 func __LayoutElementHashMapItemArray_Get(array *__LayoutElementHashMapItemArray, index int32) *LayoutElementHashMapItem {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index)))
 	}
 	return &LayoutElementHashMapItem_DEFAULT
 }
+
 func __LayoutElementHashMapItemArray_GetValue(array *__LayoutElementHashMapItemArray, index int32) LayoutElementHashMapItem {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index)))
 	}
 	return LayoutElementHashMapItem_DEFAULT
 }
+
 func __LayoutElementHashMapItemArray_Add(array *__LayoutElementHashMapItemArray, item LayoutElementHashMapItem) *LayoutElementHashMapItem {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(func() int32 {
@@ -1881,12 +2011,14 @@ func __LayoutElementHashMapItemArray_Add(array *__LayoutElementHashMapItemArray,
 	}
 	return &LayoutElementHashMapItem_DEFAULT
 }
+
 func __LayoutElementHashMapItemArraySlice_Get(slice *__LayoutElementHashMapItemArraySlice, index int32) *LayoutElementHashMapItem {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index)))
 	}
 	return &LayoutElementHashMapItem_DEFAULT
 }
+
 func __LayoutElementHashMapItemArray_RemoveSwapback(array *__LayoutElementHashMapItemArray, index int32) LayoutElementHashMapItem {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1896,6 +2028,7 @@ func __LayoutElementHashMapItemArray_RemoveSwapback(array *__LayoutElementHashMa
 	}
 	return LayoutElementHashMapItem_DEFAULT
 }
+
 func __LayoutElementHashMapItemArray_Set(array *__LayoutElementHashMapItemArray, index int32, value LayoutElementHashMapItem) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*LayoutElementHashMapItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(LayoutElementHashMapItem{})*uintptr(index))) = value
@@ -1928,18 +2061,21 @@ var __MeasuredWord_DEFAULT __MeasuredWord = __MeasuredWord{}
 func __MeasuredWordArray_Allocate_Arena(capacity int32, arena *Arena) __MeasuredWordArray {
 	return __MeasuredWordArray{Capacity: capacity, Length: 0, InternalArray: (*__MeasuredWord)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__MeasuredWord{})), arena))}
 }
+
 func __MeasuredWordArray_Get(array *__MeasuredWordArray, index int32) *__MeasuredWord {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index)))
 	}
 	return &__MeasuredWord_DEFAULT
 }
+
 func __MeasuredWordArray_GetValue(array *__MeasuredWordArray, index int32) __MeasuredWord {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index)))
 	}
 	return __MeasuredWord_DEFAULT
 }
+
 func __MeasuredWordArray_Add(array *__MeasuredWordArray, item __MeasuredWord) *__MeasuredWord {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(func() int32 {
@@ -1952,12 +2088,14 @@ func __MeasuredWordArray_Add(array *__MeasuredWordArray, item __MeasuredWord) *_
 	}
 	return &__MeasuredWord_DEFAULT
 }
+
 func __MeasuredWordArraySlice_Get(slice *__MeasuredWordArraySlice, index int32) *__MeasuredWord {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*__MeasuredWord)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index)))
 	}
 	return &__MeasuredWord_DEFAULT
 }
+
 func __MeasuredWordArray_RemoveSwapback(array *__MeasuredWordArray, index int32) __MeasuredWord {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -1967,6 +2105,7 @@ func __MeasuredWordArray_RemoveSwapback(array *__MeasuredWordArray, index int32)
 	}
 	return __MeasuredWord_DEFAULT
 }
+
 func __MeasuredWordArray_Set(array *__MeasuredWordArray, index int32, value __MeasuredWord) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__MeasuredWord)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasuredWord{})*uintptr(index))) = value
@@ -2001,18 +2140,21 @@ var __MeasureTextCacheItem_DEFAULT __MeasureTextCacheItem = __MeasureTextCacheIt
 func __MeasureTextCacheItemArray_Allocate_Arena(capacity int32, arena *Arena) __MeasureTextCacheItemArray {
 	return __MeasureTextCacheItemArray{Capacity: capacity, Length: 0, InternalArray: (*__MeasureTextCacheItem)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__MeasureTextCacheItem{})), arena))}
 }
+
 func __MeasureTextCacheItemArray_Get(array *__MeasureTextCacheItemArray, index int32) *__MeasureTextCacheItem {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index)))
 	}
 	return &__MeasureTextCacheItem_DEFAULT
 }
+
 func __MeasureTextCacheItemArray_GetValue(array *__MeasureTextCacheItemArray, index int32) __MeasureTextCacheItem {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index)))
 	}
 	return __MeasureTextCacheItem_DEFAULT
 }
+
 func __MeasureTextCacheItemArray_Add(array *__MeasureTextCacheItemArray, item __MeasureTextCacheItem) *__MeasureTextCacheItem {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(func() int32 {
@@ -2025,12 +2167,14 @@ func __MeasureTextCacheItemArray_Add(array *__MeasureTextCacheItemArray, item __
 	}
 	return &__MeasureTextCacheItem_DEFAULT
 }
+
 func __MeasureTextCacheItemArraySlice_Get(slice *__MeasureTextCacheItemArraySlice, index int32) *__MeasureTextCacheItem {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index)))
 	}
 	return &__MeasureTextCacheItem_DEFAULT
 }
+
 func __MeasureTextCacheItemArray_RemoveSwapback(array *__MeasureTextCacheItemArray, index int32) __MeasureTextCacheItem {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -2040,6 +2184,7 @@ func __MeasureTextCacheItemArray_RemoveSwapback(array *__MeasureTextCacheItemArr
 	}
 	return __MeasureTextCacheItem_DEFAULT
 }
+
 func __MeasureTextCacheItemArray_Set(array *__MeasureTextCacheItemArray, index int32, value __MeasureTextCacheItem) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__MeasureTextCacheItem)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__MeasureTextCacheItem{})*uintptr(index))) = value
@@ -2071,18 +2216,21 @@ var __LayoutElementTreeNode_DEFAULT __LayoutElementTreeNode = __LayoutElementTre
 func __LayoutElementTreeNodeArray_Allocate_Arena(capacity int32, arena *Arena) __LayoutElementTreeNodeArray {
 	return __LayoutElementTreeNodeArray{Capacity: capacity, Length: 0, InternalArray: (*__LayoutElementTreeNode)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__LayoutElementTreeNode{})), arena))}
 }
+
 func __LayoutElementTreeNodeArray_Get(array *__LayoutElementTreeNodeArray, index int32) *__LayoutElementTreeNode {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index)))
 	}
 	return &__LayoutElementTreeNode_DEFAULT
 }
+
 func __LayoutElementTreeNodeArray_GetValue(array *__LayoutElementTreeNodeArray, index int32) __LayoutElementTreeNode {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index)))
 	}
 	return __LayoutElementTreeNode_DEFAULT
 }
+
 func __LayoutElementTreeNodeArray_Add(array *__LayoutElementTreeNodeArray, item __LayoutElementTreeNode) *__LayoutElementTreeNode {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(func() int32 {
@@ -2095,12 +2243,14 @@ func __LayoutElementTreeNodeArray_Add(array *__LayoutElementTreeNodeArray, item 
 	}
 	return &__LayoutElementTreeNode_DEFAULT
 }
+
 func __LayoutElementTreeNodeArraySlice_Get(slice *__LayoutElementTreeNodeArraySlice, index int32) *__LayoutElementTreeNode {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index)))
 	}
 	return &__LayoutElementTreeNode_DEFAULT
 }
+
 func __LayoutElementTreeNodeArray_RemoveSwapback(array *__LayoutElementTreeNodeArray, index int32) __LayoutElementTreeNode {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -2110,6 +2260,7 @@ func __LayoutElementTreeNodeArray_RemoveSwapback(array *__LayoutElementTreeNodeA
 	}
 	return __LayoutElementTreeNode_DEFAULT
 }
+
 func __LayoutElementTreeNodeArray_Set(array *__LayoutElementTreeNodeArray, index int32, value __LayoutElementTreeNode) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__LayoutElementTreeNode)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeNode{})*uintptr(index))) = value
@@ -2143,18 +2294,21 @@ var __LayoutElementTreeRoot_DEFAULT __LayoutElementTreeRoot = __LayoutElementTre
 func __LayoutElementTreeRootArray_Allocate_Arena(capacity int32, arena *Arena) __LayoutElementTreeRootArray {
 	return __LayoutElementTreeRootArray{Capacity: capacity, Length: 0, InternalArray: (*__LayoutElementTreeRoot)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(__LayoutElementTreeRoot{})), arena))}
 }
+
 func __LayoutElementTreeRootArray_Get(array *__LayoutElementTreeRootArray, index int32) *__LayoutElementTreeRoot {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index)))
 	}
 	return &__LayoutElementTreeRoot_DEFAULT
 }
+
 func __LayoutElementTreeRootArray_GetValue(array *__LayoutElementTreeRootArray, index int32) __LayoutElementTreeRoot {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index)))
 	}
 	return __LayoutElementTreeRoot_DEFAULT
 }
+
 func __LayoutElementTreeRootArray_Add(array *__LayoutElementTreeRootArray, item __LayoutElementTreeRoot) *__LayoutElementTreeRoot {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(func() int32 {
@@ -2167,12 +2321,14 @@ func __LayoutElementTreeRootArray_Add(array *__LayoutElementTreeRootArray, item 
 	}
 	return &__LayoutElementTreeRoot_DEFAULT
 }
+
 func __LayoutElementTreeRootArraySlice_Get(slice *__LayoutElementTreeRootArraySlice, index int32) *__LayoutElementTreeRoot {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index)))
 	}
 	return &__LayoutElementTreeRoot_DEFAULT
 }
+
 func __LayoutElementTreeRootArray_RemoveSwapback(array *__LayoutElementTreeRootArray, index int32) __LayoutElementTreeRoot {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
@@ -2182,6 +2338,7 @@ func __LayoutElementTreeRootArray_RemoveSwapback(array *__LayoutElementTreeRootA
 	}
 	return __LayoutElementTreeRoot_DEFAULT
 }
+
 func __LayoutElementTreeRootArray_Set(array *__LayoutElementTreeRootArray, index int32, value __LayoutElementTreeRoot) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*__LayoutElementTreeRoot)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__LayoutElementTreeRoot{})*uintptr(index))) = value
@@ -2192,6 +2349,7 @@ func __LayoutElementTreeRootArray_Set(array *__LayoutElementTreeRootArray, index
 		}
 	}
 }
+
 func __Context_Allocate_Arena(arena *Arena) *Context {
 	var (
 		totalSizeBytes  uint64 = uint64(unsafe.Sizeof(Context{}))
@@ -2204,6 +2362,7 @@ func __Context_Allocate_Arena(arena *Arena) *Context {
 	arena.NextAllocation = nextAllocOffset + totalSizeBytes
 	return (*Context)(unsafe.Pointer(uintptr(memoryAddress + nextAllocOffset)))
 }
+
 func __WriteStringToCharBuffer(buffer *__charArray, string_ String) String {
 	for i := int32(0); i < string_.Length; i++ {
 		*(*byte)(unsafe.Add(unsafe.Pointer(buffer.InternalArray), buffer.Length+i)) = *(*byte)(unsafe.Add(unsafe.Pointer(string_.Chars), i))
@@ -2212,65 +2371,77 @@ func __WriteStringToCharBuffer(buffer *__charArray, string_ String) String {
 	return String{Length: string_.Length, Chars: ((*byte)(unsafe.Add(unsafe.Pointer((*byte)(unsafe.Add(unsafe.Pointer(buffer.InternalArray), buffer.Length))), -string_.Length)))}
 }
 
-var __MeasureText func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions
-var __QueryScrollOffset func(elementId uint32, userData unsafe.Pointer) Vector2
+var (
+	__MeasureText       func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions
+	__QueryScrollOffset func(elementId uint32, userData unsafe.Pointer) Vector2
+)
 
 func __GetOpenLayoutElement() *LayoutElement {
 	var context *Context = GetCurrentContext()
 	return LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1))
 }
+
 func __GetParentElementId() uint32 {
 	var context *Context = GetCurrentContext()
 	return LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-2)).Id
 }
+
 func __StoreLayoutConfig(config LayoutConfig) *LayoutConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &LAYOUT_DEFAULT
 	}
 	return __LayoutConfigArray_Add(&GetCurrentContext().layoutConfigs, config)
 }
+
 func __StoreTextElementConfig(config TextElementConfig) *TextElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &TextElementConfig_DEFAULT
 	}
 	return __TextElementConfigArray_Add(&GetCurrentContext().textElementConfigs, config)
 }
+
 func __StoreImageElementConfig(config ImageElementConfig) *ImageElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &ImageElementConfig_DEFAULT
 	}
 	return __ImageElementConfigArray_Add(&GetCurrentContext().imageElementConfigs, config)
 }
+
 func __StoreFloatingElementConfig(config FloatingElementConfig) *FloatingElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &FloatingElementConfig_DEFAULT
 	}
 	return __FloatingElementConfigArray_Add(&GetCurrentContext().floatingElementConfigs, config)
 }
+
 func __StoreCustomElementConfig(config CustomElementConfig) *CustomElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &CustomElementConfig_DEFAULT
 	}
 	return __CustomElementConfigArray_Add(&GetCurrentContext().customElementConfigs, config)
 }
+
 func __StoreScrollElementConfig(config ScrollElementConfig) *ScrollElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &ScrollElementConfig_DEFAULT
 	}
 	return __ScrollElementConfigArray_Add(&GetCurrentContext().scrollElementConfigs, config)
 }
+
 func __StoreBorderElementConfig(config BorderElementConfig) *BorderElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &BorderElementConfig_DEFAULT
 	}
 	return __BorderElementConfigArray_Add(&GetCurrentContext().borderElementConfigs, config)
 }
+
 func __StoreSharedElementConfig(config SharedElementConfig) *SharedElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &SharedElementConfig_DEFAULT
 	}
 	return __SharedElementConfigArray_Add(&GetCurrentContext().sharedElementConfigs, config)
 }
+
 func __AttachElementConfig(config ElementConfigUnion, type_ __ElementConfigType) ElementConfig {
 	var context *Context = GetCurrentContext()
 	if context.booleanWarnings.MaxElementsExceeded {
@@ -2280,6 +2451,7 @@ func __AttachElementConfig(config ElementConfigUnion, type_ __ElementConfigType)
 	openLayoutElement.ElementConfigs.Length++
 	return *__ElementConfigArray_Add(&context.elementConfigs, ElementConfig{Type: type_, Config: config})
 }
+
 func __FindElementConfigWithType(element *LayoutElement, type_ __ElementConfigType) ElementConfigUnion {
 	for i := int32(0); i < element.ElementConfigs.Length; i++ {
 		var config *ElementConfig = __ElementConfigArraySlice_Get(&element.ElementConfigs, i)
@@ -2289,6 +2461,7 @@ func __FindElementConfigWithType(element *LayoutElement, type_ __ElementConfigTy
 	}
 	return ElementConfigUnion{}
 }
+
 func __HashNumber(offset uint32, seed uint32) ElementId {
 	var hash uint32 = seed
 	hash += offset + 48
@@ -2299,6 +2472,7 @@ func __HashNumber(offset uint32, seed uint32) ElementId {
 	hash += hash << 15
 	return ElementId{Id: hash + 1, Offset: offset, BaseId: seed, StringId: __STRING_DEFAULT}
 }
+
 func __HashString(key String, offset uint32, seed uint32) ElementId {
 	var (
 		hash uint32 = 0
@@ -2321,6 +2495,7 @@ func __HashString(key String, offset uint32, seed uint32) ElementId {
 	base += base << 15
 	return ElementId{Id: hash + 1, Offset: offset, BaseId: base + 1, StringId: key}
 }
+
 func __HashTextWithConfig(text *String, config *TextElementConfig) uint32 {
 	var (
 		hash            uint32 = 0
@@ -2366,6 +2541,7 @@ func __HashTextWithConfig(text *String, config *TextElementConfig) uint32 {
 	hash += hash << 15
 	return hash + 1
 }
+
 func __AddMeasuredWord(word __MeasuredWord, previousWord *__MeasuredWord) *__MeasuredWord {
 	var context *Context = GetCurrentContext()
 	if context.measuredWordsFreeList.Length > 0 {
@@ -2379,6 +2555,7 @@ func __AddMeasuredWord(word __MeasuredWord, previousWord *__MeasuredWord) *__Mea
 		return __MeasuredWordArray_Add(&context.measuredWords, word)
 	}
 }
+
 func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureTextCacheItem {
 	var context *Context = GetCurrentContext()
 	if __MeasureText == nil {
@@ -2514,9 +2691,11 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	}
 	return measured
 }
+
 func __PointIsInsideRect(point Vector2, rect BoundingBox) bool {
 	return point.X >= rect.X && point.X <= rect.X+rect.Width && point.Y >= rect.Y && point.Y <= rect.Y+rect.Height
 }
+
 func __AddHashMapItem(elementId ElementId, layoutElement *LayoutElement, idAlias uint32) *LayoutElementHashMapItem {
 	var context *Context = GetCurrentContext()
 	if context.layoutElementsHashMapInternal.Length == context.layoutElementsHashMapInternal.Capacity-1 {
@@ -2555,6 +2734,7 @@ func __AddHashMapItem(elementId ElementId, layoutElement *LayoutElement, idAlias
 	}
 	return hashItem
 }
+
 func __GetHashMapItem(id uint32) *LayoutElementHashMapItem {
 	var (
 		context      *Context = GetCurrentContext()
@@ -2570,6 +2750,7 @@ func __GetHashMapItem(id uint32) *LayoutElementHashMapItem {
 	}
 	return &LayoutElementHashMapItem_DEFAULT
 }
+
 func __GenerateIdForAnonymousElement(openLayoutElement *LayoutElement) ElementId {
 	var (
 		context       *Context       = GetCurrentContext()
@@ -2581,6 +2762,7 @@ func __GenerateIdForAnonymousElement(openLayoutElement *LayoutElement) ElementId
 	__StringArray_Add(&context.layoutElementIdStrings, elementId.StringId)
 	return elementId
 }
+
 func __ElementHasConfig(layoutElement *LayoutElement, type_ __ElementConfigType) bool {
 	for i := int32(0); i < layoutElement.ElementConfigs.Length; i++ {
 		if __ElementConfigArraySlice_Get(&layoutElement.ElementConfigs, i).Type == type_ {
@@ -2589,6 +2771,7 @@ func __ElementHasConfig(layoutElement *LayoutElement, type_ __ElementConfigType)
 	}
 	return false
 }
+
 func __UpdateAspectRatioBox(layoutElement *LayoutElement) {
 	for j := int32(0); j < layoutElement.ElementConfigs.Length; j++ {
 		var config *ElementConfig = __ElementConfigArraySlice_Get(&layoutElement.ElementConfigs, j)
@@ -2607,6 +2790,7 @@ func __UpdateAspectRatioBox(layoutElement *LayoutElement) {
 		}
 	}
 }
+
 func __CloseElement() {
 	var context *Context = GetCurrentContext()
 	if context.booleanWarnings.MaxElementsExceeded {
@@ -2773,6 +2957,7 @@ func __CloseElement() {
 		__int32_tArray_Add(&context.layoutElementChildrenBuffer, closingElementIndex)
 	}
 }
+
 func __MemCmp(s1 *byte, s2 *byte, length int32) bool {
 	for i := int32(0); i < length; i++ {
 		if *(*byte)(unsafe.Add(unsafe.Pointer(s1), i)) != *(*byte)(unsafe.Add(unsafe.Pointer(s2), i)) {
@@ -2781,6 +2966,7 @@ func __MemCmp(s1 *byte, s2 *byte, length int32) bool {
 	}
 	return true
 }
+
 func __OpenElement() {
 	var context *Context = GetCurrentContext()
 	if context.layoutElements.Length == context.layoutElements.Capacity-1 || context.booleanWarnings.MaxElementsExceeded {
@@ -2796,6 +2982,7 @@ func __OpenElement() {
 		__int32_tArray_Set(&context.layoutElementClipElementIds, context.layoutElements.Length-1, 0)
 	}
 }
+
 func __OpenTextElement(text String, textConfig *TextElementConfig) {
 	var context *Context = GetCurrentContext()
 	if context.layoutElements.Length == context.layoutElements.Capacity-1 || context.booleanWarnings.MaxElementsExceeded {
@@ -2829,6 +3016,7 @@ func __OpenTextElement(text String, textConfig *TextElementConfig) {
 	textElement.LayoutConfig = &LAYOUT_DEFAULT
 	parentElement.ChildrenOrTextContent.Children.Length++
 }
+
 func __AttachId(elementId ElementId) ElementId {
 	var context *Context = GetCurrentContext()
 	if context.booleanWarnings.MaxElementsExceeded {
@@ -2841,6 +3029,7 @@ func __AttachId(elementId ElementId) ElementId {
 	__StringArray_Add(&context.layoutElementIdStrings, elementId.StringId)
 	return elementId
 }
+
 func __ConfigureOpenElement(declaration ElementDeclaration) {
 	var (
 		context           *Context       = GetCurrentContext()
@@ -2937,6 +3126,7 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 		__AttachElementConfig(ElementConfigUnion{BorderElementConfig: __StoreBorderElementConfig(declaration.Border)}, __ELEMENT_CONFIG_TYPE_BORDER)
 	}
 }
+
 func __InitializeEphemeralMemory(context *Context) {
 	var (
 		maxElementCount int32  = context.maxElementCount
@@ -2971,6 +3161,7 @@ func __InitializeEphemeralMemory(context *Context) {
 	context.layoutElementClipElementIds = __int32_tArray_Allocate_Arena(maxElementCount, arena)
 	context.dynamicStringData = __charArray_Allocate_Arena(maxElementCount, arena)
 }
+
 func __InitializePersistentMemory(context *Context) {
 	var (
 		maxElementCount              int32  = context.maxElementCount
@@ -2996,6 +3187,7 @@ func __FloatEqual(left float32, right float32) bool {
 	var subtracted float32 = left - right
 	return subtracted < __EPSILON && subtracted > -__EPSILON
 }
+
 func __SizeContainersAlongAxis(xAxis bool) {
 	var (
 		context                  *Context       = GetCurrentContext()
@@ -3367,6 +3559,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 		}
 	}
 }
+
 func __IntToString(integer int32) String {
 	if integer == 0 {
 		return String{Length: 1, Chars: libc.CString("0")}
@@ -3411,6 +3604,7 @@ func __IntToString(integer int32) String {
 	context.dynamicStringData.Length += length
 	return String{Length: length, Chars: chars}
 }
+
 func __AddRenderCommand(renderCommand RenderCommand) {
 	var context *Context = GetCurrentContext()
 	if context.renderCommands.Length < context.renderCommands.Capacity-1 {
@@ -3422,6 +3616,7 @@ func __AddRenderCommand(renderCommand RenderCommand) {
 		}
 	}
 }
+
 func __ElementIsOffscreen(boundingBox *BoundingBox) bool {
 	var context *Context = GetCurrentContext()
 	if context.disableCulling {
@@ -3429,6 +3624,7 @@ func __ElementIsOffscreen(boundingBox *BoundingBox) bool {
 	}
 	return boundingBox.X > context.layoutDimensions.Width || boundingBox.Y > context.layoutDimensions.Height || boundingBox.X+boundingBox.Width < 0 || boundingBox.Y+boundingBox.Height < 0
 }
+
 func __CalculateFinalLayout() {
 	var context *Context = GetCurrentContext()
 	__SizeContainersAlongAxis(true)
@@ -4044,8 +4240,10 @@ func __CalculateFinalLayout() {
 	}
 }
 
-var __debugViewWidth uint32 = 400
-var __debugViewHighlightColor Color = Color{R: 168, G: 66, B: 28, A: 100}
+var (
+	__debugViewWidth          uint32 = 400
+	__debugViewHighlightColor Color  = Color{R: 168, G: 66, B: 28, A: 100}
+)
 
 func __WarningArray_Allocate_Arena(capacity int32, arena *Arena) __WarningArray {
 	var (
@@ -4061,6 +4259,7 @@ func __WarningArray_Allocate_Arena(capacity int32, arena *Arena) __WarningArray 
 	}
 	return array
 }
+
 func __WarningArray_Add(array *__WarningArray, item __Warning) *__Warning {
 	if array.Length < array.Capacity {
 		*(*__Warning)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(__Warning{})*uintptr(func() int32 {
@@ -4073,6 +4272,7 @@ func __WarningArray_Add(array *__WarningArray, item __Warning) *__Warning {
 	}
 	return &__WARNING_DEFAULT
 }
+
 func __Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Arena) unsafe.Pointer {
 	var (
 		totalSizeBytes  uint64 = uint64(uint32(capacity) * itemSize)
@@ -4086,6 +4286,7 @@ func __Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Arena) unsaf
 	}
 	return unsafe.Pointer(uintptr(__NULL))
 }
+
 func __Array_RangeCheck(index int32, length int32) bool {
 	if index < length && index >= 0 {
 		return true
@@ -4094,6 +4295,7 @@ func __Array_RangeCheck(index int32, length int32) bool {
 	context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.errorHandler.UserData})
 	return false
 }
+
 func __Array_AddCapacityCheck(length int32, capacity int32) bool {
 	if length < capacity {
 		return true
@@ -4102,6 +4304,7 @@ func __Array_AddCapacityCheck(length int32, capacity int32) bool {
 	context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.errorHandler.UserData})
 	return false
 }
+
 func MinMemorySize() uint32 {
 	var (
 		fakeContext    Context  = Context{maxElementCount: __defaultMaxElementCount, maxMeasureTextCacheWordCount: __defaultMaxMeasureTextWordCacheCount, internalArena: Arena{Capacity: math.MaxUint64, Memory: nil}}
@@ -4116,23 +4319,28 @@ func MinMemorySize() uint32 {
 	__InitializeEphemeralMemory(&fakeContext)
 	return uint32(fakeContext.internalArena.NextAllocation + 128)
 }
+
 func CreateArenaWithCapacityAndMemory(capacity uint64, memory unsafe.Pointer) Arena {
 	var arena Arena = Arena{Capacity: capacity, Memory: (*byte)(memory)}
 	return arena
 }
+
 func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData unsafe.Pointer) {
 	var context *Context = GetCurrentContext()
 	__MeasureText = measureTextFunction
 	context.measureTextUserData = userData
 }
+
 func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData unsafe.Pointer) {
 	var context *Context = GetCurrentContext()
 	__QueryScrollOffset = queryScrollOffsetFunction
 	context.queryScrollOffsetUserData = userData
 }
+
 func SetLayoutDimensions(dimensions Dimensions) {
 	GetCurrentContext().layoutDimensions = dimensions
 }
+
 func SetPointerState(position Vector2, isPointerDown bool) {
 	var context *Context = GetCurrentContext()
 	if context.booleanWarnings.MaxElementsExceeded {
@@ -4202,6 +4410,7 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 		}
 	}
 }
+
 func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHandler) *Context {
 	var context *Context = __Context_Allocate_Arena(&arena)
 	if context == nil {
@@ -4237,12 +4446,15 @@ func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHand
 	context.layoutDimensions = layoutDimensions
 	return context
 }
+
 func GetCurrentContext() *Context {
 	return __currentContext
 }
+
 func SetCurrentContext(context *Context) {
 	__currentContext = context
 }
+
 func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, deltaTime float32) {
 	var (
 		context                     *Context                       = GetCurrentContext()
@@ -4461,6 +4673,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 		}
 	}
 }
+
 func BeginLayout() {
 	var context *Context = GetCurrentContext()
 	__InitializeEphemeralMemory(context)
@@ -4484,6 +4697,7 @@ func BeginLayout() {
 	__int32_tArray_Add(&context.openLayoutElementStack, 0)
 	__LayoutElementTreeRootArray_Add(&context.layoutElementTreeRoots, __LayoutElementTreeRoot{})
 }
+
 func EndLayout() RenderCommandArray {
 	var context *Context = GetCurrentContext()
 	__CloseElement()
@@ -4501,12 +4715,15 @@ func EndLayout() RenderCommandArray {
 	}
 	return context.renderCommands
 }
+
 func getElementId(idString String) ElementId {
 	return __HashString(idString, 0, 0)
 }
+
 func getElementIdWithIndex(idString String, index uint32) ElementId {
 	return __HashString(idString, index, 0)
 }
+
 func Hovered() bool {
 	var context *Context = GetCurrentContext()
 	if context.booleanWarnings.MaxElementsExceeded {
@@ -4523,6 +4740,7 @@ func Hovered() bool {
 	}
 	return false
 }
+
 func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, userData int64), userData int64) {
 	var context *Context = GetCurrentContext()
 	if context.booleanWarnings.MaxElementsExceeded {
@@ -4536,6 +4754,7 @@ func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, 
 	hashMapItem.OnHoverFunction = onHoverFunction
 	hashMapItem.HoverFunctionUserData = userData
 }
+
 func PointerOver(elementId ElementId) bool {
 	var context *Context = GetCurrentContext()
 	for i := int32(0); i < context.pointerOverIds.Length; i++ {
@@ -4545,6 +4764,7 @@ func PointerOver(elementId ElementId) bool {
 	}
 	return false
 }
+
 func GetScrollContainerData(id ElementId) ScrollContainerData {
 	var context *Context = GetCurrentContext()
 	for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
@@ -4555,6 +4775,7 @@ func GetScrollContainerData(id ElementId) ScrollContainerData {
 	}
 	return ScrollContainerData{}
 }
+
 func GetElementData(id ElementId) ElementData {
 	var item *LayoutElementHashMapItem = __GetHashMapItem(id.Id)
 	if item == &LayoutElementHashMapItem_DEFAULT {
@@ -4562,26 +4783,32 @@ func GetElementData(id ElementId) ElementData {
 	}
 	return ElementData{BoundingBox: item.BoundingBox, Found: true}
 }
+
 func SetDebugModeEnabled(enabled bool) {
 	var context *Context = GetCurrentContext()
 	context.debugModeEnabled = enabled
 }
+
 func IsDebugModeEnabled() bool {
 	var context *Context = GetCurrentContext()
 	return context.debugModeEnabled
 }
+
 func SetCullingEnabled(enabled bool) {
 	var context *Context = GetCurrentContext()
 	context.disableCulling = !enabled
 }
+
 func SetExternalScrollHandlingEnabled(enabled bool) {
 	var context *Context = GetCurrentContext()
 	context.externalScrollHandlingEnabled = enabled
 }
+
 func GetMaxElementCount() int32 {
 	var context *Context = GetCurrentContext()
 	return context.maxElementCount
 }
+
 func SetMaxElementCount(maxElementCount int32) {
 	var context *Context = GetCurrentContext()
 	if context != nil {
@@ -4591,10 +4818,12 @@ func SetMaxElementCount(maxElementCount int32) {
 		__defaultMaxMeasureTextWordCacheCount = maxElementCount * 2
 	}
 }
+
 func GetMaxMeasureTextCacheWordCount() int32 {
 	var context *Context = GetCurrentContext()
 	return context.maxMeasureTextCacheWordCount
 }
+
 func SetMaxMeasureTextCacheWordCount(maxMeasureTextCacheWordCount int32) {
 	var context *Context = GetCurrentContext()
 	if context != nil {
@@ -4603,6 +4832,7 @@ func SetMaxMeasureTextCacheWordCount(maxMeasureTextCacheWordCount int32) {
 		__defaultMaxMeasureTextWordCacheCount = maxMeasureTextCacheWordCount
 	}
 }
+
 func ResetMeasureTextCache() {
 	var context *Context = GetCurrentContext()
 	context.measureTextHashMapInternal.Length = 0

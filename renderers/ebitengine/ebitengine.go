@@ -15,9 +15,7 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-var (
-	whiteImage *ebiten.Image
-)
+var whiteImage *ebiten.Image
 
 func init() {
 	// Creating a sub-image to avoid bleeding edges
@@ -128,7 +126,7 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 	var vertices [512]ebiten.Vertex
 	var indices [512]uint16
 
-	//define center rectangle
+	// define center rectangle
 	// 0 Center TL
 	vertices[vertexCount] = ebiten.Vertex{
 		DstX:   rect.X + clampedRadius,
@@ -191,7 +189,7 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 	indices[indexCount] = 3
 	indexCount++
 
-	//define rounded corners as triangle fans
+	// define rounded corners as triangle fans
 	step := (math.Pi / 2) / float32(numCircleSegments)
 	for i := 0; i < numCircleSegments; i++ {
 		angle1 := float32(i) * step
@@ -256,7 +254,7 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 			indexCount++
 		}
 	}
-	//Define edge rectangles
+	// Define edge rectangles
 	// Top edge
 	// TL
 	vertices[vertexCount] = ebiten.Vertex{
@@ -285,15 +283,15 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 
 	indices[indexCount] = 0
 	indexCount++
-	indices[indexCount] = vertexCount - 2 //TL
+	indices[indexCount] = vertexCount - 2 // TL
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //TR
+	indices[indexCount] = vertexCount - 1 // TR
 	indexCount++
 	indices[indexCount] = 1
 	indexCount++
 	indices[indexCount] = 0
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //TR
+	indices[indexCount] = vertexCount - 1 // TR
 	indexCount++
 	// Right edge
 	// RT
@@ -323,15 +321,15 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 
 	indices[indexCount] = 1
 	indexCount++
-	indices[indexCount] = vertexCount - 2 //RT
+	indices[indexCount] = vertexCount - 2 // RT
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //RB
+	indices[indexCount] = vertexCount - 1 // RB
 	indexCount++
 	indices[indexCount] = 2
 	indexCount++
 	indices[indexCount] = 1
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //RB
+	indices[indexCount] = vertexCount - 1 // RB
 	indexCount++
 	// Bottom edge
 	// BR
@@ -361,15 +359,15 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 
 	indices[indexCount] = 2
 	indexCount++
-	indices[indexCount] = vertexCount - 2 //BR
+	indices[indexCount] = vertexCount - 2 // BR
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //BL
+	indices[indexCount] = vertexCount - 1 // BL
 	indexCount++
 	indices[indexCount] = 3
 	indexCount++
 	indices[indexCount] = 2
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //BL
+	indices[indexCount] = vertexCount - 1 // BL
 	indexCount++
 	// Left edge
 	// LB
@@ -399,15 +397,15 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 
 	indices[indexCount] = 3
 	indexCount++
-	indices[indexCount] = vertexCount - 2 //LB
+	indices[indexCount] = vertexCount - 2 // LB
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //LT
+	indices[indexCount] = vertexCount - 1 // LT
 	indexCount++
 	indices[indexCount] = 0
 	indexCount++
 	indices[indexCount] = 3
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //LT
+	indices[indexCount] = vertexCount - 1 // LT
 	indexCount++
 
 	// Render everything

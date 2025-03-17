@@ -46,7 +46,8 @@ func SizingGrow(sz float32) SizingAxis {
 		}{
 			MinMax: SizingMinMax{sz, sz},
 		},
-		Type: __SIZING_TYPE_GROW}
+		Type: __SIZING_TYPE_GROW,
+	}
 }
 
 func SizingFixed(sz float32) SizingAxis {
@@ -57,7 +58,8 @@ func SizingFixed(sz float32) SizingAxis {
 		}{
 			MinMax: SizingMinMax{sz, sz},
 		},
-		Type: __SIZING_TYPE_FIXED}
+		Type: __SIZING_TYPE_FIXED,
+	}
 }
 
 func CornerRadiusAll(radius float32) CornerRadius {

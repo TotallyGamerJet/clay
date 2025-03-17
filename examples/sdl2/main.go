@@ -59,7 +59,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	_ = sdl.GLSetAttribute(sdl.GL_MULTISAMPLESAMPLES, 4) //for antialiasing
+	_ = sdl.GLSetAttribute(sdl.GL_MULTISAMPLESAMPLES, 4) // for antialiasing
 
 	const enableVsync = false
 	if enableVsync {
@@ -67,7 +67,7 @@ func main() {
 	} else {
 		renderer, _ = sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 	}
-	_ = renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND) //for alpha blending
+	_ = renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND) // for alpha blending
 
 	const screenWidth, screenHeight = 800, 600
 
@@ -78,10 +78,10 @@ func main() {
 
 	clay.SetMeasureTextFunction(sdl2.MeasureText, unsafe.Pointer(&fonts))
 
-	var NOW = sdl.GetPerformanceCounter()
+	NOW := sdl.GetPerformanceCounter()
 	var LAST uint64 = 0
 	var deltaTime float64 = 0
-	var demoData = videodemo.Initialize()
+	demoData := videodemo.Initialize()
 
 loop:
 	for {
@@ -106,7 +106,7 @@ loop:
 		fmt.Println(deltaTime)
 
 		mouseX, mouseY, mouseState := sdl.GetMouseState()
-		var mousePosition = clay.Vector2{X: float32(mouseX), Y: float32(mouseY)}
+		mousePosition := clay.Vector2{X: float32(mouseX), Y: float32(mouseY)}
 		clay.SetPointerState(mousePosition, mouseState&sdl.Button(1) != 0)
 
 		clay.UpdateScrollContainers(
@@ -126,5 +126,4 @@ loop:
 
 		renderer.Present()
 	}
-
 }

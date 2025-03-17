@@ -3,6 +3,7 @@ out: ./
 int_size: 4
 use_go_int: false
 package: clay
+exec_after: ['go', 'generate']
 
 predef: |
   #define __STDC__ 1

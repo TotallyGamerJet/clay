@@ -47,7 +47,7 @@ func Initialize() Data {
 	documents[3] = document{title: "Article 4", contents: "Article 4"}
 	documents[4] = document{title: "Article 5", contents: "Article 5"}
 
-	var data = Data{
+	data := Data{
 		frameArena: arena{memory: make([]byte, 1024)},
 		documents:  documents,
 	}

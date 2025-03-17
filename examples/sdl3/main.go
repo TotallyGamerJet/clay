@@ -80,7 +80,7 @@ func main() {
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(sdl3.MeasureText, unsafe.Pointer(&rendererData.Fonts))
 
-	var demoData = videodemo.Initialize()
+	demoData := videodemo.Initialize()
 
 	sdl.RunLoop(func() error {
 		var event sdl.Event

@@ -221,14 +221,14 @@ func renderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius 
 	var vertices [512]sdl.Vertex
 	var indices [512]int32
 
-	//define center rectangle
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{}} //0 center TL
+	// define center rectangle
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{}} // 0 center TL
 	vertexCount++
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1}} //1 center TR
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1}} // 1 center TR
 	vertexCount++
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1, Y: 1}} //2 center BR
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1, Y: 1}} // 2 center BR
 	vertexCount++
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{Y: 1}} //3 center BL
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{Y: 1}} // 3 center BL
 	vertexCount++
 
 	indices[indexCount] = 0
@@ -244,7 +244,7 @@ func renderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius 
 	indices[indexCount] = 3
 	indexCount++
 
-	//define rounded corners as triangle fans
+	// define rounded corners as triangle fans
 	step := (math.Pi / 2) / float32(numCircleSegments)
 	for i := 0; i < numCircleSegments; i++ {
 		angle1 := float32(i) * step
@@ -295,78 +295,78 @@ func renderFillRoundedRect(renderer *sdl.Renderer, rect sdl.FRect, cornerRadius 
 			indexCount++
 		}
 	}
-	//Define edge rectangles
+	// Define edge rectangles
 	// Top edge
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y}, Color: color, TexCoord: sdl.FPoint{}} //TL
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y}, Color: color, TexCoord: sdl.FPoint{}} // TL
 	vertexCount++
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y}, Color: color, TexCoord: sdl.FPoint{X: 1}} //TR
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y}, Color: color, TexCoord: sdl.FPoint{X: 1}} // TR
 	vertexCount++
 
 	indices[indexCount] = 0
 	indexCount++
-	indices[indexCount] = vertexCount - 2 //TL
+	indices[indexCount] = vertexCount - 2 // TL
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //TR
+	indices[indexCount] = vertexCount - 1 // TR
 	indexCount++
 	indices[indexCount] = 1
 	indexCount++
 	indices[indexCount] = 0
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //TR
+	indices[indexCount] = vertexCount - 1 // TR
 	indexCount++
 	// Right edge
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1}} //RT
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1}} // RT
 	vertexCount++
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1, Y: 1}} //RB
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{X: 1, Y: 1}} // RB
 	vertexCount++
 
 	indices[indexCount] = 1
 	indexCount++
-	indices[indexCount] = vertexCount - 2 //RT
+	indices[indexCount] = vertexCount - 2 // RT
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //RB
+	indices[indexCount] = vertexCount - 1 // RB
 	indexCount++
 	indices[indexCount] = 2
 	indexCount++
 	indices[indexCount] = 1
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //RB
+	indices[indexCount] = vertexCount - 1 // RB
 	indexCount++
 	// Bottom edge
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y + rect.H}, Color: color, TexCoord: sdl.FPoint{X: 1, Y: 1}} //BR
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + rect.W - clampedRadius, Y: rect.Y + rect.H}, Color: color, TexCoord: sdl.FPoint{X: 1, Y: 1}} // BR
 	vertexCount++
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y + rect.H}, Color: color, TexCoord: sdl.FPoint{Y: 1}} //BL
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X + clampedRadius, Y: rect.Y + rect.H}, Color: color, TexCoord: sdl.FPoint{Y: 1}} // BL
 	vertexCount++
 
 	indices[indexCount] = 2
 	indexCount++
-	indices[indexCount] = vertexCount - 2 //BR
+	indices[indexCount] = vertexCount - 2 // BR
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //BL
+	indices[indexCount] = vertexCount - 1 // BL
 	indexCount++
 	indices[indexCount] = 3
 	indexCount++
 	indices[indexCount] = 2
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //BL
+	indices[indexCount] = vertexCount - 1 // BL
 	indexCount++
 	// Left edge
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{Y: 1}} //LB
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X, Y: rect.Y + rect.H - clampedRadius}, Color: color, TexCoord: sdl.FPoint{Y: 1}} // LB
 	vertexCount++
-	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{}} //LT
+	vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: rect.X, Y: rect.Y + clampedRadius}, Color: color, TexCoord: sdl.FPoint{}} // LT
 	vertexCount++
 
 	indices[indexCount] = 3
 	indexCount++
-	indices[indexCount] = vertexCount - 2 //LB
+	indices[indexCount] = vertexCount - 2 // LB
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //LT
+	indices[indexCount] = vertexCount - 1 // LT
 	indexCount++
 	indices[indexCount] = 0
 	indexCount++
 	indices[indexCount] = 3
 	indexCount++
-	indices[indexCount] = vertexCount - 1 //LT
+	indices[indexCount] = vertexCount - 1 // LT
 	indexCount++
 
 	// Render everything
