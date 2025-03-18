@@ -1,5 +1,5 @@
 # clay
-[![GoDoc](https://godoc.org/github.com/totallygamerjet/clay?status.svg)](https://godoc.org/github.com/totallygamerjet/clay)
+[![GoDoc](https://godoc.org/github.com/TotallyGamerJet/clay?status.svg)](https://godoc.org/github.com/TotallyGamerJet/clay)
 
 This is a Go port of the C layout library ([Clay](https://github.com/nicbarker/clay)).
 
