@@ -16,6 +16,10 @@ const (
 
 var __ELEMENT_DEFINITION_LATCH uint8
 
+func __SuppressUnusedLatchDefinitionVariableWarning() {
+	_ = __ELEMENT_DEFINITION_LATCH
+}
+
 type String struct {
 	Length int32
 	Chars  *byte
@@ -206,6 +210,7 @@ const (
 )
 
 type TextElementConfig struct {
+	UserData           unsafe.Pointer
 	TextColor          Color
 	FontId             uint16
 	FontSize           uint16
@@ -2807,6 +2812,8 @@ func __CloseElement() {
 			elementHasScrollVertical = config.Config.ScrollElementConfig.Vertical
 			context.openClipElementStack.Length--
 			break
+		} else if config.Type == __ELEMENT_CONFIG_TYPE_FLOATING {
+			context.openClipElementStack.Length--
 		}
 	}
 	openLayoutElement.ChildrenOrTextContent.Children.Elements = (*int32)(unsafe.Add(unsafe.Pointer(context.layoutElementChildren.InternalArray), unsafe.Sizeof(int32(0))*uintptr(context.layoutElementChildren.Length)))
@@ -3030,7 +3037,7 @@ func __AttachId(elementId ElementId) ElementId {
 	return elementId
 }
 
-func __ConfigureOpenElement(declaration ElementDeclaration) {
+func __ConfigureOpenElementPtr(declaration *ElementDeclaration) {
 	var (
 		context           *Context       = GetCurrentContext()
 		openLayoutElement *LayoutElement = __GetOpenLayoutElement()
@@ -3091,6 +3098,9 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 			if openLayoutElementId.Id == 0 {
 				openLayoutElementId = __HashString(String{Length: int32(((len("__FloatingContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__FloatingContainer")}, uint32(context.layoutElementTreeRoots.Length), 0)
 			}
+			var currentElementIndex int32 = __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1)
+			__int32_tArray_Set(&context.layoutElementClipElementIds, currentElementIndex, int32(clipElementId))
+			__int32_tArray_Add(&context.openClipElementStack, int32(clipElementId))
 			__LayoutElementTreeRootArray_Add(&context.layoutElementTreeRoots, __LayoutElementTreeRoot{LayoutElementIndex: __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1), ParentId: floatingConfig.ParentId, ClipElementId: clipElementId, ZIndex: floatingConfig.ZIndex})
 			__AttachElementConfig(ElementConfigUnion{FloatingElementConfig: __StoreFloatingElementConfig(floatingConfig)}, __ELEMENT_CONFIG_TYPE_FLOATING)
 		}
@@ -3125,6 +3135,10 @@ func __ConfigureOpenElement(declaration ElementDeclaration) {
 	if !__MemCmp((*byte)(unsafe.Pointer(&declaration.Border.Width)), (*byte)(unsafe.Pointer(&__BorderWidth_DEFAULT)), int32(uint32(unsafe.Sizeof(BorderWidth{})))) {
 		__AttachElementConfig(ElementConfigUnion{BorderElementConfig: __StoreBorderElementConfig(declaration.Border)}, __ELEMENT_CONFIG_TYPE_BORDER)
 	}
+}
+
+func __ConfigureOpenElement(declaration ElementDeclaration) {
+	__ConfigureOpenElementPtr(&declaration)
 }
 
 func __InitializeEphemeralMemory(context *Context) {
@@ -4050,7 +4064,7 @@ func __CalculateFinalLayout() {
 							if textElementConfig.TextAlignment == TEXT_ALIGN_CENTER {
 								offset /= 2
 							}
-							__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: currentElementBoundingBox.X + offset, Y: currentElementBoundingBox.Y + yPosition, Width: wrappedLine.Dimensions.Width, Height: wrappedLine.Dimensions.Height}, RenderData: RenderData{Text: TextRenderData{StringContents: StringSlice{Length: wrappedLine.Line.Length, Chars: wrappedLine.Line.Chars, BaseChars: currentElement.ChildrenOrTextContent.TextElementData.Text.Chars}, TextColor: textElementConfig.TextColor, FontId: textElementConfig.FontId, FontSize: textElementConfig.FontSize, LetterSpacing: textElementConfig.LetterSpacing, LineHeight: textElementConfig.LineHeight}}, UserData: sharedConfig.UserData, Id: __HashNumber(uint32(lineIndex), currentElement.Id).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_TEXT})
+							__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: currentElementBoundingBox.X + offset, Y: currentElementBoundingBox.Y + yPosition, Width: wrappedLine.Dimensions.Width, Height: wrappedLine.Dimensions.Height}, RenderData: RenderData{Text: TextRenderData{StringContents: StringSlice{Length: wrappedLine.Line.Length, Chars: wrappedLine.Line.Chars, BaseChars: currentElement.ChildrenOrTextContent.TextElementData.Text.Chars}, TextColor: textElementConfig.TextColor, FontId: textElementConfig.FontId, FontSize: textElementConfig.FontSize, LetterSpacing: textElementConfig.LetterSpacing, LineHeight: textElementConfig.LineHeight}}, UserData: textElementConfig.UserData, Id: __HashNumber(uint32(lineIndex), currentElement.Id).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_TEXT})
 							yPosition += finalLineHeight
 							if !context.disableCulling && currentElementBoundingBox.Y+yPosition > context.layoutDimensions.Height {
 								break
@@ -4317,7 +4331,7 @@ func MinMemorySize() uint32 {
 	__Context_Allocate_Arena(&fakeContext.internalArena)
 	__InitializePersistentMemory(&fakeContext)
 	__InitializeEphemeralMemory(&fakeContext)
-	return uint32(fakeContext.internalArena.NextAllocation + 128)
+	return uint32(fakeContext.internalArena.NextAllocation) + 128
 }
 
 func CreateArenaWithCapacityAndMemory(capacity uint64, memory unsafe.Pointer) Arena {
