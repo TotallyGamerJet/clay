@@ -18,8 +18,6 @@ func handleClayError(errorData clay.ErrorData) {
 	panic(errorData)
 }
 
-// TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
-
 func main() {
 	const (
 		winWidth, winHeight = 640, 480
@@ -82,7 +80,8 @@ func main() {
 
 	demoData := videodemo.Initialize()
 
-	sdl.RunLoop(func() error {
+	_ = sdl.RunLoop(func() error {
+		scrollDelta := clay.Vector2{}
 		var event sdl.Event
 		for sdl.PollEvent(&event) {
 			switch event.Type {
@@ -96,18 +95,19 @@ func main() {
 				})
 			case sdl.EVENT_MOUSE_WHEEL:
 				e := event.MouseWheelEvent()
-				scrollDelta := clay.Vector2{
+				scrollDelta = clay.Vector2{
 					X: e.X,
 					Y: e.Y,
 				}
-				clay.UpdateScrollContainers(true, scrollDelta, 0.01)
 			}
 		}
 		state, x, y := sdl.GetMouseState()
 		clay.SetPointerState(clay.Vector2{
-			X: float32(x),
-			Y: float32(y),
+			X: x,
+			Y: y,
 		}, state&sdl.BUTTON_LEFT != 0)
+
+		clay.UpdateScrollContainers(true, scrollDelta, 0.01)
 
 		renderCommands := videodemo.CreateLayout(&demoData)
 

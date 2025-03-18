@@ -16,8 +16,6 @@ func handleClayError(errorData clay.ErrorData) {
 	panic(errorData)
 }
 
-// TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
-
 const (
 	winWidth, winHeight = 640, 480
 	fontSize            = 16
@@ -36,12 +34,10 @@ type App struct {
 
 func (a *App) Update() error {
 	dx, dy := ebiten.Wheel()
-	if dx != 0 || dy != 0 {
-		clay.UpdateScrollContainers(true, clay.Vector2{
-			X: float32(dx),
-			Y: float32(dy),
-		}, 0.01)
-	}
+	clay.UpdateScrollContainers(true, clay.Vector2{
+		X: float32(dx),
+		Y: float32(dy),
+	}, 0.01)
 
 	x, y := ebiten.CursorPosition()
 	clay.SetPointerState(clay.Vector2{
