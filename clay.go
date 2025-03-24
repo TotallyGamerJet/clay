@@ -4354,7 +4354,7 @@ func MinMemorySize() uint32 {
 	return uint32(fakeContext.internalArena.NextAllocation) + 128
 }
 
-func CreateArenaWithCapacityAndMemory(capacity uint64, memory unsafe.Pointer) Arena {
+func createArenaWithCapacityAndMemory(capacity uint64, memory unsafe.Pointer) Arena {
 	var arena Arena = Arena{Capacity: capacity, Memory: (*byte)(memory)}
 	return arena
 }

@@ -130,3 +130,7 @@ func (r *RenderCommandArray) Iter() iter.Seq[RenderCommand] {
 		}
 	}
 }
+
+func CreateArenaWithCapacityAndMemory(memory []byte) Arena {
+	return createArenaWithCapacityAndMemory(uint64(len(memory)), unsafe.Pointer(unsafe.SliceData(memory)))
+}

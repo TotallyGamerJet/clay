@@ -77,6 +77,8 @@ files:
 #      - name: LayoutElementHashMapItem_DEFAULT
 #        rename: layoutElementHashMapItem_DEFAULT
       # unexport fields for Clay_Context
+      - name: Clay_CreateArenaWithCapacityAndMemory
+        rename: createArenaWithCapacityAndMemory
       - name: Clay_Context
         fields:
           - name: maxElementCount

@@ -55,7 +55,7 @@ func main() {
 
 	sdl.SetHint(sdl.HINT_RENDER_DRIVER, "opengl")
 
-	window, err = sdl.CreateWindow("SDL", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, 800, 600, sdl.WINDOW_SHOWN|sdl.WINDOW_RESIZABLE)
+	window, err = sdl.CreateWindow("SDL2", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED, 640, 480, sdl.WINDOW_SHOWN|sdl.WINDOW_RESIZABLE)
 	if err != nil {
 		panic(err)
 	}
@@ -73,7 +73,7 @@ func main() {
 
 	totalMemorySize := clay.MinMemorySize()
 	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
+	arena := clay.CreateArenaWithCapacityAndMemory(memory)
 	clay.Initialize(arena, clay.Dimensions{Width: screenWidth, Height: screenHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
 	clay.SetMeasureTextFunction(sdl2.MeasureText, unsafe.Pointer(&fonts))

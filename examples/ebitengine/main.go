@@ -99,7 +99,7 @@ func main() {
 	// Initialize Clay
 	totalMemorySize := clay.MinMemorySize()
 	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
+	arena := clay.CreateArenaWithCapacityAndMemory(memory)
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(ebitengine.MeasureText, unsafe.Pointer(&app.fonts))
 	ebImg := ebiten.NewImageFromImage(videodemo.SquirerelImage)

@@ -40,7 +40,7 @@ func main() {
 		err      error
 	)
 
-	window, renderer, err = sdl.CreateWindowAndRenderer("SDL", winWidth, winHeight, sdl.WINDOW_RESIZABLE)
+	window, renderer, err = sdl.CreateWindowAndRenderer("SDL3", winWidth, winHeight, sdl.WINDOW_RESIZABLE)
 	if err != nil {
 		panic(err)
 	}
@@ -84,7 +84,7 @@ func main() {
 	// Initialize Clay
 	totalMemorySize := clay.MinMemorySize()
 	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
+	arena := clay.CreateArenaWithCapacityAndMemory(memory)
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(sdl3.MeasureText, unsafe.Pointer(&rendererData.Fonts))
 
