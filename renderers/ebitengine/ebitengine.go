@@ -94,6 +94,8 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 			config := &renderCommand.RenderData.Image
 			img := (*ebiten.Image)(config.ImageData)
 			opts := &ebiten.DrawImageOptions{}
+			bounds := img.Bounds()
+			opts.GeoM.Scale(float64(boundingBox.Width/float32(bounds.Dx())), float64(boundingBox.Height/float32(bounds.Dy())))
 			opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
 			screen.DrawImage(img, opts)
 		case clay.RENDER_COMMAND_TYPE_BORDER:

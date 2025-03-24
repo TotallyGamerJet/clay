@@ -81,7 +81,21 @@ func main() {
 	NOW := sdl.GetPerformanceCounter()
 	var LAST uint64 = 0
 	var deltaTime float64 = 0
-	demoData := videodemo.Initialize()
+	surface, err := sdl.CreateRGBSurfaceFrom(
+		unsafe.Pointer(unsafe.SliceData(videodemo.SquirerelImage.Pix)),
+		int32(videodemo.SquirerelImage.Bounds().Dx()),
+		int32(videodemo.SquirerelImage.Bounds().Dy()),
+		32,
+		videodemo.SquirerelImage.Stride,
+		0x000000ff,
+		0x0000ff00,
+		0x00ff0000,
+		0xff000000,
+	)
+	if err != nil {
+		panic(err)
+	}
+	demoData := videodemo.Initialize(unsafe.Pointer(surface))
 
 loop:
 	for {

@@ -71,6 +71,17 @@ func main() {
 		},
 	}
 
+	surface, err := sdl.CreateSurfaceFrom(
+		int32(videodemo.SquirerelImage.Bounds().Dx()),
+		int32(videodemo.SquirerelImage.Bounds().Dy()),
+		sdl.PIXELFORMAT_RGBA32,
+		unsafe.Pointer(unsafe.SliceData(videodemo.SquirerelImage.Pix)),
+		videodemo.SquirerelImage.Stride,
+	)
+	if err != nil {
+		panic(err)
+	}
+
 	// Initialize Clay
 	totalMemorySize := clay.MinMemorySize()
 	memory := make([]byte, totalMemorySize)
@@ -78,7 +89,7 @@ func main() {
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(sdl3.MeasureText, unsafe.Pointer(&rendererData.Fonts))
 
-	demoData := videodemo.Initialize()
+	demoData := videodemo.Initialize(unsafe.Pointer(surface))
 
 	_ = sdl.RunLoop(func() error {
 		scrollDelta := clay.Vector2{}

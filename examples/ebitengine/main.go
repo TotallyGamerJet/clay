@@ -102,8 +102,8 @@ func main() {
 	arena := clay.CreateArenaWithCapacityAndMemory(uint64(totalMemorySize), unsafe.Pointer(unsafe.SliceData(memory)))
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(ebitengine.MeasureText, unsafe.Pointer(&app.fonts))
-
-	app.demoData = videodemo.Initialize()
+	ebImg := ebiten.NewImageFromImage(videodemo.SquirerelImage)
+	app.demoData = videodemo.Initialize(unsafe.Pointer(ebImg))
 
 	if err := ebiten.RunGame(app); err != nil {
 		panic(err)
