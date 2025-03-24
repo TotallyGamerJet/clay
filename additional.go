@@ -71,13 +71,23 @@ func CornerRadiusAll(radius float32) CornerRadius {
 	}
 }
 
-func BorderAll(width uint16) BorderWidth {
+func BorderOutside(width uint16) BorderWidth {
 	return BorderWidth{
 		width,
 		width,
 		width,
 		width,
 		0,
+	}
+}
+
+func BorderAll(width uint16) BorderWidth {
+	return BorderWidth{
+		width,
+		width,
+		width,
+		width,
+		width,
 	}
 }
 
