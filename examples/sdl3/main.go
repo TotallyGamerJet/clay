@@ -70,18 +70,16 @@ func main() {
 			font,
 		},
 	}
-	// TODO: implement
-	var surface *sdl.Surface
-	//surface, err := sdl.CreateSurfaceFrom(
-	//	int32(videodemo.SquirerelImage.Bounds().Dx()),
-	//	int32(videodemo.SquirerelImage.Bounds().Dy()),
-	//	sdl.PIXELFORMAT_RGBA32,
-	//	unsafe.Pointer(unsafe.SliceData(videodemo.SquirerelImage.Pix)),
-	//	videodemo.SquirerelImage.Stride,
-	//)
-	//if err != nil {
-	//	panic(err)
-	//}
+	surface, err := sdl.CreateSurfaceFrom(
+		videodemo.SquirerelImage.Bounds().Dx(),
+		videodemo.SquirerelImage.Bounds().Dy(),
+		sdl.PIXELFORMAT_RGBA32,
+		videodemo.SquirerelImage.Pix,
+		videodemo.SquirerelImage.Stride,
+	)
+	if err != nil {
+		panic(err)
+	}
 
 	// Initialize Clay
 	totalMemorySize := clay.MinMemorySize()
