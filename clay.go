@@ -2125,6 +2125,7 @@ func __MeasuredWordArray_Set(array *__MeasuredWordArray, index int32, value __Me
 type __MeasureTextCacheItem struct {
 	UnwrappedDimensions     Dimensions
 	MeasuredWordsStartIndex int32
+	MinWidth                float32
 	ContainsNewlines        bool
 	Id                      uint32
 	NextIndex               int32
@@ -2643,6 +2644,11 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 				length     int32      = end - start
 				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData)
 			)
+			if dimensions.Width > measured.MinWidth {
+				measured.MinWidth = dimensions.Width
+			} else {
+				measured.MinWidth = measured.MinWidth
+			}
 			if measuredHeight > dimensions.Height {
 				/* (002) */
 			} else {
@@ -2679,6 +2685,11 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 			/* (002) */
 		} else {
 			measuredHeight = dimensions.Height
+		}
+		if dimensions.Width > measured.MinWidth {
+			measured.MinWidth = dimensions.Width
+		} else {
+			measured.MinWidth = measured.MinWidth
 		}
 	}
 	if lineWidth > measuredWidth {
@@ -2816,28 +2827,31 @@ func __CloseElement() {
 			context.openClipElementStack.Length--
 		}
 	}
+	var leftRightPadding float32 = float32(int32(layoutConfig.Padding.Left) + int32(layoutConfig.Padding.Right))
+	var topBottomPadding float32 = float32(int32(layoutConfig.Padding.Top) + int32(layoutConfig.Padding.Bottom))
 	openLayoutElement.ChildrenOrTextContent.Children.Elements = (*int32)(unsafe.Add(unsafe.Pointer(context.layoutElementChildren.InternalArray), unsafe.Sizeof(int32(0))*uintptr(context.layoutElementChildren.Length)))
 	if layoutConfig.LayoutDirection == LEFT_TO_RIGHT {
-		openLayoutElement.Dimensions.Width = float32(int32(layoutConfig.Padding.Left) + int32(layoutConfig.Padding.Right))
+		openLayoutElement.Dimensions.Width = leftRightPadding
+		openLayoutElement.MinDimensions.Width = leftRightPadding
 		for i := int32(0); i < int32(openLayoutElement.ChildrenOrTextContent.Children.Length); i++ {
 			var (
 				childIndex int32          = __int32_tArray_GetValue(&context.layoutElementChildrenBuffer, context.layoutElementChildrenBuffer.Length-int32(openLayoutElement.ChildrenOrTextContent.Children.Length)+i)
 				child      *LayoutElement = LayoutElementArray_Get(&context.layoutElements, childIndex)
 			)
 			openLayoutElement.Dimensions.Width += child.Dimensions.Width
-			if openLayoutElement.Dimensions.Height > (child.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)) {
+			if openLayoutElement.Dimensions.Height > (child.Dimensions.Height + topBottomPadding) {
 				/* (004) */
 			} else {
-				openLayoutElement.Dimensions.Height = child.Dimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)
+				openLayoutElement.Dimensions.Height = child.Dimensions.Height + topBottomPadding
 			}
 			if !elementHasScrollHorizontal {
 				openLayoutElement.MinDimensions.Width += child.MinDimensions.Width
 			}
 			if !elementHasScrollVertical {
-				if openLayoutElement.MinDimensions.Height > (child.MinDimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)) {
+				if openLayoutElement.MinDimensions.Height > (child.MinDimensions.Height + topBottomPadding) {
 					/* (005) */
 				} else {
-					openLayoutElement.MinDimensions.Height = child.MinDimensions.Height + float32(layoutConfig.Padding.Top) + float32(layoutConfig.Padding.Bottom)
+					openLayoutElement.MinDimensions.Height = child.MinDimensions.Height + topBottomPadding
 				}
 			}
 			__int32_tArray_Add(&context.layoutElementChildren, childIndex)
@@ -2851,26 +2865,27 @@ func __CloseElement() {
 		openLayoutElement.Dimensions.Width += childGap
 		openLayoutElement.MinDimensions.Width += childGap
 	} else if layoutConfig.LayoutDirection == TOP_TO_BOTTOM {
-		openLayoutElement.Dimensions.Height = float32(int32(layoutConfig.Padding.Top) + int32(layoutConfig.Padding.Bottom))
+		openLayoutElement.Dimensions.Height = topBottomPadding
+		openLayoutElement.MinDimensions.Height = topBottomPadding
 		for i := int32(0); i < int32(openLayoutElement.ChildrenOrTextContent.Children.Length); i++ {
 			var (
 				childIndex int32          = __int32_tArray_GetValue(&context.layoutElementChildrenBuffer, context.layoutElementChildrenBuffer.Length-int32(openLayoutElement.ChildrenOrTextContent.Children.Length)+i)
 				child      *LayoutElement = LayoutElementArray_Get(&context.layoutElements, childIndex)
 			)
 			openLayoutElement.Dimensions.Height += child.Dimensions.Height
-			if openLayoutElement.Dimensions.Width > (child.Dimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)) {
+			if openLayoutElement.Dimensions.Width > (child.Dimensions.Width + leftRightPadding) {
 				/* (006) */
 			} else {
-				openLayoutElement.Dimensions.Width = child.Dimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)
+				openLayoutElement.Dimensions.Width = child.Dimensions.Width + leftRightPadding
 			}
 			if !elementHasScrollVertical {
 				openLayoutElement.MinDimensions.Height += child.MinDimensions.Height
 			}
 			if !elementHasScrollHorizontal {
-				if openLayoutElement.MinDimensions.Width > (child.MinDimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)) {
+				if openLayoutElement.MinDimensions.Width > (child.MinDimensions.Width + leftRightPadding) {
 					/* (007) */
 				} else {
-					openLayoutElement.MinDimensions.Width = child.MinDimensions.Width + float32(layoutConfig.Padding.Left) + float32(layoutConfig.Padding.Right)
+					openLayoutElement.MinDimensions.Width = child.MinDimensions.Width + leftRightPadding
 				}
 			}
 			__int32_tArray_Add(&context.layoutElementChildren, childIndex)
@@ -3017,7 +3032,7 @@ func __OpenTextElement(text String, textConfig *TextElementConfig) {
 		return textMeasured.UnwrappedDimensions.Height
 	}()}
 	textElement.Dimensions = textDimensions
-	textElement.MinDimensions = Dimensions{Width: textMeasured.UnwrappedDimensions.Height, Height: textDimensions.Height}
+	textElement.MinDimensions = Dimensions{Width: textMeasured.MinWidth, Height: textDimensions.Height}
 	textElement.ChildrenOrTextContent.TextElementData = __TextElementDataArray_Add(&context.textElementData, __TextElementData{Text: text, PreferredDimensions: textMeasured.UnwrappedDimensions, ElementIndex: context.layoutElements.Length - 1})
 	textElement.ElementConfigs = __ElementConfigArraySlice{Length: 1, InternalArray: __ElementConfigArray_Add(&context.elementConfigs, ElementConfig{Type: __ELEMENT_CONFIG_TYPE_TEXT, Config: ElementConfigUnion{TextElementConfig: textConfig}})}
 	textElement.LayoutConfig = &LAYOUT_DEFAULT
@@ -3528,6 +3543,12 @@ func __SizeContainersAlongAxis(xAxis bool) {
 					} else {
 						childSizing = childElement.LayoutConfig.Sizing.Height
 					}
+					var minSize float32
+					if xAxis {
+						minSize = childElement.MinDimensions.Width
+					} else {
+						minSize = childElement.MinDimensions.Height
+					}
 					var childSize *float32
 					if xAxis {
 						childSize = &childElement.Dimensions.Width
@@ -3548,25 +3569,24 @@ func __SizeContainersAlongAxis(xAxis bool) {
 							}
 						}
 					}
-					if childSizing.Type == __SIZING_TYPE_FIT {
-						if childSizing.Size.MinMax.Min > (func() float32 {
-							if (*childSize) < maxSize {
-								return *childSize
-							}
-							return maxSize
-						}()) {
-							*childSize = childSizing.Size.MinMax.Min
-						} else if (*childSize) < maxSize {
-							/* (015) */
-						} else {
-							*childSize = maxSize
-						}
-					} else if childSizing.Type == __SIZING_TYPE_GROW {
+					if childSizing.Type == __SIZING_TYPE_GROW {
 						if maxSize < childSizing.Size.MinMax.Max {
 							*childSize = maxSize
 						} else {
 							*childSize = childSizing.Size.MinMax.Max
 						}
+					}
+					if minSize > (func() float32 {
+						if (*childSize) < maxSize {
+							return *childSize
+						}
+						return maxSize
+					}()) {
+						*childSize = minSize
+					} else if (*childSize) < maxSize {
+						/* (015) */
+					} else {
+						*childSize = maxSize
 					}
 				}
 			}
