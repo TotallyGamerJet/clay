@@ -71,6 +71,16 @@ func CornerRadiusAll(radius float32) CornerRadius {
 	}
 }
 
+func BorderAll(width uint16) BorderWidth {
+	return BorderWidth{
+		width,
+		width,
+		width,
+		width,
+		0,
+	}
+}
+
 // TODO: add generic iterator functions for types with [type]_GetValue functions that are converted into methods
 
 func UI() func(decl ElementDeclaration, children func()) {

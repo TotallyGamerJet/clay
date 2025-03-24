@@ -103,6 +103,15 @@ func RenderHeaderButton(text string) {
 		Layout: clay.LayoutConfig{
 			Padding: clay.Padding{Left: 16, Right: 16, Top: 8, Bottom: 8},
 		},
+		//Border: func() clay.BorderElementConfig {
+		//	if !clay.Hovered() {
+		//		return clay.BorderElementConfig{}
+		//	}
+		//	return clay.BorderElementConfig{
+		//		Color: clay.Color{R: 81, G: 162, B: 255, A: 255},
+		//		Width: clay.BorderAll(4),
+		//	}
+		//}(),
 		BackgroundColor: clay.Color{R: 140, G: 140, B: 140, A: 255},
 		CornerRadius:    clay.CornerRadiusAll(5),
 	}, func() {
@@ -310,7 +319,6 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 						},
 						Image: clay.ImageElementConfig{ImageData: selectedDocument.image.(unsafe.Pointer), SourceDimensions: clay.Dimensions{Width: 1280, Height: 853}},
 					}, func() {
-
 					})
 				}
 				clay.Text(selectedDocument.contents, clay.TextConfig(clay.TextElementConfig{
