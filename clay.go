@@ -21,8 +21,9 @@ func __SuppressUnusedLatchDefinitionVariableWarning() {
 }
 
 type String struct {
-	Length int32
-	Chars  *byte
+	IsStaticallyAllocated bool
+	Length                int32
+	Chars                 *byte
 }
 type StringSlice struct {
 	Length    int32
@@ -210,15 +211,14 @@ const (
 )
 
 type TextElementConfig struct {
-	UserData           unsafe.Pointer
-	TextColor          Color
-	FontId             uint16
-	FontSize           uint16
-	LetterSpacing      uint16
-	LineHeight         uint16
-	WrapMode           TextElementConfigWrapMode
-	TextAlignment      TextAlignment
-	HashStringContents bool
+	UserData      unsafe.Pointer
+	TextColor     Color
+	FontId        uint16
+	FontSize      uint16
+	LetterSpacing uint16
+	LineHeight    uint16
+	WrapMode      TextElementConfigWrapMode
+	TextAlignment TextAlignment
 }
 type __TextElementConfigWrapper struct {
 	Wrapped TextElementConfig
@@ -1268,7 +1268,7 @@ type __StringArraySlice struct {
 	InternalArray *String
 }
 
-var String_DEFAULT String = String{}
+var String_DEFAULT String = String{IsStaticallyAllocated: false}
 
 func __StringArray_Allocate_Arena(capacity int32, arena *Arena) __StringArray {
 	return __StringArray{Capacity: capacity, Length: 0, InternalArray: (*String)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(String{})), arena))}
@@ -2502,44 +2502,35 @@ func __HashString(key String, offset uint32, seed uint32) ElementId {
 	return ElementId{Id: hash + 1, Offset: offset, BaseId: base + 1, StringId: key}
 }
 
-func __HashTextWithConfig(text *String, config *TextElementConfig) uint32 {
-	var (
-		hash            uint32 = 0
-		pointerAsNumber uint64 = uint64(uintptr(unsafe.Pointer(text.Chars)))
-	)
-	if config.HashStringContents {
-		var maxLengthToHash uint32 = uint32(func() int32 {
-			if text.Length < 256 {
-				return text.Length
-			}
-			return 256
-		}())
-		for i := uint32(0); i < maxLengthToHash; i++ {
-			hash += uint32(*(*byte)(unsafe.Add(unsafe.Pointer(text.Chars), i)))
-			hash += hash << 10
-			hash ^= hash >> 6
-		}
-	} else {
-		hash += uint32(pointerAsNumber)
+func __HashData(data *uint8, length uint64) uint64 {
+	var hash uint64 = 0
+	for i := int32(0); uint64(i) < length; i++ {
+		hash += uint64(*(*uint8)(unsafe.Add(unsafe.Pointer(data), i)))
 		hash += hash << 10
 		hash ^= hash >> 6
 	}
-	hash += uint32(text.Length)
-	hash += hash << 10
-	hash ^= hash >> 6
+	return hash
+}
+
+func __HashStringContentsWithConfig(text *String, config *TextElementConfig) uint32 {
+	var hash uint32 = 0
+	if text.IsStaticallyAllocated {
+		hash += uint32(uint64(uintptr(unsafe.Pointer(text.Chars))))
+		hash += hash << 10
+		hash ^= hash >> 6
+		hash += uint32(text.Length)
+		hash += hash << 10
+		hash ^= hash >> 6
+	} else {
+		hash = uint32(__HashData((*uint8)(unsafe.Pointer(text.Chars)), uint64(text.Length)) % math.MaxUint32)
+	}
 	hash += uint32(config.FontId)
 	hash += hash << 10
 	hash ^= hash >> 6
 	hash += uint32(config.FontSize)
 	hash += hash << 10
 	hash ^= hash >> 6
-	hash += uint32(config.LineHeight)
-	hash += hash << 10
-	hash ^= hash >> 6
 	hash += uint32(config.LetterSpacing)
-	hash += hash << 10
-	hash ^= hash >> 6
-	hash += uint32(config.WrapMode)
 	hash += hash << 10
 	hash ^= hash >> 6
 	hash += hash << 3
@@ -2567,11 +2558,11 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	if __MeasureText == nil {
 		if !context.booleanWarnings.TextMeasurementFunctionNotSet {
 			context.booleanWarnings.TextMeasurementFunctionNotSet = true
-			context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED, ErrorText: String{Length: int32(((len("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.")}, UserData: context.errorHandler.UserData})
+			context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay's internal MeasureText function is null. You may have forgotten to call SetMeasureTextFunction(), or passed a NULL function pointer by mistake.")}, UserData: context.errorHandler.UserData})
 		}
 		return &__MeasureTextCacheItem_DEFAULT
 	}
-	var id uint32 = __HashTextWithConfig(text, config)
+	var id uint32 = __HashStringContentsWithConfig(text, config)
 	var hashBucket uint32 = id % uint32(context.maxMeasureTextCacheWordCount/32)
 	var elementIndexPrevious int32 = 0
 	var elementIndex int32 = *(*int32)(unsafe.Add(unsafe.Pointer(context.measureTextHashMap.InternalArray), unsafe.Sizeof(int32(0))*uintptr(hashBucket)))
@@ -2614,7 +2605,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	} else {
 		if context.measureTextHashMapInternal.Length == context.measureTextHashMapInternal.Capacity-1 {
 			if !context.booleanWarnings.MaxTextMeasureCacheExceeded {
-				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.")}, UserData: context.errorHandler.UserData})
+				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to measure text elements. Try using SetMaxElementCount() with a higher value.")}, UserData: context.errorHandler.UserData})
 				context.booleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
 			return &__MeasureTextCacheItem_DEFAULT
@@ -2633,7 +2624,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	for end < text.Length {
 		if context.measuredWords.Length == context.measuredWords.Capacity-1 {
 			if !context.booleanWarnings.MaxTextMeasureCacheExceeded {
-				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).")}, UserData: context.errorHandler.UserData})
+				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay has run out of space in it's internal text measurement cache. Try using SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).")}, UserData: context.errorHandler.UserData})
 				context.booleanWarnings.MaxTextMeasureCacheExceeded = true
 			}
 			return &__MeasureTextCacheItem_DEFAULT
@@ -2727,11 +2718,12 @@ func __AddHashMapItem(elementId ElementId, layoutElement *LayoutElement, idAlias
 			item.NextIndex = hashItem.NextIndex
 			if hashItem.Generation <= context.generation {
 				hashItem.ElementId = elementId
+				hashItem.IdAlias = idAlias
 				hashItem.Generation = context.generation + 1
 				hashItem.LayoutElement = layoutElement
 				hashItem.DebugData.Collision = false
 			} else {
-				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_DUPLICATE_ID, ErrorText: String{Length: int32(((len("An element with this ID was already previously declared during this layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.errorHandler.UserData})
+				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_DUPLICATE_ID, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("An element with this ID was already previously declared during this layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.errorHandler.UserData})
 				if context.debugModeEnabled {
 					hashItem.DebugData.Collision = true
 				}
@@ -3059,7 +3051,7 @@ func __ConfigureOpenElementPtr(declaration *ElementDeclaration) {
 	)
 	openLayoutElement.LayoutConfig = __StoreLayoutConfig(declaration.Layout)
 	if declaration.Layout.Sizing.Width.Type == __SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Width.Size.Percent > 1 || declaration.Layout.Sizing.Height.Type == __SIZING_TYPE_PERCENT && declaration.Layout.Sizing.Height.Size.Percent > 1 {
-		context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_PERCENTAGE_OVER_1, ErrorText: String{Length: int32(((len("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.")}, UserData: context.errorHandler.UserData})
+		context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_PERCENTAGE_OVER_1, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element was configured with SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.")}, UserData: context.errorHandler.UserData})
 	}
 	var openLayoutElementId ElementId = declaration.Id
 	openLayoutElement.ElementConfigs.InternalArray = (*ElementConfig)(unsafe.Add(unsafe.Pointer(context.elementConfigs.InternalArray), unsafe.Sizeof(ElementConfig{})*uintptr(context.elementConfigs.Length)))
@@ -3103,15 +3095,15 @@ func __ConfigureOpenElementPtr(declaration *ElementDeclaration) {
 			} else if declaration.Floating.AttachTo == ATTACH_TO_ELEMENT_WITH_ID {
 				var parentItem *LayoutElementHashMapItem = __GetHashMapItem(floatingConfig.ParentId)
 				if parentItem == nil {
-					context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{Length: int32(((len("A floating element was declared with a parentId, but no element with that ID was found.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.errorHandler.UserData})
+					context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("A floating element was declared with a parentId, but no element with that ID was found.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.errorHandler.UserData})
 				} else {
 					clipElementId = uint32(__int32_tArray_GetValue(&context.layoutElementClipElementIds, int32(int64((uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray)))/unsafe.Sizeof(LayoutElement{})))))
 				}
 			} else if declaration.Floating.AttachTo == ATTACH_TO_ROOT {
-				floatingConfig.ParentId = __HashString(String{Length: int32(((len("__RootContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0).Id
+				floatingConfig.ParentId = __HashString(String{IsStaticallyAllocated: true, Length: int32(((len("__RootContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0).Id
 			}
 			if openLayoutElementId.Id == 0 {
-				openLayoutElementId = __HashString(String{Length: int32(((len("__FloatingContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__FloatingContainer")}, uint32(context.layoutElementTreeRoots.Length), 0)
+				openLayoutElementId = __HashString(String{IsStaticallyAllocated: true, Length: int32(((len("__FloatingContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__FloatingContainer")}, uint32(context.layoutElementTreeRoots.Length), 0)
 			}
 			var currentElementIndex int32 = __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1)
 			__int32_tArray_Set(&context.layoutElementClipElementIds, currentElementIndex, int32(clipElementId))
@@ -3646,7 +3638,7 @@ func __AddRenderCommand(renderCommand RenderCommand) {
 	} else {
 		if !context.booleanWarnings.MaxRenderCommandsExceeded {
 			context.booleanWarnings.MaxRenderCommandsExceeded = true
-			context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.")}, UserData: context.errorHandler.UserData})
+			context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using SetMaxElementCount() with a higher value.")}, UserData: context.errorHandler.UserData})
 		}
 	}
 }
@@ -4289,7 +4281,7 @@ func __WarningArray_Allocate_Arena(capacity int32, arena *Arena) __WarningArray 
 		array.InternalArray = (*__Warning)(unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset)))
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
 	} else {
-		__currentContext.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.errorHandler.UserData})
+		__currentContext.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.errorHandler.UserData})
 	}
 	return array
 }
@@ -4316,7 +4308,7 @@ func __Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Arena) unsaf
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
 		return unsafe.Pointer(uintptr(uint64(uintptr(unsafe.Pointer(arena.Memory))) + nextAllocOffset))
 	} else {
-		__currentContext.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.errorHandler.UserData})
+		__currentContext.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_ARENA_CAPACITY_EXCEEDED, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Initialize()")}, UserData: __currentContext.errorHandler.UserData})
 	}
 	return unsafe.Pointer(uintptr(__NULL))
 }
@@ -4326,7 +4318,7 @@ func __Array_RangeCheck(index int32, length int32) bool {
 		return true
 	}
 	var context *Context = GetCurrentContext()
-	context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.errorHandler.UserData})
+	context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.errorHandler.UserData})
 	return false
 }
 
@@ -4335,7 +4327,7 @@ func __Array_AddCapacityCheck(length int32, capacity int32) bool {
 		return true
 	}
 	var context *Context = GetCurrentContext()
-	context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.errorHandler.UserData})
+	context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_INTERNAL_ERROR, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.")}, UserData: context.errorHandler.UserData})
 	return false
 }
 
@@ -4399,10 +4391,10 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 			var mapItem *LayoutElementHashMapItem = __GetHashMapItem(currentElement.Id)
 			var clipElementId int32 = __int32_tArray_GetValue(&context.layoutElementClipElementIds, int32(int64((uintptr(unsafe.Pointer(currentElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray)))/unsafe.Sizeof(LayoutElement{}))))
 			var clipItem *LayoutElementHashMapItem = __GetHashMapItem(uint32(clipElementId))
-			var elementBox BoundingBox = mapItem.BoundingBox
-			elementBox.X -= root.PointerOffset.X
-			elementBox.Y -= root.PointerOffset.Y
 			if mapItem != nil {
+				var elementBox BoundingBox = mapItem.BoundingBox
+				elementBox.X -= root.PointerOffset.X
+				elementBox.Y -= root.PointerOffset.Y
 				if __PointIsInsideRect(position, elementBox) && (clipElementId == 0 || __PointIsInsideRect(position, clipItem.BoundingBox)) {
 					if mapItem.OnHoverFunction != nil {
 						mapItem.OnHoverFunction(mapItem.ElementId, context.pointerInfo, mapItem.HoverFunctionUserData)
@@ -4719,7 +4711,7 @@ func BeginLayout() {
 	}
 	context.booleanWarnings = BooleanWarnings{MaxElementsExceeded: false}
 	__OpenElement()
-	__ConfigureOpenElement(ElementDeclaration{Id: __HashString(String{Length: int32(((len("__RootContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0), Layout: LayoutConfig{Sizing: Sizing{Width: SizingAxis{Size: struct {
+	__ConfigureOpenElement(ElementDeclaration{Id: __HashString(String{IsStaticallyAllocated: true, Length: int32(((len("__RootContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__RootContainer")}, 0, 0), Layout: LayoutConfig{Sizing: Sizing{Width: SizingAxis{Size: struct {
 		// union
 		MinMax  SizingMinMax
 		Percent float32
@@ -4739,9 +4731,9 @@ func EndLayout() RenderCommandArray {
 	if context.booleanWarnings.MaxElementsExceeded {
 		var message String
 		if !elementsExceededBeforeDebugView {
-			message = String{Length: int32(((len("Clay Error: Layout elements exceeded __maxElementCount after adding the debug-view to the layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded __maxElementCount after adding the debug-view to the layout.")}
+			message = String{IsStaticallyAllocated: true, Length: int32(((len("Clay Error: Layout elements exceeded __maxElementCount after adding the debug-view to the layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded __maxElementCount after adding the debug-view to the layout.")}
 		} else {
-			message = String{Length: int32(((len("Clay Error: Layout elements exceeded __maxElementCount") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded __maxElementCount")}
+			message = String{IsStaticallyAllocated: true, Length: int32(((len("Clay Error: Layout elements exceeded __maxElementCount") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("Clay Error: Layout elements exceeded __maxElementCount")}
 		}
 		__AddRenderCommand(RenderCommand{BoundingBox: BoundingBox{X: context.layoutDimensions.Width/2 - 59*4, Y: context.layoutDimensions.Height / 2, Width: 0, Height: 0}, RenderData: RenderData{Text: TextRenderData{StringContents: StringSlice{Length: message.Length, Chars: message.Chars, BaseChars: message.Chars}, TextColor: Color{R: 255, G: 0, B: 0, A: 255}, FontSize: 16}}, CommandType: RENDER_COMMAND_TYPE_TEXT})
 	} else {
