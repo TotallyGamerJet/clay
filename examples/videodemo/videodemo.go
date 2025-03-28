@@ -23,7 +23,7 @@ var white = clay.Color{R: 255, G: 255, B: 255, A: 255}
 //go:embed squirrel-eating-nut.jpg
 var squirrelImageJPG []byte
 
-var SquirerelImage *image.RGBA
+var SquirrelImage *image.RGBA
 
 func init() {
 	img, err := jpeg.Decode(bytes.NewReader(squirrelImageJPG))
@@ -33,8 +33,8 @@ func init() {
 	bounds := img.Bounds()
 	width := bounds.Max.X
 	height := bounds.Max.Y
-	SquirerelImage = image.NewRGBA(image.Rect(0, 0, width, height))
-	draw.Draw(SquirerelImage, SquirerelImage.Bounds(), img, bounds.Min, draw.Src)
+	SquirrelImage = image.NewRGBA(image.Rect(0, 0, width, height))
+	draw.Draw(SquirrelImage, SquirrelImage.Bounds(), img, bounds.Min, draw.Src)
 }
 
 const FontIdBody16 = 0

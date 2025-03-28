@@ -82,11 +82,11 @@ func main() {
 	var LAST uint64 = 0
 	var deltaTime float64 = 0
 	surface, err := sdl.CreateRGBSurfaceFrom(
-		unsafe.Pointer(unsafe.SliceData(videodemo.SquirerelImage.Pix)),
-		int32(videodemo.SquirerelImage.Bounds().Dx()),
-		int32(videodemo.SquirerelImage.Bounds().Dy()),
+		unsafe.Pointer(unsafe.SliceData(videodemo.SquirrelImage.Pix)),
+		int32(videodemo.SquirrelImage.Bounds().Dx()),
+		int32(videodemo.SquirrelImage.Bounds().Dy()),
 		32,
-		videodemo.SquirerelImage.Stride,
+		videodemo.SquirrelImage.Stride,
 		0x000000ff,
 		0x0000ff00,
 		0x00ff0000,

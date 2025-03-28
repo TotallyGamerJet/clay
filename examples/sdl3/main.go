@@ -71,11 +71,11 @@ func main() {
 		},
 	}
 	surface, err := sdl.CreateSurfaceFrom(
-		videodemo.SquirerelImage.Bounds().Dx(),
-		videodemo.SquirerelImage.Bounds().Dy(),
+		videodemo.SquirrelImage.Bounds().Dx(),
+		videodemo.SquirrelImage.Bounds().Dy(),
 		sdl.PIXELFORMAT_RGBA32,
-		videodemo.SquirerelImage.Pix,
-		videodemo.SquirerelImage.Stride,
+		videodemo.SquirrelImage.Pix,
+		videodemo.SquirrelImage.Stride,
 	)
 	if err != nil {
 		panic(err)
