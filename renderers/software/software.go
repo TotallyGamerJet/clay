@@ -8,6 +8,7 @@ import (
 	"image/color"
 	"image/png"
 	"log/slog"
+	"math"
 	"strings"
 	"unsafe"
 
@@ -17,10 +18,21 @@ import (
 	"golang.org/x/image/math/fixed"
 )
 
-// PrintPlaygroundImage prints the image so that it displays in the Go playground
+// PrintPlaygroundImage prints the image so that it displays in the Go playground. It may have to shrink the image
+// if it is too big for the playground.
 func PrintPlaygroundImage(m image.Image) {
+	const maxPixels = math.MaxUint16
+	origWidth := m.Bounds().Dx()
+	origHeight := m.Bounds().Dy()
+	ratio := float64(origWidth) / float64(origHeight)
+	x := math.Sqrt(float64(maxPixels) / ratio)
+	newHeight := int(math.Floor(x))
+	newWidth := int(math.Floor(ratio * x))
+	newImg := image.NewRGBA(image.Rect(0, 0, newWidth, newHeight))
+	draw.BiLinear.Scale(newImg, newImg.Bounds(), m, m.Bounds(), draw.Over, nil)
+
 	var buf bytes.Buffer
-	err := png.Encode(&buf, m)
+	err := png.Encode(&buf, newImg)
 	if err != nil {
 		panic(err)
 	}
@@ -30,12 +42,6 @@ func PrintPlaygroundImage(m image.Image) {
 func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
 	fonts := *(*[]font.Face)(userData)
 	face := fonts[config.FontId]
-	//d := &font.Drawer{
-	//	Src:  image.NewUniform(color.Black),
-	//	Face: face,
-	//}
-	//bounds, advance := d.BoundString(txt.String())
-	//_ = advance
 	width := font.MeasureString(face, txt.String()).Ceil()
 	height := face.Metrics().Height.Ceil()
 	return clay.Dimensions{

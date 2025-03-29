@@ -3,7 +3,6 @@ package main
 import (
 	"image"
 	"image/color"
-	"image/draw"
 	"image/png"
 	"os"
 	"unsafe"
@@ -12,6 +11,7 @@ import (
 	"github.com/TotallyGamerJet/clay/examples/fonts"
 	"github.com/TotallyGamerJet/clay/examples/videodemo"
 	"github.com/TotallyGamerJet/clay/renderers/software"
+	"golang.org/x/image/draw"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 )
@@ -37,7 +37,7 @@ func main() {
 	}
 
 	face, err := opentype.NewFace(parsedFont, &opentype.FaceOptions{
-		Size:    16,
+		Size:    fontSize,
 		DPI:     72, // Standard screen DPI
 		Hinting: font.HintingFull,
 	})
@@ -56,6 +56,17 @@ func main() {
 	if err := software.ClayRender(window, cmds, faces); err != nil {
 		panic(err)
 	}
+
+	// playground scaling
+	// const maxPixels = math.MaxUint16
+	// origWidth := window.Bounds().Dx()
+	// origHeight := window.Bounds().Dy()
+	// ratio := float64(origWidth) / float64(origHeight)
+	// x := math.Sqrt(float64(maxPixels) / ratio)
+	// newHeight := int(math.Floor(x))
+	// newWidth := int(math.Floor(ratio * x))
+	// newImg := image.NewRGBA(image.Rect(0, 0, newWidth, newHeight))
+	// draw.BiLinear.Scale(newImg, newImg.Bounds(), window, window.Bounds(), draw.Over, nil)
 
 	create, err := os.Create("out.png")
 	if err != nil {
