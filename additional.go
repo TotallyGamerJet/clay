@@ -62,6 +62,30 @@ func SizingFixed(sz float32) SizingAxis {
 	}
 }
 
+func SizingFit(min, max float32) SizingAxis {
+	return SizingAxis{
+		Size: struct {
+			MinMax  SizingMinMax
+			Percent float32
+		}{
+			MinMax: SizingMinMax{min, max},
+		},
+		Type: __SIZING_TYPE_FIT,
+	}
+}
+
+func SizingPercent(percentOfParent float32) SizingAxis {
+	return SizingAxis{
+		Size: struct {
+			MinMax  SizingMinMax
+			Percent float32
+		}{
+			Percent: percentOfParent,
+		},
+		Type: __SIZING_TYPE_PERCENT,
+	}
+}
+
 func CornerRadiusAll(radius float32) CornerRadius {
 	return CornerRadius{
 		radius,
