@@ -99,7 +99,104 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 			opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
 			screen.DrawImage(img, opts)
 		case clay.RENDER_COMMAND_TYPE_BORDER:
-			panic("not implemented")
+			config := &renderCommand.RenderData.Border
+			config.Width.Top = uint16(float32(config.Width.Top) * scaleFactor)
+			config.Width.Bottom = uint16(float32(config.Width.Bottom) * scaleFactor)
+			config.Width.Left = uint16(float32(config.Width.Left) * scaleFactor)
+			config.Width.Right = uint16(float32(config.Width.Right) * scaleFactor)
+
+			config.CornerRadius.TopLeft *= scaleFactor
+			config.CornerRadius.BottomLeft *= scaleFactor
+			config.CornerRadius.TopRight *= scaleFactor
+			config.CornerRadius.BottomRight *= scaleFactor
+			if boundingBox.Width > 0 && boundingBox.Height > 0 {
+				maxRadius := min(boundingBox.Width, boundingBox.Height) / 2.0
+
+				if config.Width.Left > 0 {
+					clampedRadiusTop := min(config.CornerRadius.TopLeft, maxRadius)
+					clampedRadiusBottom := min(config.CornerRadius.BottomLeft, maxRadius)
+					vector.DrawFilledRect(
+						screen,
+						boundingBox.X,
+						boundingBox.Y+clampedRadiusTop,
+						float32(config.Width.Left), boundingBox.Height-clampedRadiusTop-clampedRadiusBottom,
+						color.RGBA{
+							R: uint8(config.Color.R),
+							G: uint8(config.Color.G),
+							B: uint8(config.Color.B),
+							A: uint8(config.Color.A),
+						}, true,
+					)
+				}
+
+				if config.Width.Right > 0 {
+					clampedRadiusTop := min(config.CornerRadius.TopRight, maxRadius)
+					clampedRadiusBottom := min(config.CornerRadius.BottomRight, maxRadius)
+					vector.DrawFilledRect(
+						screen,
+						boundingBox.X+boundingBox.Width-float32(config.Width.Right),
+						boundingBox.Y+clampedRadiusTop,
+						float32(config.Width.Right),
+						boundingBox.Height-clampedRadiusTop-clampedRadiusBottom,
+						color.RGBA{
+							R: uint8(config.Color.R),
+							G: uint8(config.Color.G),
+							B: uint8(config.Color.B),
+							A: uint8(config.Color.A),
+						}, true,
+					)
+				}
+
+				if config.Width.Top > 0 {
+					clampedRadiusLeft := min(config.CornerRadius.TopLeft, maxRadius)
+					clampedRadiusRight := min(config.CornerRadius.TopRight, maxRadius)
+					vector.DrawFilledRect(
+						screen,
+						boundingBox.X+clampedRadiusLeft,
+						boundingBox.Y,
+						boundingBox.Width-clampedRadiusLeft-clampedRadiusRight,
+						float32(config.Width.Top),
+						color.RGBA{
+							R: uint8(config.Color.R),
+							G: uint8(config.Color.G),
+							B: uint8(config.Color.B),
+							A: uint8(config.Color.A),
+						}, true,
+					)
+				}
+
+				if config.Width.Bottom > 0 {
+					clampedRadiusLeft := min(config.CornerRadius.BottomLeft, maxRadius)
+					clampedRadiusRight := min(config.CornerRadius.BottomRight, maxRadius)
+					vector.DrawFilledRect(
+						screen,
+						boundingBox.X+clampedRadiusLeft,
+						boundingBox.Y+boundingBox.Height-float32(config.Width.Bottom),
+						boundingBox.Width-clampedRadiusLeft-clampedRadiusRight,
+						float32(config.Width.Bottom),
+						color.RGBA{
+							R: uint8(config.Color.R),
+							G: uint8(config.Color.G),
+							B: uint8(config.Color.B),
+							A: uint8(config.Color.A),
+						}, true,
+					)
+				}
+
+				// corner index: 0->3 topLeft -> CW -> bottonLeft
+				if config.Width.Top > 0 && config.CornerRadius.TopLeft > 0 {
+					renderCornerBorder(screen, &boundingBox, config, 0, config.Color)
+				}
+				if config.Width.Top > 0 && config.CornerRadius.TopRight > 0 {
+					renderCornerBorder(screen, &boundingBox, config, 1, config.Color)
+				}
+				if config.Width.Bottom > 0 && config.CornerRadius.BottomLeft > 0 {
+					renderCornerBorder(screen, &boundingBox, config, 2, config.Color)
+				}
+				if config.Width.Bottom > 0 && config.CornerRadius.BottomLeft > 0 {
+					renderCornerBorder(screen, &boundingBox, config, 3, config.Color)
+				}
+			}
 		case clay.RENDER_COMMAND_TYPE_NONE:
 		case clay.RENDER_COMMAND_TYPE_CUSTOM:
 		default:
@@ -416,4 +513,192 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 	})
 
 	return nil
+}
+
+// all rendering is performed by a single ebitengine call, using two sets of arcing triangles, inner and outer, that fit together; along with two triangles to fill the end gaps.
+func renderCornerBorder(screen *ebiten.Image, boundingBox *clay.BoundingBox, config *clay.BorderRenderData, cornerIndex int, _color clay.Color) {
+	/////////////////////////////////
+	//The arc is constructed of outer triangles and inner triangles (if needed).
+	//First three vertices are first outer triangle's vertices
+	//Each two vertices after that are the inner-middle and second-outer vertex of
+	//each outer triangle after the first, because there first-outer vertex is equal to the
+	//second-outer vertex of the previous triangle. Indices set accordingly.
+	//The final two vertices are the missing vertices for the first and last inner triangles (if needed)
+	//Everything is in clockwise order (CW).
+	/////////////////////////////////
+
+	r := _color.R / 255
+	g := _color.G / 255
+	b := _color.B / 255
+	a := _color.A / 255
+
+	var centerX, centerY, outerRadius, startAngle, borderWidth float32
+	maxRadius := min(boundingBox.Width, boundingBox.Height) / 2.0
+
+	var vertices [512]ebiten.Vertex
+	var indices [512]uint16
+	indexCount, vertexCount := uint16(0), uint16(0)
+
+	switch cornerIndex {
+	case 0:
+		startAngle = math.Pi
+		outerRadius = min(config.CornerRadius.TopLeft, maxRadius)
+		centerX = boundingBox.X + outerRadius
+		centerY = boundingBox.Y + outerRadius
+		borderWidth = float32(config.Width.Top)
+	case 1:
+		startAngle = 3 * math.Pi / 2
+		outerRadius = min(config.CornerRadius.TopRight, maxRadius)
+		centerX = boundingBox.X + boundingBox.Width - outerRadius
+		centerY = boundingBox.Y + outerRadius
+		borderWidth = float32(config.Width.Top)
+	case 2:
+		startAngle = 0
+		outerRadius = min(config.CornerRadius.BottomRight, maxRadius)
+		centerX = boundingBox.X + boundingBox.Width - outerRadius
+		centerY = boundingBox.Y + boundingBox.Height - outerRadius
+		borderWidth = float32(config.Width.Bottom)
+	case 3:
+		startAngle = math.Pi / 2
+		outerRadius = min(config.CornerRadius.BottomLeft, maxRadius)
+		centerX = boundingBox.X + outerRadius
+		centerY = boundingBox.Y + boundingBox.Height - outerRadius
+		borderWidth = float32(config.Width.Bottom)
+	default:
+		panic("invalid corner index")
+	}
+
+	innerRadius := outerRadius - borderWidth
+	minNumOuterTriangles := numCircleSegments
+	numOuterTriangles := max(minNumOuterTriangles, int(math.Ceil(float64(outerRadius*0.5))))
+	angleStep := math.Pi / (2.0 * float32(numOuterTriangles))
+
+	// outer triangles, in CW order
+	for i := 0; i < numOuterTriangles; i++ {
+		angle1 := startAngle + float32(i)*angleStep       // first-outer vertex angle
+		angle2 := startAngle + (float32(i)+0.5)*angleStep // inner-middle vertex angle
+		angle3 := startAngle + float32(i+1)*angleStep     // second-outer vertex angle
+
+		if i == 0 { // first outer triangle
+			vertices[vertexCount] = ebiten.Vertex{
+				DstX:   centerX + float32(math.Cos(float64(angle1)))*outerRadius,
+				DstY:   centerY + float32(math.Sin(float64(angle1)))*outerRadius,
+				SrcX:   0,
+				SrcY:   0,
+				ColorR: r,
+				ColorG: g,
+				ColorB: b,
+				ColorA: a,
+			} // vertex index = 0
+			vertexCount++
+		}
+		indices[indexCount] = vertexCount - 1 // will be second-outer vertex of last outer triangle if not first outer triangle.
+		indexCount++
+		if innerRadius > 0 {
+			vertices[vertexCount] = ebiten.Vertex{
+				DstX:   centerX + float32(math.Cos(float64(angle2)))*(innerRadius),
+				DstY:   centerY + float32(math.Sin(float64(angle2)))*(innerRadius),
+				SrcX:   0,
+				SrcY:   0,
+				ColorR: r,
+				ColorG: g,
+				ColorB: b,
+				ColorA: a,
+			}
+			vertexCount++
+		} else {
+			vertices[vertexCount] = ebiten.Vertex{
+				DstX:   centerX,
+				DstY:   centerY,
+				SrcX:   0,
+				SrcY:   0,
+				ColorR: r,
+				ColorG: g,
+				ColorB: b,
+				ColorA: a,
+			}
+			vertexCount++
+		}
+
+		indices[indexCount] = vertexCount - 1
+		indexCount++
+		vertices[vertexCount] = ebiten.Vertex{
+			DstX:   centerX + float32(math.Cos(float64(angle3)))*outerRadius,
+			DstY:   centerY + float32(math.Sin(float64(angle3)))*outerRadius,
+			SrcX:   0,
+			SrcY:   0,
+			ColorR: r,
+			ColorG: g,
+			ColorB: b,
+			ColorA: a}
+		vertexCount++
+		indices[indexCount] = vertexCount - 1
+		indexCount++
+	}
+
+	if innerRadius > 0 {
+		// inner triangles in CW order (except the first and last)
+		for i := 0; i < numOuterTriangles-1; i++ { // skip the last outer triangle
+			if i == 0 { // first outer triangle -> second inner triangle
+				indices[indexCount] = 1 // inner-middle vertex of first outer triangle
+				indexCount++
+				indices[indexCount] = 2 // second-outer vertex of first outer triangle
+				indexCount++
+				indices[indexCount] = 3 // innder-middle vertex of second-outer triangle
+				indexCount++
+			} else {
+				baseIndex := 3                                    // skip first outer triangle
+				indices[indexCount] = uint16(baseIndex + (i-1)*2) // inner-middle vertex of current outer triangle
+				indexCount++
+				indices[indexCount] = uint16(baseIndex + (i-1)*2 + 1) // second-outer vertex of current outer triangle
+				indexCount++
+				indices[indexCount] = uint16(baseIndex + (i-1)*2 + 2) // inner-middle vertex of next outer triangle
+				indexCount++
+			}
+		}
+
+		endAngle := startAngle + math.Pi/2.0
+
+		// last inner triangle
+		indices[indexCount] = vertexCount - 2 // inner-middle vertex of last outer triangle
+		indexCount++
+		indices[indexCount] = vertexCount - 1 // second-outer vertex of last outer triangle
+		indexCount++
+		vertices[vertexCount] = ebiten.Vertex{
+			DstX:   centerX + float32(math.Cos(float64(endAngle)))*innerRadius,
+			DstY:   centerY + float32(math.Sin(float64(endAngle)))*innerRadius,
+			SrcX:   0,
+			SrcY:   0,
+			ColorR: r,
+			ColorG: g,
+			ColorB: b,
+			ColorA: a,
+		} // missing vertex
+		vertexCount++
+		indices[indexCount] = vertexCount - 1
+		indexCount++
+
+		// //first inner triangle
+		indices[indexCount] = 0 // first-outer vertex of first outer triangle
+		indexCount++
+		indices[indexCount] = 1 // inner-middle vertex of first outer triangle
+		indexCount++
+		vertices[vertexCount] = ebiten.Vertex{
+			DstX:   centerX + float32(math.Cos(float64(startAngle)))*innerRadius,
+			DstY:   centerY + float32(math.Sin(float64(startAngle)))*innerRadius,
+			SrcX:   0,
+			SrcY:   0,
+			ColorR: r,
+			ColorG: g,
+			ColorB: b,
+			ColorA: a,
+		} // missing vertex
+		vertexCount++
+		indices[indexCount] = vertexCount - 1
+		indexCount++
+	}
+
+	screen.DrawTriangles(vertices[:vertexCount], indices[:indexCount], whiteImage, &ebiten.DrawTrianglesOptions{
+		AntiAlias: true,
+	})
 }

@@ -103,15 +103,15 @@ func RenderHeaderButton(text string) {
 		Layout: clay.LayoutConfig{
 			Padding: clay.Padding{Left: 16, Right: 16, Top: 8, Bottom: 8},
 		},
-		//Border: func() clay.BorderElementConfig {
-		//	if !clay.Hovered() {
-		//		return clay.BorderElementConfig{}
-		//	}
-		//	return clay.BorderElementConfig{
-		//		Color: clay.Color{R: 81, G: 162, B: 255, A: 255},
-		//		Width: clay.BorderAll(4),
-		//	}
-		//}(),
+		Border: func() clay.BorderElementConfig {
+			if !clay.Hovered() {
+				return clay.BorderElementConfig{}
+			}
+			return clay.BorderElementConfig{
+				Color: clay.Color{R: 81, G: 162, B: 255, A: 255},
+				Width: clay.BorderAll(4),
+			}
+		}(),
 		BackgroundColor: clay.Color{R: 140, G: 140, B: 140, A: 255},
 		CornerRadius:    clay.CornerRadiusAll(5),
 	}, func() {
