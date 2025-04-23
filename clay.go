@@ -47,8 +47,8 @@ type Context struct {
 	debugSelectedElementId             uint32
 	generation                         uint32
 	arenaResetOffset                   uint64
-	measureTextUserData                unsafe.Pointer
-	queryScrollOffsetUserData          unsafe.Pointer
+	measureTextUserData                any
+	queryScrollOffsetUserData          any
 	internalArena                      Arena
 	layoutElements                     LayoutElementArray
 	renderCommands                     RenderCommandArray
@@ -211,7 +211,7 @@ const (
 )
 
 type TextElementConfig struct {
-	UserData      unsafe.Pointer
+	UserData      any
 	TextColor     Color
 	FontId        uint16
 	FontSize      uint16
@@ -224,7 +224,7 @@ type __TextElementConfigWrapper struct {
 	Wrapped TextElementConfig
 }
 type ImageElementConfig struct {
-	ImageData        unsafe.Pointer
+	ImageData        any
 	SourceDimensions Dimensions
 }
 type __ImageElementConfigWrapper struct {
@@ -277,7 +277,7 @@ type __FloatingElementConfigWrapper struct {
 	Wrapped FloatingElementConfig
 }
 type CustomElementConfig struct {
-	CustomData unsafe.Pointer
+	CustomData any
 }
 type __CustomElementConfigWrapper struct {
 	Wrapped CustomElementConfig
@@ -319,12 +319,12 @@ type ImageRenderData struct {
 	BackgroundColor  Color
 	CornerRadius     CornerRadius
 	SourceDimensions Dimensions
-	ImageData        unsafe.Pointer
+	ImageData        any
 }
 type CustomRenderData struct {
 	BackgroundColor Color
 	CornerRadius    CornerRadius
-	CustomData      unsafe.Pointer
+	CustomData      any
 }
 type ScrollRenderData struct {
 	Horizontal bool
@@ -371,7 +371,7 @@ const (
 type RenderCommand struct {
 	BoundingBox BoundingBox
 	RenderData  RenderData
-	UserData    unsafe.Pointer
+	UserData    any
 	Id          uint32
 	ZIndex      int16
 	CommandType RenderCommandType
@@ -404,7 +404,7 @@ type ElementDeclaration struct {
 	Custom          CustomElementConfig
 	Scroll          ScrollElementConfig
 	Border          BorderElementConfig
-	UserData        unsafe.Pointer
+	UserData        any
 }
 type __ElementDeclarationWrapper struct {
 	Wrapped ElementDeclaration
@@ -425,11 +425,11 @@ const (
 type ErrorData struct {
 	ErrorType ErrorType
 	ErrorText String
-	UserData  unsafe.Pointer
+	UserData  any
 }
 type ErrorHandler struct {
 	ErrorHandlerFunction func(errorText ErrorData)
-	UserData             unsafe.Pointer
+	UserData             any
 }
 
 var (
@@ -472,7 +472,7 @@ type __WarningArray struct {
 type SharedElementConfig struct {
 	BackgroundColor Color
 	CornerRadius    CornerRadius
-	UserData        unsafe.Pointer
+	UserData        any
 }
 type __SharedElementConfigWrapper struct {
 	Wrapped SharedElementConfig
@@ -1968,7 +1968,7 @@ type LayoutElementHashMapItem struct {
 	ElementId             ElementId
 	LayoutElement         *LayoutElement
 	OnHoverFunction       func(elementId ElementId, pointerInfo PointerData, userData int64)
-	HoverFunctionUserData int64
+	HoverFunctionUserData any
 	NextIndex             int32
 	Generation            uint32
 	IdAlias               uint32
@@ -2618,7 +2618,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 	var lineWidth float32 = 0
 	var measuredWidth float32 = 0
 	var measuredHeight float32 = 0
-	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.measureTextUserData).Width
+	var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, config, context.measureTextUserData.(unsafe.Pointer)).Width
 	var tempWord __MeasuredWord = __MeasuredWord{Next: -1}
 	var previousWord *__MeasuredWord = &tempWord
 	for end < text.Length {
@@ -2633,7 +2633,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		if int32(current) == ' ' || int32(current) == '\n' {
 			var (
 				length     int32      = end - start
-				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData)
+				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData.(unsafe.Pointer))
 			)
 			if dimensions.Width > measured.MinWidth {
 				measured.MinWidth = dimensions.Width
@@ -2669,7 +2669,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		end++
 	}
 	if end-start > 0 {
-		var dimensions Dimensions = __MeasureText(StringSlice{Length: end - start, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData)
+		var dimensions Dimensions = __MeasureText(StringSlice{Length: end - start, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData.(unsafe.Pointer))
 		__AddMeasuredWord(__MeasuredWord{StartOffset: start, Length: end - start, Width: dimensions.Width, Next: -1}, previousWord)
 		lineWidth += dimensions.Width
 		if measuredHeight > dimensions.Height {
@@ -3136,7 +3136,7 @@ func __ConfigureOpenElementPtr(declaration *ElementDeclaration) {
 			scrollOffset = __ScrollContainerDataInternalArray_Add(&context.scrollContainerDatas, __ScrollContainerDataInternal{LayoutElement: openLayoutElement, ScrollOrigin: Vector2{X: -1, Y: -1}, ElementId: openLayoutElement.Id, OpenThisFrame: true})
 		}
 		if context.externalScrollHandlingEnabled {
-			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.queryScrollOffsetUserData)
+			scrollOffset.ScrollPosition = __QueryScrollOffset(scrollOffset.ElementId, context.queryScrollOffsetUserData.(unsafe.Pointer))
 		}
 	}
 	if !__MemCmp((*byte)(unsafe.Pointer(&declaration.Border.Width)), (*byte)(unsafe.Pointer(&__BorderWidth_DEFAULT)), int32(uint32(unsafe.Sizeof(BorderWidth{})))) {
@@ -3674,7 +3674,7 @@ func __CalculateFinalLayout() {
 			textElementData.WrappedLines.Length++
 			continue
 		}
-		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.measureTextUserData).Width
+		var spaceWidth float32 = __MeasureText(StringSlice{Length: 1, Chars: __SPACECHAR.Chars, BaseChars: __SPACECHAR.Chars}, textConfig, context.measureTextUserData.(unsafe.Pointer)).Width
 		_ = spaceWidth
 		var wordIndex int32 = measureTextCacheItem.MeasuredWordsStartIndex
 		for wordIndex != -1 {
@@ -3942,7 +3942,7 @@ func __CalculateFinalLayout() {
 						}
 					}
 				}
-				__AddRenderCommand(RenderCommand{BoundingBox: clipHashMapItem.BoundingBox, UserData: nil, Id: __HashNumber(rootElement.Id, uint32(int32(rootElement.ChildrenOrTextContent.Children.Length)+10)).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_SCISSOR_START})
+				__AddRenderCommand(RenderCommand{BoundingBox: clipHashMapItem.BoundingBox, UserData: 0, Id: __HashNumber(rootElement.Id, uint32(int32(rootElement.ChildrenOrTextContent.Children.Length)+10)).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_SCISSOR_START})
 			}
 		}
 		__LayoutElementTreeNodeArray_Add(&dfsBuffer, __LayoutElementTreeNode{LayoutElement: rootElement, Position: rootPosition, NextChildOffset: Vector2{X: float32(rootElement.LayoutConfig.Padding.Left), Y: float32(rootElement.LayoutConfig.Padding.Top)}})
@@ -4351,13 +4351,13 @@ func createArenaWithCapacityAndMemory(capacity uint64, memory unsafe.Pointer) Ar
 	return arena
 }
 
-func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData unsafe.Pointer) {
+func SetMeasureTextFunction(measureTextFunction func(text StringSlice, config *TextElementConfig, userData unsafe.Pointer) Dimensions, userData any) {
 	var context *Context = GetCurrentContext()
 	__MeasureText = measureTextFunction
 	context.measureTextUserData = userData
 }
 
-func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData unsafe.Pointer) {
+func SetQueryScrollOffsetFunction(queryScrollOffsetFunction func(elementId uint32, userData unsafe.Pointer) Vector2, userData any) {
 	var context *Context = GetCurrentContext()
 	__QueryScrollOffset = queryScrollOffsetFunction
 	context.queryScrollOffsetUserData = userData
@@ -4397,7 +4397,7 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 				elementBox.Y -= root.PointerOffset.Y
 				if __PointIsInsideRect(position, elementBox) && (clipElementId == 0 || __PointIsInsideRect(position, clipItem.BoundingBox)) {
 					if mapItem.OnHoverFunction != nil {
-						mapItem.OnHoverFunction(mapItem.ElementId, context.pointerInfo, mapItem.HoverFunctionUserData)
+						mapItem.OnHoverFunction(mapItem.ElementId, context.pointerInfo, mapItem.HoverFunctionUserData.(int64))
 					}
 					__ElementIdArray_Add(&context.pointerOverIds, mapItem.ElementId)
 					found = true
@@ -4457,7 +4457,7 @@ func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHand
 		if errorHandler.ErrorHandlerFunction != nil {
 			return errorHandler
 		}
-		return ErrorHandler{ErrorHandlerFunction: __ErrorHandlerFunctionDefault, UserData: nil}
+		return ErrorHandler{ErrorHandlerFunction: __ErrorHandlerFunctionDefault, UserData: 0}
 	}(), layoutDimensions: layoutDimensions, internalArena: arena}
 	SetCurrentContext(context)
 	__InitializePersistentMemory(context)
@@ -4767,7 +4767,7 @@ func Hovered() bool {
 	return false
 }
 
-func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, userData int64), userData int64) {
+func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, userData int64), userData any) {
 	var context *Context = GetCurrentContext()
 	if context.booleanWarnings.MaxElementsExceeded {
 		return

@@ -95,7 +95,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 			}
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
-			texture, err := renderer.CreateTextureFromSurface((*sdl.Surface)(config.ImageData))
+			texture, err := renderer.CreateTextureFromSurface((*sdl.Surface)(config.ImageData.(unsafe.Pointer)))
 			if err != nil {
 				return err
 			}

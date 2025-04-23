@@ -92,7 +92,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 			screen = fullScreen
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
-			img := (*ebiten.Image)(config.ImageData)
+			img := (*ebiten.Image)(config.ImageData.(unsafe.Pointer))
 			opts := &ebiten.DrawImageOptions{}
 			bounds := img.Bounds()
 			opts.GeoM.Scale(float64(boundingBox.Width/float32(bounds.Dx())), float64(boundingBox.Height/float32(bounds.Dy())))
@@ -630,7 +630,8 @@ func renderCornerBorder(screen *ebiten.Image, boundingBox *clay.BoundingBox, con
 			ColorR: r,
 			ColorG: g,
 			ColorB: b,
-			ColorA: a}
+			ColorA: a,
+		}
 		vertexCount++
 		indices[indexCount] = vertexCount - 1
 		indexCount++
