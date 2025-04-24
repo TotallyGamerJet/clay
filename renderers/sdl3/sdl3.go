@@ -447,7 +447,7 @@ func renderCornerBorder(renderer *sdl.Renderer, boundingBox *clay.BoundingBox, c
 
 		indices[indexCount] = vertexCount - 1
 		indexCount++
-		vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{centerX + float32(math.Cos(float64(angle3)))*outerRadius, centerY + float32(math.Sin(float64(angle3)))*outerRadius}, Color: color}
+		vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: centerX + float32(math.Cos(float64(angle3)))*outerRadius, Y: centerY + float32(math.Sin(float64(angle3)))*outerRadius}, Color: color}
 		vertexCount++
 		indices[indexCount] = vertexCount - 1
 		indexCount++
@@ -481,7 +481,7 @@ func renderCornerBorder(renderer *sdl.Renderer, boundingBox *clay.BoundingBox, c
 		indexCount++
 		indices[indexCount] = vertexCount - 1 // second-outer vertex of last outer triangle
 		indexCount++
-		vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{centerX + float32(math.Cos(float64(endAngle)))*innerRadius, centerY + float32(math.Sin(float64(endAngle)))*innerRadius}, Color: color} // missing vertex
+		vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: centerX + float32(math.Cos(float64(endAngle)))*innerRadius, Y: centerY + float32(math.Sin(float64(endAngle)))*innerRadius}, Color: color} // missing vertex
 		vertexCount++
 		indices[indexCount] = vertexCount - 1
 		indexCount++
@@ -491,7 +491,7 @@ func renderCornerBorder(renderer *sdl.Renderer, boundingBox *clay.BoundingBox, c
 		indexCount++
 		indices[indexCount] = 1 // inner-middle vertex of first outer triangle
 		indexCount++
-		vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{centerX + float32(math.Cos(float64(startAngle)))*innerRadius, centerY + float32(math.Sin(float64(startAngle)))*innerRadius}, Color: color} // missing vertex
+		vertices[vertexCount] = sdl.Vertex{Position: sdl.FPoint{X: centerX + float32(math.Cos(float64(startAngle)))*innerRadius, Y: centerY + float32(math.Sin(float64(startAngle)))*innerRadius}, Color: color} // missing vertex
 		vertexCount++
 		indices[indexCount] = vertexCount - 1
 		indexCount++
