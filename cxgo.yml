@@ -308,3 +308,5 @@ files:
           highestPriorityScrollData.ScrollPosition.Y = highestPriorityScrollData.ScrollPosition.Y
 
         new: /* (021) */
+      - old: measured.MinWidth = measured.MinWidth
+        new: /* (022) */

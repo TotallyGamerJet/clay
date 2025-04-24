@@ -2638,7 +2638,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 			if dimensions.Width > measured.MinWidth {
 				measured.MinWidth = dimensions.Width
 			} else {
-				measured.MinWidth = measured.MinWidth
+				/* (022) */
 			}
 			if measuredHeight > dimensions.Height {
 				/* (002) */
@@ -2680,7 +2680,7 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		if dimensions.Width > measured.MinWidth {
 			measured.MinWidth = dimensions.Width
 		} else {
-			measured.MinWidth = measured.MinWidth
+			/* (022) */
 		}
 	}
 	if lineWidth > measuredWidth {
@@ -2722,6 +2722,8 @@ func __AddHashMapItem(elementId ElementId, layoutElement *LayoutElement, idAlias
 				hashItem.Generation = context.generation + 1
 				hashItem.LayoutElement = layoutElement
 				hashItem.DebugData.Collision = false
+				hashItem.OnHoverFunction = nil
+				hashItem.HoverFunctionUserData = 0
 			} else {
 				context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_DUPLICATE_ID, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("An element with this ID was already previously declared during this layout.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("An element with this ID was already previously declared during this layout.")}, UserData: context.errorHandler.UserData})
 				if context.debugModeEnabled {
@@ -3040,7 +3042,7 @@ func __AttachId(elementId ElementId) ElementId {
 	var idAlias uint32 = openLayoutElement.Id
 	openLayoutElement.Id = elementId.Id
 	__AddHashMapItem(elementId, openLayoutElement, idAlias)
-	__StringArray_Add(&context.layoutElementIdStrings, elementId.StringId)
+	__StringArray_Set(&context.layoutElementIdStrings, context.layoutElements.Length-1, elementId.StringId)
 	return elementId
 }
 
@@ -4796,7 +4798,11 @@ func GetScrollContainerData(id ElementId) ScrollContainerData {
 	for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
 		var scrollContainerData *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 		if scrollContainerData.ElementId == id.Id {
-			return ScrollContainerData{ScrollPosition: &scrollContainerData.ScrollPosition, ScrollContainerDimensions: Dimensions{Width: scrollContainerData.BoundingBox.Width, Height: scrollContainerData.BoundingBox.Height}, ContentDimensions: scrollContainerData.ContentSize, Config: *__FindElementConfigWithType(scrollContainerData.LayoutElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig, Found: true}
+			var scrollElementConfig *ScrollElementConfig = __FindElementConfigWithType(scrollContainerData.LayoutElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+			if scrollElementConfig == nil {
+				return ScrollContainerData{}
+			}
+			return ScrollContainerData{ScrollPosition: &scrollContainerData.ScrollPosition, ScrollContainerDimensions: Dimensions{Width: scrollContainerData.BoundingBox.Width, Height: scrollContainerData.BoundingBox.Height}, ContentDimensions: scrollContainerData.ContentSize, Config: *scrollElementConfig, Found: true}
 		}
 	}
 	return ScrollContainerData{}

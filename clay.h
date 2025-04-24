@@ -1373,7 +1373,7 @@ uint64_t Clay__HashData(const uint8_t* data, size_t length) {
             length -= 16;
         }
         else {
-            for (int i = 0; i < length; i++) {
+            for (size_t i = 0; i < length; i++) {
                 overflowBuffer[i] = data[i];
             }
             msg = _mm_loadu_si128((const __m128i*)overflowBuffer);
@@ -1392,6 +1392,7 @@ uint64_t Clay__HashData(const uint8_t* data, size_t length) {
     Clay__SIMDARXMix(&v2, &v3);
     v0 = _mm_add_epi64(v0, v2);
     v1 = _mm_add_epi64(v1, v3);
+    v0 = _mm_add_epi64(v0, v1);
 
     uint64_t result[2];
     _mm_storeu_si128((__m128i*)result, v0);
@@ -1399,13 +1400,9 @@ uint64_t Clay__HashData(const uint8_t* data, size_t length) {
     return result[0] ^ result[1];
 }
 #elif !defined(CLAY_DISABLE_SIMD) && defined(__aarch64__)
-static inline uint64x2_t Clay__SIMDRotateLeft(uint64x2_t x, int r) {
-    return vorrq_u64(vshlq_n_u64(x, 17), vshrq_n_u64(x, 64 - 17));
-}
-
 static inline void Clay__SIMDARXMix(uint64x2_t* a, uint64x2_t* b) {
     *a = vaddq_u64(*a, *b);
-    *b = veorq_u64(Clay__SIMDRotateLeft(*b, 17), *a);
+    *b = veorq_u64(vorrq_u64(vshlq_n_u64(*b, 17), vshrq_n_u64(*b, 64 - 17)), *a);
 }
 
 uint64_t Clay__HashData(const uint8_t* data, size_t length) {
@@ -1430,11 +1427,11 @@ uint64_t Clay__HashData(const uint8_t* data, size_t length) {
             length -= 8;
         }
         else {
-            for (int i = 0; i < length; i++) {
+            for (size_t i = 0; i < length; i++) {
                 overflowBuffer[i] = data[i];
             }
             uint8x8_t lower = vld1_u8(overflowBuffer);
-            msg = vcombine_u8(lower, vdup_n_u8(0));
+            msg = vreinterpretq_u64_u8(vcombine_u8(lower, vdup_n_u8(0)));
             length = 0;
         }
         v0 = veorq_u64(v0, msg);
@@ -1449,6 +1446,7 @@ uint64_t Clay__HashData(const uint8_t* data, size_t length) {
     Clay__SIMDARXMix(&v2, &v3);
     v0 = vaddq_u64(v0, v2);
     v1 = vaddq_u64(v1, v3);
+    v0 = vaddq_u64(v0, v1);
 
     uint64_t result[2];
     vst1q_u64(result, v0);
@@ -1674,6 +1672,8 @@ Clay_LayoutElementHashMapItem* Clay__AddHashMapItem(Clay_ElementId elementId, Cl
                 hashItem->generation = context->generation + 1;
                 hashItem->layoutElement = layoutElement;
                 hashItem->debugData->collision = false;
+                hashItem->onHoverFunction = NULL;
+                hashItem->hoverFunctionUserData = 0;
             } else { // Multiple collisions this frame - two elements have the same ID
                 context->errorHandler.errorHandlerFunction(CLAY__INIT(Clay_ErrorData) {
                     .errorType = CLAY_ERROR_TYPE_DUPLICATE_ID,
@@ -1981,7 +1981,7 @@ Clay_ElementId Clay__AttachId(Clay_ElementId elementId) {
     uint32_t idAlias = openLayoutElement->id;
     openLayoutElement->id = elementId.id;
     Clay__AddHashMapItem(elementId, openLayoutElement, idAlias);
-    Clay__StringArray_Add(&context->layoutElementIdStrings, elementId.stringId);
+    Clay__StringArray_Set(&context->layoutElementIdStrings, context->layoutElements.length - 1, elementId.stringId);
     return elementId;
 }
 
@@ -3512,11 +3512,15 @@ Clay_ScrollContainerData Clay_GetScrollContainerData(Clay_ElementId id) {
     for (int32_t i = 0; i < context->scrollContainerDatas.length; ++i) {
         Clay__ScrollContainerDataInternal *scrollContainerData = Clay__ScrollContainerDataInternalArray_Get(&context->scrollContainerDatas, i);
         if (scrollContainerData->elementId == id.id) {
+            Clay_ScrollElementConfig *scrollElementConfig = Clay__FindElementConfigWithType(scrollContainerData->layoutElement, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).scrollElementConfig;
+            if (!scrollElementConfig) { // This can happen on the first frame before a scroll container is declared
+                return CLAY__INIT(Clay_ScrollContainerData) CLAY__DEFAULT_STRUCT;
+            }
             return CLAY__INIT(Clay_ScrollContainerData) {
                 .scrollPosition = &scrollContainerData->scrollPosition,
                 .scrollContainerDimensions = { scrollContainerData->boundingBox.width, scrollContainerData->boundingBox.height },
                 .contentDimensions = scrollContainerData->contentSize,
-                .config = *Clay__FindElementConfigWithType(scrollContainerData->layoutElement, CLAY__ELEMENT_CONFIG_TYPE_SCROLL).scrollElementConfig,
+                .config = *scrollElementConfig,
                 .found = true
             };
         }
