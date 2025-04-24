@@ -95,7 +95,7 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 			screen = fullScreen
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
-			img := (*image.Image)(config.ImageData)
+			img := (*image.Image)(config.ImageData.(unsafe.Pointer))
 			if img == nil {
 				continue
 			}
