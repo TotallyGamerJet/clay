@@ -295,7 +295,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 			clay.UI()(clay.ElementDeclaration{
 				Id:              clay.ID("MainContent"),
 				BackgroundColor: contentBackgroundColor,
-				Scroll:          clay.ScrollElementConfig{Vertical: true},
+				Clip:            clay.ClipElementConfig{Vertical: true, ChildOffset: clay.GetScrollOffset()},
 				Layout: clay.LayoutConfig{
 					LayoutDirection: clay.TOP_TO_BOTTOM,
 					ChildGap:        16,

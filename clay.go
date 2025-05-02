@@ -64,7 +64,7 @@ type Context struct {
 	textElementConfigs                 __TextElementConfigArray
 	imageElementConfigs                __ImageElementConfigArray
 	floatingElementConfigs             __FloatingElementConfigArray
-	scrollElementConfigs               __ScrollElementConfigArray
+	ClipElementConfigs                 __ClipElementConfigArray
 	customElementConfigs               __CustomElementConfigArray
 	borderElementConfigs               __BorderElementConfigArray
 	sharedElementConfigs               __SharedElementConfigArray
@@ -282,12 +282,13 @@ type CustomElementConfig struct {
 type __CustomElementConfigWrapper struct {
 	Wrapped CustomElementConfig
 }
-type ScrollElementConfig struct {
-	Horizontal bool
-	Vertical   bool
+type ClipElementConfig struct {
+	Horizontal  bool
+	Vertical    bool
+	ChildOffset Vector2
 }
-type __ScrollElementConfigWrapper struct {
-	Wrapped ScrollElementConfig
+type __ClipElementConfigWrapper struct {
+	Wrapped ClipElementConfig
 }
 type BorderWidth struct {
 	Left            uint16
@@ -326,7 +327,7 @@ type CustomRenderData struct {
 	CornerRadius    CornerRadius
 	CustomData      any
 }
-type ScrollRenderData struct {
+type ClipRenderData struct {
 	Horizontal bool
 	Vertical   bool
 }
@@ -342,13 +343,13 @@ type RenderData struct {
 	Image     ImageRenderData
 	Custom    CustomRenderData
 	Border    BorderRenderData
-	Scroll    ScrollRenderData
+	Clip      ClipRenderData
 }
 type ScrollContainerData struct {
 	ScrollPosition            *Vector2
 	ScrollContainerDimensions Dimensions
 	ContentDimensions         Dimensions
-	Config                    ScrollElementConfig
+	Config                    ClipElementConfig
 	Found                     bool
 }
 type ElementData struct {
@@ -402,7 +403,7 @@ type ElementDeclaration struct {
 	Image           ImageElementConfig
 	Floating        FloatingElementConfig
 	Custom          CustomElementConfig
-	Scroll          ScrollElementConfig
+	Clip            ClipElementConfig
 	Border          BorderElementConfig
 	UserData        any
 }
@@ -1116,69 +1117,69 @@ func __CustomElementConfigArray_Set(array *__CustomElementConfigArray, index int
 	}
 }
 
-type __ScrollElementConfigArray struct {
+type __ClipElementConfigArray struct {
 	Capacity      int32
 	Length        int32
-	InternalArray *ScrollElementConfig
+	InternalArray *ClipElementConfig
 }
-type __ScrollElementConfigArraySlice struct {
+type __ClipElementConfigArraySlice struct {
 	Length        int32
-	InternalArray *ScrollElementConfig
+	InternalArray *ClipElementConfig
 }
 
-var ScrollElementConfig_DEFAULT ScrollElementConfig = ScrollElementConfig{Horizontal: false}
+var ClipElementConfig_DEFAULT ClipElementConfig = ClipElementConfig{Horizontal: false}
 
-func __ScrollElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __ScrollElementConfigArray {
-	return __ScrollElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*ScrollElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ScrollElementConfig{})), arena))}
+func __ClipElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __ClipElementConfigArray {
+	return __ClipElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*ClipElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ClipElementConfig{})), arena))}
 }
 
-func __ScrollElementConfigArray_Get(array *__ScrollElementConfigArray, index int32) *ScrollElementConfig {
+func __ClipElementConfigArray_Get(array *__ClipElementConfigArray, index int32) *ClipElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
-		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
+		return (*ClipElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(index)))
 	}
-	return &ScrollElementConfig_DEFAULT
+	return &ClipElementConfig_DEFAULT
 }
 
-func __ScrollElementConfigArray_GetValue(array *__ScrollElementConfigArray, index int32) ScrollElementConfig {
+func __ClipElementConfigArray_GetValue(array *__ClipElementConfigArray, index int32) ClipElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
-		return *(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
+		return *(*ClipElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(index)))
 	}
-	return ScrollElementConfig_DEFAULT
+	return ClipElementConfig_DEFAULT
 }
 
-func __ScrollElementConfigArray_Add(array *__ScrollElementConfigArray, item ScrollElementConfig) *ScrollElementConfig {
+func __ClipElementConfigArray_Add(array *__ClipElementConfigArray, item ClipElementConfig) *ClipElementConfig {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
-		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(func() int32 {
+		*(*ClipElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(func() int32 {
 			p_ := &array.Length
 			x := *p_
 			*p_++
 			return x
 		}()))) = item
-		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(array.Length-1)))
+		return (*ClipElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(array.Length-1)))
 	}
-	return &ScrollElementConfig_DEFAULT
+	return &ClipElementConfig_DEFAULT
 }
 
-func __ScrollElementConfigArraySlice_Get(slice *__ScrollElementConfigArraySlice, index int32) *ScrollElementConfig {
+func __ClipElementConfigArraySlice_Get(slice *__ClipElementConfigArraySlice, index int32) *ClipElementConfig {
 	if __Array_RangeCheck(index, slice.Length) {
-		return (*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
+		return (*ClipElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(index)))
 	}
-	return &ScrollElementConfig_DEFAULT
+	return &ClipElementConfig_DEFAULT
 }
 
-func __ScrollElementConfigArray_RemoveSwapback(array *__ScrollElementConfigArray, index int32) ScrollElementConfig {
+func __ClipElementConfigArray_RemoveSwapback(array *__ClipElementConfigArray, index int32) ClipElementConfig {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
-		var removed ScrollElementConfig = *(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index)))
-		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index))) = *(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(array.Length)))
+		var removed ClipElementConfig = *(*ClipElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(index)))
+		*(*ClipElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(index))) = *(*ClipElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(array.Length)))
 		return removed
 	}
-	return ScrollElementConfig_DEFAULT
+	return ClipElementConfig_DEFAULT
 }
 
-func __ScrollElementConfigArray_Set(array *__ScrollElementConfigArray, index int32, value ScrollElementConfig) {
+func __ClipElementConfigArray_Set(array *__ClipElementConfigArray, index int32, value ClipElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
-		*(*ScrollElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ScrollElementConfig{})*uintptr(index))) = value
+		*(*ClipElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ClipElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
 			/* (001) */
 		} else {
@@ -1472,7 +1473,7 @@ const (
 	__ELEMENT_CONFIG_TYPE_NONE = __ElementConfigType(iota)
 	__ELEMENT_CONFIG_TYPE_BORDER
 	__ELEMENT_CONFIG_TYPE_FLOATING
-	__ELEMENT_CONFIG_TYPE_SCROLL
+	__ELEMENT_CONFIG_TYPE_CLIP
 	__ELEMENT_CONFIG_TYPE_IMAGE
 	__ELEMENT_CONFIG_TYPE_TEXT
 	__ELEMENT_CONFIG_TYPE_CUSTOM
@@ -1485,7 +1486,7 @@ type ElementConfigUnion struct {
 	ImageElementConfig    *ImageElementConfig
 	FloatingElementConfig *FloatingElementConfig
 	CustomElementConfig   *CustomElementConfig
-	ScrollElementConfig   *ScrollElementConfig
+	ClipElementConfig     *ClipElementConfig
 	BorderElementConfig   *BorderElementConfig
 	SharedElementConfig   *SharedElementConfig
 }
@@ -2427,11 +2428,11 @@ func __StoreCustomElementConfig(config CustomElementConfig) *CustomElementConfig
 	return __CustomElementConfigArray_Add(&GetCurrentContext().customElementConfigs, config)
 }
 
-func __StoreScrollElementConfig(config ScrollElementConfig) *ScrollElementConfig {
+func __StoreClipElementConfig(config ClipElementConfig) *ClipElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
-		return &ScrollElementConfig_DEFAULT
+		return &ClipElementConfig_DEFAULT
 	}
-	return __ScrollElementConfigArray_Add(&GetCurrentContext().scrollElementConfigs, config)
+	return __ClipElementConfigArray_Add(&GetCurrentContext().ClipElementConfigs, config)
 }
 
 func __StoreBorderElementConfig(config BorderElementConfig) *BorderElementConfig {
@@ -2812,9 +2813,9 @@ func __CloseElement() {
 	var elementHasScrollVertical bool = false
 	for i := int32(0); i < openLayoutElement.ElementConfigs.Length; i++ {
 		var config *ElementConfig = __ElementConfigArraySlice_Get(&openLayoutElement.ElementConfigs, i)
-		if config.Type == __ELEMENT_CONFIG_TYPE_SCROLL {
-			elementHasScrollHorizontal = config.Config.ScrollElementConfig.Horizontal
-			elementHasScrollVertical = config.Config.ScrollElementConfig.Vertical
+		if config.Type == __ELEMENT_CONFIG_TYPE_CLIP {
+			elementHasScrollHorizontal = config.Config.ClipElementConfig.Horizontal
+			elementHasScrollVertical = config.Config.ClipElementConfig.Vertical
 			context.openClipElementStack.Length--
 			break
 		} else if config.Type == __ELEMENT_CONFIG_TYPE_FLOATING {
@@ -3096,7 +3097,7 @@ func __ConfigureOpenElementPtr(declaration *ElementDeclaration) {
 				}
 			} else if declaration.Floating.AttachTo == ATTACH_TO_ELEMENT_WITH_ID {
 				var parentItem *LayoutElementHashMapItem = __GetHashMapItem(floatingConfig.ParentId)
-				if parentItem == nil {
+				if parentItem == &LayoutElementHashMapItem_DEFAULT {
 					context.errorHandler.ErrorHandlerFunction(ErrorData{ErrorType: ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND, ErrorText: String{IsStaticallyAllocated: true, Length: int32(((len("A floating element was declared with a parentId, but no element with that ID was found.") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("A floating element was declared with a parentId, but no element with that ID was found.")}, UserData: context.errorHandler.UserData})
 				} else {
 					clipElementId = uint32(__int32_tArray_GetValue(&context.layoutElementClipElementIds, int32(int64((uintptr(unsafe.Pointer(parentItem.LayoutElement))-uintptr(unsafe.Pointer(context.layoutElements.InternalArray)))/unsafe.Sizeof(LayoutElement{})))))
@@ -3122,8 +3123,8 @@ func __ConfigureOpenElementPtr(declaration *ElementDeclaration) {
 	} else if openLayoutElement.Id == 0 {
 		openLayoutElementId = __GenerateIdForAnonymousElement(openLayoutElement)
 	}
-	if declaration.Scroll.Horizontal || declaration.Scroll.Vertical {
-		__AttachElementConfig(ElementConfigUnion{ScrollElementConfig: __StoreScrollElementConfig(declaration.Scroll)}, __ELEMENT_CONFIG_TYPE_SCROLL)
+	if declaration.Clip.Horizontal || declaration.Clip.Vertical {
+		__AttachElementConfig(ElementConfigUnion{ClipElementConfig: __StoreClipElementConfig(declaration.Clip)}, __ELEMENT_CONFIG_TYPE_CLIP)
 		__int32_tArray_Add(&context.openClipElementStack, int32(openLayoutElement.Id))
 		var scrollOffset *__ScrollContainerDataInternal = (*__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(__NULL)))
 		for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
@@ -3164,7 +3165,7 @@ func __InitializeEphemeralMemory(context *Context) {
 	context.textElementConfigs = __TextElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.imageElementConfigs = __ImageElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.floatingElementConfigs = __FloatingElementConfigArray_Allocate_Arena(maxElementCount, arena)
-	context.scrollElementConfigs = __ScrollElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.ClipElementConfigs = __ClipElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.customElementConfigs = __CustomElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.borderElementConfigs = __BorderElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.sharedElementConfigs = __SharedElementConfigArray_Allocate_Arena(maxElementCount, arena)
@@ -3361,7 +3362,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 			if sizingAlongAxis {
 				var sizeToDistribute float32 = parentSize - parentPadding - innerContentSize
 				if sizeToDistribute < 0 {
-					var scrollElementConfig *ScrollElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+					var scrollElementConfig *ClipElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
 					if scrollElementConfig != nil {
 						if xAxis && scrollElementConfig.Horizontal || !xAxis && scrollElementConfig.Vertical {
 							continue
@@ -3553,9 +3554,9 @@ func __SizeContainersAlongAxis(xAxis bool) {
 						continue
 					}
 					var maxSize float32 = parentSize - parentPadding
-					if __ElementHasConfig(parent, __ELEMENT_CONFIG_TYPE_SCROLL) {
-						var scrollElementConfig *ScrollElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
-						if xAxis && scrollElementConfig.Horizontal || !xAxis && scrollElementConfig.Vertical {
+					if __ElementHasConfig(parent, __ELEMENT_CONFIG_TYPE_CLIP) {
+						var clipElementConfig *ClipElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
+						if xAxis && clipElementConfig.Horizontal || !xAxis && clipElementConfig.Vertical {
 							if maxSize > innerContentSize {
 								/* (014) */
 							} else {
@@ -3929,20 +3930,14 @@ func __CalculateFinalLayout() {
 			var clipHashMapItem *LayoutElementHashMapItem = __GetHashMapItem(root.ClipElementId)
 			if clipHashMapItem != nil {
 				if context.externalScrollHandlingEnabled {
-					var scrollConfig *ScrollElementConfig = __FindElementConfigWithType(clipHashMapItem.LayoutElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
-					for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
-						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
-						if mapping.LayoutElement == clipHashMapItem.LayoutElement {
-							root.PointerOffset = mapping.ScrollPosition
-							if scrollConfig.Horizontal {
-								rootPosition.X += mapping.ScrollPosition.X
-							}
-							if scrollConfig.Vertical {
-								rootPosition.Y += mapping.ScrollPosition.Y
-							}
-							break
-						}
+					var clipConfig *ClipElementConfig = __FindElementConfigWithType(clipHashMapItem.LayoutElement, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
+					if clipConfig.Horizontal {
+						rootPosition.X += clipConfig.ChildOffset.X
 					}
+					if clipConfig.Vertical {
+						rootPosition.Y += clipConfig.ChildOffset.Y
+					}
+					break
 				}
 				__AddRenderCommand(RenderCommand{BoundingBox: clipHashMapItem.BoundingBox, UserData: 0, Id: __HashNumber(rootElement.Id, uint32(int32(rootElement.ChildrenOrTextContent.Children.Length)+10)).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_SCISSOR_START})
 			}
@@ -3970,19 +3965,14 @@ func __CalculateFinalLayout() {
 					currentElementBoundingBox.Height += expand.Height * 2
 				}
 				var scrollContainerData *__ScrollContainerDataInternal = (*__ScrollContainerDataInternal)(unsafe.Pointer(uintptr(__NULL)))
-				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_SCROLL) {
-					var scrollConfig *ScrollElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_CLIP) {
+					var clipConfig *ClipElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
 					for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
 						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 						if mapping.LayoutElement == currentElement {
 							scrollContainerData = mapping
 							mapping.BoundingBox = currentElementBoundingBox
-							if scrollConfig.Horizontal {
-								scrollOffset.X = mapping.ScrollPosition.X
-							}
-							if scrollConfig.Vertical {
-								scrollOffset.Y = mapping.ScrollPosition.Y
-							}
+							scrollOffset = clipConfig.ChildOffset
 							if context.externalScrollHandlingEnabled {
 								scrollOffset = Vector2{}
 							}
@@ -4013,7 +4003,7 @@ func __CalculateFinalLayout() {
 							currentType __ElementConfigType = __ElementConfigArraySlice_Get(&currentElement.ElementConfigs, current).Type
 							nextType    __ElementConfigType = __ElementConfigArraySlice_Get(&currentElement.ElementConfigs, next).Type
 						)
-						if nextType == __ELEMENT_CONFIG_TYPE_SCROLL || currentType == __ELEMENT_CONFIG_TYPE_BORDER {
+						if nextType == __ELEMENT_CONFIG_TYPE_CLIP || currentType == __ELEMENT_CONFIG_TYPE_BORDER {
 							sortedConfigIndexes[i] = next
 							sortedConfigIndexes[i+1] = current
 						}
@@ -4042,9 +4032,9 @@ func __CalculateFinalLayout() {
 						fallthrough
 					case __ELEMENT_CONFIG_TYPE_BORDER:
 						shouldRender = false
-					case __ELEMENT_CONFIG_TYPE_SCROLL:
+					case __ELEMENT_CONFIG_TYPE_CLIP:
 						renderCommand.CommandType = RENDER_COMMAND_TYPE_SCISSOR_START
-						renderCommand.RenderData = RenderData{Scroll: ScrollRenderData{Horizontal: elementConfig.Config.ScrollElementConfig.Horizontal, Vertical: elementConfig.Config.ScrollElementConfig.Vertical}}
+						renderCommand.RenderData = RenderData{Clip: ClipRenderData{Horizontal: elementConfig.Config.ClipElementConfig.Horizontal, Vertical: elementConfig.Config.ClipElementConfig.Vertical}}
 					case __ELEMENT_CONFIG_TYPE_IMAGE:
 						renderCommand.CommandType = RENDER_COMMAND_TYPE_IMAGE
 						renderCommand.RenderData = RenderData{Image: ImageRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius, SourceDimensions: elementConfig.Config.ImageElementConfig.SourceDimensions, ImageData: elementConfig.Config.ImageElementConfig.ImageData}}
@@ -4158,20 +4148,15 @@ func __CalculateFinalLayout() {
 				}
 			} else {
 				var (
-					closeScrollElement bool                 = false
-					scrollConfig       *ScrollElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
+					closeClipElement bool               = false
+					clipConfig       *ClipElementConfig = __FindElementConfigWithType(currentElement, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
 				)
-				if scrollConfig != nil {
-					closeScrollElement = true
+				if clipConfig != nil {
+					closeClipElement = true
 					for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
 						var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 						if mapping.LayoutElement == currentElement {
-							if scrollConfig.Horizontal {
-								scrollOffset.X = mapping.ScrollPosition.X
-							}
-							if scrollConfig.Vertical {
-								scrollOffset.Y = mapping.ScrollPosition.Y
-							}
+							scrollOffset = clipConfig.ChildOffset
 							if context.externalScrollHandlingEnabled {
 								scrollOffset = Vector2{}
 							}
@@ -4219,7 +4204,7 @@ func __CalculateFinalLayout() {
 						}
 					}
 				}
-				if closeScrollElement {
+				if closeClipElement {
 					__AddRenderCommand(RenderCommand{Id: __HashNumber(currentElement.Id, uint32(int32(rootElement.ChildrenOrTextContent.Children.Length)+11)).Id, CommandType: RENDER_COMMAND_TYPE_SCISSOR_END})
 				}
 				dfsBuffer.Length--
@@ -4483,6 +4468,26 @@ func SetCurrentContext(context *Context) {
 	__currentContext = context
 }
 
+func GetScrollOffset() Vector2 {
+	var context *Context = GetCurrentContext()
+	if context.booleanWarnings.MaxElementsExceeded {
+		return Vector2{}
+	}
+	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
+	if openLayoutElement.Id == 0 {
+		__GenerateIdForAnonymousElement(openLayoutElement)
+	}
+	var clipConfig *ClipElementConfig = __FindElementConfigWithType(openLayoutElement, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
+	_ = clipConfig
+	for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
+		var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
+		if mapping.LayoutElement == openLayoutElement {
+			return mapping.ScrollPosition
+		}
+	}
+	return Vector2{}
+}
+
 func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, deltaTime float32) {
 	var (
 		context                     *Context                       = GetCurrentContext()
@@ -4598,10 +4603,10 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 	}
 	if highestPriorityElementIndex > -1 && highestPriorityScrollData != nil {
 		var (
-			scrollElement         *LayoutElement       = highestPriorityScrollData.LayoutElement
-			scrollConfig          *ScrollElementConfig = __FindElementConfigWithType(scrollElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
-			canScrollVertically   bool                 = scrollConfig.Vertical && highestPriorityScrollData.ContentSize.Height > scrollElement.Dimensions.Height
-			canScrollHorizontally bool                 = scrollConfig.Horizontal && highestPriorityScrollData.ContentSize.Width > scrollElement.Dimensions.Width
+			scrollElement         *LayoutElement     = highestPriorityScrollData.LayoutElement
+			clipConfig            *ClipElementConfig = __FindElementConfigWithType(scrollElement, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
+			canScrollVertically   bool               = clipConfig.Vertical && highestPriorityScrollData.ContentSize.Height > scrollElement.Dimensions.Height
+			canScrollHorizontally bool               = clipConfig.Horizontal && highestPriorityScrollData.ContentSize.Width > scrollElement.Dimensions.Width
 		)
 		if canScrollVertically {
 			highestPriorityScrollData.ScrollPosition.Y = highestPriorityScrollData.ScrollPosition.Y + scrollDelta.Y*10
@@ -4798,11 +4803,11 @@ func GetScrollContainerData(id ElementId) ScrollContainerData {
 	for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
 		var scrollContainerData *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 		if scrollContainerData.ElementId == id.Id {
-			var scrollElementConfig *ScrollElementConfig = __FindElementConfigWithType(scrollContainerData.LayoutElement, __ELEMENT_CONFIG_TYPE_SCROLL).ScrollElementConfig
-			if scrollElementConfig == nil {
+			var clipElementConfig *ClipElementConfig = __FindElementConfigWithType(scrollContainerData.LayoutElement, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
+			if clipElementConfig == nil {
 				return ScrollContainerData{}
 			}
-			return ScrollContainerData{ScrollPosition: &scrollContainerData.ScrollPosition, ScrollContainerDimensions: Dimensions{Width: scrollContainerData.BoundingBox.Width, Height: scrollContainerData.BoundingBox.Height}, ContentDimensions: scrollContainerData.ContentSize, Config: *scrollElementConfig, Found: true}
+			return ScrollContainerData{ScrollPosition: &scrollContainerData.ScrollPosition, ScrollContainerDimensions: Dimensions{Width: scrollContainerData.BoundingBox.Width, Height: scrollContainerData.BoundingBox.Height}, ContentDimensions: scrollContainerData.ContentSize, Config: *clipElementConfig, Found: true}
 		}
 	}
 	return ScrollContainerData{}

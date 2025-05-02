@@ -247,8 +247,8 @@ files:
         new: 0
       - old: int8{}
         new: 0
-      - old: declaration.Scroll.Horizontal | declaration.Scroll.Vertical
-        new: declaration.Scroll.Horizontal || declaration.Scroll.Vertical
+      - old: declaration.Clip.Horizontal | declaration.Clip.Vertical
+        new: declaration.Clip.Horizontal || declaration.Clip.Vertical
       - old: Clay__
         new: __
       - old: CLAY__
