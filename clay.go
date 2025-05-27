@@ -80,7 +80,7 @@ type Context struct {
 	measuredWords                      __MeasuredWordArray
 	measuredWordsFreeList              __int32_tArray
 	openClipElementStack               __int32_tArray
-	pointerOverIds                     __ElementIdArray
+	pointerOverIds                     ElementIdArray
 	scrollContainerDatas               __ScrollContainerDataInternalArray
 	treeNodeVisited                    __boolArray
 	dynamicStringData                  __charArray
@@ -116,6 +116,11 @@ type ElementId struct {
 	Offset   uint32
 	BaseId   uint32
 	StringId String
+}
+type ElementIdArray struct {
+	Capacity      int32
+	Length        int32
+	InternalArray *ElementId
 }
 type CornerRadius struct {
 	TopLeft     float32
@@ -264,6 +269,13 @@ const (
 	ATTACH_TO_ROOT
 )
 
+type FloatingClipToElement int32
+
+const (
+	CLIP_TO_NONE = FloatingClipToElement(iota)
+	CLIP_TO_ATTACHED_PARENT
+)
+
 type FloatingElementConfig struct {
 	Offset             Vector2
 	Expand             Dimensions
@@ -272,6 +284,7 @@ type FloatingElementConfig struct {
 	AttachPoints       FloatingAttachPoints
 	PointerCaptureMode PointerCaptureMode
 	AttachTo           FloatingAttachToElement
+	ClipTo             FloatingClipToElement
 }
 type __FloatingElementConfigWrapper struct {
 	Wrapped FloatingElementConfig
@@ -327,15 +340,18 @@ type CustomRenderData struct {
 	CornerRadius    CornerRadius
 	CustomData      any
 }
-type ClipRenderData struct {
+type ScrollRenderData struct {
 	Horizontal bool
 	Vertical   bool
 }
-type BorderRenderData struct {
-	Color        Color
-	CornerRadius CornerRadius
-	Width        BorderWidth
-}
+type (
+	ClipRenderData   ScrollRenderData
+	BorderRenderData struct {
+		Color        Color
+		CornerRadius CornerRadius
+		Width        BorderWidth
+	}
+)
 type RenderData struct {
 	// union
 	Rectangle RectangleRenderData
@@ -691,37 +707,32 @@ func __charArray_Set(array *__charArray, index int32, value int8) {
 	}
 }
 
-type __ElementIdArray struct {
-	Capacity      int32
-	Length        int32
-	InternalArray *ElementId
-}
-type __ElementIdArraySlice struct {
+type ElementIdArraySlice struct {
 	Length        int32
 	InternalArray *ElementId
 }
 
 var ElementId_DEFAULT ElementId = ElementId{}
 
-func __ElementIdArray_Allocate_Arena(capacity int32, arena *Arena) __ElementIdArray {
-	return __ElementIdArray{Capacity: capacity, Length: 0, InternalArray: (*ElementId)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ElementId{})), arena))}
+func ElementIdArray_Allocate_Arena(capacity int32, arena *Arena) ElementIdArray {
+	return ElementIdArray{Capacity: capacity, Length: 0, InternalArray: (*ElementId)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(ElementId{})), arena))}
 }
 
-func __ElementIdArray_Get(array *__ElementIdArray, index int32) *ElementId {
+func ElementIdArray_Get(array *ElementIdArray, index int32) *ElementId {
 	if __Array_RangeCheck(index, array.Length) {
 		return (*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
 	return &ElementId_DEFAULT
 }
 
-func __ElementIdArray_GetValue(array *__ElementIdArray, index int32) ElementId {
+func ElementIdArray_GetValue(array *ElementIdArray, index int32) ElementId {
 	if __Array_RangeCheck(index, array.Length) {
 		return *(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
 	return ElementId_DEFAULT
 }
 
-func __ElementIdArray_Add(array *__ElementIdArray, item ElementId) *ElementId {
+func ElementIdArray_Add(array *ElementIdArray, item ElementId) *ElementId {
 	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
 		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(func() int32 {
 			p_ := &array.Length
@@ -734,14 +745,14 @@ func __ElementIdArray_Add(array *__ElementIdArray, item ElementId) *ElementId {
 	return &ElementId_DEFAULT
 }
 
-func __ElementIdArraySlice_Get(slice *__ElementIdArraySlice, index int32) *ElementId {
+func ElementIdArraySlice_Get(slice *ElementIdArraySlice, index int32) *ElementId {
 	if __Array_RangeCheck(index, slice.Length) {
 		return (*ElementId)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
 	}
 	return &ElementId_DEFAULT
 }
 
-func __ElementIdArray_RemoveSwapback(array *__ElementIdArray, index int32) ElementId {
+func ElementIdArray_RemoveSwapback(array *ElementIdArray, index int32) ElementId {
 	if __Array_RangeCheck(index, array.Length) {
 		array.Length--
 		var removed ElementId = *(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index)))
@@ -751,7 +762,7 @@ func __ElementIdArray_RemoveSwapback(array *__ElementIdArray, index int32) Eleme
 	return ElementId_DEFAULT
 }
 
-func __ElementIdArray_Set(array *__ElementIdArray, index int32, value ElementId) {
+func ElementIdArray_Set(array *ElementIdArray, index int32, value ElementId) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*ElementId)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(ElementId{})*uintptr(index))) = value
 		if index < array.Length {
@@ -3108,6 +3119,9 @@ func __ConfigureOpenElementPtr(declaration *ElementDeclaration) {
 			if openLayoutElementId.Id == 0 {
 				openLayoutElementId = __HashString(String{IsStaticallyAllocated: true, Length: int32(((len("__FloatingContainer") + 1) / int(unsafe.Sizeof(byte(0)))) - int(unsafe.Sizeof(byte(0)))), Chars: libc.CString("__FloatingContainer")}, uint32(context.layoutElementTreeRoots.Length), 0)
 			}
+			if declaration.Floating.ClipTo == CLIP_TO_NONE {
+				clipElementId = 0
+			}
 			var currentElementIndex int32 = __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1)
 			__int32_tArray_Set(&context.layoutElementClipElementIds, currentElementIndex, int32(clipElementId))
 			__int32_tArray_Add(&context.openClipElementStack, int32(clipElementId))
@@ -3200,7 +3214,7 @@ func __InitializePersistentMemory(context *Context) {
 	context.measuredWordsFreeList = __int32_tArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
 	context.measureTextHashMap = __int32_tArray_Allocate_Arena(maxElementCount, arena)
 	context.measuredWords = __MeasuredWordArray_Allocate_Arena(maxMeasureTextCacheWordCount, arena)
-	context.pointerOverIds = __ElementIdArray_Allocate_Arena(maxElementCount, arena)
+	context.pointerOverIds = ElementIdArray_Allocate_Arena(maxElementCount, arena)
 	context.debugElementData = __DebugElementDataArray_Allocate_Arena(maxElementCount, arena)
 	context.arenaResetOffset = arena.NextAllocation
 }
@@ -4253,6 +4267,10 @@ func __CalculateFinalLayout() {
 	}
 }
 
+func GetPointerOverIds() ElementIdArray {
+	return GetCurrentContext().pointerOverIds
+}
+
 var (
 	__debugViewWidth          uint32 = 400
 	__debugViewHighlightColor Color  = Color{R: 168, G: 66, B: 28, A: 100}
@@ -4386,10 +4404,10 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 					if mapItem.OnHoverFunction != nil {
 						mapItem.OnHoverFunction(mapItem.ElementId, context.pointerInfo, mapItem.HoverFunctionUserData.(int64))
 					}
-					__ElementIdArray_Add(&context.pointerOverIds, mapItem.ElementId)
+					ElementIdArray_Add(&context.pointerOverIds, mapItem.ElementId)
 					found = true
 					if mapItem.IdAlias != 0 {
-						__ElementIdArray_Add(&context.pointerOverIds, ElementId{Id: mapItem.IdAlias})
+						ElementIdArray_Add(&context.pointerOverIds, ElementId{Id: mapItem.IdAlias})
 					}
 				}
 				if __ElementHasConfig(currentElement, __ELEMENT_CONFIG_TYPE_TEXT) {
@@ -4477,8 +4495,6 @@ func GetScrollOffset() Vector2 {
 	if openLayoutElement.Id == 0 {
 		__GenerateIdForAnonymousElement(openLayoutElement)
 	}
-	var clipConfig *ClipElementConfig = __FindElementConfigWithType(openLayoutElement, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
-	_ = clipConfig
 	for i := int32(0); i < context.scrollContainerDatas.Length; i++ {
 		var mapping *__ScrollContainerDataInternal = __ScrollContainerDataInternalArray_Get(&context.scrollContainerDatas, i)
 		if mapping.LayoutElement == openLayoutElement {
@@ -4595,7 +4611,7 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 			scrollData.ScrollPosition.Y = 0
 		}
 		for j := int32(0); j < context.pointerOverIds.Length; j++ {
-			if scrollData.LayoutElement.Id == __ElementIdArray_Get(&context.pointerOverIds, j).Id {
+			if scrollData.LayoutElement.Id == ElementIdArray_Get(&context.pointerOverIds, j).Id {
 				highestPriorityElementIndex = j
 				highestPriorityScrollData = scrollData
 			}
@@ -4767,7 +4783,7 @@ func Hovered() bool {
 		__GenerateIdForAnonymousElement(openLayoutElement)
 	}
 	for i := int32(0); i < context.pointerOverIds.Length; i++ {
-		if __ElementIdArray_Get(&context.pointerOverIds, i).Id == openLayoutElement.Id {
+		if ElementIdArray_Get(&context.pointerOverIds, i).Id == openLayoutElement.Id {
 			return true
 		}
 	}
@@ -4791,7 +4807,7 @@ func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, 
 func PointerOver(elementId ElementId) bool {
 	var context *Context = GetCurrentContext()
 	for i := int32(0); i < context.pointerOverIds.Length; i++ {
-		if __ElementIdArray_Get(&context.pointerOverIds, i).Id == elementId.Id {
+		if ElementIdArray_Get(&context.pointerOverIds, i).Id == elementId.Id {
 			return true
 		}
 	}
