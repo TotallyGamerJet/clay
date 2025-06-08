@@ -317,7 +317,10 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 								Height: clay.SizingFixed(90),
 							},
 						},
-						Image: clay.ImageElementConfig{ImageData: selectedDocument.image.(unsafe.Pointer), SourceDimensions: clay.Dimensions{Width: 1280, Height: 853}},
+						AspectRatio: clay.AspectRatioElementConfig{
+							AspectRatio: 1280.0 / 853.0,
+						},
+						Image: clay.ImageElementConfig{ImageData: selectedDocument.image.(unsafe.Pointer)},
 					}, func() {
 					})
 				}

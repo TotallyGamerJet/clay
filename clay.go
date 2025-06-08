@@ -56,12 +56,13 @@ type Context struct {
 	layoutElementChildren              __int32_tArray
 	layoutElementChildrenBuffer        __int32_tArray
 	textElementData                    __TextElementDataArray
-	imageElementPointers               __int32_tArray
+	AspectRatioElementIndexes          __int32_tArray
 	reusableElementIndexBuffer         __int32_tArray
 	layoutElementClipElementIds        __int32_tArray
 	layoutConfigs                      __LayoutConfigArray
 	elementConfigs                     __ElementConfigArray
 	textElementConfigs                 __TextElementConfigArray
+	AspectRatioElementConfigs          __AspectRatioElementConfigArray
 	imageElementConfigs                __ImageElementConfigArray
 	floatingElementConfigs             __FloatingElementConfigArray
 	ClipElementConfigs                 __ClipElementConfigArray
@@ -228,9 +229,14 @@ type TextElementConfig struct {
 type __TextElementConfigWrapper struct {
 	Wrapped TextElementConfig
 }
+type AspectRatioElementConfig struct {
+	AspectRatio float32
+}
+type __AspectRatioElementConfigWrapper struct {
+	Wrapped AspectRatioElementConfig
+}
 type ImageElementConfig struct {
-	ImageData        any
-	SourceDimensions Dimensions
+	ImageData any
 }
 type __ImageElementConfigWrapper struct {
 	Wrapped ImageElementConfig
@@ -330,10 +336,9 @@ type RectangleRenderData struct {
 	CornerRadius    CornerRadius
 }
 type ImageRenderData struct {
-	BackgroundColor  Color
-	CornerRadius     CornerRadius
-	SourceDimensions Dimensions
-	ImageData        any
+	BackgroundColor Color
+	CornerRadius    CornerRadius
+	ImageData       any
 }
 type CustomRenderData struct {
 	BackgroundColor Color
@@ -416,6 +421,7 @@ type ElementDeclaration struct {
 	Layout          LayoutConfig
 	BackgroundColor Color
 	CornerRadius    CornerRadius
+	AspectRatio     AspectRatioElementConfig
 	Image           ImageElementConfig
 	Floating        FloatingElementConfig
 	Custom          CustomElementConfig
@@ -907,6 +913,77 @@ func __TextElementConfigArray_RemoveSwapback(array *__TextElementConfigArray, in
 func __TextElementConfigArray_Set(array *__TextElementConfigArray, index int32, value TextElementConfig) {
 	if __Array_RangeCheck(index, array.Capacity) {
 		*(*TextElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(TextElementConfig{})*uintptr(index))) = value
+		if index < array.Length {
+			/* (001) */
+		} else {
+			array.Length = index + 1
+		}
+	}
+}
+
+type __AspectRatioElementConfigArray struct {
+	Capacity      int32
+	Length        int32
+	InternalArray *AspectRatioElementConfig
+}
+type __AspectRatioElementConfigArraySlice struct {
+	Length        int32
+	InternalArray *AspectRatioElementConfig
+}
+
+var AspectRatioElementConfig_DEFAULT AspectRatioElementConfig = AspectRatioElementConfig{}
+
+func __AspectRatioElementConfigArray_Allocate_Arena(capacity int32, arena *Arena) __AspectRatioElementConfigArray {
+	return __AspectRatioElementConfigArray{Capacity: capacity, Length: 0, InternalArray: (*AspectRatioElementConfig)(__Array_Allocate_Arena(capacity, uint32(unsafe.Sizeof(AspectRatioElementConfig{})), arena))}
+}
+
+func __AspectRatioElementConfigArray_Get(array *__AspectRatioElementConfigArray, index int32) *AspectRatioElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return (*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(index)))
+	}
+	return &AspectRatioElementConfig_DEFAULT
+}
+
+func __AspectRatioElementConfigArray_GetValue(array *__AspectRatioElementConfigArray, index int32) AspectRatioElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		return *(*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(index)))
+	}
+	return AspectRatioElementConfig_DEFAULT
+}
+
+func __AspectRatioElementConfigArray_Add(array *__AspectRatioElementConfigArray, item AspectRatioElementConfig) *AspectRatioElementConfig {
+	if __Array_AddCapacityCheck(array.Length, array.Capacity) {
+		*(*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(func() int32 {
+			p_ := &array.Length
+			x := *p_
+			*p_++
+			return x
+		}()))) = item
+		return (*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(array.Length-1)))
+	}
+	return &AspectRatioElementConfig_DEFAULT
+}
+
+func __AspectRatioElementConfigArraySlice_Get(slice *__AspectRatioElementConfigArraySlice, index int32) *AspectRatioElementConfig {
+	if __Array_RangeCheck(index, slice.Length) {
+		return (*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(slice.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(index)))
+	}
+	return &AspectRatioElementConfig_DEFAULT
+}
+
+func __AspectRatioElementConfigArray_RemoveSwapback(array *__AspectRatioElementConfigArray, index int32) AspectRatioElementConfig {
+	if __Array_RangeCheck(index, array.Length) {
+		array.Length--
+		var removed AspectRatioElementConfig = *(*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(index)))
+		*(*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(index))) = *(*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(array.Length)))
+		return removed
+	}
+	return AspectRatioElementConfig_DEFAULT
+}
+
+func __AspectRatioElementConfigArray_Set(array *__AspectRatioElementConfigArray, index int32, value AspectRatioElementConfig) {
+	if __Array_RangeCheck(index, array.Capacity) {
+		*(*AspectRatioElementConfig)(unsafe.Add(unsafe.Pointer(array.InternalArray), unsafe.Sizeof(AspectRatioElementConfig{})*uintptr(index))) = value
 		if index < array.Length {
 			/* (001) */
 		} else {
@@ -1485,6 +1562,7 @@ const (
 	__ELEMENT_CONFIG_TYPE_BORDER
 	__ELEMENT_CONFIG_TYPE_FLOATING
 	__ELEMENT_CONFIG_TYPE_CLIP
+	__ELEMENT_CONFIG_TYPE_ASPECT
 	__ELEMENT_CONFIG_TYPE_IMAGE
 	__ELEMENT_CONFIG_TYPE_TEXT
 	__ELEMENT_CONFIG_TYPE_CUSTOM
@@ -1493,13 +1571,14 @@ const (
 
 type ElementConfigUnion struct {
 	// union
-	TextElementConfig     *TextElementConfig
-	ImageElementConfig    *ImageElementConfig
-	FloatingElementConfig *FloatingElementConfig
-	CustomElementConfig   *CustomElementConfig
-	ClipElementConfig     *ClipElementConfig
-	BorderElementConfig   *BorderElementConfig
-	SharedElementConfig   *SharedElementConfig
+	TextElementConfig        *TextElementConfig
+	AspectRatioElementConfig *AspectRatioElementConfig
+	ImageElementConfig       *ImageElementConfig
+	FloatingElementConfig    *FloatingElementConfig
+	CustomElementConfig      *CustomElementConfig
+	ClipElementConfig        *ClipElementConfig
+	BorderElementConfig      *BorderElementConfig
+	SharedElementConfig      *SharedElementConfig
 }
 type ElementConfig struct {
 	Type   __ElementConfigType
@@ -2418,6 +2497,13 @@ func __StoreTextElementConfig(config TextElementConfig) *TextElementConfig {
 	return __TextElementConfigArray_Add(&GetCurrentContext().textElementConfigs, config)
 }
 
+func __StoreAspectRatioElementConfig(config AspectRatioElementConfig) *AspectRatioElementConfig {
+	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
+		return &AspectRatioElementConfig_DEFAULT
+	}
+	return __AspectRatioElementConfigArray_Add(&GetCurrentContext().AspectRatioElementConfigs, config)
+}
+
 func __StoreImageElementConfig(config ImageElementConfig) *ImageElementConfig {
 	if GetCurrentContext().booleanWarnings.MaxElementsExceeded {
 		return &ImageElementConfig_DEFAULT
@@ -2516,7 +2602,7 @@ func __HashString(key String, offset uint32, seed uint32) ElementId {
 
 func __HashData(data *uint8, length uint64) uint64 {
 	var hash uint64 = 0
-	for i := int32(0); uint64(i) < length; i++ {
+	for i := uint64(0); i < length; i++ {
 		hash += uint64(*(*uint8)(unsafe.Add(unsafe.Pointer(data), i)))
 		hash += hash << 10
 		hash ^= hash >> 6
@@ -2695,11 +2781,12 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 			/* (022) */
 		}
 	}
-	if lineWidth > measuredWidth {
-		measuredWidth = lineWidth
-	} else {
-		/* (003) */
-	}
+	measuredWidth = (func() float32 {
+		if lineWidth > measuredWidth {
+			return lineWidth
+		}
+		return measuredWidth
+	}()) - float32(config.LetterSpacing)
 	measured.MeasuredWordsStartIndex = tempWord.Next
 	measured.UnwrappedDimensions.Width = measuredWidth
 	measured.UnwrappedDimensions.Height = measuredHeight
@@ -2797,16 +2884,15 @@ func __ElementHasConfig(layoutElement *LayoutElement, type_ __ElementConfigType)
 func __UpdateAspectRatioBox(layoutElement *LayoutElement) {
 	for j := int32(0); j < layoutElement.ElementConfigs.Length; j++ {
 		var config *ElementConfig = __ElementConfigArraySlice_Get(&layoutElement.ElementConfigs, j)
-		if config.Type == __ELEMENT_CONFIG_TYPE_IMAGE {
-			var imageConfig *ImageElementConfig = config.Config.ImageElementConfig
-			if imageConfig.SourceDimensions.Width == 0 || imageConfig.SourceDimensions.Height == 0 {
+		if config.Type == __ELEMENT_CONFIG_TYPE_ASPECT {
+			var aspectConfig *AspectRatioElementConfig = config.Config.AspectRatioElementConfig
+			if aspectConfig.AspectRatio == 0 {
 				break
 			}
-			var aspect float32 = imageConfig.SourceDimensions.Width / imageConfig.SourceDimensions.Height
 			if layoutElement.Dimensions.Width == 0 && layoutElement.Dimensions.Height != 0 {
-				layoutElement.Dimensions.Width = layoutElement.Dimensions.Height * aspect
+				layoutElement.Dimensions.Width = layoutElement.Dimensions.Height * aspectConfig.AspectRatio
 			} else if layoutElement.Dimensions.Width != 0 && layoutElement.Dimensions.Height == 0 {
-				layoutElement.Dimensions.Height = layoutElement.Dimensions.Height * (1 / aspect)
+				layoutElement.Dimensions.Height = layoutElement.Dimensions.Width * (1 / aspectConfig.AspectRatio)
 			}
 			break
 		}
@@ -3092,7 +3178,10 @@ func __ConfigureOpenElementPtr(declaration *ElementDeclaration) {
 	}
 	if declaration.Image.ImageData != nil {
 		__AttachElementConfig(ElementConfigUnion{ImageElementConfig: __StoreImageElementConfig(declaration.Image)}, __ELEMENT_CONFIG_TYPE_IMAGE)
-		__int32_tArray_Add(&context.imageElementPointers, context.layoutElements.Length-1)
+	}
+	if declaration.AspectRatio.AspectRatio > 0 {
+		__AttachElementConfig(ElementConfigUnion{AspectRatioElementConfig: __StoreAspectRatioElementConfig(declaration.AspectRatio)}, __ELEMENT_CONFIG_TYPE_ASPECT)
+		__int32_tArray_Add(&context.AspectRatioElementIndexes, context.layoutElements.Length-1)
 	}
 	if declaration.Floating.AttachTo != ATTACH_TO_NONE {
 		var (
@@ -3177,6 +3266,7 @@ func __InitializeEphemeralMemory(context *Context) {
 	context.layoutConfigs = __LayoutConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.elementConfigs = __ElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.textElementConfigs = __TextElementConfigArray_Allocate_Arena(maxElementCount, arena)
+	context.AspectRatioElementConfigs = __AspectRatioElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.imageElementConfigs = __ImageElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.floatingElementConfigs = __FloatingElementConfigArray_Allocate_Arena(maxElementCount, arena)
 	context.ClipElementConfigs = __ClipElementConfigArray_Allocate_Arena(maxElementCount, arena)
@@ -3190,7 +3280,7 @@ func __InitializeEphemeralMemory(context *Context) {
 	context.layoutElementChildren = __int32_tArray_Allocate_Arena(maxElementCount, arena)
 	context.openLayoutElementStack = __int32_tArray_Allocate_Arena(maxElementCount, arena)
 	context.textElementData = __TextElementDataArray_Allocate_Arena(maxElementCount, arena)
-	context.imageElementPointers = __int32_tArray_Allocate_Arena(maxElementCount, arena)
+	context.AspectRatioElementIndexes = __int32_tArray_Allocate_Arena(maxElementCount, arena)
 	context.renderCommands = RenderCommandArray_Allocate_Arena(maxElementCount, arena)
 	context.treeNodeVisited = __boolArray_Allocate_Arena(maxElementCount, arena)
 	context.treeNodeVisited.Length = context.treeNodeVisited.Capacity
@@ -3324,7 +3414,7 @@ func __SizeContainersAlongAxis(xAxis bool) {
 				if !__ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_TEXT) && int32(childElement.ChildrenOrTextContent.Children.Length) > 0 {
 					__int32_tArray_Add(&bfsBuffer, childElementIndex)
 				}
-				if childSizing.Type != __SIZING_TYPE_PERCENT && childSizing.Type != __SIZING_TYPE_FIXED && (!__ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_TEXT) || __FindElementConfigWithType(childElement, __ELEMENT_CONFIG_TYPE_TEXT).TextElementConfig.WrapMode == TEXT_WRAP_WORDS) && (xAxis || !__ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_IMAGE)) {
+				if childSizing.Type != __SIZING_TYPE_PERCENT && childSizing.Type != __SIZING_TYPE_FIXED && (!__ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_TEXT) || __FindElementConfigWithType(childElement, __ELEMENT_CONFIG_TYPE_TEXT).TextElementConfig.WrapMode == TEXT_WRAP_WORDS) {
 					__int32_tArray_Add(&resizableContainerBuffer, childElementIndex)
 				}
 				if sizingAlongAxis {
@@ -3376,9 +3466,9 @@ func __SizeContainersAlongAxis(xAxis bool) {
 			if sizingAlongAxis {
 				var sizeToDistribute float32 = parentSize - parentPadding - innerContentSize
 				if sizeToDistribute < 0 {
-					var scrollElementConfig *ClipElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
-					if scrollElementConfig != nil {
-						if xAxis && scrollElementConfig.Horizontal || !xAxis && scrollElementConfig.Vertical {
+					var clipElementConfig *ClipElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
+					if clipElementConfig != nil {
+						if xAxis && clipElementConfig.Horizontal || !xAxis && clipElementConfig.Vertical {
 							continue
 						}
 					}
@@ -3564,9 +3654,6 @@ func __SizeContainersAlongAxis(xAxis bool) {
 					} else {
 						childSize = &childElement.Dimensions.Height
 					}
-					if !xAxis && __ElementHasConfig(childElement, __ELEMENT_CONFIG_TYPE_IMAGE) {
-						continue
-					}
 					var maxSize float32 = parentSize - parentPadding
 					if __ElementHasConfig(parent, __ELEMENT_CONFIG_TYPE_CLIP) {
 						var clipElementConfig *ClipElementConfig = __FindElementConfigWithType(parent, __ELEMENT_CONFIG_TYPE_CLIP).ClipElementConfig
@@ -3725,28 +3812,24 @@ func __CalculateFinalLayout() {
 				lineLengthChars = 0
 				lineStartOffset = measuredWord.StartOffset
 			} else {
-				lineWidth += measuredWord.Width
+				lineWidth += measuredWord.Width + float32(textConfig.LetterSpacing)
 				lineLengthChars += measuredWord.Length
 				wordIndex = measuredWord.Next
 			}
 		}
 		if lineLengthChars > 0 {
-			__WrappedTextLineArray_Add(&context.wrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth, Height: lineHeight}, Line: String{Length: lineLengthChars, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), lineStartOffset))}})
+			__WrappedTextLineArray_Add(&context.wrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth - float32(textConfig.LetterSpacing), Height: lineHeight}, Line: String{Length: lineLengthChars, Chars: (*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), lineStartOffset))}})
 			textElementData.WrappedLines.Length++
 		}
 		containerElement.Dimensions.Height = lineHeight * float32(textElementData.WrappedLines.Length)
 	}
-	for i := int32(0); i < context.imageElementPointers.Length; i++ {
+	for i := int32(0); i < context.AspectRatioElementIndexes.Length; i++ {
 		var (
-			imageElement *LayoutElement      = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.imageElementPointers, i))
-			config       *ImageElementConfig = __FindElementConfigWithType(imageElement, __ELEMENT_CONFIG_TYPE_IMAGE).ImageElementConfig
+			aspectElement *LayoutElement            = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.AspectRatioElementIndexes, i))
+			config        *AspectRatioElementConfig = __FindElementConfigWithType(aspectElement, __ELEMENT_CONFIG_TYPE_ASPECT).AspectRatioElementConfig
 		)
-		imageElement.Dimensions.Height = (config.SourceDimensions.Height / (func() float32 {
-			if config.SourceDimensions.Width > 1 {
-				return config.SourceDimensions.Width
-			}
-			return 1
-		}())) * imageElement.Dimensions.Width
+		aspectElement.Dimensions.Height = (1 / config.AspectRatio) * aspectElement.Dimensions.Width
+		aspectElement.LayoutConfig.Sizing.Height.Size.MinMax.Max = aspectElement.Dimensions.Height
 	}
 	var dfsBuffer __LayoutElementTreeNodeArray = context.layoutElementTreeNodeArray1
 	dfsBuffer.Length = 0
@@ -3829,6 +3912,13 @@ func __CalculateFinalLayout() {
 		}
 	}
 	__SizeContainersAlongAxis(false)
+	for i := int32(0); i < context.AspectRatioElementIndexes.Length; i++ {
+		var (
+			aspectElement *LayoutElement            = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.AspectRatioElementIndexes, i))
+			config        *AspectRatioElementConfig = __FindElementConfigWithType(aspectElement, __ELEMENT_CONFIG_TYPE_ASPECT).AspectRatioElementConfig
+		)
+		aspectElement.Dimensions.Width = config.AspectRatio * aspectElement.Dimensions.Height
+	}
 	var sortMax int32 = context.layoutElementTreeRoots.Length - 1
 	for sortMax > 0 {
 		for i := int32(0); i < sortMax; i++ {
@@ -4040,6 +4130,8 @@ func __CalculateFinalLayout() {
 						shouldRender  bool           = !offscreen
 					)
 					switch elementConfig.Type {
+					case __ELEMENT_CONFIG_TYPE_ASPECT:
+						fallthrough
 					case __ELEMENT_CONFIG_TYPE_FLOATING:
 						fallthrough
 					case __ELEMENT_CONFIG_TYPE_SHARED:
@@ -4051,7 +4143,7 @@ func __CalculateFinalLayout() {
 						renderCommand.RenderData = RenderData{Clip: ClipRenderData{Horizontal: elementConfig.Config.ClipElementConfig.Horizontal, Vertical: elementConfig.Config.ClipElementConfig.Vertical}}
 					case __ELEMENT_CONFIG_TYPE_IMAGE:
 						renderCommand.CommandType = RENDER_COMMAND_TYPE_IMAGE
-						renderCommand.RenderData = RenderData{Image: ImageRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius, SourceDimensions: elementConfig.Config.ImageElementConfig.SourceDimensions, ImageData: elementConfig.Config.ImageElementConfig.ImageData}}
+						renderCommand.RenderData = RenderData{Image: ImageRenderData{BackgroundColor: sharedConfig.BackgroundColor, CornerRadius: sharedConfig.CornerRadius, ImageData: elementConfig.Config.ImageElementConfig.ImageData}}
 						emitRectangle = false
 					case __ELEMENT_CONFIG_TYPE_TEXT:
 						if !shouldRender {
