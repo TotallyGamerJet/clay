@@ -2448,16 +2448,12 @@ func __LayoutElementTreeRootArray_Set(array *__LayoutElementTreeRootArray, index
 }
 
 func __Context_Allocate_Arena(arena *Arena) *Context {
-	var (
-		totalSizeBytes  uint64 = uint64(unsafe.Sizeof(Context{}))
-		memoryAddress   uint64 = uint64(uintptr(unsafe.Pointer(arena.Memory)))
-		nextAllocOffset uint64 = (memoryAddress % 64)
-	)
-	if nextAllocOffset+totalSizeBytes > arena.Capacity {
+	var totalSizeBytes uint64 = uint64(unsafe.Sizeof(Context{}))
+	if totalSizeBytes > arena.Capacity {
 		return nil
 	}
-	arena.NextAllocation = nextAllocOffset + totalSizeBytes
-	return (*Context)(unsafe.Pointer(uintptr(memoryAddress + nextAllocOffset)))
+	arena.NextAllocation += totalSizeBytes
+	return (*Context)(unsafe.Pointer(arena.Memory))
 }
 
 func __WriteStringToCharBuffer(buffer *__charArray, string_ String) String {
@@ -2731,8 +2727,11 @@ func __MeasureTextCached(text *String, config *TextElementConfig) *__MeasureText
 		if int32(current) == ' ' || int32(current) == '\n' {
 			var (
 				length     int32      = end - start
-				dimensions Dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData.(unsafe.Pointer))
+				dimensions Dimensions = Dimensions{}
 			)
+			if length > 0 {
+				dimensions = __MeasureText(StringSlice{Length: length, Chars: (*byte)(unsafe.Add(unsafe.Pointer(text.Chars), start)), BaseChars: text.Chars}, config, context.measureTextUserData.(unsafe.Pointer))
+			}
 			if dimensions.Width > measured.MinWidth {
 				measured.MinWidth = dimensions.Width
 			} else {
@@ -2906,13 +2905,13 @@ func __CloseElement() {
 	}
 	var openLayoutElement *LayoutElement = __GetOpenLayoutElement()
 	var layoutConfig *LayoutConfig = openLayoutElement.LayoutConfig
-	var elementHasScrollHorizontal bool = false
-	var elementHasScrollVertical bool = false
+	var elementHasClipHorizontal bool = false
+	var elementHasClipVertical bool = false
 	for i := int32(0); i < openLayoutElement.ElementConfigs.Length; i++ {
 		var config *ElementConfig = __ElementConfigArraySlice_Get(&openLayoutElement.ElementConfigs, i)
 		if config.Type == __ELEMENT_CONFIG_TYPE_CLIP {
-			elementHasScrollHorizontal = config.Config.ClipElementConfig.Horizontal
-			elementHasScrollVertical = config.Config.ClipElementConfig.Vertical
+			elementHasClipHorizontal = config.Config.ClipElementConfig.Horizontal
+			elementHasClipVertical = config.Config.ClipElementConfig.Vertical
 			context.openClipElementStack.Length--
 			break
 		} else if config.Type == __ELEMENT_CONFIG_TYPE_FLOATING {
@@ -2936,10 +2935,10 @@ func __CloseElement() {
 			} else {
 				openLayoutElement.Dimensions.Height = child.Dimensions.Height + topBottomPadding
 			}
-			if !elementHasScrollHorizontal {
+			if !elementHasClipHorizontal {
 				openLayoutElement.MinDimensions.Width += child.MinDimensions.Width
 			}
-			if !elementHasScrollVertical {
+			if !elementHasClipVertical {
 				if openLayoutElement.MinDimensions.Height > (child.MinDimensions.Height + topBottomPadding) {
 					/* (005) */
 				} else {
@@ -2955,7 +2954,9 @@ func __CloseElement() {
 			return 0
 		}()) * int32(layoutConfig.ChildGap))
 		openLayoutElement.Dimensions.Width += childGap
-		openLayoutElement.MinDimensions.Width += childGap
+		if !elementHasClipHorizontal {
+			openLayoutElement.MinDimensions.Width += childGap
+		}
 	} else if layoutConfig.LayoutDirection == TOP_TO_BOTTOM {
 		openLayoutElement.Dimensions.Height = topBottomPadding
 		openLayoutElement.MinDimensions.Height = topBottomPadding
@@ -2970,10 +2971,10 @@ func __CloseElement() {
 			} else {
 				openLayoutElement.Dimensions.Width = child.Dimensions.Width + leftRightPadding
 			}
-			if !elementHasScrollVertical {
+			if !elementHasClipVertical {
 				openLayoutElement.MinDimensions.Height += child.MinDimensions.Height
 			}
-			if !elementHasScrollHorizontal {
+			if !elementHasClipHorizontal {
 				if openLayoutElement.MinDimensions.Width > (child.MinDimensions.Width + leftRightPadding) {
 					/* (007) */
 				} else {
@@ -2989,7 +2990,9 @@ func __CloseElement() {
 			return 0
 		}()) * int32(layoutConfig.ChildGap))
 		openLayoutElement.Dimensions.Height += childGap
-		openLayoutElement.MinDimensions.Height += childGap
+		if !elementHasClipVertical {
+			openLayoutElement.MinDimensions.Height += childGap
+		}
 	}
 	context.layoutElementChildrenBuffer.Length -= int32(openLayoutElement.ChildrenOrTextContent.Children.Length)
 	if layoutConfig.Sizing.Width.Type != __SIZING_TYPE_PERCENT {
@@ -3334,41 +3337,53 @@ func __SizeContainersAlongAxis(xAxis bool) {
 			)
 			if parentItem != nil && parentItem != &LayoutElementHashMapItem_DEFAULT {
 				var parentLayoutElement *LayoutElement = parentItem.LayoutElement
-				if rootElement.LayoutConfig.Sizing.Width.Type == __SIZING_TYPE_GROW {
+				switch rootElement.LayoutConfig.Sizing.Width.Type {
+				case __SIZING_TYPE_GROW:
 					rootElement.Dimensions.Width = parentLayoutElement.Dimensions.Width
+				case __SIZING_TYPE_PERCENT:
+					rootElement.Dimensions.Width = parentLayoutElement.Dimensions.Width * rootElement.LayoutConfig.Sizing.Width.Size.Percent
+				default:
 				}
-				if rootElement.LayoutConfig.Sizing.Height.Type == __SIZING_TYPE_GROW {
+				switch rootElement.LayoutConfig.Sizing.Height.Type {
+				case __SIZING_TYPE_GROW:
 					rootElement.Dimensions.Height = parentLayoutElement.Dimensions.Height
+				case __SIZING_TYPE_PERCENT:
+					rootElement.Dimensions.Height = parentLayoutElement.Dimensions.Height * rootElement.LayoutConfig.Sizing.Height.Size.Percent
+				default:
 				}
 			}
 		}
-		if (func() float32 {
-			if rootElement.Dimensions.Width > rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min {
-				return rootElement.Dimensions.Width
-			}
-			return rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min
-		}()) < rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Max {
-			if rootElement.Dimensions.Width > rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min {
-				/* (008) */
+		if rootElement.LayoutConfig.Sizing.Width.Type != __SIZING_TYPE_PERCENT {
+			if (func() float32 {
+				if rootElement.Dimensions.Width > rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min {
+					return rootElement.Dimensions.Width
+				}
+				return rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min
+			}()) < rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Max {
+				if rootElement.Dimensions.Width > rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min {
+					/* (008) */
+				} else {
+					rootElement.Dimensions.Width = rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min
+				}
 			} else {
-				rootElement.Dimensions.Width = rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Min
+				rootElement.Dimensions.Width = rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Max
 			}
-		} else {
-			rootElement.Dimensions.Width = rootElement.LayoutConfig.Sizing.Width.Size.MinMax.Max
 		}
-		if (func() float32 {
-			if rootElement.Dimensions.Height > rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min {
-				return rootElement.Dimensions.Height
-			}
-			return rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min
-		}()) < rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Max {
-			if rootElement.Dimensions.Height > rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min {
-				/* (009) */
+		if rootElement.LayoutConfig.Sizing.Height.Type != __SIZING_TYPE_PERCENT {
+			if (func() float32 {
+				if rootElement.Dimensions.Height > rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min {
+					return rootElement.Dimensions.Height
+				}
+				return rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min
+			}()) < rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Max {
+				if rootElement.Dimensions.Height > rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min {
+					/* (009) */
+				} else {
+					rootElement.Dimensions.Height = rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min
+				}
 			} else {
-				rootElement.Dimensions.Height = rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Min
+				rootElement.Dimensions.Height = rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Max
 			}
-		} else {
-			rootElement.Dimensions.Height = rootElement.LayoutConfig.Sizing.Height.Size.MinMax.Max
 		}
 		for i := int32(0); i < bfsBuffer.Length; i++ {
 			var (
@@ -3792,7 +3807,12 @@ func __CalculateFinalLayout() {
 				wordIndex = measuredWord.Next
 				lineStartOffset = measuredWord.StartOffset + measuredWord.Length
 			} else if measuredWord.Length == 0 || lineWidth+measuredWord.Width > containerElement.Dimensions.Width {
-				var finalCharIsSpace bool = *(*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), lineStartOffset+lineLengthChars-1)) == ' '
+				var finalCharIsSpace bool = *(*byte)(unsafe.Add(unsafe.Pointer(textElementData.Text.Chars), func() int32 {
+					if (lineStartOffset + lineLengthChars - 1) > 0 {
+						return lineStartOffset + lineLengthChars - 1
+					}
+					return 0
+				}())) == ' '
 				__WrappedTextLineArray_Add(&context.wrappedTextLines, __WrappedTextLine{Dimensions: Dimensions{Width: lineWidth + (func() float32 {
 					if finalCharIsSpace {
 						return -spaceWidth
@@ -4041,7 +4061,6 @@ func __CalculateFinalLayout() {
 					if clipConfig.Vertical {
 						rootPosition.Y += clipConfig.ChildOffset.Y
 					}
-					break
 				}
 				__AddRenderCommand(RenderCommand{BoundingBox: clipHashMapItem.BoundingBox, UserData: 0, Id: __HashNumber(rootElement.Id, uint32(int32(rootElement.ChildrenOrTextContent.Children.Length)+10)).Id, ZIndex: root.ZIndex, CommandType: RENDER_COMMAND_TYPE_SCISSOR_START})
 			}
@@ -4222,6 +4241,11 @@ func __CalculateFinalLayout() {
 						default:
 						}
 						currentElementTreeNode.NextChildOffset.X += extraSpace
+						if 0 > extraSpace {
+							extraSpace = 0
+						} else {
+							extraSpace = extraSpace
+						}
 					} else {
 						for i := int32(0); i < int32(currentElement.ChildrenOrTextContent.Children.Length); i++ {
 							var childElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, *(*int32)(unsafe.Add(unsafe.Pointer(currentElement.ChildrenOrTextContent.Children.Elements), unsafe.Sizeof(int32(0))*uintptr(i))))
@@ -4245,6 +4269,11 @@ func __CalculateFinalLayout() {
 						case ALIGN_Y_CENTER:
 							extraSpace /= 2
 						default:
+						}
+						if 0 > extraSpace {
+							extraSpace = 0
+						} else {
+							extraSpace = extraSpace
 						}
 						currentElementTreeNode.NextChildOffset.Y += extraSpace
 					}
@@ -4399,7 +4428,7 @@ func __WarningArray_Add(array *__WarningArray, item __Warning) *__Warning {
 func __Array_Allocate_Arena(capacity int32, itemSize uint32, arena *Arena) unsafe.Pointer {
 	var (
 		totalSizeBytes  uint64 = uint64(uint32(capacity) * itemSize)
-		nextAllocOffset uint64 = arena.NextAllocation + (64 - arena.NextAllocation%64)
+		nextAllocOffset uint64 = arena.NextAllocation + ((64 - arena.NextAllocation%64) & 63)
 	)
 	if nextAllocOffset+totalSizeBytes <= arena.Capacity {
 		arena.NextAllocation = nextAllocOffset + totalSizeBytes
@@ -4492,7 +4521,7 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 				var elementBox BoundingBox = mapItem.BoundingBox
 				elementBox.X -= root.PointerOffset.X
 				elementBox.Y -= root.PointerOffset.Y
-				if __PointIsInsideRect(position, elementBox) && (clipElementId == 0 || __PointIsInsideRect(position, clipItem.BoundingBox)) {
+				if __PointIsInsideRect(position, elementBox) && (clipElementId == 0 || __PointIsInsideRect(position, clipItem.BoundingBox) || context.externalScrollHandlingEnabled) {
 					if mapItem.OnHoverFunction != nil {
 						mapItem.OnHoverFunction(mapItem.ElementId, context.pointerInfo, mapItem.HoverFunctionUserData.(int64))
 					}
@@ -4535,6 +4564,13 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 }
 
 func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHandler) *Context {
+	var baseOffset uint64 = 64 - uint64(uintptr(unsafe.Pointer(arena.Memory)))%64
+	if baseOffset == 64 {
+		baseOffset = 0
+	} else {
+		baseOffset = baseOffset
+	}
+	arena.Memory = (*byte)(unsafe.Add(unsafe.Pointer(arena.Memory), baseOffset))
 	var context *Context = __Context_Allocate_Arena(&arena)
 	if context == nil {
 		return nil
