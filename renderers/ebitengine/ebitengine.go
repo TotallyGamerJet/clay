@@ -16,6 +16,7 @@ import (
 )
 
 var whiteImage *ebiten.Image
+var solidColorImage *ebiten.Image
 
 func init() {
 	// Creating a sub-image to avoid bleeding edges
@@ -23,6 +24,10 @@ func init() {
 	img := ebiten.NewImage(3, 3)
 	img.Fill(color.White)
 	whiteImage = img.SubImage(image.Rect(1, 1, 2, 2)).(*ebiten.Image)
+
+	// Create a 1x1 solid color image for efficient rectangle drawing
+	// This avoids the vector.DrawFilledRect bug on macOS/Retina
+	solidColorImage = ebiten.NewImage(1, 1)
 }
 
 func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
@@ -55,18 +60,18 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 					return err
 				}
 			} else {
-				vector.DrawFilledRect(
-					screen,
-					boundingBox.X,
-					boundingBox.Y,
-					boundingBox.Width, boundingBox.Height,
-					color.RGBA{
-						R: uint8(config.BackgroundColor.R),
-						G: uint8(config.BackgroundColor.G),
-						B: uint8(config.BackgroundColor.B),
-						A: uint8(config.BackgroundColor.A),
-					}, true,
-				)
+				// Workaround for vector.DrawFilledRect bug on macOS/Retina displays
+				rectColor := color.RGBA{
+					R: uint8(config.BackgroundColor.R),
+					G: uint8(config.BackgroundColor.G),
+					B: uint8(config.BackgroundColor.B),
+					A: uint8(config.BackgroundColor.A),
+				}
+				solidColorImage.Fill(rectColor)
+				opts := &ebiten.DrawImageOptions{}
+				opts.GeoM.Scale(float64(boundingBox.Width), float64(boundingBox.Height))
+				opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
+				screen.DrawImage(solidColorImage, opts)
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
@@ -115,7 +120,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				if config.Width.Left > 0 {
 					clampedRadiusTop := min(config.CornerRadius.TopLeft, maxRadius)
 					clampedRadiusBottom := min(config.CornerRadius.BottomLeft, maxRadius)
-					vector.DrawFilledRect(
+					vector.FillRect(
 						screen,
 						boundingBox.X,
 						boundingBox.Y+clampedRadiusTop,
@@ -132,7 +137,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				if config.Width.Right > 0 {
 					clampedRadiusTop := min(config.CornerRadius.TopRight, maxRadius)
 					clampedRadiusBottom := min(config.CornerRadius.BottomRight, maxRadius)
-					vector.DrawFilledRect(
+					vector.FillRect(
 						screen,
 						boundingBox.X+boundingBox.Width-float32(config.Width.Right),
 						boundingBox.Y+clampedRadiusTop,
@@ -150,7 +155,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				if config.Width.Top > 0 {
 					clampedRadiusLeft := min(config.CornerRadius.TopLeft, maxRadius)
 					clampedRadiusRight := min(config.CornerRadius.TopRight, maxRadius)
-					vector.DrawFilledRect(
+					vector.FillRect(
 						screen,
 						boundingBox.X+clampedRadiusLeft,
 						boundingBox.Y,
@@ -168,7 +173,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				if config.Width.Bottom > 0 {
 					clampedRadiusLeft := min(config.CornerRadius.BottomLeft, maxRadius)
 					clampedRadiusRight := min(config.CornerRadius.BottomRight, maxRadius)
-					vector.DrawFilledRect(
+					vector.FillRect(
 						screen,
 						boundingBox.X+clampedRadiusLeft,
 						boundingBox.Y+boundingBox.Height-float32(config.Width.Bottom),
