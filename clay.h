@@ -879,7 +879,7 @@ CLAY_DLL_EXPORT bool Clay_Hovered(void);
 // Bind a callback that will be called when the pointer position provided by Clay_SetPointerState is within the current element's bounding box.
 // - onHoverFunction is a function pointer to a user defined function.
 // - userData is a pointer that will be transparently passed through when the onHoverFunction is called.
-CLAY_DLL_EXPORT void Clay_OnHover(void (*onHoverFunction)(Clay_ElementId elementId, Clay_PointerData pointerData, intptr_t userData), intptr_t userData);
+CLAY_DLL_EXPORT void Clay_OnHover(void (*onHoverFunction)(Clay_ElementId elementId, Clay_PointerData pointerData, void *userData), void *userData);
 // An imperative function that returns true if the pointer position provided by Clay_SetPointerState is within the element with the provided ID's bounding box.
 // This ID can be calculated either with CLAY_ID() for string literal IDs, or Clay_GetElementId for dynamic strings.
 CLAY_DLL_EXPORT bool Clay_PointerOver(Clay_ElementId elementId);
@@ -1146,6 +1146,7 @@ typedef struct {
     Clay_LayoutConfig *layoutConfig;
     Clay__ElementConfigArraySlice elementConfigs;
     uint32_t id;
+    uint16_t floatingChildrenCount;
 } Clay_LayoutElement;
 
 CLAY__ARRAY_DEFINE(Clay_LayoutElement, Clay_LayoutElementArray)
@@ -1178,8 +1179,8 @@ typedef struct { // todo get this struct into a single cache line
     Clay_BoundingBox boundingBox;
     Clay_ElementId elementId;
     Clay_LayoutElement* layoutElement;
-    void (*onHoverFunction)(Clay_ElementId elementId, Clay_PointerData pointerInfo, intptr_t userData);
-    intptr_t hoverFunctionUserData;
+    void (*onHoverFunction)(Clay_ElementId elementId, Clay_PointerData pointerInfo, void *userData);
+    void *hoverFunctionUserData;
     int32_t nextIndex;
     uint32_t generation;
     Clay__DebugElementData *debugData;
@@ -1776,7 +1777,8 @@ Clay_LayoutElementHashMapItem *Clay__GetHashMapItem(uint32_t id) {
 Clay_ElementId Clay__GenerateIdForAnonymousElement(Clay_LayoutElement *openLayoutElement) {
     Clay_Context* context = Clay_GetCurrentContext();
     Clay_LayoutElement *parentElement = Clay_LayoutElementArray_Get(&context->layoutElements, Clay__int32_tArray_GetValue(&context->openLayoutElementStack, context->openLayoutElementStack.length - 2));
-    Clay_ElementId elementId = Clay__HashNumber(parentElement->childrenOrTextContent.children.length, parentElement->id);
+    uint32_t offset = parentElement->childrenOrTextContent.children.length + parentElement->floatingChildrenCount;
+    Clay_ElementId elementId = Clay__HashNumber(offset, parentElement->id);
     openLayoutElement->id = elementId.id;
     Clay__AddHashMapItem(elementId, openLayoutElement);
     Clay__StringArray_Add(&context->layoutElementIdStrings, elementId.stringId);
@@ -1917,9 +1919,15 @@ void Clay__CloseElement(void) {
 
     // Close the currently open element
     int32_t closingElementIndex = Clay__int32_tArray_RemoveSwapback(&context->openLayoutElementStack, (int)context->openLayoutElementStack.length - 1);
+
+    // Get the currently open parent
     openLayoutElement = Clay__GetOpenLayoutElement();
 
-    if (!elementIsFloating && context->openLayoutElementStack.length > 1) {
+    if (context->openLayoutElementStack.length > 1) {
+        if(elementIsFloating) {
+            openLayoutElement->floatingChildrenCount++;
+            return;
+        }
         openLayoutElement->childrenOrTextContent.children.length++;
         Clay__int32_tArray_Add(&context->layoutElementChildrenBuffer, closingElementIndex);
     }
@@ -3407,7 +3415,7 @@ CLAY_DLL_EXPORT Clay_ElementIdArray Clay_GetPointerOverIds(void) {
 //    }
 //}
 //
-//void HandleDebugViewCloseButtonInteraction(Clay_ElementId elementId, Clay_PointerData pointerInfo, intptr_t userData) {
+//void HandleDebugViewCloseButtonInteraction(Clay_ElementId elementId, Clay_PointerData pointerInfo, void *userData) {
 //    Clay_Context* context = Clay_GetCurrentContext();
 //    (void) elementId; (void) pointerInfo; (void) userData;
 //    if (pointerInfo.state == CLAY_POINTER_DATA_PRESSED_THIS_FRAME) {
@@ -4285,7 +4293,7 @@ bool Clay_Hovered(void) {
     return false;
 }
 
-void Clay_OnHover(void (*onHoverFunction)(Clay_ElementId elementId, Clay_PointerData pointerInfo, intptr_t userData), intptr_t userData) {
+void Clay_OnHover(void (*onHoverFunction)(Clay_ElementId elementId, Clay_PointerData pointerInfo, void *userData), void *userData) {
     Clay_Context* context = Clay_GetCurrentContext();
     if (context->booleanWarnings.maxElementsExceeded) {
         return;

@@ -1817,11 +1817,12 @@ type LayoutElement struct {
 		Children        __LayoutElementChildren
 		TextElementData *__TextElementData
 	}
-	Dimensions     Dimensions
-	MinDimensions  Dimensions
-	LayoutConfig   *LayoutConfig
-	ElementConfigs __ElementConfigArraySlice
-	Id             uint32
+	Dimensions            Dimensions
+	MinDimensions         Dimensions
+	LayoutConfig          *LayoutConfig
+	ElementConfigs        __ElementConfigArraySlice
+	Id                    uint32
+	FloatingChildrenCount uint16
 }
 type LayoutElementArray struct {
 	Capacity      int32
@@ -2058,7 +2059,7 @@ type LayoutElementHashMapItem struct {
 	BoundingBox           BoundingBox
 	ElementId             ElementId
 	LayoutElement         *LayoutElement
-	OnHoverFunction       func(elementId ElementId, pointerInfo PointerData, userData int64)
+	OnHoverFunction       func(elementId ElementId, pointerInfo PointerData, userData unsafe.Pointer)
 	HoverFunctionUserData any
 	NextIndex             int32
 	Generation            uint32
@@ -2874,7 +2875,8 @@ func __GenerateIdForAnonymousElement(openLayoutElement *LayoutElement) ElementId
 	var (
 		context       *Context       = GetCurrentContext()
 		parentElement *LayoutElement = LayoutElementArray_Get(&context.layoutElements, __int32_tArray_GetValue(&context.openLayoutElementStack, context.openLayoutElementStack.Length-2))
-		elementId     ElementId      = __HashNumber(uint32(parentElement.ChildrenOrTextContent.Children.Length), parentElement.Id)
+		offset        uint32         = uint32(int32(parentElement.ChildrenOrTextContent.Children.Length) + int32(parentElement.FloatingChildrenCount))
+		elementId     ElementId      = __HashNumber(offset, parentElement.Id)
 	)
 	openLayoutElement.Id = elementId.Id
 	__AddHashMapItem(elementId, openLayoutElement)
@@ -3084,7 +3086,11 @@ func __CloseElement() {
 	var elementIsFloating bool = __ElementHasConfig(openLayoutElement, __ELEMENT_CONFIG_TYPE_FLOATING)
 	var closingElementIndex int32 = __int32_tArray_RemoveSwapback(&context.openLayoutElementStack, context.openLayoutElementStack.Length-1)
 	openLayoutElement = __GetOpenLayoutElement()
-	if !elementIsFloating && context.openLayoutElementStack.Length > 1 {
+	if context.openLayoutElementStack.Length > 1 {
+		if elementIsFloating {
+			openLayoutElement.FloatingChildrenCount++
+			return
+		}
 		openLayoutElement.ChildrenOrTextContent.Children.Length++
 		__int32_tArray_Add(&context.layoutElementChildrenBuffer, closingElementIndex)
 	}
@@ -4530,7 +4536,7 @@ func SetPointerState(position Vector2, isPointerDown bool) {
 				elementBox.Y -= root.PointerOffset.Y
 				if __PointIsInsideRect(position, elementBox) && (clipElementId == 0 || __PointIsInsideRect(position, clipItem.BoundingBox) || context.externalScrollHandlingEnabled) {
 					if mapItem.OnHoverFunction != nil {
-						mapItem.OnHoverFunction(mapItem.ElementId, context.pointerInfo, mapItem.HoverFunctionUserData.(int64))
+						mapItem.OnHoverFunction(mapItem.ElementId, context.pointerInfo, mapItem.HoverFunctionUserData.(unsafe.Pointer))
 					}
 					ElementIdArray_Add(&context.pointerOverIds, mapItem.ElementId)
 					found = true
@@ -4924,7 +4930,7 @@ func Hovered() bool {
 	return false
 }
 
-func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, userData int64), userData any) {
+func OnHover(onHoverFunction func(elementId ElementId, pointerInfo PointerData, userData unsafe.Pointer), userData any) {
 	var context *Context = GetCurrentContext()
 	if context.booleanWarnings.MaxElementsExceeded {
 		return
