@@ -14,6 +14,7 @@ This is a Go port of the C layout library ([Clay](https://github.com/nicbarker/c
 Clay includes multiple prebuilt renderers:
 
 * Ebitengine - [hajimehoshi/ebiten](https://github.com/hajimehoshi/ebiten)
+* Raylib - [gen2brain/raylib-go](https://github.com/gen2brain/raylib-go)
 * SDL2 - [veandco/go-sdl2](https://github.com/veandco/go-sdl2)
 * SDL3 - [Zyko0/go-sdl3](https://github.com/Zyko0/go-sdl3)
 * Software - [golang.org/x/image](https://golang.org/x/image)
