@@ -6,7 +6,6 @@ import (
 	"image"
 	"image/draw"
 	"image/jpeg"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
 )
@@ -45,21 +44,9 @@ type document struct {
 	image    any
 }
 
-type arena struct {
-	offset int64
-	memory []byte
-}
-
-func alloc[T any](arena *arena) *T {
-	prev := uintptr(arena.offset)
-	arena.offset = int64(prev + unsafe.Sizeof(*new(T)))
-	return (*T)(unsafe.Add(unsafe.Pointer(unsafe.SliceData(arena.memory)), prev))
-}
-
 type Data struct {
 	selectedDocumentIndex int32
 	yOffset               float32
-	frameArena            arena
 	documents             []document
 }
 
@@ -78,8 +65,7 @@ func Initialize(squirrelImage any) Data {
 	documents[4] = document{title: "Article 5", contents: "Article 5"}
 
 	data := Data{
-		frameArena: arena{memory: make([]byte, 1024)},
-		documents:  documents,
+		documents: documents,
 	}
 	return data
 }
@@ -135,8 +121,6 @@ func handleSidebarInteraction(elementId clay.ElementId, pointerData clay.Pointer
 }
 
 func CreateLayout(data *Data) clay.RenderCommandArray {
-	data.frameArena.offset = 0
-
 	clay.BeginLayout()
 
 	layoutExpand := clay.Sizing{
@@ -259,8 +243,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 							}))
 						})
 					} else {
-						clickData := alloc[sidebarClickData](&data.frameArena)
-						*clickData = sidebarClickData{
+						clickData := &sidebarClickData{
 							requestedDocumentIndex: int32(i),
 							selectedDocumentIndex:  &data.selectedDocumentIndex,
 							documentLen:            int32(len(data.documents)),
