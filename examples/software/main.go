@@ -27,8 +27,7 @@ const (
 
 func main() {
 	totalMemorySize := clay.MinMemorySize()
-	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(memory)
+	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
 	parsedFont, err := opentype.Parse(fonts.RobotoRegularTTF)
@@ -45,7 +44,7 @@ func main() {
 	faces := []font.Face{
 		videodemo.FontIdBody16: face,
 	}
-	clay.SetMeasureTextFunction(software.MeasureText, unsafe.Pointer(&faces))
+	clay.SetMeasureTextFunction(software.MeasureText, &faces)
 	var img image.Image = videodemo.SquirrelImage
 	demoData := videodemo.Initialize(unsafe.Pointer(&img))
 	window := image.NewRGBA(image.Rect(0, 0, winWidth, winHeight))

@@ -9,7 +9,6 @@ import (
 	"image/png"
 	"log/slog"
 	"math"
-	"strings"
 	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
@@ -39,10 +38,10 @@ func PrintPlaygroundImage(m image.Image) {
 	fmt.Println("IMAGE:" + base64.StdEncoding.EncodeToString(buf.Bytes()))
 }
 
-func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
-	fonts := *(*[]font.Face)(userData)
+func MeasureText(txt string, config *clay.TextElementConfig, userData any) clay.Dimensions {
+	fonts := *userData.(*[]font.Face)
 	face := fonts[config.FontId]
-	width := font.MeasureString(face, txt.String()).Ceil()
+	width := font.MeasureString(face, txt).Ceil()
 	height := face.Metrics().Height.Ceil()
 	return clay.Dimensions{
 		Width: float32(width), Height: float32(height),
@@ -70,7 +69,6 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
-			cloned := strings.Clone(config.StringContents.String())
 			face := fonts[config.FontId]
 
 			c := color.RGBA{
@@ -85,7 +83,7 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 				Face: face,
 				Dot:  fixed.Point26_6{X: fixed.I(int(boundingBox.X)), Y: fixed.I(int(boundingBox.Y)) + face.Metrics().Ascent},
 			}
-			d.DrawString(cloned)
+			d.DrawString(config.StringContents)
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
 			rect := image.Rect(int(boundingBox.X), int(boundingBox.Y), int(boundingBox.X+boundingBox.Width), int(boundingBox.Y+boundingBox.Height))
 			screen = screen.(interface {

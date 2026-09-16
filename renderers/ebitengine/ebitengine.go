@@ -6,7 +6,6 @@ import (
 	"image/color"
 	"log/slog"
 	"math"
-	"strings"
 	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
@@ -15,8 +14,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-var whiteImage *ebiten.Image
-var solidColorImage *ebiten.Image
+var (
+	whiteImage      *ebiten.Image
+	solidColorImage *ebiten.Image
+)
 
 func init() {
 	// Creating a sub-image to avoid bleeding edges
@@ -30,12 +31,12 @@ func init() {
 	solidColorImage = ebiten.NewImage(1, 1)
 }
 
-func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
-	fonts := *(*[]text.Face)(userData)
+func MeasureText(txt string, config *clay.TextElementConfig, userData any) clay.Dimensions {
+	fonts := *userData.(*[]text.Face)
 
 	font := fonts[config.FontId]
 
-	width, height := text.Measure(txt.String(), font, font.Metrics().HLineGap)
+	width, height := text.Measure(txt, font, font.Metrics().HLineGap)
 	scaleFactor := ebiten.Monitor().DeviceScaleFactor() // should we be passing the scaleFactor like we do in the renderer?
 	return clay.Dimensions{
 		Width:  float32(width / scaleFactor),
@@ -75,7 +76,6 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
-			cloned := strings.Clone(config.StringContents.String())
 			font := fonts[config.FontId]
 
 			opts := &text.DrawOptions{}
@@ -86,7 +86,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				config.TextColor.A/255,
 			)
 			opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
-			text.Draw(screen, cloned, font, opts)
+			text.Draw(screen, config.StringContents, font, opts)
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
 			screen = screen.SubImage(image.Rect(
 				int(boundingBox.X), int(boundingBox.Y),

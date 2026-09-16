@@ -123,8 +123,8 @@ func RenderHeaderButton(text string) {
 	})
 }
 
-func handleSidebarInteraction(elementId clay.ElementId, pointerData clay.PointerData, userData unsafe.Pointer) {
-	clickData := (*sidebarClickData)(userData)
+func handleSidebarInteraction(elementId clay.ElementId, pointerData clay.PointerData, userData any) {
+	clickData := userData.(*sidebarClickData)
 	// If this button was clicked
 	if pointerData.State == clay.POINTER_DATA_PRESSED_THIS_FRAME {
 		if clickData.requestedDocumentIndex >= 0 && clickData.requestedDocumentIndex < clickData.documentLen {
@@ -276,7 +276,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 							}()},
 							CornerRadius: clay.CornerRadiusAll(8),
 						}, func() {
-							clay.OnHover(handleSidebarInteraction, unsafe.Pointer(clickData))
+							clay.OnHover(handleSidebarInteraction, clickData)
 							clay.Text(document.title, clay.TextConfig(clay.TextElementConfig{
 								FontId:    FontIdBody16,
 								FontSize:  20,
@@ -327,8 +327,8 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 	})
 
 	renderCommands := clay.EndLayout()
-	for i := int32(0); i < renderCommands.Length; i++ {
-		clay.RenderCommandArray_Get(&renderCommands, i).BoundingBox.Y += data.yOffset
+	for i := range renderCommands {
+		renderCommands[i].BoundingBox.Y += data.yOffset
 	}
 	return renderCommands
 }

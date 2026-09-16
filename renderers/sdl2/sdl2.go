@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log/slog"
 	"math"
-	"strings"
 	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
@@ -17,12 +16,10 @@ type Font struct {
 	Font   *ttf.Font
 }
 
-func MeasureText(text clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
-	fonts := *(*[]Font)(userData)
+func MeasureText(text string, config *clay.TextElementConfig, userData any) clay.Dimensions {
+	fonts := *userData.(*[]Font)
 	font := fonts[config.FontId].Font
-	chars := strings.Clone(text.String())
-
-	width, height, err := font.SizeUTF8(chars)
+	width, height, err := font.SizeUTF8(text)
 	if err != nil {
 		panic(fmt.Errorf("sdl2: failed to measure text: %w", err))
 	}
@@ -60,9 +57,8 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
-			cloned := strings.Clone(config.StringContents.String())
 			font := fonts[config.FontId].Font
-			surface, err := font.RenderUTF8Blended(cloned, sdl.Color{
+			surface, err := font.RenderUTF8Blended(config.StringContents, sdl.Color{
 				R: uint8(config.TextColor.R),
 				G: uint8(config.TextColor.G),
 				B: uint8(config.TextColor.B),

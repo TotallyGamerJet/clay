@@ -3,16 +3,7 @@ package clay
 import (
 	"fmt"
 	"iter"
-	"unsafe"
 )
-
-func (s String) String() string {
-	return unsafe.String(s.Chars, s.Length)
-}
-
-func (s StringSlice) String() string {
-	return unsafe.String(s.Chars, s.Length)
-}
 
 // confirm that ErrorData implements error type
 var _ error = ErrorData{}
@@ -21,16 +12,12 @@ func (e ErrorData) Error() string {
 	return fmt.Sprintf("%s (code: %d)", e.ErrorText, e.ErrorType)
 }
 
-func toString(s string) String {
-	return String{Length: int32(len(s)), Chars: unsafe.StringData(s)}
-}
-
 func ID(label string) ElementId {
-	return __HashString(toString(label), 0)
+	return __HashString(label, 0)
 }
 
 func IDI(label string, index uint32) ElementId {
-	return __HashStringWithOffset(toString(label), index, 0)
+	return __HashStringWithOffset(label, index, 0)
 }
 
 func PaddingAll(padding uint16) Padding {
@@ -139,32 +126,22 @@ func UI(id ...ElementId) func(decl ElementDeclaration, children func()) {
 }
 
 func Text(text string, config *TextElementConfig) {
-	__OpenTextElement(toString(text), config)
+	if config == nil {
+		config = &TextElementConfig{}
+	}
+	openTextElement(text, config)
 }
 
 func TextConfig(config TextElementConfig) *TextElementConfig {
-	return __StoreTextElementConfig(config)
+	return &config
 }
 
-func GetElementId(idString string) ElementId {
-	return getElementId(toString(idString))
-}
-
-func GetElementIdWithIndex(idString string, index uint32) ElementId {
-	return getElementIdWithIndex(toString(idString), index)
-}
-
-func (r *RenderCommandArray) Iter() iter.Seq[RenderCommand] {
+func (r RenderCommandArray) Iter() iter.Seq[RenderCommand] {
 	return func(yield func(RenderCommand) bool) {
-		cmds := unsafe.Slice(r.InternalArray, r.Length)
-		for _, v := range cmds {
+		for _, v := range r {
 			if !yield(v) {
 				return
 			}
 		}
 	}
-}
-
-func CreateArenaWithCapacityAndMemory(memory []byte) Arena {
-	return createArenaWithCapacityAndMemory(uint64(len(memory)), unsafe.Pointer(unsafe.SliceData(memory)))
 }

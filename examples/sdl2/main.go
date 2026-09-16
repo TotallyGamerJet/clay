@@ -17,8 +17,6 @@ func handleClayError(errorData clay.ErrorData) {
 	panic(errorData)
 }
 
-// TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
-
 func main() {
 	if err := sdl.Init(sdl.INIT_VIDEO); err != nil {
 		panic(err)
@@ -72,11 +70,10 @@ func main() {
 	const screenWidth, screenHeight = 800, 600
 
 	totalMemorySize := clay.MinMemorySize()
-	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(memory)
+	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	clay.Initialize(arena, clay.Dimensions{Width: screenWidth, Height: screenHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
-	clay.SetMeasureTextFunction(sdl2.MeasureText, unsafe.Pointer(&fonts))
+	clay.SetMeasureTextFunction(sdl2.MeasureText, &fonts)
 
 	NOW := sdl.GetPerformanceCounter()
 	var LAST uint64 = 0

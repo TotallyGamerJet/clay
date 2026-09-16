@@ -18,13 +18,18 @@ Clay includes multiple prebuilt renderers:
 * SDL3 - [Zyko0/go-sdl3](https://github.com/Zyko0/go-sdl3)
 * Software - [golang.org/x/image](https://golang.org/x/image)
 
-## Generate clay.go
+## Updating clay
 
-Everything in `clay.go` is generated from the main project's `clay.h` file using [CxGo](https://github.com/gotranspile/cxgo).
-Just run the command below to regenerate it.
+Clay's C source (`clay.h`) is compiled to WebAssembly with clang and translated to Go with
+[wasm2go](https://github.com/ncruces/wasm2go). The Go types and bindings in `clay.go` are
+generated from clang's AST of `clay.h`. To update clay, replace `clay.h` and run:
+
 ```shell
-go tool cxgo
+go generate
 ```
+
+This requires a clang that can target WebAssembly, like [wasi-sdk](https://github.com/WebAssembly/wasi-sdk).
+It is looked up in `tools/wasi-sdk`, `$WASI_SDK_PATH`, or `PATH`; set `CLANG` to override.
 
 ## License
 

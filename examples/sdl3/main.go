@@ -83,10 +83,9 @@ func main() {
 
 	// Initialize Clay
 	totalMemorySize := clay.MinMemorySize()
-	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(memory)
+	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
-	clay.SetMeasureTextFunction(sdl3.MeasureText, unsafe.Pointer(&rendererData.Fonts))
+	clay.SetMeasureTextFunction(sdl3.MeasureText, &rendererData.Fonts)
 
 	demoData := videodemo.Initialize(unsafe.Pointer(surface))
 
