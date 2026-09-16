@@ -17,8 +17,6 @@ func handleClayError(errorData clay.ErrorData) {
 	panic(errorData)
 }
 
-// TODO: CreateArenaWithCapacityAndMemory should take a slice of bytes
-
 func main() {
 	if err := sdl.Init(sdl.INIT_VIDEO); err != nil {
 		panic(err)
@@ -45,6 +43,7 @@ func main() {
 		videodemo.FontIdBody16: {
 			FontId: videodemo.FontIdBody16,
 			Font:   font,
+			Data:   fonts.RobotoRegularTTF,
 		},
 	}
 
@@ -72,11 +71,10 @@ func main() {
 	const screenWidth, screenHeight = 800, 600
 
 	totalMemorySize := clay.MinMemorySize()
-	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(memory)
+	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	clay.Initialize(arena, clay.Dimensions{Width: screenWidth, Height: screenHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
-	clay.SetMeasureTextFunction(sdl2.MeasureText, unsafe.Pointer(&fonts))
+	clay.SetMeasureTextFunction(sdl2.MeasureText, &fonts)
 
 	NOW := sdl.GetPerformanceCounter()
 	var LAST uint64 = 0
@@ -95,7 +93,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	demoData := videodemo.Initialize(unsafe.Pointer(surface))
+	demoData := videodemo.Initialize(surface)
 
 loop:
 	for {
@@ -108,6 +106,11 @@ loop:
 			switch e := event.(type) {
 			case *sdl.QuitEvent:
 				break loop
+			case *sdl.KeyboardEvent:
+				// Press D to toggle the debug view.
+				if e.Type == sdl.KEYDOWN && e.Repeat == 0 && e.Keysym.Sym == sdl.K_d {
+					clay.SetDebugModeEnabled(!clay.IsDebugModeEnabled())
+				}
 			case *sdl.MouseWheelEvent:
 				scrollDelta.X = float32(e.X)
 				scrollDelta.Y = float32(e.Y)

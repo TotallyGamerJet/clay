@@ -6,17 +6,19 @@ import (
 	"image/color"
 	"log/slog"
 	"math"
-	"strings"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
+	"github.com/TotallyGamerJet/clay/renderers/internal/overlay"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/colorm"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 )
 
-var whiteImage *ebiten.Image
-var solidColorImage *ebiten.Image
+var (
+	whiteImage      *ebiten.Image
+	solidColorImage *ebiten.Image
+)
 
 func init() {
 	// Creating a sub-image to avoid bleeding edges
@@ -30,13 +32,38 @@ func init() {
 	solidColorImage = ebiten.NewImage(1, 1)
 }
 
-func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData unsafe.Pointer) clay.Dimensions {
-	fonts := *(*[]text.Face)(userData)
+type sizedFaceKey struct {
+	face *text.GoTextFace
+	size float64
+}
 
-	font := fonts[config.FontId]
+var sizedFaces = map[sizedFaceKey]*text.GoTextFace{}
 
-	width, height := text.Measure(txt.String(), font, font.Metrics().HLineGap)
+// sizedFace returns face with the font size of the text, scaled by scaleFactor.
+// Only *text.GoTextFace can be resized; other faces and texts without a font size use face as is.
+func sizedFace(face text.Face, fontSize uint16, scaleFactor float64) text.Face {
+	f, ok := face.(*text.GoTextFace)
+	if !ok || fontSize == 0 {
+		return face
+	}
+	key := sizedFaceKey{face: f, size: float64(fontSize) * scaleFactor}
+	sized, ok := sizedFaces[key]
+	if !ok {
+		c := *f
+		c.Size = key.size
+		sized = &c
+		sizedFaces[key] = sized
+	}
+	return sized
+}
+
+func MeasureText(txt string, config *clay.TextElementConfig, userData any) clay.Dimensions {
+	fonts := *userData.(*[]text.Face)
+
 	scaleFactor := ebiten.Monitor().DeviceScaleFactor() // should we be passing the scaleFactor like we do in the renderer?
+	font := sizedFace(fonts[config.FontId], config.FontSize, scaleFactor)
+
+	width, height := text.Measure(txt, font, font.Metrics().HLineGap)
 	return clay.Dimensions{
 		Width:  float32(width / scaleFactor),
 		Height: float32(height / scaleFactor),
@@ -45,6 +72,7 @@ func MeasureText(txt clay.StringSlice, config *clay.TextElementConfig, userData 
 
 func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.RenderCommandArray, fonts []text.Face) error {
 	fullScreen := screen
+	var overlays overlay.Stack
 	for renderCommand := range renderCommands.Iter() {
 		boundingBox := renderCommand.BoundingBox
 		boundingBox.X *= scaleFactor
@@ -54,6 +82,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
+			config.BackgroundColor = overlays.Apply(config.BackgroundColor)
 			if config.CornerRadius.TopLeft > 0 {
 				cornerRadius := config.CornerRadius.TopLeft * scaleFactor
 				if err := renderFillRoundedRect(screen, boundingBox, cornerRadius, config.BackgroundColor); err != nil {
@@ -61,7 +90,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				}
 			} else {
 				// Workaround for vector.DrawFilledRect bug on macOS/Retina displays
-				rectColor := color.RGBA{
+				rectColor := color.NRGBA{
 					R: uint8(config.BackgroundColor.R),
 					G: uint8(config.BackgroundColor.G),
 					B: uint8(config.BackgroundColor.B),
@@ -75,8 +104,8 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
-			cloned := strings.Clone(config.StringContents.String())
-			font := fonts[config.FontId]
+			config.TextColor = overlays.Apply(config.TextColor)
+			font := sizedFace(fonts[config.FontId], config.FontSize, float64(scaleFactor))
 
 			opts := &text.DrawOptions{}
 			opts.ColorScale.Scale(
@@ -86,7 +115,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				config.TextColor.A/255,
 			)
 			opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
-			text.Draw(screen, cloned, font, opts)
+			text.Draw(screen, config.StringContents, font, opts)
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
 			screen = screen.SubImage(image.Rect(
 				int(boundingBox.X), int(boundingBox.Y),
@@ -95,16 +124,28 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 			)).(*ebiten.Image)
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
 			screen = fullScreen
+		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+			overlays.Push(renderCommand.RenderData.OverlayColor.Color)
+		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+			overlays.Pop()
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
-			img := (*ebiten.Image)(config.ImageData.(unsafe.Pointer))
-			opts := &ebiten.DrawImageOptions{}
+			img := config.ImageData.(*ebiten.Image)
 			bounds := img.Bounds()
+			opts := &colorm.DrawImageOptions{}
 			opts.GeoM.Scale(float64(boundingBox.Width/float32(bounds.Dx())), float64(boundingBox.Height/float32(bounds.Dy())))
 			opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
-			screen.DrawImage(img, opts)
+			var cm colorm.ColorM
+			for _, o := range overlays {
+				// The color matrix works on non-premultiplied colors: rgb = rgb*(1-a) + overlay*a
+				a := float64(o.A / 255)
+				cm.Scale(1-a, 1-a, 1-a, 1)
+				cm.Translate(float64(o.R/255)*a, float64(o.G/255)*a, float64(o.B/255)*a, 0)
+			}
+			colorm.DrawImage(screen, img, cm, opts)
 		case clay.RENDER_COMMAND_TYPE_BORDER:
 			config := &renderCommand.RenderData.Border
+			config.Color = overlays.Apply(config.Color)
 			config.Width.Top = uint16(float32(config.Width.Top) * scaleFactor)
 			config.Width.Bottom = uint16(float32(config.Width.Bottom) * scaleFactor)
 			config.Width.Left = uint16(float32(config.Width.Left) * scaleFactor)
@@ -125,7 +166,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 						boundingBox.X,
 						boundingBox.Y+clampedRadiusTop,
 						float32(config.Width.Left), boundingBox.Height-clampedRadiusTop-clampedRadiusBottom,
-						color.RGBA{
+						color.NRGBA{
 							R: uint8(config.Color.R),
 							G: uint8(config.Color.G),
 							B: uint8(config.Color.B),
@@ -143,7 +184,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 						boundingBox.Y+clampedRadiusTop,
 						float32(config.Width.Right),
 						boundingBox.Height-clampedRadiusTop-clampedRadiusBottom,
-						color.RGBA{
+						color.NRGBA{
 							R: uint8(config.Color.R),
 							G: uint8(config.Color.G),
 							B: uint8(config.Color.B),
@@ -161,7 +202,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 						boundingBox.Y,
 						boundingBox.Width-clampedRadiusLeft-clampedRadiusRight,
 						float32(config.Width.Top),
-						color.RGBA{
+						color.NRGBA{
 							R: uint8(config.Color.R),
 							G: uint8(config.Color.G),
 							B: uint8(config.Color.B),
@@ -179,7 +220,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 						boundingBox.Y+boundingBox.Height-float32(config.Width.Bottom),
 						boundingBox.Width-clampedRadiusLeft-clampedRadiusRight,
 						float32(config.Width.Bottom),
-						color.RGBA{
+						color.NRGBA{
 							R: uint8(config.Color.R),
 							G: uint8(config.Color.G),
 							B: uint8(config.Color.B),
@@ -195,7 +236,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				if config.Width.Top > 0 && config.CornerRadius.TopRight > 0 {
 					renderCornerBorder(screen, &boundingBox, config, 1, config.Color)
 				}
-				if config.Width.Bottom > 0 && config.CornerRadius.BottomLeft > 0 {
+				if config.Width.Bottom > 0 && config.CornerRadius.BottomRight > 0 {
 					renderCornerBorder(screen, &boundingBox, config, 2, config.Color)
 				}
 				if config.Width.Bottom > 0 && config.CornerRadius.BottomLeft > 0 {

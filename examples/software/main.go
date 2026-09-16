@@ -1,11 +1,11 @@
 package main
 
 import (
+	"flag"
 	"image"
 	"image/color"
 	"image/png"
 	"os"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/examples/fonts"
@@ -26,9 +26,11 @@ const (
 )
 
 func main() {
+	debug := flag.Bool("debug", false, "enable the debug view")
+	flag.Parse()
+
 	totalMemorySize := clay.MinMemorySize()
-	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(memory)
+	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
 	parsedFont, err := opentype.Parse(fonts.RobotoRegularTTF)
@@ -36,18 +38,20 @@ func main() {
 		panic(err)
 	}
 
-	face, err := opentype.NewFace(parsedFont, &opentype.FaceOptions{
-		Size:    fontSize,
-		DPI:     72, // Standard screen DPI
-		Hinting: font.HintingFull,
-	})
-
-	faces := []font.Face{
-		videodemo.FontIdBody16: face,
+	faces := []*software.Font{
+		videodemo.FontIdBody16: {
+			Font: parsedFont,
+			Options: opentype.FaceOptions{
+				Size:    fontSize,
+				DPI:     72, // Standard screen DPI
+				Hinting: font.HintingFull,
+			},
+		},
 	}
-	clay.SetMeasureTextFunction(software.MeasureText, unsafe.Pointer(&faces))
+	clay.SetMeasureTextFunction(software.MeasureText, &faces)
+	clay.SetDebugModeEnabled(*debug)
 	var img image.Image = videodemo.SquirrelImage
-	demoData := videodemo.Initialize(unsafe.Pointer(&img))
+	demoData := videodemo.Initialize(&img)
 	window := image.NewRGBA(image.Rect(0, 0, winWidth, winHeight))
 	draw.Draw(window, window.Bounds(), image.NewUniform(color.RGBA{A: 255}), image.Point{}, draw.Src)
 

@@ -2,13 +2,13 @@ package main
 
 import (
 	"bytes"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/examples/fonts"
 	"github.com/TotallyGamerJet/clay/examples/videodemo"
 	"github.com/TotallyGamerJet/clay/renderers/ebitengine"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
@@ -33,6 +33,11 @@ type App struct {
 }
 
 func (a *App) Update() error {
+	// Press D to toggle the debug view.
+	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
+		clay.SetDebugModeEnabled(!clay.IsDebugModeEnabled())
+	}
+
 	dx, dy := ebiten.Wheel()
 	clay.UpdateScrollContainers(true, clay.Vector2{
 		X: float32(dx),
@@ -98,12 +103,11 @@ func main() {
 
 	// Initialize Clay
 	totalMemorySize := clay.MinMemorySize()
-	memory := make([]byte, totalMemorySize)
-	arena := clay.CreateArenaWithCapacityAndMemory(memory)
+	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
-	clay.SetMeasureTextFunction(ebitengine.MeasureText, unsafe.Pointer(&app.fonts))
+	clay.SetMeasureTextFunction(ebitengine.MeasureText, &app.fonts)
 	ebImg := ebiten.NewImageFromImage(videodemo.SquirrelImage)
-	app.demoData = videodemo.Initialize(unsafe.Pointer(ebImg))
+	app.demoData = videodemo.Initialize(ebImg)
 
 	if err := ebiten.RunGame(app); err != nil {
 		panic(err)
