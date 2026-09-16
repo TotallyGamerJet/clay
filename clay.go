@@ -2,17 +2,56 @@
 
 package clay
 
+type PointerDataInteractionState uint8
+
+const (
+	POINTER_DATA_PRESSED_THIS_FRAME  PointerDataInteractionState = 0
+	POINTER_DATA_PRESSED             PointerDataInteractionState = 1
+	POINTER_DATA_RELEASED_THIS_FRAME PointerDataInteractionState = 2
+	POINTER_DATA_RELEASED            PointerDataInteractionState = 3
+)
+
 type RenderCommandType uint8
 
 const (
-	RENDER_COMMAND_TYPE_NONE          RenderCommandType = 0
-	RENDER_COMMAND_TYPE_RECTANGLE     RenderCommandType = 1
-	RENDER_COMMAND_TYPE_BORDER        RenderCommandType = 2
-	RENDER_COMMAND_TYPE_TEXT          RenderCommandType = 3
-	RENDER_COMMAND_TYPE_IMAGE         RenderCommandType = 4
-	RENDER_COMMAND_TYPE_SCISSOR_START RenderCommandType = 5
-	RENDER_COMMAND_TYPE_SCISSOR_END   RenderCommandType = 6
-	RENDER_COMMAND_TYPE_CUSTOM        RenderCommandType = 7
+	RENDER_COMMAND_TYPE_NONE                RenderCommandType = 0
+	RENDER_COMMAND_TYPE_RECTANGLE           RenderCommandType = 1
+	RENDER_COMMAND_TYPE_BORDER              RenderCommandType = 2
+	RENDER_COMMAND_TYPE_TEXT                RenderCommandType = 3
+	RENDER_COMMAND_TYPE_IMAGE               RenderCommandType = 4
+	RENDER_COMMAND_TYPE_SCISSOR_START       RenderCommandType = 5
+	RENDER_COMMAND_TYPE_SCISSOR_END         RenderCommandType = 6
+	RENDER_COMMAND_TYPE_OVERLAY_COLOR_START RenderCommandType = 7
+	RENDER_COMMAND_TYPE_OVERLAY_COLOR_END   RenderCommandType = 8
+	RENDER_COMMAND_TYPE_CUSTOM              RenderCommandType = 9
+)
+
+type TransitionState int32
+
+const (
+	TRANSITION_STATE_IDLE          TransitionState = 0
+	TRANSITION_STATE_ENTERING      TransitionState = 1
+	TRANSITION_STATE_TRANSITIONING TransitionState = 2
+	TRANSITION_STATE_EXITING       TransitionState = 3
+)
+
+type TransitionProperty int32
+
+const (
+	TRANSITION_PROPERTY_NONE             TransitionProperty = 0
+	TRANSITION_PROPERTY_X                TransitionProperty = 1
+	TRANSITION_PROPERTY_Y                TransitionProperty = 2
+	TRANSITION_PROPERTY_POSITION         TransitionProperty = 3
+	TRANSITION_PROPERTY_WIDTH            TransitionProperty = 4
+	TRANSITION_PROPERTY_HEIGHT           TransitionProperty = 8
+	TRANSITION_PROPERTY_DIMENSIONS       TransitionProperty = 12
+	TRANSITION_PROPERTY_BOUNDING_BOX     TransitionProperty = 15
+	TRANSITION_PROPERTY_BACKGROUND_COLOR TransitionProperty = 16
+	TRANSITION_PROPERTY_OVERLAY_COLOR    TransitionProperty = 32
+	TRANSITION_PROPERTY_CORNER_RADIUS    TransitionProperty = 64
+	TRANSITION_PROPERTY_BORDER_COLOR     TransitionProperty = 128
+	TRANSITION_PROPERTY_BORDER_WIDTH     TransitionProperty = 256
+	TRANSITION_PROPERTY_BORDER           TransitionProperty = 384
 )
 
 type __SizingType uint8
@@ -84,6 +123,35 @@ const (
 	CLIP_TO_ATTACHED_PARENT FloatingClipToElement = 1
 )
 
+type TransitionInteractionHandlingType uint8
+
+const (
+	TRANSITION_DISABLE_INTERACTIONS_WHILE_TRANSITIONING_POSITION TransitionInteractionHandlingType = 0
+	TRANSITION_ALLOW_INTERACTIONS_WHILE_TRANSITIONING_POSITION   TransitionInteractionHandlingType = 1
+)
+
+type TransitionEnterTriggerType uint8
+
+const (
+	TRANSITION_ENTER_SKIP_ON_FIRST_PARENT_FRAME    TransitionEnterTriggerType = 0
+	TRANSITION_ENTER_TRIGGER_ON_FIRST_PARENT_FRAME TransitionEnterTriggerType = 1
+)
+
+type TransitionExitTriggerType uint8
+
+const (
+	TRANSITION_EXIT_SKIP_WHEN_PARENT_EXITS    TransitionExitTriggerType = 0
+	TRANSITION_EXIT_TRIGGER_WHEN_PARENT_EXITS TransitionExitTriggerType = 1
+)
+
+type ExitTransitionSiblingOrdering uint8
+
+const (
+	EXIT_TRANSITION_ORDERING_UNDERNEATH_SIBLINGS ExitTransitionSiblingOrdering = 0
+	EXIT_TRANSITION_ORDERING_NATURAL_ORDER       ExitTransitionSiblingOrdering = 1
+	EXIT_TRANSITION_ORDERING_ABOVE_SIBLINGS      ExitTransitionSiblingOrdering = 2
+)
+
 type TextElementConfigWrapMode uint8
 
 const (
@@ -112,15 +180,7 @@ const (
 	ERROR_TYPE_PERCENTAGE_OVER_1                      ErrorType = 6
 	ERROR_TYPE_INTERNAL_ERROR                         ErrorType = 7
 	ERROR_TYPE_UNBALANCED_OPEN_CLOSE                  ErrorType = 8
-)
-
-type PointerDataInteractionState uint8
-
-const (
-	POINTER_DATA_PRESSED_THIS_FRAME  PointerDataInteractionState = 0
-	POINTER_DATA_PRESSED             PointerDataInteractionState = 1
-	POINTER_DATA_RELEASED_THIS_FRAME PointerDataInteractionState = 2
-	POINTER_DATA_RELEASED            PointerDataInteractionState = 3
+	ERROR_TYPE_HASH_MAP_CAPACITY_EXCEEDED             ErrorType = 9
 )
 
 type Vector2 struct {
@@ -138,6 +198,23 @@ func encVector2(b []byte, p uint32, v *Vector2) {
 func decVector2(m []byte, p uint32, v *Vector2) {
 	v.X = getF32(m, p+0)
 	v.Y = getF32(m, p+4)
+}
+
+type PointerData struct {
+	Position Vector2
+	State    PointerDataInteractionState
+}
+
+const sizeofPointerData = 12
+
+func encPointerData(b []byte, p uint32, v *PointerData) {
+	encVector2(b, p+0, &v.Position)
+	putU8(b, p+8, uint8(v.State))
+}
+
+func decPointerData(m []byte, p uint32, v *PointerData) {
+	decVector2(m, p+0, &v.Position)
+	v.State = PointerDataInteractionState(getU8(m, p+8))
 }
 
 type Dimensions struct {
@@ -388,14 +465,29 @@ func decClipRenderData(m []byte, p uint32, v *ClipRenderData) {
 	v.Vertical = getBool(m, p+1)
 }
 
+type OverlayColorRenderData struct {
+	Color Color
+}
+
+const sizeofOverlayColorRenderData = 16
+
+func encOverlayColorRenderData(b []byte, p uint32, v *OverlayColorRenderData) {
+	encColor(b, p+0, &v.Color)
+}
+
+func decOverlayColorRenderData(m []byte, p uint32, v *OverlayColorRenderData) {
+	decColor(m, p+0, &v.Color)
+}
+
 type RenderData struct {
 	// union
-	Rectangle RectangleRenderData
-	Text      TextRenderData
-	Image     ImageRenderData
-	Custom    CustomRenderData
-	Border    BorderRenderData
-	Clip      ClipRenderData
+	Rectangle    RectangleRenderData
+	Text         TextRenderData
+	Image        ImageRenderData
+	Custom       CustomRenderData
+	Border       BorderRenderData
+	Clip         ClipRenderData
+	OverlayColor OverlayColorRenderData
 }
 
 const sizeofRenderData = 44
@@ -431,6 +523,10 @@ func decRenderCommand(m []byte, p uint32, v *RenderCommand) {
 		decClipRenderData(m, p+16+0, &v.RenderData.Clip)
 	case RENDER_COMMAND_TYPE_SCISSOR_END:
 		decClipRenderData(m, p+16+0, &v.RenderData.Clip)
+	case RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+		decOverlayColorRenderData(m, p+16+0, &v.RenderData.OverlayColor)
+	case RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+		decOverlayColorRenderData(m, p+16+0, &v.RenderData.OverlayColor)
 	case RENDER_COMMAND_TYPE_CUSTOM:
 		decCustomRenderData(m, p+16+0, &v.RenderData.Custom)
 	}
@@ -568,6 +664,54 @@ func decScrollContainerData(m []byte, p uint32, v *ScrollContainerData) {
 	decDimensions(m, p+12, &v.ContentDimensions)
 	decClipElementConfig(m, p+20, &v.Config)
 	v.Found = getBool(m, p+32)
+}
+
+type TransitionData struct {
+	BoundingBox     BoundingBox
+	BackgroundColor Color
+	OverlayColor    Color
+	BorderColor     Color
+	BorderWidth     BorderWidth
+}
+
+const sizeofTransitionData = 76
+
+func encTransitionData(b []byte, p uint32, v *TransitionData) {
+	encBoundingBox(b, p+0, &v.BoundingBox)
+	encColor(b, p+16, &v.BackgroundColor)
+	encColor(b, p+32, &v.OverlayColor)
+	encColor(b, p+48, &v.BorderColor)
+	encBorderWidth(b, p+64, &v.BorderWidth)
+}
+
+func decTransitionData(m []byte, p uint32, v *TransitionData) {
+	decBoundingBox(m, p+0, &v.BoundingBox)
+	decColor(m, p+16, &v.BackgroundColor)
+	decColor(m, p+32, &v.OverlayColor)
+	decColor(m, p+48, &v.BorderColor)
+	decBorderWidth(m, p+64, &v.BorderWidth)
+}
+
+type TransitionCallbackArguments struct {
+	TransitionState TransitionState
+	Initial         TransitionData
+	Current         Pointer[TransitionData]
+	Target          TransitionData
+	ElapsedTime     float32
+	Duration        float32
+	Properties      TransitionProperty
+}
+
+const sizeofTransitionCallbackArguments = 172
+
+func decTransitionCallbackArguments(m []byte, p uint32, v *TransitionCallbackArguments) {
+	v.TransitionState = TransitionState(getU32(m, p+0))
+	decTransitionData(m, p+4, &v.Initial)
+	v.Current = Pointer[TransitionData]{addr: getU32(m, p+80)}
+	decTransitionData(m, p+84, &v.Target)
+	v.ElapsedTime = getF32(m, p+160)
+	v.Duration = getF32(m, p+164)
+	v.Properties = TransitionProperty(getU32(m, p+168))
 }
 
 type SizingMinMax struct {
@@ -810,9 +954,47 @@ func decBorderElementConfig(m []byte, p uint32, v *BorderElementConfig) {
 	decBorderWidth(m, p+16, &v.Width)
 }
 
+type TransitionElementConfig struct {
+	Duration            float32
+	Properties          TransitionProperty
+	InteractionHandling TransitionInteractionHandlingType
+	Enter               struct {
+		Trigger TransitionEnterTriggerType
+	}
+	Exit struct {
+		Trigger         TransitionExitTriggerType
+		SiblingOrdering ExitTransitionSiblingOrdering
+	}
+}
+
+const sizeofTransitionElementConfig = 32
+
+func encTransitionElementConfig(b []byte, p uint32, v *TransitionElementConfig) {
+	putF32(b, p+4, v.Duration)
+	putU32(b, p+8, uint32(v.Properties))
+	putU8(b, p+12, uint8(v.InteractionHandling))
+	putU8(b, p+16+4, uint8(v.Enter.Trigger))
+
+	putU8(b, p+24+4, uint8(v.Exit.Trigger))
+	putU8(b, p+24+5, uint8(v.Exit.SiblingOrdering))
+
+}
+
+func decTransitionElementConfig(m []byte, p uint32, v *TransitionElementConfig) {
+	v.Duration = getF32(m, p+4)
+	v.Properties = TransitionProperty(getU32(m, p+8))
+	v.InteractionHandling = TransitionInteractionHandlingType(getU8(m, p+12))
+	v.Enter.Trigger = TransitionEnterTriggerType(getU8(m, p+16+4))
+
+	v.Exit.Trigger = TransitionExitTriggerType(getU8(m, p+24+4))
+	v.Exit.SiblingOrdering = ExitTransitionSiblingOrdering(getU8(m, p+24+5))
+
+}
+
 type ElementDeclaration struct {
 	Layout          LayoutConfig
 	BackgroundColor Color
+	OverlayColor    Color
 	CornerRadius    CornerRadius
 	AspectRatio     AspectRatioElementConfig
 	Image           ImageElementConfig
@@ -820,35 +1002,40 @@ type ElementDeclaration struct {
 	Custom          CustomElementConfig
 	Clip            ClipElementConfig
 	Border          BorderElementConfig
+	Transition      TransitionElementConfig
 	UserData        any
 }
 
-const sizeofElementDeclaration = 156
+const sizeofElementDeclaration = 204
 
 func encElementDeclaration(b []byte, p uint32, v *ElementDeclaration) {
 	encLayoutConfig(b, p+0, &v.Layout)
 	encColor(b, p+40, &v.BackgroundColor)
-	encCornerRadius(b, p+56, &v.CornerRadius)
-	encAspectRatioElementConfig(b, p+72, &v.AspectRatio)
-	encImageElementConfig(b, p+76, &v.Image)
-	encFloatingElementConfig(b, p+80, &v.Floating)
-	encCustomElementConfig(b, p+108, &v.Custom)
-	encClipElementConfig(b, p+112, &v.Clip)
-	encBorderElementConfig(b, p+124, &v.Border)
-	putU32(b, p+152, storeHandle(v.UserData))
+	encColor(b, p+56, &v.OverlayColor)
+	encCornerRadius(b, p+72, &v.CornerRadius)
+	encAspectRatioElementConfig(b, p+88, &v.AspectRatio)
+	encImageElementConfig(b, p+92, &v.Image)
+	encFloatingElementConfig(b, p+96, &v.Floating)
+	encCustomElementConfig(b, p+124, &v.Custom)
+	encClipElementConfig(b, p+128, &v.Clip)
+	encBorderElementConfig(b, p+140, &v.Border)
+	encTransitionElementConfig(b, p+168, &v.Transition)
+	putU32(b, p+200, storeHandle(v.UserData))
 }
 
 func decElementDeclaration(m []byte, p uint32, v *ElementDeclaration) {
 	decLayoutConfig(m, p+0, &v.Layout)
 	decColor(m, p+40, &v.BackgroundColor)
-	decCornerRadius(m, p+56, &v.CornerRadius)
-	decAspectRatioElementConfig(m, p+72, &v.AspectRatio)
-	decImageElementConfig(m, p+76, &v.Image)
-	decFloatingElementConfig(m, p+80, &v.Floating)
-	decCustomElementConfig(m, p+108, &v.Custom)
-	decClipElementConfig(m, p+112, &v.Clip)
-	decBorderElementConfig(m, p+124, &v.Border)
-	v.UserData = loadHandle(getU32(m, p+152))
+	decColor(m, p+56, &v.OverlayColor)
+	decCornerRadius(m, p+72, &v.CornerRadius)
+	decAspectRatioElementConfig(m, p+88, &v.AspectRatio)
+	decImageElementConfig(m, p+92, &v.Image)
+	decFloatingElementConfig(m, p+96, &v.Floating)
+	decCustomElementConfig(m, p+124, &v.Custom)
+	decClipElementConfig(m, p+128, &v.Clip)
+	decBorderElementConfig(m, p+140, &v.Border)
+	decTransitionElementConfig(m, p+168, &v.Transition)
+	v.UserData = loadHandle(getU32(m, p+200))
 }
 
 type TextElementConfig struct {
@@ -906,23 +1093,6 @@ func decErrorData(m []byte, p uint32, v *ErrorData) {
 	v.UserData = loadHandle(getU32(m, p+16))
 }
 
-type PointerData struct {
-	Position Vector2
-	State    PointerDataInteractionState
-}
-
-const sizeofPointerData = 12
-
-func encPointerData(b []byte, p uint32, v *PointerData) {
-	encVector2(b, p+0, &v.Position)
-	putU8(b, p+8, uint8(v.State))
-}
-
-func decPointerData(m []byte, p uint32, v *PointerData) {
-	decVector2(m, p+0, &v.Position)
-	v.State = PointerDataInteractionState(getU8(m, p+8))
-}
-
 func MinMemorySize() uint32 {
 	return uint32(module.Xgo_Clay_MinMemorySize())
 }
@@ -932,6 +1102,14 @@ func SetPointerState(position Vector2, pointerDown bool) {
 	encVector2(argBuf, 0, &position)
 	argPtr := wasmCommit(argBuf)
 	module.Xgo_Clay_SetPointerState(int32(argPtr+0), b2i(pointerDown))
+}
+
+func GetPointerState() PointerData {
+	argPtr := scratchAddr
+	var ret PointerData
+	module.Xgo_Clay_GetPointerState(int32(argPtr + 0))
+	decPointerData(wasmMemory(), argPtr+0, &ret)
+	return ret
 }
 
 func GetCurrentContext() *Context {
@@ -964,6 +1142,14 @@ func SetLayoutDimensions(dimensions Dimensions) {
 	module.Xgo_Clay_SetLayoutDimensions(int32(argPtr + 0))
 }
 
+func GetLayoutDimensions() Dimensions {
+	argPtr := scratchAddr
+	var ret Dimensions
+	module.Xgo_Clay_GetLayoutDimensions(int32(argPtr + 0))
+	decDimensions(wasmMemory(), argPtr+0, &ret)
+	return ret
+}
+
 func beginLayout() {
 	module.Xgo_Clay_BeginLayout()
 }
@@ -971,11 +1157,15 @@ func beginLayout() {
 var endLayoutResult RenderCommandArray
 
 // The returned slice is reused by the next call to EndLayout.
-func EndLayout() RenderCommandArray {
+func EndLayout(deltaTime float32) RenderCommandArray {
 	argPtr := scratchAddr
-	module.Xgo_Clay_EndLayout(int32(argPtr + 0))
+	module.Xgo_Clay_EndLayout(int32(argPtr+0), float32(deltaTime))
 	decRenderCommandArray(wasmMemory(), argPtr+0, &endLayoutResult)
 	return endLayoutResult
+}
+
+func GetOpenElementId() uint32 {
+	return uint32(module.Xgo_Clay_GetOpenElementId())
 }
 
 func GetElementId(idString string) ElementId {
@@ -1083,7 +1273,7 @@ func __OpenElementWithId(elementId ElementId) {
 }
 
 func __ConfigureOpenElement(config ElementDeclaration) {
-	argBuf := wasmArgs(156)
+	argBuf := wasmArgs(204)
 	encElementDeclaration(argBuf, 0, &config)
 	argPtr := wasmCommit(argBuf)
 	module.Xgo_Clay__ConfigureOpenElement(int32(argPtr + 0))
@@ -1113,14 +1303,12 @@ func __HashStringWithOffset(key string, offset uint32, seed uint32) ElementId {
 	return ret
 }
 
-func __GetParentElementId() uint32 {
-	return uint32(module.Xgo_Clay__GetParentElementId())
-}
-
 func decodeValue(m []byte, p uint32, v any) {
 	switch v := v.(type) {
 	case *Vector2:
 		decVector2(m, p, v)
+	case *TransitionData:
+		decTransitionData(m, p, v)
 	default:
 		panic("clay: unsupported pointer type")
 	}
@@ -1131,6 +1319,9 @@ func encodeValue(b []byte, p uint32, v any) uint32 {
 	case *Vector2:
 		encVector2(b, p, v)
 		return sizeofVector2
+	case *TransitionData:
+		encTransitionData(b, p, v)
+		return sizeofTransitionData
 	default:
 		panic("clay: unsupported pointer type")
 	}

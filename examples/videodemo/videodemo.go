@@ -326,7 +326,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 		})
 	})
 
-	renderCommands := clay.EndLayout()
+	renderCommands := clay.EndLayout(0)
 	for i := range renderCommands {
 		renderCommands[i].BoundingBox.Y += data.yOffset
 	}
