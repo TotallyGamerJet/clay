@@ -7,18 +7,54 @@ import (
 	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
+	"github.com/TotallyGamerJet/clay/renderers/internal/overlay"
 	"github.com/veandco/go-sdl2/sdl"
 	"github.com/veandco/go-sdl2/ttf"
 )
 
 type Font struct {
 	FontId uint32
-	Font   *ttf.Font
+	// Font is used for text without a font size, and for all text if Data is nil.
+	Font *ttf.Font
+	// Data is the font file, used to open the font at the font sizes of the text.
+	// SDL reads from it while the font is in use, so it must not be modified.
+	Data []byte
+}
+
+type sizedFontKey struct {
+	data *byte
+	size uint16
+}
+
+var sizedFonts = map[sizedFontKey]*ttf.Font{}
+
+// sized returns the font at the given size.
+func (f *Font) sized(size uint16) (*ttf.Font, error) {
+	if size == 0 || len(f.Data) == 0 {
+		return f.Font, nil
+	}
+	key := sizedFontKey{data: &f.Data[0], size: size}
+	if font, ok := sizedFonts[key]; ok {
+		return font, nil
+	}
+	rw, err := sdl.RWFromMem(f.Data)
+	if err != nil {
+		return nil, err
+	}
+	font, err := ttf.OpenFontRW(rw, 1, int(size))
+	if err != nil {
+		return nil, err
+	}
+	sizedFonts[key] = font
+	return font, nil
 }
 
 func MeasureText(text string, config *clay.TextElementConfig, userData any) clay.Dimensions {
 	fonts := *userData.(*[]Font)
-	font := fonts[config.FontId].Font
+	font, err := fonts[config.FontId].sized(config.FontSize)
+	if err != nil {
+		panic(fmt.Errorf("sdl2: failed to open font: %w", err))
+	}
 	width, height, err := font.SizeUTF8(text)
 	if err != nil {
 		panic(fmt.Errorf("sdl2: failed to measure text: %w", err))
@@ -31,12 +67,13 @@ func MeasureText(text string, config *clay.TextElementConfig, userData any) clay
 }
 
 func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, fonts []Font) error {
+	var overlays overlay.Stack
 	for renderCommand := range renderCommands.Iter() {
 		boundingBox := renderCommand.BoundingBox
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
-			color := config.BackgroundColor
+			color := overlays.Apply(config.BackgroundColor)
 			if err := renderer.SetDrawColor(uint8(color.R), uint8(color.G), uint8(color.B), uint8(color.A)); err != nil {
 				return err
 			}
@@ -57,12 +94,16 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
-			font := fonts[config.FontId].Font
+			font, err := fonts[config.FontId].sized(config.FontSize)
+			if err != nil {
+				return err
+			}
+			textColor := overlays.Apply(config.TextColor)
 			surface, err := font.RenderUTF8Blended(config.StringContents, sdl.Color{
-				R: uint8(config.TextColor.R),
-				G: uint8(config.TextColor.G),
-				B: uint8(config.TextColor.B),
-				A: uint8(config.TextColor.A),
+				R: uint8(textColor.R),
+				G: uint8(textColor.G),
+				B: uint8(textColor.B),
+				A: uint8(textColor.A),
 			})
 			if err != nil {
 				return err
@@ -74,8 +115,8 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			destination := sdl.Rect{
 				X: int32(boundingBox.X),
 				Y: int32(boundingBox.Y),
-				W: int32(boundingBox.Width),
-				H: int32(boundingBox.Height),
+				W: surface.W,
+				H: surface.H,
 			}
 			if err := renderer.Copy(texture, nil, &destination); err != nil {
 				return err
@@ -98,6 +139,10 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			if err := renderer.SetClipRect(nil); err != nil {
 				return err
 			}
+		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+			overlays.Push(renderCommand.RenderData.OverlayColor.Color)
+		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+			overlays.Pop()
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
 			texture, err := renderer.CreateTextureFromSurface((*sdl.Surface)(config.ImageData.(unsafe.Pointer)))
@@ -116,8 +161,22 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			if err := texture.Destroy(); err != nil {
 				return err
 			}
+			// Blend the image towards the overlays by drawing them over it.
+			// This is exact for opaque images.
+			for _, o := range overlays {
+				if err := renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND); err != nil {
+					return err
+				}
+				if err := renderer.SetDrawColor(uint8(o.R), uint8(o.G), uint8(o.B), uint8(o.A)); err != nil {
+					return err
+				}
+				if err := renderer.FillRect(&destination); err != nil {
+					return err
+				}
+			}
 		case clay.RENDER_COMMAND_TYPE_BORDER:
 			config := &renderCommand.RenderData.Border
+			config.Color = overlays.Apply(config.Color)
 			if err := renderer.SetDrawColor(uint8(config.Color.R), uint8(config.Color.G), uint8(config.Color.B), uint8(config.Color.A)); err != nil {
 				return err
 			}
@@ -188,7 +247,7 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 				if config.Width.Top > 0 && config.CornerRadius.TopRight > 0 {
 					renderCornerBorder(renderer, &boundingBox, config, 1, config.Color)
 				}
-				if config.Width.Bottom > 0 && config.CornerRadius.BottomLeft > 0 {
+				if config.Width.Bottom > 0 && config.CornerRadius.BottomRight > 0 {
 					renderCornerBorder(renderer, &boundingBox, config, 2, config.Color)
 				}
 				if config.Width.Bottom > 0 && config.CornerRadius.BottomLeft > 0 {

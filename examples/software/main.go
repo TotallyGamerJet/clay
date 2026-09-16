@@ -39,14 +39,15 @@ func main() {
 		panic(err)
 	}
 
-	face, err := opentype.NewFace(parsedFont, &opentype.FaceOptions{
-		Size:    fontSize,
-		DPI:     72, // Standard screen DPI
-		Hinting: font.HintingFull,
-	})
-
-	faces := []font.Face{
-		videodemo.FontIdBody16: face,
+	faces := []*software.Font{
+		videodemo.FontIdBody16: {
+			Font: parsedFont,
+			Options: opentype.FaceOptions{
+				Size:    fontSize,
+				DPI:     72, // Standard screen DPI
+				Hinting: font.HintingFull,
+			},
+		},
 	}
 	clay.SetMeasureTextFunction(software.MeasureText, &faces)
 	clay.SetDebugModeEnabled(*debug)

@@ -7,6 +7,7 @@ import (
 	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
+	"github.com/TotallyGamerJet/clay/renderers/internal/overlay"
 	"github.com/Zyko0/go-sdl3/sdl"
 	"github.com/Zyko0/go-sdl3/ttf"
 )
@@ -17,9 +18,41 @@ type RendererData struct {
 	Fonts      []*ttf.Font
 }
 
+type sizedFontKey struct {
+	font *ttf.Font
+	size uint16
+}
+
+var sizedFonts = map[sizedFontKey]*ttf.Font{}
+
+// sizedFont returns a copy of font with the font size of the text.
+// Copies are kept instead of resizing font, as resizing clears its glyph cache.
+func sizedFont(font *ttf.Font, size uint16) (*ttf.Font, error) {
+	if size == 0 {
+		return font, nil
+	}
+	key := sizedFontKey{font: font, size: size}
+	if sized, ok := sizedFonts[key]; ok {
+		return sized, nil
+	}
+	sized, err := font.Copy()
+	if err != nil {
+		return nil, err
+	}
+	if err := sized.SetSize(float32(size)); err != nil {
+		sized.Close()
+		return nil, err
+	}
+	sizedFonts[key] = sized
+	return sized, nil
+}
+
 func MeasureText(text string, config *clay.TextElementConfig, userData any) clay.Dimensions {
 	fonts := *userData.(*[]*ttf.Font)
-	font := fonts[config.FontId]
+	font, err := sizedFont(fonts[config.FontId], config.FontSize)
+	if err != nil {
+		panic(fmt.Errorf("sdl3: failed to size font: %w", err))
+	}
 
 	width, height, err := font.StringSize(text)
 	if err != nil {
@@ -36,6 +69,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 	renderer := rendererData.Renderer
 	fonts := rendererData.Fonts
 	textEngine := rendererData.TextEngine
+	var overlays overlay.Stack
 	for renderCommand := range renderCommands.Iter() {
 		boundingBox := renderCommand.BoundingBox
 		rect := sdl.FRect{
@@ -47,6 +81,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
+			config.BackgroundColor = overlays.Apply(config.BackgroundColor)
 			renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
 			renderer.SetDrawColor(
 				uint8(config.BackgroundColor.R),
@@ -64,7 +99,11 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 			}
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
-			font := fonts[config.FontId]
+			config.TextColor = overlays.Apply(config.TextColor)
+			font, err := sizedFont(fonts[config.FontId], config.FontSize)
+			if err != nil {
+				return err
+			}
 			text, err := textEngine.CreateText(font, config.StringContents)
 			if err != nil {
 				return err
@@ -91,6 +130,10 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 			if err := renderer.SetClipRect(nil); err != nil {
 				return err
 			}
+		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+			overlays.Push(renderCommand.RenderData.OverlayColor.Color)
+		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+			overlays.Pop()
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
 			texture, err := renderer.CreateTextureFromSurface((*sdl.Surface)(config.ImageData.(unsafe.Pointer)))
@@ -107,8 +150,18 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 				return err
 			}
 			texture.Destroy()
+			// Blend the image towards the overlays by drawing them over it.
+			// This is exact for opaque images.
+			for _, o := range overlays {
+				renderer.SetDrawBlendMode(sdl.BLENDMODE_BLEND)
+				renderer.SetDrawColor(uint8(o.R), uint8(o.G), uint8(o.B), uint8(o.A))
+				if err := renderer.RenderFillRect(&destination); err != nil {
+					return err
+				}
+			}
 		case clay.RENDER_COMMAND_TYPE_BORDER:
 			config := &renderCommand.RenderData.Border
+			config.Color = overlays.Apply(config.Color)
 			if err := renderer.SetDrawColor(uint8(config.Color.R), uint8(config.Color.G), uint8(config.Color.B), uint8(config.Color.A)); err != nil {
 				return err
 			}
@@ -179,7 +232,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 				if config.Width.Top > 0 && config.CornerRadius.TopRight > 0 {
 					renderCornerBorder(renderer, &boundingBox, config, 1, config.Color)
 				}
-				if config.Width.Bottom > 0 && config.CornerRadius.BottomLeft > 0 {
+				if config.Width.Bottom > 0 && config.CornerRadius.BottomRight > 0 {
 					renderCornerBorder(renderer, &boundingBox, config, 2, config.Color)
 				}
 				if config.Width.Bottom > 0 && config.CornerRadius.BottomLeft > 0 {

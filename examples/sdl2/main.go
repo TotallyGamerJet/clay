@@ -43,6 +43,7 @@ func main() {
 		videodemo.FontIdBody16: {
 			FontId: videodemo.FontIdBody16,
 			Font:   font,
+			Data:   fonts.RobotoRegularTTF,
 		},
 	}
 
