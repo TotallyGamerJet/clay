@@ -313,7 +313,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 						AspectRatio: clay.AspectRatioElementConfig{
 							AspectRatio: 1280.0 / 853.0,
 						},
-						Image: clay.ImageElementConfig{ImageData: selectedDocument.image.(unsafe.Pointer)},
+						Image: clay.ImageElementConfig{ImageData: selectedDocument.image},
 					}, func() {
 					})
 				}

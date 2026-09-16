@@ -93,7 +93,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	demoData := videodemo.Initialize(unsafe.Pointer(surface))
+	demoData := videodemo.Initialize(surface)
 
 loop:
 	for {

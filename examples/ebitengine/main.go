@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/examples/fonts"
@@ -108,7 +107,7 @@ func main() {
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(ebitengine.MeasureText, &app.fonts)
 	ebImg := ebiten.NewImageFromImage(videodemo.SquirrelImage)
-	app.demoData = videodemo.Initialize(unsafe.Pointer(ebImg))
+	app.demoData = videodemo.Initialize(ebImg)
 
 	if err := ebiten.RunGame(app); err != nil {
 		panic(err)

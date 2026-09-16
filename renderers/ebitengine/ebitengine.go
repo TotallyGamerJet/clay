@@ -6,7 +6,6 @@ import (
 	"image/color"
 	"log/slog"
 	"math"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/renderers/internal/overlay"
@@ -131,7 +130,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 			overlays.Pop()
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
-			img := (*ebiten.Image)(config.ImageData.(unsafe.Pointer))
+			img := config.ImageData.(*ebiten.Image)
 			bounds := img.Bounds()
 			opts := &colorm.DrawImageOptions{}
 			opts.GeoM.Scale(float64(boundingBox.Width/float32(bounds.Dx())), float64(boundingBox.Height/float32(bounds.Dy())))

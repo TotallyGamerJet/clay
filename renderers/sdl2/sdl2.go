@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log/slog"
 	"math"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/renderers/internal/overlay"
@@ -145,7 +144,7 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			overlays.Pop()
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
-			texture, err := renderer.CreateTextureFromSurface((*sdl.Surface)(config.ImageData.(unsafe.Pointer)))
+			texture, err := renderer.CreateTextureFromSurface(config.ImageData.(*sdl.Surface))
 			if err != nil {
 				return err
 			}

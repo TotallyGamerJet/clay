@@ -6,7 +6,6 @@ import (
 	"image/color"
 	"image/png"
 	"os"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/examples/fonts"
@@ -52,7 +51,7 @@ func main() {
 	clay.SetMeasureTextFunction(software.MeasureText, &faces)
 	clay.SetDebugModeEnabled(*debug)
 	var img image.Image = videodemo.SquirrelImage
-	demoData := videodemo.Initialize(unsafe.Pointer(&img))
+	demoData := videodemo.Initialize(&img)
 	window := image.NewRGBA(image.Rect(0, 0, winWidth, winHeight))
 	draw.Draw(window, window.Bounds(), image.NewUniform(color.RGBA{A: 255}), image.Point{}, draw.Src)
 

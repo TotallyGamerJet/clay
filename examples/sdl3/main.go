@@ -1,8 +1,6 @@
 package main
 
 import (
-	"unsafe"
-
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/examples/fonts"
 	"github.com/TotallyGamerJet/clay/examples/videodemo"
@@ -87,7 +85,7 @@ func main() {
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 	clay.SetMeasureTextFunction(sdl3.MeasureText, &rendererData.Fonts)
 
-	demoData := videodemo.Initialize(unsafe.Pointer(surface))
+	demoData := videodemo.Initialize(surface)
 
 	_ = sdl.RunLoop(func() error {
 		scrollDelta := clay.Vector2{}

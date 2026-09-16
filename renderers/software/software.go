@@ -9,7 +9,6 @@ import (
 	"image/png"
 	"log/slog"
 	"math"
-	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/renderers/internal/overlay"
@@ -129,11 +128,11 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 			overlays.Pop()
 		case clay.RENDER_COMMAND_TYPE_IMAGE:
 			config := &renderCommand.RenderData.Image
-			img := (*image.Image)(config.ImageData.(unsafe.Pointer))
+			img := config.ImageData.(*image.Image)
 			if img == nil {
 				continue
 			}
-			var src image.Image = *img
+			src := *img
 			if overlays.Active() {
 				src = overlayImage{Image: src, overlays: overlays}
 			}
