@@ -76,11 +76,7 @@ func RenderDropdownMenuItem(text string) {
 			Padding: clay.PaddingAll(16),
 		},
 	}, func() {
-		clay.Text(text, clay.TextConfig(clay.TextElementConfig{
-			FontId:    FontIdBody16,
-			FontSize:  16,
-			TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
-		}))
+		clay.Text(text, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 16, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
 	})
 }
 
@@ -101,11 +97,7 @@ func RenderHeaderButton(text string) {
 		BackgroundColor: clay.Color{R: 140, G: 140, B: 140, A: 255},
 		CornerRadius:    clay.CornerRadiusAll(5),
 	}, func() {
-		clay.Text(text, clay.TextConfig(clay.TextElementConfig{
-			FontId:    FontIdBody16,
-			FontSize:  16,
-			TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
-		}))
+		clay.Text(text, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 16, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
 	})
 }
 
@@ -159,11 +151,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 				BackgroundColor: clay.Color{R: 150, G: 150, B: 150, A: 255},
 				CornerRadius:    clay.CornerRadiusAll(5),
 			}, func() {
-				clay.Text("File", clay.TextConfig(clay.TextElementConfig{
-					FontId:    FontIdBody16,
-					FontSize:  16,
-					TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
-				}))
+				clay.Text("File", new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 16, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
 
 				fileMenuVisible := clay.PointerOver(clay.GetElementId("FileButton")) ||
 					clay.PointerOver(clay.GetElementId("FileMenu"))
@@ -236,11 +224,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 							BackgroundColor: clay.Color{R: 120, G: 120, B: 120, A: 255},
 							CornerRadius:    clay.CornerRadiusAll(8),
 						}, func() {
-							clay.Text(document.title, clay.TextConfig(clay.TextElementConfig{
-								FontId:    FontIdBody16,
-								FontSize:  20,
-								TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
-							}))
+							clay.Text(document.title, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 20, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
 						})
 					} else {
 						clickData := &sidebarClickData{
@@ -260,11 +244,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 							CornerRadius: clay.CornerRadiusAll(8),
 						}, func() {
 							clay.OnHover(handleSidebarInteraction, clickData)
-							clay.Text(document.title, clay.TextConfig(clay.TextElementConfig{
-								FontId:    FontIdBody16,
-								FontSize:  20,
-								TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255},
-							}))
+							clay.Text(document.title, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 20, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
 						})
 					}
 				}
@@ -280,11 +260,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 				},
 			}, func() {
 				selectedDocument := data.documents[data.selectedDocumentIndex]
-				clay.Text(selectedDocument.title, clay.TextConfig(clay.TextElementConfig{
-					FontId:    FontIdBody16,
-					FontSize:  24,
-					TextColor: white,
-				}))
+				clay.Text(selectedDocument.title, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 24, TextColor: white}))
 				if selectedDocument.image != nil {
 					clay.UI()(clay.ElementDeclaration{
 						Layout: clay.LayoutConfig{
@@ -300,11 +276,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 					}, func() {
 					})
 				}
-				clay.Text(selectedDocument.contents, clay.TextConfig(clay.TextElementConfig{
-					FontId:    FontIdBody16,
-					FontSize:  24,
-					TextColor: white,
-				}))
+				clay.Text(selectedDocument.contents, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 24, TextColor: white}))
 			})
 		})
 	})

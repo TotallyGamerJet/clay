@@ -336,11 +336,11 @@ func renderFillRoundedRect(screen *ebiten.Image, rect clay.BoundingBox, cornerRa
 
 	// define rounded corners as triangle fans
 	step := (math.Pi / 2) / float32(numCircleSegments)
-	for i := 0; i < numCircleSegments; i++ {
+	for i := range numCircleSegments {
 		angle1 := float32(i) * step
 		angle2 := (float32(i) + 1) * step
 
-		for j := uint16(0); j < 4; j++ {
+		for j := range uint16(4) {
 			var cx, cy, signX, signY float32
 
 			switch j {
@@ -620,7 +620,7 @@ func renderCornerBorder(screen *ebiten.Image, boundingBox *clay.BoundingBox, con
 	angleStep := math.Pi / (2.0 * float32(numOuterTriangles))
 
 	// outer triangles, in CW order
-	for i := 0; i < numOuterTriangles; i++ {
+	for i := range numOuterTriangles {
 		angle1 := startAngle + float32(i)*angleStep       // first-outer vertex angle
 		angle2 := startAngle + (float32(i)+0.5)*angleStep // inner-middle vertex angle
 		angle3 := startAngle + float32(i+1)*angleStep     // second-outer vertex angle

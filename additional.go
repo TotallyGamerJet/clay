@@ -132,10 +132,6 @@ func Text(text string, config *TextElementConfig) {
 	openTextElement(text, config)
 }
 
-func TextConfig(config TextElementConfig) *TextElementConfig {
-	return &config
-}
-
 func (r RenderCommandArray) Iter() iter.Seq[RenderCommand] {
 	return func(yield func(RenderCommand) bool) {
 		for _, v := range r {
