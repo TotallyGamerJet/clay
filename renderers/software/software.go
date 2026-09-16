@@ -55,18 +55,14 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
-			c := color.RGBA{
+			c := color.NRGBA{
 				R: uint8(config.BackgroundColor.R),
 				G: uint8(config.BackgroundColor.G),
 				B: uint8(config.BackgroundColor.B),
 				A: uint8(config.BackgroundColor.A),
 			}
 			rect := image.Rect(int(boundingBox.X), int(boundingBox.Y), int(boundingBox.X+boundingBox.Width), int(boundingBox.Y+boundingBox.Height))
-			if config.CornerRadius.TopLeft > 0 {
-				draw.Draw(screen, rect, &image.Uniform{C: c}, image.Point{}, draw.Src)
-			} else {
-				draw.Draw(screen, rect, &image.Uniform{C: c}, image.Point{}, draw.Src)
-			}
+			draw.Draw(screen, rect, &image.Uniform{C: c}, image.Point{}, draw.Over)
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
 			face := fonts[config.FontId]
@@ -100,7 +96,25 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 			destRect := image.Rect(int(boundingBox.X), int(boundingBox.Y), int(boundingBox.X+boundingBox.Width), int(boundingBox.Y+boundingBox.Height))
 			draw.ApproxBiLinear.Scale(screen, destRect, *img, (*img).Bounds(), draw.Over, nil)
 		case clay.RENDER_COMMAND_TYPE_BORDER:
-			panic("not implemented")
+			// Corner radius is ignored, like for rectangles.
+			config := &renderCommand.RenderData.Border
+			src := &image.Uniform{C: color.NRGBA{
+				R: uint8(config.Color.R),
+				G: uint8(config.Color.G),
+				B: uint8(config.Color.B),
+				A: uint8(config.Color.A),
+			}}
+			x0, y0 := int(boundingBox.X), int(boundingBox.Y)
+			x1, y1 := int(boundingBox.X+boundingBox.Width), int(boundingBox.Y+boundingBox.Height)
+			w := config.Width
+			for _, rect := range []image.Rectangle{
+				image.Rect(x0, y0, x0+int(w.Left), y1),
+				image.Rect(x1-int(w.Right), y0, x1, y1),
+				image.Rect(x0, y0, x1, y0+int(w.Top)),
+				image.Rect(x0, y1-int(w.Bottom), x1, y1),
+			} {
+				draw.Draw(screen, rect, src, image.Point{}, draw.Over)
+			}
 		case clay.RENDER_COMMAND_TYPE_NONE:
 		case clay.RENDER_COMMAND_TYPE_CUSTOM:
 		default:

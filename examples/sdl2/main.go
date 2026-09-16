@@ -105,6 +105,11 @@ loop:
 			switch e := event.(type) {
 			case *sdl.QuitEvent:
 				break loop
+			case *sdl.KeyboardEvent:
+				// Press D to toggle the debug view.
+				if e.Type == sdl.KEYDOWN && e.Repeat == 0 && e.Keysym.Sym == sdl.K_d {
+					clay.SetDebugModeEnabled(!clay.IsDebugModeEnabled())
+				}
 			case *sdl.MouseWheelEvent:
 				scrollDelta.X = float32(e.X)
 				scrollDelta.Y = float32(e.Y)

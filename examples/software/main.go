@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"image"
 	"image/color"
 	"image/png"
@@ -26,6 +27,9 @@ const (
 )
 
 func main() {
+	debug := flag.Bool("debug", false, "enable the debug view")
+	flag.Parse()
+
 	totalMemorySize := clay.MinMemorySize()
 	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
@@ -45,6 +49,7 @@ func main() {
 		videodemo.FontIdBody16: face,
 	}
 	clay.SetMeasureTextFunction(software.MeasureText, &faces)
+	clay.SetDebugModeEnabled(*debug)
 	var img image.Image = videodemo.SquirrelImage
 	demoData := videodemo.Initialize(unsafe.Pointer(&img))
 	window := image.NewRGBA(image.Rect(0, 0, winWidth, winHeight))

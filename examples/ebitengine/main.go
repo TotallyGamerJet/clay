@@ -9,6 +9,7 @@ import (
 	"github.com/TotallyGamerJet/clay/examples/videodemo"
 	"github.com/TotallyGamerJet/clay/renderers/ebitengine"
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 )
 
@@ -33,6 +34,11 @@ type App struct {
 }
 
 func (a *App) Update() error {
+	// Press D to toggle the debug view.
+	if inpututil.IsKeyJustPressed(ebiten.KeyD) {
+		clay.SetDebugModeEnabled(!clay.IsDebugModeEnabled())
+	}
+
 	dx, dy := ebiten.Wheel()
 	clay.UpdateScrollContainers(true, clay.Vector2{
 		X: float32(dx),

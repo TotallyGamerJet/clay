@@ -102,6 +102,11 @@ func main() {
 					Width:  float32(e.Data1),
 					Height: float32(e.Data2),
 				})
+			case sdl.EVENT_KEY_DOWN:
+				// Press D to toggle the debug view.
+				if e := event.KeyboardEvent(); e.Key == sdl.K_D && !e.Repeat {
+					clay.SetDebugModeEnabled(!clay.IsDebugModeEnabled())
+				}
 			case sdl.EVENT_MOUSE_WHEEL:
 				e := event.MouseWheelEvent()
 				scrollDelta = clay.Vector2{
