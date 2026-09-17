@@ -31,6 +31,7 @@ func main() {
 
 	totalMemorySize := clay.MinMemorySize()
 	arena := clay.CreateArenaWithCapacity(totalMemorySize)
+	defer arena.Free()
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
 	parsedFont, err := opentype.Parse(fonts.RobotoRegularTTF)

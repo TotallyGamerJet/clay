@@ -19,6 +19,7 @@ func main() {
 
 	totalMemorySize := clay.MinMemorySize()
 	arena := clay.CreateArenaWithCapacity(totalMemorySize)
+	defer arena.Free()
 	clay.Initialize(arena, clay.Dimensions{
 		Width:  float32(rl.GetScreenWidth()),
 		Height: float32(rl.GetScreenHeight()),
