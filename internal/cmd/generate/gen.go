@@ -6,6 +6,7 @@ import (
 	"go/token"
 	"log"
 	"maps"
+	"regexp"
 	"slices"
 	"strings"
 )
@@ -94,6 +95,7 @@ func goFields(r *record) []*field {
 const minScratch = 4096
 
 type gen struct {
+	names    map[string]string // C name -> Go name, for the comments
 	m        *model
 	goOut    strings.Builder
 	cOut     strings.Builder
@@ -105,6 +107,7 @@ type function struct {
 	cName, goName string
 	ret           *ctype
 	params        []param
+	doc           []string
 }
 
 type param struct {
@@ -113,7 +116,7 @@ type param struct {
 }
 
 func generate(m *model) (goSrc, cSrc []byte, err error) {
-	g := &gen{m: m, scratch: minScratch}
+	g := &gen{m: m, scratch: minScratch, names: map[string]string{}}
 	var funcs []*function
 	for _, n := range m.funcs {
 		f, err := g.function(n)
@@ -135,6 +138,22 @@ func generate(m *model) (goSrc, cSrc []byte, err error) {
 	}
 	for _, r := range m.recOrder {
 		classify(r)
+	}
+
+	// Names used in the comments carried over from clay.h.
+	for _, n := range m.funcs {
+		if name := goName(n.Name); !handwritten[n.Name] || name != "" {
+			g.names[n.Name] = name
+		}
+	}
+	for _, r := range m.recOrder {
+		g.names[r.cName] = r.goName
+	}
+	for _, e := range m.enumOrder {
+		g.names[e.cName] = e.goName
+		for _, c := range e.consts {
+			g.names[c.cName] = c.goName
+		}
 	}
 
 	g.cOut.WriteString(cHeader)
@@ -185,7 +204,7 @@ package clay
 `
 
 func (g *gen) function(n *node) (*function, error) {
-	f := &function{cName: n.Name, goName: goName(n.Name)}
+	f := &function{cName: n.Name, goName: goName(n.Name), doc: g.m.doc(n.Loc)}
 	if r, ok := renames[n.Name]; ok {
 		f.goName = r
 	}
@@ -410,10 +429,39 @@ func (g *gen) goType(t *ctype) (string, bool) {
 	return "", false
 }
 
+// goDoc renders a comment from clay.h as a Go doc comment, with the C names it mentions
+// replaced by the Go names they are generated as.
+func (g *gen) goDoc(doc []string) string {
+	var b strings.Builder
+	for _, line := range doc {
+		line = cNames.ReplaceAllStringFunc(line, func(name string) string {
+			if goName, ok := g.names[name]; ok {
+				return goName
+			}
+			return name
+		})
+		switch {
+		case line == "":
+			b.WriteString("//\n")
+		case strings.HasPrefix(line, "- "):
+			// A list, which go doc needs indented and preceded by a blank line.
+			if !strings.HasSuffix(b.String(), "//\n") {
+				b.WriteString("//\n")
+			}
+			fmt.Fprintf(&b, "//   %s\n", line)
+		default:
+			fmt.Fprintf(&b, "// %s\n", line)
+		}
+	}
+	return b.String()
+}
+
+var cNames = regexp.MustCompile(`\bC[Ll][Aa][Yy]_+[A-Za-z0-9_]+\b`)
+
 func (g *gen) emitEnum(e *enum) {
-	fmt.Fprintf(&g.goOut, "type %s %s\n\nconst (\n", e.goName, e.prim.goType)
+	fmt.Fprintf(&g.goOut, "%stype %s %s\n\nconst (\n", g.goDoc(e.doc), e.goName, e.prim.goType)
 	for _, c := range e.consts {
-		fmt.Fprintf(&g.goOut, "%s %s = %d\n", c.goName, e.goName, c.value)
+		fmt.Fprintf(&g.goOut, "%s%s %s = %d\n", g.goDoc(c.doc), c.goName, e.goName, c.value)
 		fmt.Fprintf(&g.cOut, "_Static_assert(%s == %d, \"%s\");\n", c.cName, c.value, c.cName)
 	}
 	g.goOut.WriteString(")\n\n")
@@ -434,7 +482,7 @@ func (g *gen) emitRecord(r *record) error {
 			return fmt.Errorf("unsupported element type")
 		}
 		esize, _ := r.elem.sizeAlign()
-		fmt.Fprintf(&g.goOut, "type %s []%s\n\n", r.goName, elem)
+		fmt.Fprintf(&g.goOut, "%stype %s []%s\n\n", g.goDoc(r.doc), r.goName, elem)
 		fmt.Fprintf(&g.goOut, "const sizeof%s = %d\n\n", r.goName, r.size)
 		fmt.Fprintf(&g.goOut, "func dec%s(m []byte, p uint32, v *%s) {\n", r.goName, r.goName)
 		fmt.Fprintf(&g.goOut, "n := int(int32(getU32(m, p+%d)))\naddr := getU32(m, p+%d)\n", r.fields[1].off, r.fields[2].off)
@@ -450,12 +498,12 @@ func (g *gen) emitRecord(r *record) error {
 		if !ok {
 			return fmt.Errorf("field %s has unsupported type", f.cName)
 		}
-		fmt.Fprintf(&body, "%s %s\n", f.goName, ft)
+		fmt.Fprintf(&body, "%s%s %s\n", g.goDoc(f.doc), f.goName, ft)
 	}
 	if r.union {
-		fmt.Fprintf(&g.goOut, "type %s struct {\n// union\n%s}\n\n", r.goName, body.String())
+		fmt.Fprintf(&g.goOut, "%stype %s struct {\n// union\n%s}\n\n", g.goDoc(r.doc), r.goName, body.String())
 	} else {
-		fmt.Fprintf(&g.goOut, "type %s struct {\n%s}\n\n", r.goName, body.String())
+		fmt.Fprintf(&g.goOut, "%stype %s struct {\n%s}\n\n", g.goDoc(r.doc), r.goName, body.String())
 	}
 	fmt.Fprintf(&g.goOut, "const sizeof%s = %d\n\n", r.goName, r.size)
 
@@ -818,7 +866,7 @@ func (g *gen) emitFunction(f *function) {
 			fmt.Fprintf(&body, "return %s(%s)\n", goRet, call)
 		}
 	}
-	fmt.Fprintf(&g.goOut, "%sfunc %s(%s) %s {\n%s}\n\n", doc, f.goName, strings.Join(goParams, ", "), goRet, body.String())
+	fmt.Fprintf(&g.goOut, "%s%sfunc %s(%s) %s {\n%s}\n\n", g.goDoc(f.doc), doc, f.goName, strings.Join(goParams, ", "), goRet, body.String())
 }
 
 func (g *gen) cScalar(t *ctype) string {

@@ -54,7 +54,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	m, err := parseAST(ast)
+	src, err := os.ReadFile("clay.h")
+	if err != nil {
+		log.Fatal(err)
+	}
+	m, err := parseAST(src, ast)
 	if err != nil {
 		log.Fatal(err)
 	}

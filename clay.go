@@ -2,28 +2,44 @@
 
 package clay
 
+// Represents the current state of interaction with clay this frame.
 type PointerDataInteractionState uint8
 
 const (
-	POINTER_DATA_PRESSED_THIS_FRAME  PointerDataInteractionState = 0
-	POINTER_DATA_PRESSED             PointerDataInteractionState = 1
+	// A left mouse click, or touch occurred this frame.
+	POINTER_DATA_PRESSED_THIS_FRAME PointerDataInteractionState = 0
+	// The left mouse button click or touch happened at some point in the past, and is still currently held down this frame.
+	POINTER_DATA_PRESSED PointerDataInteractionState = 1
+	// The left mouse button click or touch was released this frame.
 	POINTER_DATA_RELEASED_THIS_FRAME PointerDataInteractionState = 2
-	POINTER_DATA_RELEASED            PointerDataInteractionState = 3
+	// The left mouse button click or touch is not currently down / was released at some point in the past.
+	POINTER_DATA_RELEASED PointerDataInteractionState = 3
 )
 
+// Used by renderers to determine specific handling for each render command.
 type RenderCommandType uint8
 
 const (
-	RENDER_COMMAND_TYPE_NONE                RenderCommandType = 0
-	RENDER_COMMAND_TYPE_RECTANGLE           RenderCommandType = 1
-	RENDER_COMMAND_TYPE_BORDER              RenderCommandType = 2
-	RENDER_COMMAND_TYPE_TEXT                RenderCommandType = 3
-	RENDER_COMMAND_TYPE_IMAGE               RenderCommandType = 4
-	RENDER_COMMAND_TYPE_SCISSOR_START       RenderCommandType = 5
-	RENDER_COMMAND_TYPE_SCISSOR_END         RenderCommandType = 6
+	// This command type should be skipped.
+	RENDER_COMMAND_TYPE_NONE RenderCommandType = 0
+	// The renderer should draw a solid color rectangle.
+	RENDER_COMMAND_TYPE_RECTANGLE RenderCommandType = 1
+	// The renderer should draw a colored border inset into the bounding box.
+	RENDER_COMMAND_TYPE_BORDER RenderCommandType = 2
+	// The renderer should draw text.
+	RENDER_COMMAND_TYPE_TEXT RenderCommandType = 3
+	// The renderer should draw an image.
+	RENDER_COMMAND_TYPE_IMAGE RenderCommandType = 4
+	// The renderer should begin clipping all future draw commands, only rendering content that falls within the provided boundingBox.
+	RENDER_COMMAND_TYPE_SCISSOR_START RenderCommandType = 5
+	// The renderer should finish any previously active clipping, and begin rendering elements in full again.
+	RENDER_COMMAND_TYPE_SCISSOR_END RenderCommandType = 6
+	// The renderer should begin performing a "color overlay" on all subsequent render commands until disabled again.
 	RENDER_COMMAND_TYPE_OVERLAY_COLOR_START RenderCommandType = 7
-	RENDER_COMMAND_TYPE_OVERLAY_COLOR_END   RenderCommandType = 8
-	RENDER_COMMAND_TYPE_CUSTOM              RenderCommandType = 9
+	// The renderer should disable any previously active "color overlay" and render elements with their standard colors again.
+	RENDER_COMMAND_TYPE_OVERLAY_COLOR_END RenderCommandType = 8
+	// The renderer should provide a custom implementation for handling this render command based on its .customData
+	RENDER_COMMAND_TYPE_CUSTOM RenderCommandType = 9
 )
 
 type TransitionState int32
@@ -54,38 +70,56 @@ const (
 	TRANSITION_PROPERTY_BORDER           TransitionProperty = 384
 )
 
+// Controls how the element takes up space inside its parent container.
 type __SizingType uint8
 
 const (
-	__SIZING_TYPE_FIT     __SizingType = 0
-	__SIZING_TYPE_GROW    __SizingType = 1
+	// (default) Wraps tightly to the size of the element's contents.
+	__SIZING_TYPE_FIT __SizingType = 0
+	// Expands along this axis to fill available space in the parent element, sharing it with other GROW elements.
+	__SIZING_TYPE_GROW __SizingType = 1
+	// Expects 0-1 range. Clamps the axis size to a percent of the parent container's axis size minus padding and child gaps.
 	__SIZING_TYPE_PERCENT __SizingType = 2
-	__SIZING_TYPE_FIXED   __SizingType = 3
+	// Clamps the axis size to an exact size in pixels.
+	__SIZING_TYPE_FIXED __SizingType = 3
 )
 
+// Controls the alignment along the x axis (horizontal) of child elements.
 type LayoutAlignmentX uint8
 
 const (
-	ALIGN_X_LEFT   LayoutAlignmentX = 0
-	ALIGN_X_RIGHT  LayoutAlignmentX = 1
+	// (Default) Aligns child elements to the left hand side of this element, offset by padding.width.left
+	ALIGN_X_LEFT LayoutAlignmentX = 0
+	// Aligns child elements to the right hand side of this element, offset by padding.width.right
+	ALIGN_X_RIGHT LayoutAlignmentX = 1
+	// Aligns child elements horizontally to the center of this element
 	ALIGN_X_CENTER LayoutAlignmentX = 2
 )
 
+// Controls the alignment along the y axis (vertical) of child elements.
 type LayoutAlignmentY uint8
 
 const (
-	ALIGN_Y_TOP    LayoutAlignmentY = 0
+	// (Default) Aligns child elements to the top of this element, offset by padding.width.top
+	ALIGN_Y_TOP LayoutAlignmentY = 0
+	// Aligns child elements to the bottom of this element, offset by padding.width.bottom
 	ALIGN_Y_BOTTOM LayoutAlignmentY = 1
+	// Aligns child elements vertically to the center of this element
 	ALIGN_Y_CENTER LayoutAlignmentY = 2
 )
 
+// Controls the direction in which child elements will be automatically laid out.
 type LayoutDirection uint8
 
 const (
+	// (Default) Lays out child elements from left to right with increasing x.
 	LEFT_TO_RIGHT LayoutDirection = 0
+	// Lays out child elements from top to bottom with increasing y.
 	TOP_TO_BOTTOM LayoutDirection = 1
 )
 
+// Controls where a floating element is offset relative to its parent element.
+// Note: see https://github.com/user-attachments/assets/b8c6dfaa-c1b1-41a4-be55-013473e4a6ce for a visual explanation.
 type FloatingAttachPointType uint8
 
 const (
@@ -100,26 +134,38 @@ const (
 	ATTACH_POINT_RIGHT_BOTTOM  FloatingAttachPointType = 8
 )
 
+// Controls how mouse pointer events like hover and click are captured or passed through to elements underneath a floating element.
 type PointerCaptureMode uint8
 
 const (
-	POINTER_CAPTURE_MODE_CAPTURE     PointerCaptureMode = 0
+	// (default) "Capture" the pointer event and don't allow events like hover and click to pass through to elements underneath.
+	POINTER_CAPTURE_MODE_CAPTURE PointerCaptureMode = 0
+	// CLAY_POINTER_CAPTURE_MODE_PARENT, TODO pass pointer through to attached parent
+	// Transparently pass through pointer events like hover and click to elements underneath the floating element.
 	POINTER_CAPTURE_MODE_PASSTHROUGH PointerCaptureMode = 1
 )
 
+// Controls which element a floating element is "attached" to (i.e. relative offset from).
 type FloatingAttachToElement uint8
 
 const (
-	ATTACH_TO_NONE            FloatingAttachToElement = 0
-	ATTACH_TO_PARENT          FloatingAttachToElement = 1
+	// (default) Disables floating for this element.
+	ATTACH_TO_NONE FloatingAttachToElement = 0
+	// Attaches this floating element to its parent, positioned based on the .attachPoints and .offset fields.
+	ATTACH_TO_PARENT FloatingAttachToElement = 1
+	// Attaches this floating element to an element with a specific ID, specified with the .parentId field. positioned based on the .attachPoints and .offset fields.
 	ATTACH_TO_ELEMENT_WITH_ID FloatingAttachToElement = 2
-	ATTACH_TO_ROOT            FloatingAttachToElement = 3
+	// Attaches this floating element to the root of the layout, which combined with the .offset field provides functionality similar to "absolute positioning".
+	ATTACH_TO_ROOT FloatingAttachToElement = 3
 )
 
+// Controls whether or not a floating element is clipped to the same clipping rectangle as the element it's attached to.
 type FloatingClipToElement uint8
 
 const (
-	CLIP_TO_NONE            FloatingClipToElement = 0
+	// (default) - The floating element does not inherit clipping.
+	CLIP_TO_NONE FloatingClipToElement = 0
+	// The floating element is clipped to the same clipping rectangle as the element it's attached to.
 	CLIP_TO_ATTACHED_PARENT FloatingClipToElement = 1
 )
 
@@ -152,35 +198,54 @@ const (
 	EXIT_TRANSITION_ORDERING_ABOVE_SIBLINGS      ExitTransitionSiblingOrdering = 2
 )
 
+// Controls how text "wraps", that is how it is broken into multiple lines when there is insufficient horizontal space.
 type TextElementConfigWrapMode uint8
 
 const (
-	TEXT_WRAP_WORDS    TextElementConfigWrapMode = 0
+	// (default) breaks on whitespace characters.
+	TEXT_WRAP_WORDS TextElementConfigWrapMode = 0
+	// Don't break on space characters, only on newlines.
 	TEXT_WRAP_NEWLINES TextElementConfigWrapMode = 1
-	TEXT_WRAP_NONE     TextElementConfigWrapMode = 2
+	// Disable text wrapping entirely.
+	TEXT_WRAP_NONE TextElementConfigWrapMode = 2
 )
 
+// Controls how wrapped lines of text are horizontally aligned within the outer text bounding box.
 type TextAlignment uint8
 
 const (
-	TEXT_ALIGN_LEFT   TextAlignment = 0
+	// (default) Horizontally aligns wrapped lines of text to the left hand side of their bounding box.
+	TEXT_ALIGN_LEFT TextAlignment = 0
+	// Horizontally aligns wrapped lines of text to the center of their bounding box.
 	TEXT_ALIGN_CENTER TextAlignment = 1
-	TEXT_ALIGN_RIGHT  TextAlignment = 2
+	// Horizontally aligns wrapped lines of text to the right hand side of their bounding box.
+	TEXT_ALIGN_RIGHT TextAlignment = 2
 )
 
+// Represents the type of error clay encountered while computing layout.
 type ErrorType uint8
 
 const (
+	// A text measurement function wasn't provided using SetMeasureTextFunction(), or the provided function was null.
 	ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED ErrorType = 0
-	ERROR_TYPE_ARENA_CAPACITY_EXCEEDED                ErrorType = 1
-	ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED             ErrorType = 2
-	ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED     ErrorType = 3
-	ERROR_TYPE_DUPLICATE_ID                           ErrorType = 4
-	ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND    ErrorType = 5
-	ERROR_TYPE_PERCENTAGE_OVER_1                      ErrorType = 6
-	ERROR_TYPE_INTERNAL_ERROR                         ErrorType = 7
-	ERROR_TYPE_UNBALANCED_OPEN_CLOSE                  ErrorType = 8
-	ERROR_TYPE_HASH_MAP_CAPACITY_EXCEEDED             ErrorType = 9
+	// Clay attempted to allocate its internal data structures but ran out of space.
+	// The arena passed to Initialize was created with a capacity smaller than that required by MinMemorySize().
+	ERROR_TYPE_ARENA_CAPACITY_EXCEEDED ErrorType = 1
+	// Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxElementCount().
+	ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED ErrorType = 2
+	// Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxMeasureTextCacheWordCount().
+	ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED ErrorType = 3
+	// Two elements were declared with exactly the same ID within one layout.
+	ERROR_TYPE_DUPLICATE_ID ErrorType = 4
+	// A floating element was declared using CLAY_ATTACH_TO_ELEMENT_ID and either an invalid .parentId was provided or no element with the provided .parentId was found.
+	ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND ErrorType = 5
+	// An element was declared that using CLAY_SIZING_PERCENT but the percentage value was over 1. Percentage values are expected to be in the 0-1 range.
+	ERROR_TYPE_PERCENTAGE_OVER_1 ErrorType = 6
+	// Clay encountered an internal error. It would be wonderful if you could report this so we can fix it!
+	ERROR_TYPE_INTERNAL_ERROR ErrorType = 7
+	// __OpenElement was called more times than __CloseElement, so there were still remaining open elements when the layout ended.
+	ERROR_TYPE_UNBALANCED_OPEN_CLOSE      ErrorType = 8
+	ERROR_TYPE_HASH_MAP_CAPACITY_EXCEEDED ErrorType = 9
 )
 
 type Vector2 struct {
@@ -200,9 +265,16 @@ func decVector2(m []byte, p uint32, v *Vector2) {
 	v.Y = getF32(m, p+4)
 }
 
+// Information on the current state of pointer interactions this frame.
 type PointerData struct {
+	// The position of the mouse / touch / pointer relative to the root of the layout.
 	Position Vector2
-	State    PointerDataInteractionState
+	// Represents the current state of interaction with clay this frame.
+	// POINTER_DATA_PRESSED_THIS_FRAME - A left mouse click, or touch occurred this frame.
+	// POINTER_DATA_PRESSED - The left mouse button click or touch happened at some point in the past, and is still currently held down this frame.
+	// POINTER_DATA_RELEASED_THIS_FRAME - The left mouse button click or touch was released this frame.
+	// POINTER_DATA_RELEASED - The left mouse button click or touch is not currently down / was released at some point in the past.
+	State PointerDataInteractionState
 }
 
 const sizeofPointerData = 12
@@ -257,6 +329,7 @@ func decBoundingBox(m []byte, p uint32, v *BoundingBox) {
 	v.Height = getF32(m, p+12)
 }
 
+// Internally clay conventionally represents colors as 0-255, but interpretation is up to the renderer.
 type Color struct {
 	R float32
 	G float32
@@ -280,6 +353,8 @@ func decColor(m []byte, p uint32, v *Color) {
 	v.A = getF32(m, p+12)
 }
 
+// Controls the "radius", or corner rounding of elements, including rectangles, borders and images.
+// The rounding is determined by drawing a circle inset into the element corner by (radius, radius) pixels.
 type CornerRadius struct {
 	TopLeft     float32
 	TopRight    float32
@@ -303,9 +378,13 @@ func decCornerRadius(m []byte, p uint32, v *CornerRadius) {
 	v.BottomRight = getF32(m, p+12)
 }
 
+// Render command data when commandType == RENDER_COMMAND_TYPE_RECTANGLE
 type RectangleRenderData struct {
+	// The solid background color to fill this rectangle with. Conventionally represented as 0-255 for each channel, but interpretation is up to the renderer.
 	BackgroundColor Color
-	CornerRadius    CornerRadius
+	// Controls the "radius", or corner rounding of elements, including rectangles, borders and images.
+	// The rounding is determined by drawing a circle inset into the element corner by (radius, radius) pixels.
+	CornerRadius CornerRadius
 }
 
 const sizeofRectangleRenderData = 32
@@ -333,13 +412,20 @@ func decStringSlice(m []byte, p uint32, v *string) {
 	*v = loadString(m, getU32(m, p+4), getU32(m, p+0))
 }
 
+// Render command data when commandType == RENDER_COMMAND_TYPE_TEXT
 type TextRenderData struct {
+	// A string slice containing the text to be rendered.
+	// Note: this is not guaranteed to be null terminated.
 	StringContents string
-	TextColor      Color
-	FontId         uint16
-	FontSize       uint16
-	LetterSpacing  uint16
-	LineHeight     uint16
+	// Conventionally represented as 0-255 for each channel, but interpretation is up to the renderer.
+	TextColor Color
+	// An integer representing the font to use to render this text, transparently passed through from the text declaration.
+	FontId   uint16
+	FontSize uint16
+	// Specifies the extra whitespace gap in pixels between each character.
+	LetterSpacing uint16
+	// The height of the bounding box for this line of text.
+	LineHeight uint16
 }
 
 const sizeofTextRenderData = 36
@@ -362,10 +448,17 @@ func decTextRenderData(m []byte, p uint32, v *TextRenderData) {
 	v.LineHeight = uint16(getU16(m, p+34))
 }
 
+// Render command data when commandType == RENDER_COMMAND_TYPE_IMAGE
 type ImageRenderData struct {
+	// The tint color for this image. Note that the default value is 0,0,0,0 and should likely be interpreted
+	// as "untinted".
+	// Conventionally represented as 0-255 for each channel, but interpretation is up to the renderer.
 	BackgroundColor Color
-	CornerRadius    CornerRadius
-	ImageData       any
+	// Controls the "radius", or corner rounding of this image.
+	// The rounding is determined by drawing a circle inset into the element corner by (radius, radius) pixels.
+	CornerRadius CornerRadius
+	// A pointer transparently passed through from the original element definition, typically used to represent image data.
+	ImageData any
 }
 
 const sizeofImageRenderData = 36
@@ -382,10 +475,16 @@ func decImageRenderData(m []byte, p uint32, v *ImageRenderData) {
 	v.ImageData = loadHandle(getU32(m, p+32))
 }
 
+// Render command data when commandType == RENDER_COMMAND_TYPE_CUSTOM
 type CustomRenderData struct {
+	// Passed through from .backgroundColor in the original element declaration.
+	// Conventionally represented as 0-255 for each channel, but interpretation is up to the renderer.
 	BackgroundColor Color
-	CornerRadius    CornerRadius
-	CustomData      any
+	// Controls the "radius", or corner rounding of this custom element.
+	// The rounding is determined by drawing a circle inset into the element corner by (radius, radius) pixels.
+	CornerRadius CornerRadius
+	// A pointer transparently passed through from the original element definition.
+	CustomData any
 }
 
 const sizeofCustomRenderData = 36
@@ -402,11 +501,15 @@ func decCustomRenderData(m []byte, p uint32, v *CustomRenderData) {
 	v.CustomData = loadHandle(getU32(m, p+32))
 }
 
+// Controls the widths of individual element borders.
 type BorderWidth struct {
-	Left            uint16
-	Right           uint16
-	Top             uint16
-	Bottom          uint16
+	Left   uint16
+	Right  uint16
+	Top    uint16
+	Bottom uint16
+	// Creates borders between each child element, depending on the .layoutDirection.
+	// e.g. for LEFT_TO_RIGHT, borders will be vertical lines, and for TOP_TO_BOTTOM borders will be horizontal lines.
+	// .betweenChildren borders will result in individual RECTANGLE render commands being generated.
 	BetweenChildren uint16
 }
 
@@ -428,10 +531,16 @@ func decBorderWidth(m []byte, p uint32, v *BorderWidth) {
 	v.BetweenChildren = uint16(getU16(m, p+8))
 }
 
+// Render command data when commandType == RENDER_COMMAND_TYPE_BORDER
 type BorderRenderData struct {
-	Color        Color
+	// Controls a shared color for all this element's borders.
+	// Conventionally represented as 0-255 for each channel, but interpretation is up to the renderer.
+	Color Color
+	// Specifies the "radius", or corner rounding of this border element.
+	// The rounding is determined by drawing a circle inset into the element corner by (radius, radius) pixels.
 	CornerRadius CornerRadius
-	Width        BorderWidth
+	// Controls individual border side widths.
+	Width BorderWidth
 }
 
 const sizeofBorderRenderData = 44
@@ -448,6 +557,7 @@ func decBorderRenderData(m []byte, p uint32, v *BorderRenderData) {
 	decBorderWidth(m, p+32, &v.Width)
 }
 
+// Render command data when commandType == RENDER_COMMAND_TYPE_SCISSOR_START || commandType == RENDER_COMMAND_TYPE_SCISSOR_END
 type ClipRenderData struct {
 	Horizontal bool
 	Vertical   bool
@@ -465,6 +575,7 @@ func decClipRenderData(m []byte, p uint32, v *ClipRenderData) {
 	v.Vertical = getBool(m, p+1)
 }
 
+// Render command data when commandType == RENDER_COMMAND_TYPE_OVERLAY_COLOR_START || commandType == RENDER_COMMAND_TYPE_OVERLAY_COLOR_END
 type OverlayColorRenderData struct {
 	Color Color
 }
@@ -479,25 +590,48 @@ func decOverlayColorRenderData(m []byte, p uint32, v *OverlayColorRenderData) {
 	decColor(m, p+0, &v.Color)
 }
 
+// A struct union containing data specific to this command's .commandType
 type RenderData struct {
 	// union
-	Rectangle    RectangleRenderData
-	Text         TextRenderData
-	Image        ImageRenderData
-	Custom       CustomRenderData
-	Border       BorderRenderData
-	Clip         ClipRenderData
+	// Render command data when commandType == RENDER_COMMAND_TYPE_RECTANGLE
+	Rectangle RectangleRenderData
+	// Render command data when commandType == RENDER_COMMAND_TYPE_TEXT
+	Text TextRenderData
+	// Render command data when commandType == RENDER_COMMAND_TYPE_IMAGE
+	Image ImageRenderData
+	// Render command data when commandType == RENDER_COMMAND_TYPE_CUSTOM
+	Custom CustomRenderData
+	// Render command data when commandType == RENDER_COMMAND_TYPE_BORDER
+	Border BorderRenderData
+	// Render command data when commandType == RENDER_COMMAND_TYPE_SCISSOR_START|END
+	Clip ClipRenderData
+	// Render command data when commandType == RENDER_COMMAND_TYPE_OVERLAY_COLOR_START|END
 	OverlayColor OverlayColorRenderData
 }
 
 const sizeofRenderData = 44
 
 type RenderCommand struct {
+	// A rectangular box that fully encloses this UI element, with the position relative to the root of the layout.
 	BoundingBox BoundingBox
-	RenderData  RenderData
-	UserData    any
-	Id          uint32
-	ZIndex      int16
+	// A struct union containing data specific to this command's commandType.
+	RenderData RenderData
+	// A pointer transparently passed through from the original element declaration.
+	UserData any
+	// The id of this element, transparently passed through from the original element declaration.
+	Id uint32
+	// The z order required for drawing this command correctly.
+	// Note: the render command array is already sorted in ascending order, and will produce correct results if drawn in naive order.
+	// This field is intended for use in batching renderers for improved performance.
+	ZIndex int16
+	// Specifies how to handle rendering of this command.
+	// RENDER_COMMAND_TYPE_RECTANGLE - The renderer should draw a solid color rectangle.
+	// RENDER_COMMAND_TYPE_BORDER - The renderer should draw a colored border inset into the bounding box.
+	// RENDER_COMMAND_TYPE_TEXT - The renderer should draw text.
+	// RENDER_COMMAND_TYPE_IMAGE - The renderer should draw an image.
+	// RENDER_COMMAND_TYPE_SCISSOR_START - The renderer should begin clipping all future draw commands, only rendering content that falls within the provided boundingBox.
+	// RENDER_COMMAND_TYPE_SCISSOR_END - The renderer should finish any previously active clipping, and begin rendering elements in full again.
+	// RENDER_COMMAND_TYPE_CUSTOM - The renderer should provide a custom implementation for handling this render command based on its .customData
 	CommandType RenderCommandType
 }
 
@@ -532,6 +666,7 @@ func decRenderCommand(m []byte, p uint32, v *RenderCommand) {
 	}
 }
 
+// A sized array of render commands.
 type RenderCommandArray []RenderCommand
 
 const sizeofRenderCommandArray = 12
@@ -566,10 +701,17 @@ func decString(m []byte, p uint32, v *string) {
 	*v = loadString(m, getU32(m, p+8), getU32(m, p+4))
 }
 
+// Primarily created via the CLAY_ID(), CLAY_IDI(), CLAY_ID_LOCAL() and CLAY_IDI_LOCAL() macros.
+// Represents a hashed string ID used for identifying and finding specific clay UI elements, required
+// by functions such as PointerOver() and GetElementData().
 type ElementId struct {
-	Id       uint32
-	Offset   uint32
-	BaseId   uint32
+	// The resulting hash generated from the other fields.
+	Id uint32
+	// A numerical offset applied after computing the hash from stringId.
+	Offset uint32
+	// A base hash value to start from, for example the parent element ID is used when calculating CLAY_ID_LOCAL().
+	BaseId uint32
+	// The string id to hash.
 	StringId string
 }
 
@@ -589,9 +731,12 @@ func decElementId(m []byte, p uint32, v *ElementId) {
 	decString(m, p+12, &v.StringId)
 }
 
+// Bounding box and other data for a specific UI element.
 type ElementData struct {
+	// The rectangle that encloses this UI element, with the position relative to the root of the layout.
 	BoundingBox BoundingBox
-	Found       bool
+	// Indicates whether an actual Element matched the provided ID or if the default struct was returned.
+	Found bool
 }
 
 const sizeofElementData = 20
@@ -606,6 +751,7 @@ func decElementData(m []byte, p uint32, v *ElementData) {
 	v.Found = getBool(m, p+16)
 }
 
+// A sized array of ElementId.
 type ElementIdArray []ElementId
 
 const sizeofElementIdArray = 12
@@ -628,9 +774,13 @@ func decElementIdArray(m []byte, p uint32, v *ElementIdArray) {
 	*v = s
 }
 
+// Controls the axis on which an element switches to "scrolling", which clips the contents and allows scrolling in that direction.
 type ClipElementConfig struct {
-	Horizontal  bool
-	Vertical    bool
+	// Clip overflowing elements on the X axis.
+	Horizontal bool
+	// Clip overflowing elements on the Y axis.
+	Vertical bool
+	// Offsets the x,y positions of all child elements. Used primarily for scrolling containers.
 	ChildOffset Vector2
 }
 
@@ -648,12 +798,19 @@ func decClipElementConfig(m []byte, p uint32, v *ClipElementConfig) {
 	decVector2(m, p+4, &v.ChildOffset)
 }
 
+// Data representing the current internal state of a scrolling element.
 type ScrollContainerData struct {
-	ScrollPosition            Pointer[Vector2]
+	// Note: This is a pointer to the real internal scroll position, mutating it may cause a change in final layout.
+	// Intended for use with external functionality that modifies scroll position, such as scroll bars or auto scrolling.
+	ScrollPosition Pointer[Vector2]
+	// The bounding box of the scroll element.
 	ScrollContainerDimensions Dimensions
-	ContentDimensions         Dimensions
-	Config                    ClipElementConfig
-	Found                     bool
+	// The outer dimensions of the inner scroll container content, including the padding of the parent scroll container.
+	ContentDimensions Dimensions
+	// The config that was originally passed to the clip element.
+	Config ClipElementConfig
+	// Indicates whether an actual scroll container matched the provided ID or if the default struct was returned.
+	Found bool
 }
 
 const sizeofScrollContainerData = 36
@@ -714,8 +871,12 @@ func decTransitionCallbackArguments(m []byte, p uint32, v *TransitionCallbackArg
 	v.Properties = TransitionProperty(getU32(m, p+168))
 }
 
+// Controls the minimum and maximum size in pixels that this element is allowed to grow or shrink to,
+// overriding sizing types such as FIT or GROW.
 type SizingMinMax struct {
+	// The smallest final size of the element on this axis will be this value in pixels.
 	Min float32
+	// The largest final size of the element on this axis will be this value in pixels.
 	Max float32
 }
 
@@ -731,12 +892,14 @@ func decSizingMinMax(m []byte, p uint32, v *SizingMinMax) {
 	v.Max = getF32(m, p+4)
 }
 
+// Controls the sizing of this element along one axis inside its parent container.
 type SizingAxis struct {
 	Size struct {
 		// union
 		MinMax  SizingMinMax
 		Percent float32
 	}
+	// Controls how the element takes up space inside its parent container.
 	Type __SizingType
 }
 
@@ -760,8 +923,11 @@ func decSizingAxis(m []byte, p uint32, v *SizingAxis) {
 	v.Type = __SizingType(getU8(m, p+8))
 }
 
+// Controls the sizing of this element along one axis inside its parent container.
 type Sizing struct {
-	Width  SizingAxis
+	// Controls the width sizing of the element, along the x axis.
+	Width SizingAxis
+	// Controls the height sizing of the element, along the y axis.
 	Height SizingAxis
 }
 
@@ -777,6 +943,8 @@ func decSizing(m []byte, p uint32, v *Sizing) {
 	decSizingAxis(m, p+12, &v.Height)
 }
 
+// Controls "padding" in pixels, which is a gap between the bounding box of this element and where its children
+// will be placed.
 type Padding struct {
 	Left   uint16
 	Right  uint16
@@ -800,8 +968,11 @@ func decPadding(m []byte, p uint32, v *Padding) {
 	v.Bottom = uint16(getU16(m, p+6))
 }
 
+// Controls how child elements are aligned on each axis.
 type ChildAlignment struct {
+	// Controls alignment of children along the x axis.
 	X LayoutAlignmentX
+	// Controls alignment of children along the y axis.
 	Y LayoutAlignmentY
 }
 
@@ -817,11 +988,18 @@ func decChildAlignment(m []byte, p uint32, v *ChildAlignment) {
 	v.Y = LayoutAlignmentY(getU8(m, p+1))
 }
 
+// Controls various settings that affect the size and position of an element, as well as the sizes and positions
+// of any child elements.
 type LayoutConfig struct {
-	Sizing          Sizing
-	Padding         Padding
-	ChildGap        uint16
-	ChildAlignment  ChildAlignment
+	// Controls the sizing of this element inside it's parent container, including FIT, GROW, PERCENT and FIXED sizing.
+	Sizing Sizing
+	// Controls "padding" in pixels, which is a gap between the bounding box of this element and where its children will be placed.
+	Padding Padding
+	// Controls the gap in pixels between child elements along the layout axis (horizontal gap for LEFT_TO_RIGHT, vertical gap for TOP_TO_BOTTOM).
+	ChildGap uint16
+	// Controls how child elements are aligned on each axis.
+	ChildAlignment ChildAlignment
+	// Controls the direction in which child elements will be automatically laid out.
 	LayoutDirection LayoutDirection
 }
 
@@ -843,7 +1021,9 @@ func decLayoutConfig(m []byte, p uint32, v *LayoutConfig) {
 	v.LayoutDirection = LayoutDirection(getU8(m, p+36))
 }
 
+// Controls various settings related to aspect ratio scaling element.
 type AspectRatioElementConfig struct {
+	// A float representing the target "Aspect ratio" for an element, which is its final width divided by its final height.
 	AspectRatio float32
 }
 
@@ -857,7 +1037,9 @@ func decAspectRatioElementConfig(m []byte, p uint32, v *AspectRatioElementConfig
 	v.AspectRatio = getF32(m, p+0)
 }
 
+// Controls various settings related to image elements.
 type ImageElementConfig struct {
+	// A transparent pointer used to pass image data through to the renderer.
 	ImageData any
 }
 
@@ -871,9 +1053,12 @@ func decImageElementConfig(m []byte, p uint32, v *ImageElementConfig) {
 	v.ImageData = loadHandle(getU32(m, p+0))
 }
 
+// Controls where a floating element is offset relative to its parent element.
 type FloatingAttachPoints struct {
+	// Controls the origin point on a floating element that attaches to its parent.
 	Element FloatingAttachPointType
-	Parent  FloatingAttachPointType
+	// Controls the origin point on the parent element that the floating element attaches to.
+	Parent FloatingAttachPointType
 }
 
 const sizeofFloatingAttachPoints = 2
@@ -888,15 +1073,38 @@ func decFloatingAttachPoints(m []byte, p uint32, v *FloatingAttachPoints) {
 	v.Parent = FloatingAttachPointType(getU8(m, p+1))
 }
 
+// Controls various settings related to "floating" elements, which are elements that "float" above other elements, potentially overlapping their boundaries,
+// and not affecting the layout of sibling or parent elements.
 type FloatingElementConfig struct {
-	Offset             Vector2
-	Expand             Dimensions
-	ParentId           uint32
-	ZIndex             int16
-	AttachPoints       FloatingAttachPoints
+	// Offsets this floating element by the provided x,y coordinates from its attachPoints.
+	Offset Vector2
+	// Expands the boundaries of the outer floating element without affecting its children.
+	Expand Dimensions
+	// When used in conjunction with .attachTo = ATTACH_TO_ELEMENT_WITH_ID, attaches this floating element to the element in the hierarchy with the provided ID.
+	// Hint: attach the ID to the other element with .id = CLAY_ID("yourId"), and specify the id the same way, with .parentId = CLAY_ID("yourId").id
+	ParentId uint32
+	// Controls the z index of this floating element and all its children. Floating elements are sorted in ascending z order before output.
+	// zIndex is also passed to the renderer for all elements contained within this floating element.
+	ZIndex int16
+	// Controls how mouse pointer events like hover and click are captured or passed through to elements underneath / behind a floating element.
+	// Enum is of the form CLAY_ATTACH_POINT_foo_bar. See FloatingAttachPoints for more details.
+	// Note: see <img src="https://github.com/user-attachments/assets/b8c6dfaa-c1b1-41a4-be55-013473e4a6ce />
+	// and <img src="https://github.com/user-attachments/assets/ebe75e0d-1904-46b0-982d-418f929d1516 /> for a visual explanation.
+	AttachPoints FloatingAttachPoints
+	// Controls how mouse pointer events like hover and click are captured or passed through to elements underneath a floating element.
+	// POINTER_CAPTURE_MODE_CAPTURE (default) - "Capture" the pointer event and don't allow events like hover and click to pass through to elements underneath.
+	// POINTER_CAPTURE_MODE_PASSTHROUGH - Transparently pass through pointer events like hover and click to elements underneath the floating element.
 	PointerCaptureMode PointerCaptureMode
-	AttachTo           FloatingAttachToElement
-	ClipTo             FloatingClipToElement
+	// Controls which element a floating element is "attached" to (i.e. relative offset from).
+	// ATTACH_TO_NONE (default) - Disables floating for this element.
+	// ATTACH_TO_PARENT - Attaches this floating element to its parent, positioned based on the .attachPoints and .offset fields.
+	// ATTACH_TO_ELEMENT_WITH_ID - Attaches this floating element to an element with a specific ID, specified with the .parentId field. positioned based on the .attachPoints and .offset fields.
+	// ATTACH_TO_ROOT - Attaches this floating element to the root of the layout, which combined with the .offset field provides functionality similar to "absolute positioning".
+	AttachTo FloatingAttachToElement
+	// Controls whether or not a floating element is clipped to the same clipping rectangle as the element it's attached to.
+	// CLIP_TO_NONE (default) - The floating element does not inherit clipping.
+	// CLIP_TO_ATTACHED_PARENT - The floating element is clipped to the same clipping rectangle as the element it's attached to.
+	ClipTo FloatingClipToElement
 }
 
 const sizeofFloatingElementConfig = 28
@@ -923,7 +1131,10 @@ func decFloatingElementConfig(m []byte, p uint32, v *FloatingElementConfig) {
 	v.ClipTo = FloatingClipToElement(getU8(m, p+26))
 }
 
+// Controls various settings related to custom elements.
 type CustomElementConfig struct {
+	// A transparent pointer through which you can pass custom data to the renderer.
+	// Generates CUSTOM render commands.
 	CustomData any
 }
 
@@ -937,8 +1148,11 @@ func decCustomElementConfig(m []byte, p uint32, v *CustomElementConfig) {
 	v.CustomData = loadHandle(getU32(m, p+0))
 }
 
+// Controls settings related to element borders.
 type BorderElementConfig struct {
+	// Controls the color of all borders with width > 0. Conventionally represented as 0-255, but interpretation is up to the renderer.
 	Color Color
+	// Controls the widths of individual borders. At least one of these should be > 0 for a BORDER render command to be generated.
 	Width BorderWidth
 }
 
@@ -954,6 +1168,7 @@ func decBorderElementConfig(m []byte, p uint32, v *BorderElementConfig) {
 	decBorderWidth(m, p+16, &v.Width)
 }
 
+// Controls settings related to transitions
 type TransitionElementConfig struct {
 	Duration            float32
 	Properties          TransitionProperty
@@ -992,18 +1207,33 @@ func decTransitionElementConfig(m []byte, p uint32, v *TransitionElementConfig) 
 }
 
 type ElementDeclaration struct {
-	Layout          LayoutConfig
+	// Controls various settings that affect the size and position of an element, as well as the sizes and positions of any child elements.
+	Layout LayoutConfig
+	// Controls the background color of the resulting element.
+	// By convention specified as 0-255, but interpretation is up to the renderer.
+	// If no other config is specified, .backgroundColor will generate a RECTANGLE render command, otherwise it will be passed as a property to IMAGE or CUSTOM render commands.
 	BackgroundColor Color
-	OverlayColor    Color
-	CornerRadius    CornerRadius
-	AspectRatio     AspectRatioElementConfig
-	Image           ImageElementConfig
-	Floating        FloatingElementConfig
-	Custom          CustomElementConfig
-	Clip            ClipElementConfig
-	Border          BorderElementConfig
-	Transition      TransitionElementConfig
-	UserData        any
+	// Perform an image editing style "Color Overlay" on this element and all its children, equivalent to
+	// glsl mix(elementColor, overlayColor.rgb, overlayColor.a)
+	OverlayColor Color
+	// Controls the "radius", or corner rounding of elements, including rectangles, borders and images.
+	CornerRadius CornerRadius
+	// Controls settings related to aspect ratio scaling.
+	AspectRatio AspectRatioElementConfig
+	// Controls settings related to image elements.
+	Image ImageElementConfig
+	// Controls whether and how an element "floats", which means it layers over the top of other elements in z order, and doesn't affect the position and size of siblings or parent elements.
+	// Note: in order to activate floating, .floating.attachTo must be set to something other than the default value.
+	Floating FloatingElementConfig
+	// Used to create CUSTOM render commands, usually to render element types not supported by Clay.
+	Custom CustomElementConfig
+	// Controls whether an element should clip its contents, as well as providing child x,y offset configuration for scrolling.
+	Clip ClipElementConfig
+	// Controls settings related to element borders, and will generate BORDER render commands.
+	Border     BorderElementConfig
+	Transition TransitionElementConfig
+	// A pointer that will be transparently passed through to resulting render commands.
+	UserData any
 }
 
 const sizeofElementDeclaration = 204
@@ -1038,14 +1268,30 @@ func decElementDeclaration(m []byte, p uint32, v *ElementDeclaration) {
 	v.UserData = loadHandle(getU32(m, p+200))
 }
 
+// Controls various functionality related to text elements.
 type TextElementConfig struct {
-	UserData      any
-	TextColor     Color
-	FontId        uint16
-	FontSize      uint16
+	// A pointer that will be transparently passed through to the resulting render command.
+	UserData any
+	// The RGBA color of the font to render, conventionally specified as 0-255.
+	TextColor Color
+	// An integer transparently passed to Clay_MeasureText to identify the font to use.
+	// The debug view will pass fontId = 0 for its internal text.
+	FontId uint16
+	// Controls the size of the font. Handled by the function provided to Clay_MeasureText.
+	FontSize uint16
+	// Controls extra horizontal spacing between characters. Handled by the function provided to Clay_MeasureText.
 	LetterSpacing uint16
-	LineHeight    uint16
-	WrapMode      TextElementConfigWrapMode
+	// Controls additional vertical space between wrapped lines of text.
+	LineHeight uint16
+	// Controls how text "wraps", that is how it is broken into multiple lines when there is insufficient horizontal space.
+	// TEXT_WRAP_WORDS (default) breaks on whitespace characters.
+	// TEXT_WRAP_NEWLINES doesn't break on space characters, only on newlines.
+	// TEXT_WRAP_NONE disables wrapping entirely.
+	WrapMode TextElementConfigWrapMode
+	// Controls how wrapped lines of text are horizontally aligned within the outer text bounding box.
+	// TEXT_ALIGN_LEFT (default) - Horizontally aligns wrapped lines of text to the left hand side of their bounding box.
+	// TEXT_ALIGN_CENTER - Horizontally aligns wrapped lines of text to the center of their bounding box.
+	// TEXT_ALIGN_RIGHT - Horizontally aligns wrapped lines of text to the right hand side of their bounding box.
 	TextAlignment TextAlignment
 }
 
@@ -1073,10 +1319,24 @@ func decTextElementConfig(m []byte, p uint32, v *TextElementConfig) {
 	v.TextAlignment = TextAlignment(getU8(m, p+29))
 }
 
+// Data to identify the error that clay has encountered.
 type ErrorData struct {
+	// Represents the type of error clay encountered while computing layout.
+	// ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED - A text measurement function wasn't provided using SetMeasureTextFunction(), or the provided function was null.
+	// ERROR_TYPE_ARENA_CAPACITY_EXCEEDED - Clay attempted to allocate its internal data structures but ran out of space. The arena passed to Initialize was created with a capacity smaller than that required by MinMemorySize().
+	// ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED - Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxElementCount().
+	// ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED - Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxMeasureTextCacheWordCount().
+	// ERROR_TYPE_DUPLICATE_ID - Two elements were declared with exactly the same ID within one layout.
+	// ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND - A floating element was declared using CLAY_ATTACH_TO_ELEMENT_ID and either an invalid .parentId was provided or no element with the provided .parentId was found.
+	// ERROR_TYPE_PERCENTAGE_OVER_1 - An element was declared that using CLAY_SIZING_PERCENT but the percentage value was over 1. Percentage values are expected to be in the 0-1 range.
+	// ERROR_TYPE_INTERNAL_ERROR - Clay encountered an internal error. It would be wonderful if you could report this so we can fix it!
+	// ERROR_TYPE_UNBALANCED_OPEN_CLOSE - __OpenElement was called more times than __CloseElement, so there were still remaining open elements when the layout ended.
+	// ERROR_TYPE_HASH_MAP_CAPACITY_EXCEEDED - Clay ran out of capacity in its internal hash map for storing element IDs -> elements. This limit can be increased with SetMaxElementCount().
 	ErrorType ErrorType
+	// A string containing human-readable error text that explains the error in more detail.
 	ErrorText string
-	UserData  any
+	// A transparent pointer passed through from when the error handler was first provided.
+	UserData any
 }
 
 const sizeofErrorData = 20
@@ -1093,10 +1353,13 @@ func decErrorData(m []byte, p uint32, v *ErrorData) {
 	v.UserData = loadHandle(getU32(m, p+16))
 }
 
+// Returns the size, in bytes, of the minimum amount of memory Clay requires to operate at its current settings.
 func MinMemorySize() uint32 {
 	return uint32(module.Xgo_Clay_MinMemorySize())
 }
 
+// Sets the state of the "pointer" (i.e. the mouse or touch) in Clay's internal data. Used for detecting and responding to mouse events in the debug view,
+// as well as for Hovered() and scroll element handling.
 func SetPointerState(position Vector2, pointerDown bool) {
 	argBuf := wasmArgs(8)
 	encVector2(argBuf, 0, &position)
@@ -1104,6 +1367,7 @@ func SetPointerState(position Vector2, pointerDown bool) {
 	module.Xgo_Clay_SetPointerState(int32(argPtr+0), b2i(pointerDown))
 }
 
+// Returns the state of the "pointer" (i.e. the mouse or touch) which was set via SetPointerState().
 func GetPointerState() PointerData {
 	argPtr := scratchAddr
 	var ret PointerData
@@ -1112,14 +1376,24 @@ func GetPointerState() PointerData {
 	return ret
 }
 
+// Returns the Context that clay is currently using. Used when using multiple instances of clay simultaneously.
 func GetCurrentContext() *Context {
 	return contextOf(uint32(module.Xgo_Clay_GetCurrentContext()))
 }
 
+// Sets the context that clay will use to compute the layout.
+// Used to restore a context saved from GetCurrentContext when using multiple instances of clay simultaneously.
 func SetCurrentContext(context *Context) {
 	module.Xgo_Clay_SetCurrentContext(context.wasmAddr())
 }
 
+// Updates the state of Clay's internal scroll data, updating scroll content positions if scrollDelta is non zero, and progressing momentum scrolling.
+//
+//   - enableDragScrolling when set to true will enable mobile device like "touch drag" scroll of scroll containers, including momentum scrolling after the touch has ended.
+//
+//   - scrollDelta is the amount to scroll this frame on each axis in pixels.
+//
+//   - deltaTime is the time in seconds since the last "frame" (scroll update)
 func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, deltaTime float32) {
 	argBuf := wasmArgs(8)
 	encVector2(argBuf, 0, &scrollDelta)
@@ -1127,6 +1401,8 @@ func UpdateScrollContainers(enableDragScrolling bool, scrollDelta Vector2, delta
 	module.Xgo_Clay_UpdateScrollContainers(b2i(enableDragScrolling), int32(argPtr+0), float32(deltaTime))
 }
 
+// Returns the internally stored scroll offset for the currently open element.
+// Generally intended for use with clip elements to create scrolling containers.
 func GetScrollOffset() Vector2 {
 	argPtr := scratchAddr
 	var ret Vector2
@@ -1135,6 +1411,7 @@ func GetScrollOffset() Vector2 {
 	return ret
 }
 
+// Updates the layout dimensions in response to the window or outer container being resized.
 func SetLayoutDimensions(dimensions Dimensions) {
 	argBuf := wasmArgs(8)
 	encDimensions(argBuf, 0, &dimensions)
@@ -1142,6 +1419,7 @@ func SetLayoutDimensions(dimensions Dimensions) {
 	module.Xgo_Clay_SetLayoutDimensions(int32(argPtr + 0))
 }
 
+// Returns the current dimensions set by SetLayoutDimensions.
 func GetLayoutDimensions() Dimensions {
 	argPtr := scratchAddr
 	var ret Dimensions
@@ -1150,12 +1428,15 @@ func GetLayoutDimensions() Dimensions {
 	return ret
 }
 
+// Called before starting any layout declarations.
 func beginLayout() {
 	module.Xgo_Clay_BeginLayout()
 }
 
 var endLayoutResult RenderCommandArray
 
+// Called when all layout declarations are finished.
+// Computes the layout and generates and returns the array of render commands to draw.
 // The returned slice is reused by the next call to EndLayout.
 func EndLayout(deltaTime float32) RenderCommandArray {
 	argPtr := scratchAddr
@@ -1164,10 +1445,13 @@ func EndLayout(deltaTime float32) RenderCommandArray {
 	return endLayoutResult
 }
 
+// Gets the ID of the currently open element, useful for retrieving IDs generated by CLAY_AUTO_ID()
 func GetOpenElementId() uint32 {
 	return uint32(module.Xgo_Clay_GetOpenElementId())
 }
 
+// Calculates a hash ID from the given idString.
+// Generally only used for dynamic strings when CLAY_ID("stringLiteral") can't be used.
 func GetElementId(idString string) ElementId {
 	argBuf := wasmArgs(12)
 	encString(argBuf, 0, &idString)
@@ -1178,6 +1462,11 @@ func GetElementId(idString string) ElementId {
 	return ret
 }
 
+// Calculates a hash ID from the given idString and index.
+//
+//   - index is used to avoid constructing dynamic ID strings in loops.
+//
+// Generally only used for dynamic strings when CLAY_IDI("stringLiteral", index) can't be used.
 func GetElementIdWithIndex(idString string, index uint32) ElementId {
 	argBuf := wasmArgs(12)
 	encString(argBuf, 0, &idString)
@@ -1188,6 +1477,9 @@ func GetElementIdWithIndex(idString string, index uint32) ElementId {
 	return ret
 }
 
+// Returns layout data such as the final calculated bounding box for an element with a given ID.
+// The returned ElementData contains a `found` bool that will be true if an element with the provided ID was found.
+// This ID can be calculated either with CLAY_ID() for string literal IDs, or GetElementId for dynamic strings.
 func GetElementData(id ElementId) ElementData {
 	argBuf := wasmArgs(24)
 	encElementId(argBuf, 0, &id)
@@ -1198,10 +1490,14 @@ func GetElementData(id ElementId) ElementData {
 	return ret
 }
 
+// Returns true if the pointer position provided by SetPointerState is within the current element's bounding box.
+// Works during element declaration, e.g. CLAY({ .backgroundColor = Hovered() ? BLUE : RED });
 func Hovered() bool {
 	return module.Xgo_Clay_Hovered() != 0
 }
 
+// An imperative function that returns true if the pointer position provided by SetPointerState is within the element with the provided ID's bounding box.
+// This ID can be calculated either with CLAY_ID() for string literal IDs, or GetElementId for dynamic strings.
 func PointerOver(elementId ElementId) bool {
 	argBuf := wasmArgs(24)
 	encElementId(argBuf, 0, &elementId)
@@ -1211,6 +1507,7 @@ func PointerOver(elementId ElementId) bool {
 
 var getPointerOverIdsResult ElementIdArray
 
+// Returns the array of element IDs that the pointer is currently over.
 // The returned slice is reused by the next call to GetPointerOverIds.
 func GetPointerOverIds() ElementIdArray {
 	argPtr := scratchAddr
@@ -1219,6 +1516,10 @@ func GetPointerOverIds() ElementIdArray {
 	return getPointerOverIdsResult
 }
 
+// Returns data representing the state of the scrolling element with the provided ID.
+// The returned ScrollContainerData contains a `found` bool that will be true if a scroll element was found with the provided ID.
+// An imperative function that returns true if the pointer position provided by SetPointerState is within the element with the provided ID's bounding box.
+// This ID can be calculated either with CLAY_ID() for string literal IDs, or GetElementId for dynamic strings.
 func GetScrollContainerData(id ElementId) ScrollContainerData {
 	argBuf := wasmArgs(24)
 	encElementId(argBuf, 0, &id)
@@ -1229,34 +1530,45 @@ func GetScrollContainerData(id ElementId) ScrollContainerData {
 	return ret
 }
 
+// Enables and disables Clay's internal debug tools.
+// This state is retained and does not need to be set each frame.
 func SetDebugModeEnabled(enabled bool) {
 	module.Xgo_Clay_SetDebugModeEnabled(b2i(enabled))
 }
 
+// Returns true if Clay's internal debug tools are currently enabled.
 func IsDebugModeEnabled() bool {
 	return module.Xgo_Clay_IsDebugModeEnabled() != 0
 }
 
+// Enables and disables visibility culling. By default, Clay will not generate render commands for elements whose bounding box is entirely outside the screen.
 func SetCullingEnabled(enabled bool) {
 	module.Xgo_Clay_SetCullingEnabled(b2i(enabled))
 }
 
+// Returns the maximum number of UI elements supported by Clay's current configuration.
 func GetMaxElementCount() int32 {
 	return int32(module.Xgo_Clay_GetMaxElementCount())
 }
 
+// Modifies the maximum number of UI elements supported by Clay's current configuration.
+// This may require reallocating additional memory, and re-calling Initialize();
 func SetMaxElementCount(maxElementCount int32) {
 	module.Xgo_Clay_SetMaxElementCount(int32(maxElementCount))
 }
 
+// Returns the maximum number of measured "words" (whitespace seperated runs of characters) that Clay can store in its internal text measurement cache.
 func GetMaxMeasureTextCacheWordCount() int32 {
 	return int32(module.Xgo_Clay_GetMaxMeasureTextCacheWordCount())
 }
 
+// Modifies the maximum number of measured "words" (whitespace seperated runs of characters) that Clay can store in its internal text measurement cache.
+// This may require reallocating additional memory, and re-calling Initialize();
 func SetMaxMeasureTextCacheWordCount(maxMeasureTextCacheWordCount int32) {
 	module.Xgo_Clay_SetMaxMeasureTextCacheWordCount(int32(maxMeasureTextCacheWordCount))
 }
 
+// Resets Clay's internal text measurement cache. Useful if font mappings have changed or fonts have been reloaded.
 func ResetMeasureTextCache() {
 	module.Xgo_Clay_ResetMeasureTextCache()
 }

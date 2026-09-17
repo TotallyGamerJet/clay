@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -19,7 +20,17 @@ type node struct {
 	Decl                *node     `json:"decl"`
 	OwnedTagDecl        *node     `json:"ownedTagDecl"`
 	Value               string    `json:"value"`
+	Loc                 *loc      `json:"loc"`
 	Inner               []*node   `json:"inner"`
+}
+
+// loc is a location in the source. Offsets are relative to the file the declaration is in,
+// which is clay.h for everything the generator looks at.
+type loc struct {
+	Offset int `json:"offset"`
+	Line   int `json:"line"`
+	// Declarations written with a macro, like CLAY_PACKED_ENUM, are located in the macro.
+	ExpansionLoc *loc `json:"expansionLoc"`
 }
 
 type qualType struct {
@@ -60,11 +71,13 @@ type enum struct {
 	cName, goName string
 	consts        []enumConst
 	prim          *prim
+	doc           []string
 }
 
 type enumConst struct {
 	cName, goName string
 	value         int64
+	doc           []string
 }
 
 type specialRecord int
@@ -86,12 +99,15 @@ type record struct {
 	// For anonymous records: the enclosing named record and the member path used in offsetof.
 	owner *record
 	path  string
+
+	doc []string
 }
 
 type field struct {
 	cName, goName string
 	t             *ctype
 	off           uint32
+	doc           []string
 }
 
 var prims = map[string]*prim{
@@ -124,6 +140,9 @@ var prims = map[string]*prim{
 }
 
 type model struct {
+	src        []byte // clay.h, for the comments documenting each declaration
+	lineStarts []int
+
 	decls     map[string]*node // RecordDecl and EnumDecl by id
 	tags      map[string]*node // complete RecordDecl by "struct Name"
 	typedefs  map[string]*node
@@ -135,18 +154,65 @@ type model struct {
 	enumOrder []*enum
 }
 
-func parseAST(data []byte) (*model, error) {
+// doc returns the comment documenting the declaration at the given source location,
+// which is either the comment lines above it or the comment trailing it on its own line.
+func (m *model) doc(l *loc) []string {
+	if l != nil && l.Offset == 0 && l.ExpansionLoc != nil {
+		l = l.ExpansionLoc
+	}
+	if l == nil || l.Offset <= 0 || l.Offset >= len(m.src) {
+		return nil
+	}
+	line, _ := slices.BinarySearch(m.lineStarts, l.Offset)
+	line-- // the line containing the offset
+	text := func(i int) string {
+		if i < 0 || i >= len(m.lineStarts) {
+			return ""
+		}
+		end := len(m.src)
+		if i+1 < len(m.lineStarts) {
+			end = m.lineStarts[i+1]
+		}
+		return strings.TrimRight(string(m.src[m.lineStarts[i]:end]), "\r\n")
+	}
+
+	var doc []string
+	for i := line - 1; i >= 0; i-- {
+		comment, ok := strings.CutPrefix(strings.TrimSpace(text(i)), "//")
+		if !ok {
+			break
+		}
+		doc = append(doc, strings.TrimSpace(comment))
+	}
+	slices.Reverse(doc)
+
+	// A comment trailing the declaration, like "uint32_t id; // The hash."
+	if rest := text(line)[min(l.Offset-m.lineStarts[line], len(text(line))):]; strings.Contains(rest, "//") {
+		_, comment, _ := strings.Cut(rest, "//")
+		doc = append(doc, strings.TrimSpace(comment))
+	}
+	return doc
+}
+
+func parseAST(src, data []byte) (*model, error) {
 	var root node
 	if err := json.Unmarshal(data, &root); err != nil {
 		return nil, err
 	}
 	m := &model{
+		src:      src,
 		decls:    map[string]*node{},
 		tags:     map[string]*node{},
 		typedefs: map[string]*node{},
 		recs:     map[*node]*record{},
 		enums:    map[*node]*enum{},
 		aliases:  map[string]*ctype{},
+	}
+	m.lineStarts = []int{0}
+	for i, b := range src {
+		if b == '\n' {
+			m.lineStarts = append(m.lineStarts, i+1)
+		}
 	}
 	var index func(n *node)
 	index = func(n *node) {
@@ -305,7 +371,7 @@ func (m *model) enum(n *node, cName string) (*enum, error) {
 	if e, ok := m.enums[n]; ok {
 		return e, nil
 	}
-	e := &enum{cName: cName, goName: goName(cName)}
+	e := &enum{cName: cName, goName: goName(cName), doc: m.doc(n.Loc)}
 	m.enums[n] = e
 	packed := false
 	next := int64(0)
@@ -320,7 +386,7 @@ func (m *model) enum(n *node, cName string) (*enum, error) {
 			} else if len(c.Inner) > 0 {
 				return nil, fmt.Errorf("enum constant %s: can't evaluate value", c.Name)
 			}
-			e.consts = append(e.consts, enumConst{cName: c.Name, goName: goConstName(c.Name), value: next})
+			e.consts = append(e.consts, enumConst{cName: c.Name, goName: goConstName(c.Name), value: next, doc: m.doc(c.Loc)})
 			minV, maxV = min(minV, next), max(maxV, next)
 			next++
 		}
@@ -370,7 +436,7 @@ func (m *model) record(n *node, cName string, owner *record, path string) (*reco
 	if r, ok := m.recs[n]; ok {
 		return r, nil
 	}
-	r := &record{cName: cName, goName: goName(cName), union: n.TagUsed == "union", owner: owner, path: path}
+	r := &record{cName: cName, goName: goName(cName), union: n.TagUsed == "union", owner: owner, path: path, doc: m.doc(n.Loc)}
 	if cName == "" {
 		r.goName = ""
 	}
@@ -392,7 +458,7 @@ func (m *model) record(n *node, cName string, owner *record, path string) (*reco
 			if err != nil {
 				return nil, fmt.Errorf("record %s field %s: %w", cName, c.Name, err)
 			}
-			r.fields = append(r.fields, &field{cName: c.Name, goName: exportName(c.Name), t: t})
+			r.fields = append(r.fields, &field{cName: c.Name, goName: exportName(c.Name), t: t, doc: m.doc(c.Loc)})
 			anon = nil
 		}
 	}
