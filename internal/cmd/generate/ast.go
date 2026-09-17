@@ -260,7 +260,7 @@ func (m *model) resolve(spelling string, anon *node, owner *record, path string)
 	s := stripQualifiers(spelling)
 	switch {
 	case strings.Contains(s, "(*)"):
-		return &ctype{kind: kFuncPtr}, nil
+		return &ctype{kind: kFuncPtr, cName: s}, nil
 	case strings.HasSuffix(s, "*"):
 		elem, err := m.resolve(strings.TrimSuffix(s, "*"), nil, nil, "")
 		if err != nil {

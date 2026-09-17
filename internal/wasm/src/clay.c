@@ -86,3 +86,74 @@ void go_open_text_element(Clay_String *text, Clay_TextElementConfig *config) {
     Clay_TextElementConfig c = *config;
     CLAY_TEXT(t, CLAY_TEXT_CONFIG(c));
 }
+
+// Transitions call back into Go through function pointers that carry no user data,
+// so there is a pool of trampolines, each of which knows its own slot.
+// Go registers a function in a slot and stores the matching trampoline in the element.
+
+#define GO_TRANSITION_SLOTS 16
+
+GO_IMPORT("transitionHandler")
+bool go_transition_handler(int32_t slot, Clay_TransitionCallbackArguments *arguments);
+
+GO_IMPORT("transitionState")
+void go_transition_state(int32_t slot, Clay_TransitionData *ret, Clay_TransitionData *state, Clay_TransitionProperty properties);
+
+#define GO_TRANSITION_TRAMPOLINE(slot)                                                            \
+    static bool go_handler_##slot(Clay_TransitionCallbackArguments arguments) {                   \
+        return go_transition_handler(slot, &arguments);                                           \
+    }                                                                                             \
+    static Clay_TransitionData go_state_##slot(Clay_TransitionData state,                         \
+                                               Clay_TransitionProperty properties) {              \
+        Clay_TransitionData ret = {0};                                                            \
+        go_transition_state(slot, &ret, &state, properties);                                      \
+        return ret;                                                                               \
+    }
+
+GO_TRANSITION_TRAMPOLINE(0)
+GO_TRANSITION_TRAMPOLINE(1)
+GO_TRANSITION_TRAMPOLINE(2)
+GO_TRANSITION_TRAMPOLINE(3)
+GO_TRANSITION_TRAMPOLINE(4)
+GO_TRANSITION_TRAMPOLINE(5)
+GO_TRANSITION_TRAMPOLINE(6)
+GO_TRANSITION_TRAMPOLINE(7)
+GO_TRANSITION_TRAMPOLINE(8)
+GO_TRANSITION_TRAMPOLINE(9)
+GO_TRANSITION_TRAMPOLINE(10)
+GO_TRANSITION_TRAMPOLINE(11)
+GO_TRANSITION_TRAMPOLINE(12)
+GO_TRANSITION_TRAMPOLINE(13)
+GO_TRANSITION_TRAMPOLINE(14)
+GO_TRANSITION_TRAMPOLINE(15)
+
+static bool (*const go_handlers[GO_TRANSITION_SLOTS])(Clay_TransitionCallbackArguments) = {
+    go_handler_0, go_handler_1, go_handler_2, go_handler_3,
+    go_handler_4, go_handler_5, go_handler_6, go_handler_7,
+    go_handler_8, go_handler_9, go_handler_10, go_handler_11,
+    go_handler_12, go_handler_13, go_handler_14, go_handler_15,
+};
+
+static Clay_TransitionData (*const go_states[GO_TRANSITION_SLOTS])(Clay_TransitionData, Clay_TransitionProperty) = {
+    go_state_0, go_state_1, go_state_2, go_state_3,
+    go_state_4, go_state_5, go_state_6, go_state_7,
+    go_state_8, go_state_9, go_state_10, go_state_11,
+    go_state_12, go_state_13, go_state_14, go_state_15,
+};
+
+// go_transition_handler_ptr returns the trampoline of a slot, or null if there are none left.
+GO_EXPORT("go_transition_handler_ptr")
+void *go_transition_handler_ptr(int32_t slot) {
+    return slot >= 0 && slot < GO_TRANSITION_SLOTS ? (void *)go_handlers[slot] : NULL;
+}
+
+GO_EXPORT("go_transition_state_ptr")
+void *go_transition_state_ptr(int32_t slot) {
+    return slot >= 0 && slot < GO_TRANSITION_SLOTS ? (void *)go_states[slot] : NULL;
+}
+
+// go_ease_out_ptr returns clay's built in transition handler, which needs no trampoline.
+GO_EXPORT("go_ease_out_ptr")
+void *go_ease_out_ptr(void) {
+    return (void *)Clay_EaseOut;
+}

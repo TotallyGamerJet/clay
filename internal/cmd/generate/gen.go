@@ -30,6 +30,14 @@ var handwritten = map[string]bool{
 	// Not useful in Go.
 	"Clay__SuppressUnusedLatchDefinitionVariableWarning": true,
 	"Clay_RenderCommandArray_Get":                        true, // RenderCommandArray is a slice
+	"Clay_EaseOut":                                       true, // exposed as the EaseOut transition handler
+}
+
+// funcPtrTypes gives the Go type wrapping each kind of function pointer clay calls back
+// through. They are written by hand in api.go, as clay passes no user data to them.
+var funcPtrTypes = map[string]string{
+	"_Bool (*)(Clay_TransitionCallbackArguments)":                           "TransitionHandler",
+	"Clay_TransitionData (*)(Clay_TransitionData, Clay_TransitionProperty)": "TransitionStateFunc",
 }
 
 // handwrittenTypes are types that can't be generated and are implemented by hand.
@@ -79,12 +87,12 @@ func (u unionTag) member(constant string) string {
 	return strings.Join(parts, "")
 }
 
-// goFields returns the fields of r that are exposed in Go. Function pointers are left out,
-// and are always NULL when a record is passed to clay.
+// goFields returns the fields of r that are exposed in Go. Function pointers that have no
+// Go type are left out, and are always NULL when a record is passed to clay.
 func goFields(r *record) []*field {
 	fields := make([]*field, 0, len(r.fields))
 	for _, f := range r.fields {
-		if f.t.kind != kFuncPtr {
+		if f.t.kind != kFuncPtr || funcPtrTypes[f.t.cName] != "" {
 			fields = append(fields, f)
 		}
 	}
@@ -331,6 +339,11 @@ func typeCaps(t *ctype) caps {
 		c.enc = c.enc && c.plain
 		c.dec = c.dec && c.plain
 		return c
+	case kFuncPtr:
+		if funcPtrTypes[t.cName] != "" {
+			// The Go type holds the function pointer, which is just a number.
+			return caps{enc: true, dec: true, plain: true}
+		}
 	case kPtr:
 		if isVoidPtr(t) {
 			return caps{enc: true, dec: true}
@@ -389,6 +402,10 @@ func (g *gen) goType(t *ctype) (string, bool) {
 	case kArray:
 		elem, ok := g.goType(t.elem)
 		return fmt.Sprintf("[%d]%s", t.len, elem), ok
+	case kFuncPtr:
+		if name := funcPtrTypes[t.cName]; name != "" {
+			return name, true
+		}
 	case kPtr:
 		if isVoidPtr(t) {
 			return "any", true
@@ -523,7 +540,7 @@ func (g *gen) emitRecord(r *record) error {
 func logOmittedFields(r *record, path string) {
 	for _, f := range r.fields {
 		switch {
-		case f.t.kind == kFuncPtr:
+		case f.t.kind == kFuncPtr && funcPtrTypes[f.t.cName] == "":
 			log.Printf("function pointer %s.%s is not available in Go", path, f.cName)
 		case f.t.kind == kRecord && f.t.rec.goName == "":
 			logOmittedFields(f.t.rec, path+"."+f.cName)
@@ -651,6 +668,8 @@ func (g *gen) encExpr(t *ctype, off, lv string) string {
 		return fmt.Sprintf("put%s(b, %s, uint%d(%s))", primSuffix(t.prim), off, t.prim.size*8, lv)
 	case kEnum:
 		return fmt.Sprintf("put%s(b, %s, uint%d(%s))", primSuffix(t.enum.prim), off, t.enum.prim.size*8, lv)
+	case kFuncPtr:
+		return fmt.Sprintf("putU32(b, %s, %s.ptr)", off, lv)
 	case kPtr: // void *
 		return fmt.Sprintf("putU32(b, %s, storeHandle(%s))", off, lv)
 	case kArray:
@@ -721,6 +740,8 @@ func (g *gen) decExpr(t *ctype, off, lv string) string {
 		return fmt.Sprintf("%s = %s(get%s(m, %s))", lv, t.prim.goType, primSuffix(t.prim), off)
 	case kEnum:
 		return fmt.Sprintf("%s = %s(get%s(m, %s))", lv, t.enum.goName, primSuffix(t.enum.prim), off)
+	case kFuncPtr:
+		return fmt.Sprintf("%s = %s{ptr: getU32(m, %s)}", lv, funcPtrTypes[t.cName], off)
 	case kPtr:
 		if isVoidPtr(t) {
 			return fmt.Sprintf("%s = loadHandle(getU32(m, %s))", lv, off)

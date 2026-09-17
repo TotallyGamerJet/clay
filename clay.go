@@ -1170,13 +1170,16 @@ func decBorderElementConfig(m []byte, p uint32, v *BorderElementConfig) {
 
 // Controls settings related to transitions
 type TransitionElementConfig struct {
+	Handler             TransitionHandler
 	Duration            float32
 	Properties          TransitionProperty
 	InteractionHandling TransitionInteractionHandlingType
 	Enter               struct {
-		Trigger TransitionEnterTriggerType
+		SetInitialState TransitionStateFunc
+		Trigger         TransitionEnterTriggerType
 	}
 	Exit struct {
+		SetFinalState   TransitionStateFunc
 		Trigger         TransitionExitTriggerType
 		SiblingOrdering ExitTransitionSiblingOrdering
 	}
@@ -1185,22 +1188,28 @@ type TransitionElementConfig struct {
 const sizeofTransitionElementConfig = 32
 
 func encTransitionElementConfig(b []byte, p uint32, v *TransitionElementConfig) {
+	putU32(b, p+0, v.Handler.ptr)
 	putF32(b, p+4, v.Duration)
 	putU32(b, p+8, uint32(v.Properties))
 	putU8(b, p+12, uint8(v.InteractionHandling))
+	putU32(b, p+16+0, v.Enter.SetInitialState.ptr)
 	putU8(b, p+16+4, uint8(v.Enter.Trigger))
 
+	putU32(b, p+24+0, v.Exit.SetFinalState.ptr)
 	putU8(b, p+24+4, uint8(v.Exit.Trigger))
 	putU8(b, p+24+5, uint8(v.Exit.SiblingOrdering))
 
 }
 
 func decTransitionElementConfig(m []byte, p uint32, v *TransitionElementConfig) {
+	v.Handler = TransitionHandler{ptr: getU32(m, p+0)}
 	v.Duration = getF32(m, p+4)
 	v.Properties = TransitionProperty(getU32(m, p+8))
 	v.InteractionHandling = TransitionInteractionHandlingType(getU8(m, p+12))
+	v.Enter.SetInitialState = TransitionStateFunc{ptr: getU32(m, p+16+0)}
 	v.Enter.Trigger = TransitionEnterTriggerType(getU8(m, p+16+4))
 
+	v.Exit.SetFinalState = TransitionStateFunc{ptr: getU32(m, p+24+0)}
 	v.Exit.Trigger = TransitionExitTriggerType(getU8(m, p+24+4))
 	v.Exit.SiblingOrdering = ExitTransitionSiblingOrdering(getU8(m, p+24+5))
 

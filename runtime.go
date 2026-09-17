@@ -330,6 +330,12 @@ func openTextElement(text string, config *TextElementConfig) {
 	module.Xgo_open_text_element(int32(p), int32(p+configOff))
 }
 
+// The functions registered for the transition trampolines, indexed by their slot.
+var (
+	transitionHandlers   []func(arguments TransitionCallbackArguments) bool
+	transitionStateFuncs []func(state TransitionData, properties TransitionProperty) TransitionData
+)
+
 // host implements the functions imported by the WebAssembly module.
 type host struct{}
 
@@ -368,6 +374,27 @@ func (host) XqueryScrollOffset(ret, elementId, userData int32) {
 	v := f.fn(uint32(elementId), f.userData)
 	var buf [sizeofVector2]byte
 	encVector2(buf[:], 0, &v)
+	copy(wasmMemory()[ret:], buf[:])
+}
+
+func (host) XtransitionHandler(slot, arguments int32) int32 {
+	if int(slot) >= len(transitionHandlers) {
+		return 0
+	}
+	var args TransitionCallbackArguments
+	decTransitionCallbackArguments(wasmMemory(), uint32(arguments), &args)
+	return b2i(transitionHandlers[slot](args))
+}
+
+func (host) XtransitionState(slot, ret, state int32, properties int32) {
+	if int(slot) >= len(transitionStateFuncs) {
+		return
+	}
+	var s TransitionData
+	decTransitionData(wasmMemory(), uint32(state), &s)
+	result := transitionStateFuncs[slot](s, TransitionProperty(properties))
+	var buf [sizeofTransitionData]byte
+	encTransitionData(buf[:], 0, &result)
 	copy(wasmMemory()[ret:], buf[:])
 }
 

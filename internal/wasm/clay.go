@@ -22,10 +22,10 @@ type Module struct {
 func New(v0 Xgo) *Module {
 	m := new(Module)
 	m._go = v0
-	m.t0 = make([]any, 7)
+	m.t0 = make([]any, 40)
 	m.maxMem = 65536
 	m.memory = make([]byte, 0x20000)
-	m.elements = [][]any{{m._HandleDebugViewCloseButtonInteraction, _Clay__ErrorHandlerFunctionDefault, m._error_handler, m._measure_text, m._query_scroll_offset, m._on_hover}}
+	m.elements = [][]any{{m._HandleDebugViewCloseButtonInteraction, _Clay__ErrorHandlerFunctionDefault, m._error_handler, m._measure_text, m._query_scroll_offset, m._on_hover, m._Clay_EaseOut, m._go_handler_0, m._go_handler_1, m._go_handler_2, m._go_handler_3, m._go_handler_4, m._go_handler_5, m._go_handler_6, m._go_handler_7, m._go_handler_8, m._go_handler_9, m._go_handler_10, m._go_handler_11, m._go_handler_12, m._go_handler_13, m._go_handler_14, m._go_handler_15, m._go_state_0, m._go_state_1, m._go_state_2, m._go_state_3, m._go_state_4, m._go_state_5, m._go_state_6, m._go_state_7, m._go_state_8, m._go_state_9, m._go_state_10, m._go_state_11, m._go_state_12, m._go_state_13, m._go_state_14, m._go_state_15}}
 	table_init(m.t0, m.elements[0], i32(1), 0, len(m.elements[0]))
 	m.elements[0] = nil
 	memory_init(m.memory, data0, uint32(i32(65536)), 0, len(data0))
@@ -43,6 +43,8 @@ type Xgo = interface {
 	XmeasureText(v0, v1, v2, v3 int32)
 	XonHover(v0, v1, v2 int32)
 	XqueryScrollOffset(v0, v1, v2 int32)
+	XtransitionHandler(v0, v1 int32) int32
+	XtransitionState(v0, v1, v2, v3 int32)
 }
 type Memory = interface {
 	Slice() *[]byte
@@ -68,10 +70,16 @@ func (m *Module) _go_query_scroll_offset(v0, v1, v2 int32) {
 func (m *Module) _go_on_hover_function(v0, v1, v2 int32) {
 	m._go.XonHover(v0, v1, v2)
 }
+func (m *Module) _go_transition_handler(v0, v1 int32) int32 {
+	return m._go.XtransitionHandler(v0, v1)
+}
+func (m *Module) _go_transition_state(v0, v1, v2, v3 int32) {
+	m._go.XtransitionState(v0, v1, v2, v3)
+}
 func _Clay__ErrorHandlerFunctionDefault(v0 int32) {
 }
 func (m *Module) _Clay_GetCurrentContext() int32 {
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	return t0
 }
 func (m *Module) _Clay__HashString(v0, v1, v2 int32) {
@@ -213,7 +221,7 @@ func (m *Module) _Clay__AddMeasuredWord(v0, v1 int32) int32 {
 	m.___stack_pointer = v2
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v3 = t1
 			t2 := int32(load32(m.memory, int64(uint32(v3))+352))
 			v4 = t2
@@ -295,7 +303,7 @@ func (m *Module) _Clay__AddMeasuredWord(v0, v1 int32) int32 {
 				m.memory[int64(uint32(v2))+76] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+79, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+83] = byte(i32(0))
-				t19 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t19 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t19
 				t20 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v5 = t20
@@ -309,7 +317,7 @@ func (m *Module) _Clay__AddMeasuredWord(v0, v1 int32) int32 {
 				store64(m.memory, int64(uint32(v2))+8, uint64(t24))
 				store32(m.memory, int64(uint32(v2))+92, uint32(v3))
 				m.t0[uint(v5)].(func(int32))(v2 + i32(8))
-				v3 = i32(70100)
+				v3 = i32(70244)
 				goto l6
 			}
 		}
@@ -341,7 +349,7 @@ func (m *Module) _Clay__AddMeasuredWord(v0, v1 int32) int32 {
 			t33 := int64(load64(m.memory, int64(uint32(v2))+76))
 			store64(m.memory, int64(uint32(v2))+56, uint64(t33))
 			m.t0[uint(v5)].(func(int32))(v2 + i32(56))
-			v3 = i32(70100)
+			v3 = i32(70244)
 			goto l6
 		}
 	l7:
@@ -368,15 +376,15 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 	t0 := m.___stack_pointer
 	v2 = t0 - i32(624)
 	m.___stack_pointer = v2
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	v3 = t1
 	{
 		{
-			t2 := int32(load32(m.memory, int64(uint32(i32(0)))+70172))
+			t2 := int32(load32(m.memory, int64(uint32(i32(0)))+70316))
 			if t2 != 0 {
 				goto l0
 			}
-			v4 = i32(70116)
+			v4 = i32(70260)
 			t3 := int32(m.memory[int64(uint32(v3))+31])
 			if t3 != 0 {
 				goto l1
@@ -533,7 +541,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 					m.memory[int64(uint32(v2))+608] = byte(i32(1))
 					store32(m.memory, int64(uint32(v2))+616, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v2))+612, uint32(i32(100)))
-					t30 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t30 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v5 = t30
 					t31 := int32(load32(m.memory, int64(uint32(v5))+20))
 					v6 = t31
@@ -546,7 +554,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 					store32(m.memory, int64(uint32(v2))+424, uint32(v5))
 					store32(m.memory, int64(uint32(v2))+620, uint32(v5))
 					m.t0[uint(v6)].(func(int32))(v2 + i32(408))
-					v4 = i32(70116)
+					v4 = i32(70260)
 					goto l14
 				}
 			l13:
@@ -599,7 +607,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 									m.memory[int64(uint32(v2))+608] = byte(i32(1))
 									store32(m.memory, int64(uint32(v2))+616, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v2))+612, uint32(i32(100)))
-									t41 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t41 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v6 = t41
 									t42 := int32(load32(m.memory, int64(uint32(v6))+20))
 									v10 = t42
@@ -612,7 +620,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 									store32(m.memory, int64(uint32(v2))+400, uint32(v6))
 									store32(m.memory, int64(uint32(v2))+620, uint32(v6))
 									m.t0[uint(v10)].(func(int32))(v2 + i32(384))
-									v6 = i32(70100)
+									v6 = i32(70244)
 									goto l20
 								}
 							l19:
@@ -636,7 +644,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 									m.memory[int64(uint32(v2))+608] = byte(i32(1))
 									store32(m.memory, int64(uint32(v2))+616, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v2))+612, uint32(i32(100)))
-									t49 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t49 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v5 = t49
 									t50 := int32(load32(m.memory, int64(uint32(v5))+20))
 									v10 = t50
@@ -687,7 +695,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 							m.memory[int64(uint32(v2))+608] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+616, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+612, uint32(i32(100)))
-							t58 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t58 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v6 = t58
 							t59 := int32(load32(m.memory, int64(uint32(v6))+20))
 							v10 = t59
@@ -738,7 +746,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 							m.memory[int64(uint32(v2))+608] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+616, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+612, uint32(i32(100)))
-							t70 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t70 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v6 = t70
 							t71 := int32(load32(m.memory, int64(uint32(v6))+20))
 							v10 = t71
@@ -781,7 +789,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 							m.memory[int64(uint32(v2))+608] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+616, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+612, uint32(i32(100)))
-							t78 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t78 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v6 = t78
 							t79 := int32(load32(m.memory, int64(uint32(v6))+20))
 							v10 = t79
@@ -794,7 +802,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 							store32(m.memory, int64(uint32(v2))+304, uint32(v6))
 							store32(m.memory, int64(uint32(v2))+620, uint32(v6))
 							m.t0[uint(v10)].(func(int32))(v2 + i32(288))
-							store32(m.memory, int64(uint32(i32(70116)))+24, uint32(v5))
+							store32(m.memory, int64(uint32(i32(70260)))+24, uint32(v5))
 							goto l30
 						}
 						t76 := int32(load32(m.memory, int64(uint32(v3))+332))
@@ -844,7 +852,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 					m.memory[int64(uint32(v2))+604] = byte(i32(7))
 					store32(m.memory, int64(uint32(v2))+607, uint32(i32(256)))
 					m.memory[int64(uint32(v2))+611] = byte(i32(0))
-					t90 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t90 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v5 = t90
 					t91 := int32(load32(m.memory, int64(uint32(v5))+20))
 					v7 = t91
@@ -902,7 +910,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 				m.memory[int64(uint32(v2))+604] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+607, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+611] = byte(i32(0))
-				t102 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t102 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v5 = t102
 				t103 := int32(load32(m.memory, int64(uint32(v5))+20))
 				v7 = t103
@@ -916,7 +924,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 				store64(m.memory, int64(uint32(v2))+192, uint64(t107))
 				store32(m.memory, int64(uint32(v2))+620, uint32(v5))
 				m.t0[uint(v7)].(func(int32))(v2 + i32(192))
-				v4 = i32(70116)
+				v4 = i32(70260)
 				goto l40
 			}
 		}
@@ -930,7 +938,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 			if t111 != v9+i32(-1) {
 				goto l41
 			}
-			v4 = i32(70116)
+			v4 = i32(70260)
 			t112 := int32(m.memory[int64(uint32(v3))+30])
 			if t112 != 0 {
 				goto l1
@@ -968,7 +976,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 				m.memory[int64(uint32(v2))+604] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+607, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+611] = byte(i32(0))
-				t118 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t118 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v5 = t118
 				t119 := int32(load32(m.memory, int64(uint32(v5))+20))
 				v7 = t119
@@ -984,7 +992,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 				m.t0[uint(v7)].(func(int32))(v2 + i32(264))
 				t124 := int32(load32(m.memory, int64(uint32(v3))+304))
 				v5 = t124
-				v4 = i32(70116)
+				v4 = i32(70260)
 				goto l43
 			}
 		l42:
@@ -1009,7 +1017,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 		v17 = v5 + i32(-1)
 	l40:
 		v7 = i32(0)
-		t128 := int32(load32(m.memory, int64(uint32(i32(0)))+69204))
+		t128 := int32(load32(m.memory, int64(uint32(i32(0)))+69344))
 		t129 := v2
 		v5 = t128
 		store32(m.memory, int64(uint32(t129))+556, uint32(v5))
@@ -1020,7 +1028,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 		store32(m.memory, int64(uint32(v2))+552, uint32(i32(1)))
 		t131 := int64(load64(m.memory, int64(uint32(v2))+552))
 		store64(m.memory, int64(uint32(v2))+176, uint64(t131))
-		t132 := int32(load32(m.memory, int64(uint32(i32(0)))+70172))
+		t132 := int32(load32(m.memory, int64(uint32(i32(0)))+70316))
 		m.t0[uint(t132)].(func(int32, int32, int32, int32))(v2+i32(604), v2+i32(176), v1, v9)
 		t133 := math.Float32frombits(load32(m.memory, int64(uint32(v2))+604))
 		v18 = t133
@@ -1055,7 +1063,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 			if t137 != t138+i32(-1) {
 				goto l46
 			}
-			v4 = i32(70116)
+			v4 = i32(70260)
 			t139 := int32(m.memory[int64(uint32(v3))+30])
 			if t139 != 0 {
 				goto l1
@@ -1125,7 +1133,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 				store32(m.memory, int64(uint32(v2))+168, uint32(v9))
 				t150 := int64(load64(m.memory, int64(uint32(v2))+504))
 				store64(m.memory, int64(uint32(v2))+160, uint64(t150))
-				t151 := int32(load32(m.memory, int64(uint32(i32(0)))+70172))
+				t151 := int32(load32(m.memory, int64(uint32(i32(0)))+70316))
 				m.t0[uint(t151)].(func(int32, int32, int32, int32))(v2+i32(604), v2+i32(160), v1, v13)
 				t152 := math.Float32frombits(load32(m.memory, int64(uint32(v2))+608))
 				v23 = t152
@@ -1236,7 +1244,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 			store32(m.memory, int64(uint32(v2))+452, uint32(v9))
 			t174 := int64(load64(m.memory, int64(uint32(v2))+444))
 			store64(m.memory, int64(uint32(v2))+96, uint64(t174))
-			t175 := int32(load32(m.memory, int64(uint32(i32(0)))+70172))
+			t175 := int32(load32(m.memory, int64(uint32(i32(0)))+70316))
 			m.t0[uint(t175)].(func(int32, int32, int32, int32))(v2+i32(604), v2+i32(96), v1, v6)
 			store32(m.memory, int64(uint32(v2))+432, uint32(v5))
 			store32(m.memory, int64(uint32(v2))+428, uint32(v7))
@@ -1302,7 +1310,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 			m.memory[int64(uint32(v2))+604] = byte(i32(7))
 			store32(m.memory, int64(uint32(v2))+607, uint32(i32(256)))
 			m.memory[int64(uint32(v2))+611] = byte(i32(0))
-			t193 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t193 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v3 = t193
 			t194 := int32(load32(m.memory, int64(uint32(v3))+20))
 			v5 = t194
@@ -1316,7 +1324,7 @@ func (m *Module) _Clay__MeasureTextCached(v0, v1 int32) int32 {
 			store64(m.memory, int64(uint32(v2))+56, uint64(t198))
 			store32(m.memory, int64(uint32(v2))+620, uint32(v3))
 			m.t0[uint(v5)].(func(int32))(v2 + i32(56))
-			store32(m.memory, int64(uint32(i32(70116)))+24, uint32(v17))
+			store32(m.memory, int64(uint32(i32(70260)))+24, uint32(v17))
 			goto l1
 		}
 	l56:
@@ -1336,7 +1344,7 @@ func (m *Module) _Clay__AddHashMapItem(v0, v1 int32) int32 {
 	v4 = i32(-1)
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v5 = t1
 			t2 := int32(load32(m.memory, int64(uint32(v5))+268))
 			t3 := int32(load32(m.memory, int64(uint32(v5))+264))
@@ -1417,7 +1425,7 @@ func (m *Module) _Clay__AddHashMapItem(v0, v1 int32) int32 {
 						m.memory[int64(uint32(v2))+208] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+216, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+212, uint32(i32(100)))
-						t20 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t20 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v3 = t20
 						t21 := int32(load32(m.memory, int64(uint32(v3))+20))
 						v11 = t21
@@ -1430,7 +1438,7 @@ func (m *Module) _Clay__AddHashMapItem(v0, v1 int32) int32 {
 						store32(m.memory, int64(uint32(v2))+120, uint32(v3))
 						store32(m.memory, int64(uint32(v2))+220, uint32(v3))
 						m.t0[uint(v11)].(func(int32))(v2 + i32(104))
-						v3 = i32(70036)
+						v3 = i32(70180)
 						goto l5
 					}
 				l4:
@@ -1541,7 +1549,7 @@ func (m *Module) _Clay__AddHashMapItem(v0, v1 int32) int32 {
 				m.memory[int64(uint32(v2))+204] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+207, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+211] = byte(i32(0))
-				t48 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t48 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v9 = t48
 				t49 := int32(load32(m.memory, int64(uint32(v9))+20))
 				v10 = t49
@@ -1614,7 +1622,7 @@ func (m *Module) _Clay__AddHashMapItem(v0, v1 int32) int32 {
 			m.memory[int64(uint32(v2))+204] = byte(i32(7))
 			store32(m.memory, int64(uint32(v2))+207, uint32(i32(256)))
 			m.memory[int64(uint32(v2))+211] = byte(i32(0))
-			t66 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t66 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v5 = t66
 			t67 := int32(load32(m.memory, int64(uint32(v5))+20))
 			v4 = t67
@@ -1628,7 +1636,7 @@ func (m *Module) _Clay__AddHashMapItem(v0, v1 int32) int32 {
 			store64(m.memory, int64(uint32(v2))+32, uint64(t71))
 			store32(m.memory, int64(uint32(v2))+220, uint32(v5))
 			m.t0[uint(v4)].(func(int32))(v2 + i32(32))
-			store32(m.memory, int64(uint32(i32(70036)))+52, uint32(v6))
+			store32(m.memory, int64(uint32(i32(70180)))+52, uint32(v6))
 			goto l1
 		}
 	l14:
@@ -1648,7 +1656,7 @@ func (m *Module) _Clay__CloseElement() {
 	v0 = t0 - i32(304)
 	m.___stack_pointer = v0
 	{
-		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v1 = t1
 		t2 := int32(m.memory[int64(uint32(v1))+28])
 		if t2 != 0 {
@@ -1679,7 +1687,7 @@ func (m *Module) _Clay__CloseElement() {
 				t8 := int64(load64(m.memory, int64(uint32(v0))+284))
 				store64(m.memory, int64(uint32(v0))+264, uint64(t8))
 				m.t0[uint(v2)].(func(int32))(v0 + i32(264))
-				v2 = i32(69412)
+				v2 = i32(69556)
 				goto l2
 			}
 		l1:
@@ -1707,7 +1715,7 @@ func (m *Module) _Clay__CloseElement() {
 				m.memory[int64(uint32(v0))+284] = byte(i32(7))
 				store32(m.memory, int64(uint32(v0))+287, uint32(i32(256)))
 				m.memory[int64(uint32(v0))+291] = byte(i32(0))
-				t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v2 = t12
 				t13 := int32(load32(m.memory, int64(uint32(v2))+20))
 				v3 = t13
@@ -1721,7 +1729,7 @@ func (m *Module) _Clay__CloseElement() {
 				store64(m.memory, int64(uint32(v0))+240, uint64(t17))
 				store32(m.memory, int64(uint32(v0))+300, uint32(v2))
 				m.t0[uint(v3)].(func(int32))(v0 + i32(240))
-				v2 = i32(69452)
+				v2 = i32(69596)
 				goto l5
 			}
 		l4:
@@ -1792,7 +1800,7 @@ func (m *Module) _Clay__CloseElement() {
 													m.memory[int64(uint32(v0))+288] = byte(i32(1))
 													store32(m.memory, int64(uint32(v0))+296, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v0))+292, uint32(i32(100)))
-													t33 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t33 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v3 = t33
 													t34 := int32(load32(m.memory, int64(uint32(v3))+20))
 													v8 = t34
@@ -1805,7 +1813,7 @@ func (m *Module) _Clay__CloseElement() {
 													store32(m.memory, int64(uint32(v0))+160, uint32(v3))
 													store32(m.memory, int64(uint32(v0))+300, uint32(v3))
 													m.t0[uint(v8)].(func(int32))(v0 + i32(144))
-													v3 = i32(69412)
+													v3 = i32(69556)
 													goto l14
 												}
 											l13:
@@ -1835,7 +1843,7 @@ func (m *Module) _Clay__CloseElement() {
 													m.memory[int64(uint32(v0))+288] = byte(i32(1))
 													store32(m.memory, int64(uint32(v0))+296, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v0))+292, uint32(i32(100)))
-													t41 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t41 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v3 = t41
 													t42 := int32(load32(m.memory, int64(uint32(v3))+20))
 													v12 = t42
@@ -1848,7 +1856,7 @@ func (m *Module) _Clay__CloseElement() {
 													store32(m.memory, int64(uint32(v0))+136, uint32(v3))
 													store32(m.memory, int64(uint32(v0))+300, uint32(v3))
 													m.t0[uint(v12)].(func(int32))(v0 + i32(120))
-													v3 = i32(69452)
+													v3 = i32(69596)
 													goto l17
 												}
 											l16:
@@ -1912,7 +1920,7 @@ func (m *Module) _Clay__CloseElement() {
 													m.memory[int64(uint32(v0))+288] = byte(i32(1))
 													store32(m.memory, int64(uint32(v0))+296, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v0))+292, uint32(i32(100)))
-													t63 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t63 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v3 = t63
 													t64 := int32(load32(m.memory, int64(uint32(v3))+20))
 													v8 = t64
@@ -1975,7 +1983,7 @@ func (m *Module) _Clay__CloseElement() {
 													m.memory[int64(uint32(v0))+288] = byte(i32(1))
 													store32(m.memory, int64(uint32(v0))+296, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v0))+292, uint32(i32(100)))
-													t73 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t73 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v3 = t73
 													t74 := int32(load32(m.memory, int64(uint32(v3))+20))
 													v8 = t74
@@ -1988,7 +1996,7 @@ func (m *Module) _Clay__CloseElement() {
 													store32(m.memory, int64(uint32(v0))+232, uint32(v3))
 													store32(m.memory, int64(uint32(v0))+300, uint32(v3))
 													m.t0[uint(v8)].(func(int32))(v0 + i32(216))
-													v3 = i32(69412)
+													v3 = i32(69556)
 													goto l27
 												}
 											l26:
@@ -2018,7 +2026,7 @@ func (m *Module) _Clay__CloseElement() {
 													m.memory[int64(uint32(v0))+288] = byte(i32(1))
 													store32(m.memory, int64(uint32(v0))+296, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v0))+292, uint32(i32(100)))
-													t81 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t81 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v3 = t81
 													t82 := int32(load32(m.memory, int64(uint32(v3))+20))
 													v12 = t82
@@ -2031,7 +2039,7 @@ func (m *Module) _Clay__CloseElement() {
 													store32(m.memory, int64(uint32(v0))+208, uint32(v3))
 													store32(m.memory, int64(uint32(v0))+300, uint32(v3))
 													m.t0[uint(v12)].(func(int32))(v0 + i32(192))
-													v3 = i32(69452)
+													v3 = i32(69596)
 													goto l30
 												}
 											l29:
@@ -2095,7 +2103,7 @@ func (m *Module) _Clay__CloseElement() {
 													m.memory[int64(uint32(v0))+288] = byte(i32(1))
 													store32(m.memory, int64(uint32(v0))+296, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v0))+292, uint32(i32(100)))
-													t103 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t103 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v3 = t103
 													t104 := int32(load32(m.memory, int64(uint32(v3))+20))
 													v8 = t104
@@ -2330,7 +2338,7 @@ func (m *Module) _Clay__CloseElement() {
 			m.memory[int64(uint32(v0))+284] = byte(i32(7))
 			store32(m.memory, int64(uint32(v0))+287, uint32(i32(256)))
 			m.memory[int64(uint32(v0))+291] = byte(i32(0))
-			t153 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t153 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v2 = t153
 			t154 := int32(load32(m.memory, int64(uint32(v2))+20))
 			v3 = t154
@@ -2344,14 +2352,14 @@ func (m *Module) _Clay__CloseElement() {
 			store64(m.memory, int64(uint32(v0))+72, uint64(t158))
 			store32(m.memory, int64(uint32(v0))+300, uint32(v2))
 			m.t0[uint(v3)].(func(int32))(v0 + i32(72))
-			v2 = i32(69412)
+			v2 = i32(69556)
 		}
 	l47:
 		t159 := int32(load32(m.memory, uint32(v2)))
 		v10 = t159
 		{
 			{
-				t160 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t160 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v2 = t160
 				t161 := int32(load32(m.memory, int64(uint32(v2))+160))
 				v3 = t161
@@ -2376,7 +2384,7 @@ func (m *Module) _Clay__CloseElement() {
 				t166 := int64(load64(m.memory, int64(uint32(v0))+284))
 				store64(m.memory, int64(uint32(v0))+48, uint64(t166))
 				m.t0[uint(v3)].(func(int32))(v0 + i32(48))
-				v3 = i32(69412)
+				v3 = i32(69556)
 				goto l49
 			}
 		l48:
@@ -2404,7 +2412,7 @@ func (m *Module) _Clay__CloseElement() {
 				m.memory[int64(uint32(v0))+284] = byte(i32(7))
 				store32(m.memory, int64(uint32(v0))+287, uint32(i32(256)))
 				m.memory[int64(uint32(v0))+291] = byte(i32(0))
-				t170 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t170 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v2 = t170
 				t171 := int32(load32(m.memory, int64(uint32(v2))+20))
 				v3 = t171
@@ -2418,7 +2426,7 @@ func (m *Module) _Clay__CloseElement() {
 				store64(m.memory, int64(uint32(v0))+24, uint64(t175))
 				store32(m.memory, int64(uint32(v0))+300, uint32(v2))
 				m.t0[uint(v3)].(func(int32))(v0 + i32(24))
-				v2 = i32(69452)
+				v2 = i32(69596)
 				goto l52
 			}
 		l51:
@@ -2454,7 +2462,7 @@ func (m *Module) _Clay__CloseElement() {
 			m.memory[int64(uint32(v0))+284] = byte(i32(7))
 			store32(m.memory, int64(uint32(v0))+287, uint32(i32(256)))
 			m.memory[int64(uint32(v0))+291] = byte(i32(0))
-			t182 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t182 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v2 = t182
 			t183 := int32(load32(m.memory, int64(uint32(v2))+20))
 			v1 = t183
@@ -2485,7 +2493,7 @@ func (m *Module) _Clay__OpenElement() {
 	m.___stack_pointer = v0
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v1 = t1
 			t2 := int32(load32(m.memory, int64(uint32(v1))+136))
 			v2 = t2
@@ -2529,7 +2537,7 @@ func (m *Module) _Clay__OpenElement() {
 				m.t0[uint(v2)].(func(int32))(v0 + i32(176))
 				t11 := int32(load32(m.memory, int64(uint32(v1))+136))
 				v4 = t11
-				v3 = i32(69452)
+				v3 = i32(69596)
 				goto l4
 			}
 		l3:
@@ -2556,7 +2564,7 @@ func (m *Module) _Clay__OpenElement() {
 				m.memory[int64(uint32(v0))+196] = byte(i32(7))
 				store32(m.memory, int64(uint32(v0))+199, uint32(i32(256)))
 				m.memory[int64(uint32(v0))+203] = byte(i32(0))
-				t17 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t17 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v2 = t17
 				t18 := int32(load32(m.memory, int64(uint32(v2))+20))
 				v4 = t18
@@ -2591,7 +2599,7 @@ func (m *Module) _Clay__OpenElement() {
 				m.memory[int64(uint32(v0))+196] = byte(i32(7))
 				store32(m.memory, int64(uint32(v0))+199, uint32(i32(256)))
 				m.memory[int64(uint32(v0))+203] = byte(i32(0))
-				t25 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t25 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v2 = t25
 				t26 := int32(load32(m.memory, int64(uint32(v2))+20))
 				v4 = t26
@@ -2605,7 +2613,7 @@ func (m *Module) _Clay__OpenElement() {
 				store64(m.memory, int64(uint32(v0))+128, uint64(t30))
 				store32(m.memory, int64(uint32(v0))+212, uint32(v2))
 				m.t0[uint(v4)].(func(int32))(v0 + i32(128))
-				v2 = i32(69412)
+				v2 = i32(69556)
 				goto l8
 			}
 		l7:
@@ -2633,7 +2641,7 @@ func (m *Module) _Clay__OpenElement() {
 				m.memory[int64(uint32(v0))+196] = byte(i32(7))
 				store32(m.memory, int64(uint32(v0))+199, uint32(i32(256)))
 				m.memory[int64(uint32(v0))+203] = byte(i32(0))
-				t34 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t34 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v2 = t34
 				t35 := int32(load32(m.memory, int64(uint32(v2))+20))
 				v4 = t35
@@ -2647,7 +2655,7 @@ func (m *Module) _Clay__OpenElement() {
 				store64(m.memory, int64(uint32(v0))+104, uint64(t39))
 				store32(m.memory, int64(uint32(v0))+212, uint32(v2))
 				m.t0[uint(v4)].(func(int32))(v0 + i32(104))
-				v2 = i32(69452)
+				v2 = i32(69596)
 				goto l11
 			}
 		l10:
@@ -2668,9 +2676,9 @@ func (m *Module) _Clay__OpenElement() {
 		v4 = (int32(uint32(v4)>>6) ^ v4) * i32(9)
 		v4 = (int32(uint32(v4)>>11)^v4)*i32(32769) + i32(1)
 		store32(m.memory, int64(uint32(t45))+228, uint32(v4))
-		t47 := int32(load32(m.memory, int64(uint32(i32(0)))+69408))
+		t47 := int32(load32(m.memory, int64(uint32(i32(0)))+69552))
 		store32(m.memory, int64(uint32(v0))+216, uint32(t47))
-		t48 := int64(load64(m.memory, int64(uint32(i32(0)))+69400))
+		t48 := int64(load64(m.memory, int64(uint32(i32(0)))+69544))
 		store64(m.memory, int64(uint32(v0))+208, uint64(t48))
 		store32(m.memory, int64(uint32(v0))+204, uint32(v2))
 		store32(m.memory, int64(uint32(v0))+196, uint32(v4))
@@ -2695,7 +2703,7 @@ func (m *Module) _Clay__OpenElement() {
 				m.memory[int64(uint32(v0))+220] = byte(i32(7))
 				store32(m.memory, int64(uint32(v0))+223, uint32(i32(256)))
 				m.memory[int64(uint32(v0))+227] = byte(i32(0))
-				t55 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t55 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v2 = t55
 				t56 := int32(load32(m.memory, int64(uint32(v2))+20))
 				v3 = t56
@@ -2760,7 +2768,7 @@ func (m *Module) _Clay__OpenElement() {
 				m.memory[int64(uint32(v0))+220] = byte(i32(7))
 				store32(m.memory, int64(uint32(v0))+223, uint32(i32(256)))
 				m.memory[int64(uint32(v0))+227] = byte(i32(0))
-				t68 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t68 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v1 = t68
 				t69 := int32(load32(m.memory, int64(uint32(v1))+20))
 				v2 = t69
@@ -2797,7 +2805,7 @@ func (m *Module) _Clay__OpenElement() {
 			m.memory[int64(uint32(v0))+220] = byte(i32(7))
 			store32(m.memory, int64(uint32(v0))+223, uint32(i32(256)))
 			m.memory[int64(uint32(v0))+227] = byte(i32(0))
-			t82 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t82 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v1 = t82
 			t83 := int32(load32(m.memory, int64(uint32(v1))+20))
 			v2 = t83
@@ -2835,7 +2843,7 @@ func (m *Module) _Clay__OpenElementWithId(v0 int32) {
 	m.___stack_pointer = v1
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v2 = t1
 			t2 := int32(load32(m.memory, int64(uint32(v2))+136))
 			v3 = t2
@@ -2879,7 +2887,7 @@ func (m *Module) _Clay__OpenElementWithId(v0 int32) {
 				m.t0[uint(v3)].(func(int32))(v1 + i32(120))
 				t11 := int32(load32(m.memory, int64(uint32(v2))+136))
 				v5 = t11
-				v3 = i32(69452)
+				v3 = i32(69596)
 				goto l4
 			}
 		l3:
@@ -2911,7 +2919,7 @@ func (m *Module) _Clay__OpenElementWithId(v0 int32) {
 				m.memory[int64(uint32(v1))+140] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+143, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+147] = byte(i32(0))
-				t18 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t18 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v4 = t18
 				t19 := int32(load32(m.memory, int64(uint32(v4))+20))
 				v5 = t19
@@ -2954,7 +2962,7 @@ func (m *Module) _Clay__OpenElementWithId(v0 int32) {
 				m.memory[int64(uint32(v1))+140] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+143, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+147] = byte(i32(0))
-				t31 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t31 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v0 = t31
 				t32 := int32(load32(m.memory, int64(uint32(v0))+20))
 				v3 = t32
@@ -3017,7 +3025,7 @@ func (m *Module) _Clay__OpenElementWithId(v0 int32) {
 				m.memory[int64(uint32(v1))+140] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+143, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+147] = byte(i32(0))
-				t43 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t43 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v2 = t43
 				t44 := int32(load32(m.memory, int64(uint32(v2))+20))
 				v0 = t44
@@ -3054,7 +3062,7 @@ func (m *Module) _Clay__OpenElementWithId(v0 int32) {
 			m.memory[int64(uint32(v1))+140] = byte(i32(7))
 			store32(m.memory, int64(uint32(v1))+143, uint32(i32(256)))
 			m.memory[int64(uint32(v1))+147] = byte(i32(0))
-			t57 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t57 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v2 = t57
 			t58 := int32(load32(m.memory, int64(uint32(v2))+20))
 			v0 = t58
@@ -3094,7 +3102,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 	m.___stack_pointer = v2
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v3 = t1
 			t2 := int32(load32(m.memory, int64(uint32(v3))+136))
 			v4 = t2
@@ -3138,7 +3146,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 				m.t0[uint(v4)].(func(int32))(v2 + i32(176))
 				t11 := int32(load32(m.memory, int64(uint32(v3))+136))
 				v4 = t11
-				v5 = i32(69412)
+				v5 = i32(69556)
 				goto l4
 			}
 		l3:
@@ -3165,7 +3173,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 				m.memory[int64(uint32(v2))+200] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+203, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+207] = byte(i32(0))
-				t14 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t14 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v4 = t14
 				t15 := int32(load32(m.memory, int64(uint32(v4))+20))
 				v5 = t15
@@ -3181,7 +3189,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 				m.t0[uint(v5)].(func(int32))(v2 + i32(152))
 				t20 := int32(load32(m.memory, int64(uint32(v3))+136))
 				v4 = t20
-				v5 = i32(69452)
+				v5 = i32(69596)
 				goto l7
 			}
 		l6:
@@ -3210,7 +3218,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 				m.memory[int64(uint32(v2))+200] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+203, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+207] = byte(i32(0))
-				t27 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t27 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v4 = t27
 				t28 := int32(load32(m.memory, int64(uint32(v4))+20))
 				v6 = t28
@@ -3224,7 +3232,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 				store64(m.memory, int64(uint32(v2))+128, uint64(t32))
 				store32(m.memory, int64(uint32(v2))+216, uint32(v4))
 				m.t0[uint(v6)].(func(int32))(v2 + i32(128))
-				v4 = i32(69452)
+				v4 = i32(69596)
 				goto l9
 			}
 		l8:
@@ -3276,7 +3284,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 					m.memory[int64(uint32(v2))+200] = byte(i32(7))
 					store32(m.memory, int64(uint32(v2))+203, uint32(i32(256)))
 					m.memory[int64(uint32(v2))+207] = byte(i32(0))
-					t39 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t39 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v6 = t39
 					t40 := int32(load32(m.memory, int64(uint32(v6))+20))
 					v7 = t40
@@ -3313,7 +3321,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 				m.memory[int64(uint32(v2))+200] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+203, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+207] = byte(i32(0))
-				t53 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t53 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v6 = t53
 				t54 := int32(load32(m.memory, int64(uint32(v6))+20))
 				v7 = t54
@@ -3356,7 +3364,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 				m.memory[int64(uint32(v2))+200] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+203, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+207] = byte(i32(0))
-				t65 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t65 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v6 = t65
 				t66 := int32(load32(m.memory, int64(uint32(v6))+20))
 				v7 = t66
@@ -3394,9 +3402,9 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 		v7 = (int32(uint32(v7)>>6) ^ v7) * i32(9)
 		v7 = (int32(uint32(v7)>>11)^v7)*i32(32769) + i32(1)
 		store32(m.memory, int64(uint32(t78))+228, uint32(v7))
-		t79 := int32(load32(m.memory, int64(uint32(i32(0)))+69408))
+		t79 := int32(load32(m.memory, int64(uint32(i32(0)))+69552))
 		store32(m.memory, int64(uint32(v2))+220, uint32(t79))
-		t80 := int64(load64(m.memory, int64(uint32(i32(0)))+69400))
+		t80 := int64(load64(m.memory, int64(uint32(i32(0)))+69544))
 		store64(m.memory, int64(uint32(v2))+212, uint64(t80))
 		store32(m.memory, int64(uint32(v2))+208, uint32(v8))
 		store32(m.memory, int64(uint32(v2))+200, uint32(v7))
@@ -3421,7 +3429,7 @@ func (m *Module) _Clay__OpenTextElement(v0, v1 int32) {
 				m.memory[int64(uint32(v2))+460] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+463, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+467] = byte(i32(0))
-				t87 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t87 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t87
 				t88 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v7 = t88
@@ -3493,7 +3501,7 @@ func (m *Module) _Clay__ConfigureOpenElementPtr(v0 int32) {
 	m.___stack_pointer = v1
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v2 = t1
 			t2 := int32(load32(m.memory, int64(uint32(v2))+160))
 			v3 = t2
@@ -3518,7 +3526,7 @@ func (m *Module) _Clay__ConfigureOpenElementPtr(v0 int32) {
 			t7 := int64(load64(m.memory, int64(uint32(v1))+504))
 			store64(m.memory, int64(uint32(v1))+440, uint64(t7))
 			m.t0[uint(v3)].(func(int32))(v1 + i32(440))
-			v3 = i32(69412)
+			v3 = i32(69556)
 			goto l1
 		}
 	l0:
@@ -3546,7 +3554,7 @@ l1:
 			m.memory[int64(uint32(v1))+504] = byte(i32(7))
 			store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 			m.memory[int64(uint32(v1))+511] = byte(i32(0))
-			t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v3 = t11
 			t12 := int32(load32(m.memory, int64(uint32(v3))+20))
 			v4 = t12
@@ -3560,7 +3568,7 @@ l1:
 			store64(m.memory, int64(uint32(v1))+416, uint64(t16))
 			store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 			m.t0[uint(v4)].(func(int32))(v1 + i32(416))
-			v5 = i32(69452)
+			v5 = i32(69596)
 			goto l4
 		}
 	l3:
@@ -3630,7 +3638,7 @@ l7:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t29 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t29 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t29
 				t30 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v4 = t30
@@ -3644,7 +3652,7 @@ l7:
 				store64(m.memory, int64(uint32(v1))+368, uint64(t34))
 				store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 				m.t0[uint(v4)].(func(int32))(v1 + i32(368))
-				v3 = i32(69412)
+				v3 = i32(69556)
 				goto l10
 			}
 		l9:
@@ -3672,7 +3680,7 @@ l7:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t38 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t38 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t38
 				t39 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v4 = t39
@@ -3686,7 +3694,7 @@ l7:
 				store64(m.memory, int64(uint32(v1))+344, uint64(t43))
 				store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 				m.t0[uint(v4)].(func(int32))(v1 + i32(344))
-				v3 = i32(69452)
+				v3 = i32(69596)
 				goto l13
 			}
 		l12:
@@ -3726,7 +3734,7 @@ l7:
 				{
 					{
 						{
-							t50 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t50 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t50
 							t51 := int32(load32(m.memory, int64(uint32(v4))+284))
 							t52 := int32(load32(m.memory, int64(uint32(v5))+136))
@@ -3757,7 +3765,7 @@ l7:
 										if t58 != v7 {
 											goto l20
 										}
-										if v3 == i32(70036) {
+										if v3 == i32(70180) {
 											goto l18
 										}
 										t59 := int32(load32(m.memory, int64(uint32(v3))+40))
@@ -3780,7 +3788,7 @@ l7:
 										m.memory[int64(uint32(v1))+504] = byte(i32(7))
 										store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 										m.memory[int64(uint32(v1))+511] = byte(i32(0))
-										t62 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t62 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v3 = t62
 										t63 := int32(load32(m.memory, int64(uint32(v3))+20))
 										v4 = t63
@@ -3794,7 +3802,7 @@ l7:
 										store64(m.memory, int64(uint32(v1))+296, uint64(t67))
 										store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 										m.t0[uint(v4)].(func(int32))(v1 + i32(296))
-										v3 = i32(69412)
+										v3 = i32(69556)
 										goto l23
 									}
 								l19:
@@ -3806,7 +3814,7 @@ l7:
 									m.memory[int64(uint32(v1))+508] = byte(i32(1))
 									store32(m.memory, int64(uint32(v1))+516, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v1))+512, uint32(i32(100)))
-									t68 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t68 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v3 = t68
 									t69 := int32(load32(m.memory, int64(uint32(v3))+20))
 									v10 = t69
@@ -3819,8 +3827,8 @@ l7:
 									store32(m.memory, int64(uint32(v1))+336, uint32(v3))
 									store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 									m.t0[uint(v10)].(func(int32))(v1 + i32(320))
-									v3 = i32(70036)
-									t73 := int32(load32(m.memory, int64(uint32(i32(0)))+70052))
+									v3 = i32(70180)
+									t73 := int32(load32(m.memory, int64(uint32(i32(0)))+70196))
 									if t73 == v7 {
 										goto l18
 									}
@@ -3879,7 +3887,7 @@ l7:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t84 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t84 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v4 = t84
 				t85 := int32(load32(m.memory, int64(uint32(v4))+20))
 				v7 = t85
@@ -3893,7 +3901,7 @@ l7:
 				store64(m.memory, int64(uint32(v1))+248, uint64(t89))
 				store32(m.memory, int64(uint32(v1))+520, uint32(v4))
 				m.t0[uint(v7)].(func(int32))(v1 + i32(248))
-				v7 = i32(69412)
+				v7 = i32(69556)
 				goto l26
 			}
 		l25:
@@ -3926,7 +3934,7 @@ l7:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t94 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t94 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t94
 				t95 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v6 = t95
@@ -3971,7 +3979,7 @@ l7:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t107 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t107 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t107
 				t108 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v6 = t108
@@ -4006,7 +4014,7 @@ l7:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t115 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t115 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t115
 				t116 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v6 = t116
@@ -4020,7 +4028,7 @@ l7:
 				store64(m.memory, int64(uint32(v1))+176, uint64(t120))
 				store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 				m.t0[uint(v6)].(func(int32))(v1 + i32(176))
-				v6 = i32(69412)
+				v6 = i32(69556)
 				goto l33
 			}
 		l32:
@@ -4041,7 +4049,7 @@ l7:
 			m.memory[int64(uint32(v1))+504] = byte(i32(7))
 			store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 			m.memory[int64(uint32(v1))+511] = byte(i32(0))
-			t124 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t124 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v3 = t124
 			t125 := int32(load32(m.memory, int64(uint32(v3))+20))
 			v4 = t125
@@ -4101,7 +4109,7 @@ l8:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t138 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t138 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t138
 				t139 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v4 = t139
@@ -4216,7 +4224,7 @@ l8:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t157 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t157 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t157
 				t158 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v4 = t158
@@ -4230,7 +4238,7 @@ l8:
 				store64(m.memory, int64(uint32(v1))+104, uint64(t162))
 				store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 				m.t0[uint(v4)].(func(int32))(v1 + i32(104))
-				v7 = i32(69688)
+				v7 = i32(69832)
 				goto l45
 			}
 		l46:
@@ -4264,7 +4272,7 @@ l8:
 		}
 		t168 := int32(load32(m.memory, int64(uint32(v7))+72))
 		t169 := int32(load32(m.memory, int64(uint32(v2))+116))
-		t170 := int32(load32(m.memory, int64(uint32(i32(0)))+70176))
+		t170 := int32(load32(m.memory, int64(uint32(i32(0)))+70320))
 		m.t0[uint(t170)].(func(int32, int32, int32))(v1+i32(504), t168, t169)
 		t171 := int64(load64(m.memory, int64(uint32(v1))+504))
 		store64(m.memory, int64(uint32(v7))+52, uint64(t171))
@@ -4277,7 +4285,7 @@ l36:
 		}
 		{
 			{
-				t173 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t173 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t173
 				t174 := int32(load32(m.memory, int64(uint32(v3))+160))
 				v4 = t174
@@ -4302,7 +4310,7 @@ l36:
 				t179 := int64(load64(m.memory, int64(uint32(v1))+504))
 				store64(m.memory, int64(uint32(v1))+80, uint64(t179))
 				m.t0[uint(v4)].(func(int32))(v1 + i32(80))
-				v4 = i32(69412)
+				v4 = i32(69556)
 				goto l49
 			}
 		l48:
@@ -4330,7 +4338,7 @@ l36:
 				m.memory[int64(uint32(v1))+504] = byte(i32(7))
 				store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 				m.memory[int64(uint32(v1))+511] = byte(i32(0))
-				t183 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t183 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t183
 				t184 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v4 = t184
@@ -4344,7 +4352,7 @@ l36:
 				store64(m.memory, int64(uint32(v1))+56, uint64(t188))
 				store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 				m.t0[uint(v4)].(func(int32))(v1 + i32(56))
-				v12 = i32(69452)
+				v12 = i32(69596)
 				goto l52
 			}
 		l51:
@@ -4380,9 +4388,9 @@ l36:
 							goto l55
 						}
 						store32(m.memory, int64(uint32(v4))+256, uint32(i32(0)))
-						v13 = i32(70036)
+						v13 = i32(70180)
 						{
-							t196 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t196 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v7 = t196
 							t197 := int32(load32(m.memory, int64(uint32(v7))+284))
 							t198 := int32(load32(m.memory, int64(uint32(v7))+276))
@@ -4414,7 +4422,7 @@ l36:
 										m.memory[int64(uint32(v1))+508] = byte(i32(1))
 										store32(m.memory, int64(uint32(v1))+516, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v1))+512, uint32(i32(100)))
-										t202 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t202 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v3 = t202
 										t203 := int32(load32(m.memory, int64(uint32(v3))+20))
 										v11 = t203
@@ -4427,7 +4435,7 @@ l36:
 										store32(m.memory, int64(uint32(v1))+48, uint32(v3))
 										store32(m.memory, int64(uint32(v1))+520, uint32(v3))
 										m.t0[uint(v11)].(func(int32))(v1 + i32(32))
-										v3 = i32(70036)
+										v3 = i32(70180)
 										goto l59
 									}
 								l58:
@@ -4503,7 +4511,7 @@ l36:
 			m.memory[int64(uint32(v1))+504] = byte(i32(7))
 			store32(m.memory, int64(uint32(v1))+507, uint32(i32(256)))
 			m.memory[int64(uint32(v1))+511] = byte(i32(0))
-			t219 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t219 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v3 = t219
 			t220 := int32(load32(m.memory, int64(uint32(v3))+20))
 			v4 = t220
@@ -4589,7 +4597,7 @@ func (m *Module) _Clay__InitializeEphemeralMemory(v0 int32) {
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t8 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t8 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t8
 		t9 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t9
@@ -4632,7 +4640,7 @@ l1:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t17 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t17 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t17
 		t18 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t18
@@ -4675,7 +4683,7 @@ l3:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t26 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t26 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t26
 		t27 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t27
@@ -4717,7 +4725,7 @@ l5:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t35 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t35 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t35
 		t36 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t36
@@ -4760,7 +4768,7 @@ l7:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t44 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t44 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t44
 		t45 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t45
@@ -4805,7 +4813,7 @@ l9:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t54 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t54 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t54
 		t55 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t55
@@ -4848,7 +4856,7 @@ l11:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t63 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t63 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t63
 		t64 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t64
@@ -4891,7 +4899,7 @@ l13:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t72 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t72 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t72
 		t73 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t73
@@ -4934,7 +4942,7 @@ l15:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t81 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t81 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t81
 		t82 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t82
@@ -4977,7 +4985,7 @@ l17:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t90 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t90 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t90
 		t91 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t91
@@ -5020,7 +5028,7 @@ l19:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t99 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t99 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t99
 		t100 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t100
@@ -5063,7 +5071,7 @@ l21:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t108 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t108 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t108
 		t109 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t109
@@ -5106,7 +5114,7 @@ l23:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t117 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t117 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t117
 		t118 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v6 = t118
@@ -5149,7 +5157,7 @@ l25:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t126 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t126 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t126
 		t127 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v5 = t127
@@ -5192,7 +5200,7 @@ l27:
 		m.memory[int64(uint32(v1))+364] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+367, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+371] = byte(i32(0))
-		t135 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t135 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v7 = t135
 		t136 := int32(load32(m.memory, int64(uint32(v7))+20))
 		v5 = t136
@@ -5247,7 +5255,7 @@ func (m *Module) _Clay__InitializePersistentMemory(v0 int32) {
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t7 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t7 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t7
 		t8 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v7 = t8
@@ -5289,7 +5297,7 @@ l1:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t16 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t16 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t16
 		t17 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v7 = t17
@@ -5331,7 +5339,7 @@ l3:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t25 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t25 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t25
 		t26 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v7 = t26
@@ -5376,7 +5384,7 @@ l5:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t35 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t35 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t35
 		t36 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v4 = t36
@@ -5419,7 +5427,7 @@ l7:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t44 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t44 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t44
 		t45 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v4 = t45
@@ -5462,7 +5470,7 @@ l9:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t53 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t53 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t53
 		t54 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v4 = t54
@@ -5505,7 +5513,7 @@ l11:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t62 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t62 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t62
 		t63 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v4 = t63
@@ -5548,7 +5556,7 @@ l13:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t71 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t71 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t71
 		t72 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v4 = t72
@@ -5591,7 +5599,7 @@ l15:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t80 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t80 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t80
 		t81 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v7 = t81
@@ -5634,7 +5642,7 @@ l17:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t89 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t89 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t89
 		t90 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v7 = t90
@@ -5677,7 +5685,7 @@ l19:
 		m.memory[int64(uint32(v1))+268] = byte(i32(1))
 		store32(m.memory, int64(uint32(v1))+271, uint32(i32(256)))
 		m.memory[int64(uint32(v1))+275] = byte(i32(0))
-		t98 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t98 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t98
 		t99 := int32(load32(m.memory, int64(uint32(v5))+20))
 		v2 = t99
@@ -5716,7 +5724,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 	v4 = t0 - i32(576)
 	m.___stack_pointer = v4
 	{
-		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v5 = t1
 		t2 := int32(load32(m.memory, int64(uint32(v5))+256))
 		if t2 < i32(1) {
@@ -5790,7 +5798,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 					m.memory[int64(uint32(v4))+560] = byte(i32(1))
 					store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-					t16 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t16 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v18 = t16
 					t17 := int32(load32(m.memory, int64(uint32(v18))+20))
 					v22 = t17
@@ -5803,7 +5811,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 					store32(m.memory, int64(uint32(v4))+552, uint32(v18))
 					store32(m.memory, int64(uint32(v4))+572, uint32(v18))
 					m.t0[uint(v22)].(func(int32))(v4 + i32(536))
-					v22 = i32(70148)
+					v22 = i32(70292)
 					goto l2
 				}
 			l1:
@@ -5833,7 +5841,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 					m.memory[int64(uint32(v4))+560] = byte(i32(1))
 					store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-					t24 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t24 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v18 = t24
 					t25 := int32(load32(m.memory, int64(uint32(v18))+20))
 					v23 = t25
@@ -5848,7 +5856,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 					m.t0[uint(v23)].(func(int32))(v4 + i32(512))
 					t29 := int32(load32(m.memory, uint32(v22)))
 					v18 = t29
-					v23 = i32(69452)
+					v23 = i32(69596)
 					goto l5
 				}
 			l4:
@@ -5869,7 +5877,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 				m.memory[int64(uint32(v4))+560] = byte(i32(1))
 				store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 				store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-				t31 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t31 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v18 = t31
 				t32 := int32(load32(m.memory, int64(uint32(v18))+20))
 				v22 = t32
@@ -5893,7 +5901,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 				if t36 == 0 {
 					goto l8
 				}
-				t37 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t37 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v22 = t37
 				t38 := int32(load32(m.memory, int64(uint32(v22))+284))
 				t39 := int32(load32(m.memory, int64(uint32(v23))+136))
@@ -5923,7 +5931,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 								if t45 != v25 {
 									goto l10
 								}
-								if v18 == i32(70036) {
+								if v18 == i32(70180) {
 									goto l8
 								}
 								t46 := int32(load32(m.memory, int64(uint32(v18))+40))
@@ -5949,7 +5957,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 							m.memory[int64(uint32(v4))+560] = byte(i32(1))
 							store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-							t48 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t48 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v18 = t48
 							t49 := int32(load32(m.memory, int64(uint32(v18))+20))
 							v26 = t49
@@ -5962,8 +5970,8 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 							store32(m.memory, int64(uint32(v4))+480, uint32(v18))
 							store32(m.memory, int64(uint32(v4))+572, uint32(v18))
 							m.t0[uint(v26)].(func(int32))(v4 + i32(464))
-							v18 = i32(70036)
-							t53 := int32(load32(m.memory, int64(uint32(i32(0)))+70052))
+							v18 = i32(70180)
+							t53 := int32(load32(m.memory, int64(uint32(i32(0)))+70196))
 							if t53 == v25 {
 								goto l8
 							}
@@ -6083,7 +6091,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 						m.memory[int64(uint32(v4))+560] = byte(i32(1))
 						store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-						t82 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t82 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v18 = t82
 						t83 := int32(load32(m.memory, int64(uint32(v18))+20))
 						v22 = t83
@@ -6096,7 +6104,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 						store32(m.memory, int64(uint32(v4))+456, uint32(v18))
 						store32(m.memory, int64(uint32(v4))+572, uint32(v18))
 						m.t0[uint(v22)].(func(int32))(v4 + i32(440))
-						v22 = i32(69452)
+						v22 = i32(69596)
 						goto l24
 					}
 				l23:
@@ -6159,7 +6167,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 											m.memory[int64(uint32(v4))+560] = byte(i32(1))
 											store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-											t97 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t97 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v18 = t97
 											t98 := int32(load32(m.memory, int64(uint32(v18))+20))
 											v38 = t98
@@ -6172,7 +6180,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 											store32(m.memory, int64(uint32(v4))+432, uint32(v18))
 											store32(m.memory, int64(uint32(v4))+572, uint32(v18))
 											m.t0[uint(v38)].(func(int32))(v4 + i32(416))
-											v18 = i32(69452)
+											v18 = i32(69596)
 											goto l28
 										}
 									l27:
@@ -6206,7 +6214,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 													m.memory[int64(uint32(v4))+560] = byte(i32(1))
 													store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-													t109 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t109 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v39 = t109
 													t110 := int32(load32(m.memory, int64(uint32(v39))+20))
 													v40 = t110
@@ -6247,7 +6255,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 											m.memory[int64(uint32(v4))+560] = byte(i32(1))
 											store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-											t116 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t116 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v39 = t116
 											t117 := int32(load32(m.memory, int64(uint32(v39))+20))
 											v40 = t117
@@ -6294,7 +6302,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 											m.memory[int64(uint32(v4))+560] = byte(i32(1))
 											store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-											t125 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t125 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v39 = t125
 											t126 := int32(load32(m.memory, int64(uint32(v39))+20))
 											v40 = t126
@@ -6346,7 +6354,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 											m.memory[int64(uint32(v4))+560] = byte(i32(1))
 											store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-											t134 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t134 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v18 = t134
 											t135 := int32(load32(m.memory, int64(uint32(v18))+20))
 											v26 = t135
@@ -6443,7 +6451,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 										m.memory[int64(uint32(v4))+560] = byte(i32(1))
 										store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-										t149 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t149 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v18 = t149
 										t150 := int32(load32(m.memory, int64(uint32(v18))+20))
 										v37 = t150
@@ -6456,7 +6464,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 										store32(m.memory, int64(uint32(v4))+312, uint32(v18))
 										store32(m.memory, int64(uint32(v4))+572, uint32(v18))
 										m.t0[uint(v37)].(func(int32))(v4 + i32(296))
-										v18 = i32(69452)
+										v18 = i32(69596)
 										goto l49
 									}
 								l48:
@@ -6555,7 +6563,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 											m.memory[int64(uint32(v4))+560] = byte(i32(1))
 											store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-											t170 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t170 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v18 = t170
 											t171 := int32(load32(m.memory, int64(uint32(v18))+20))
 											v26 = t171
@@ -6568,7 +6576,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 											store32(m.memory, int64(uint32(v4))+288, uint32(v18))
 											store32(m.memory, int64(uint32(v4))+572, uint32(v18))
 											m.t0[uint(v26)].(func(int32))(v4 + i32(272))
-											v18 = i32(69452)
+											v18 = i32(69596)
 											goto l59
 										}
 									l58:
@@ -6704,7 +6712,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 								m.memory[int64(uint32(v4))+560] = byte(i32(1))
 								store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-								t193 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t193 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v22 = t193
 								t194 := int32(load32(m.memory, int64(uint32(v22))+20))
 								v25 = t194
@@ -6717,7 +6725,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 								store32(m.memory, int64(uint32(v4))+264, uint32(v22))
 								store32(m.memory, int64(uint32(v4))+572, uint32(v22))
 								m.t0[uint(v25)].(func(int32))(v4 + i32(248))
-								v22 = i32(69412)
+								v22 = i32(69556)
 								goto l70
 							}
 						l69:
@@ -6745,7 +6753,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 									m.memory[int64(uint32(v4))+560] = byte(i32(1))
 									store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-									t200 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t200 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v22 = t200
 									t201 := int32(load32(m.memory, int64(uint32(v22))+20))
 									v25 = t201
@@ -6758,7 +6766,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 									store32(m.memory, int64(uint32(v4))+240, uint32(v22))
 									store32(m.memory, int64(uint32(v4))+572, uint32(v22))
 									m.t0[uint(v25)].(func(int32))(v4 + i32(224))
-									v22 = i32(69452)
+									v22 = i32(69596)
 									goto l73
 								}
 							l72:
@@ -6801,7 +6809,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 								m.memory[int64(uint32(v4))+560] = byte(i32(1))
 								store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-								t211 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t211 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v18 = t211
 								t212 := int32(load32(m.memory, int64(uint32(v18))+20))
 								v25 = t212
@@ -6856,7 +6864,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 										m.memory[int64(uint32(v4))+560] = byte(i32(1))
 										store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-										t218 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t218 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v22 = t218
 										t219 := int32(load32(m.memory, int64(uint32(v22))+20))
 										v26 = t219
@@ -6869,7 +6877,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 										store32(m.memory, int64(uint32(v4))+192, uint32(v22))
 										store32(m.memory, int64(uint32(v4))+572, uint32(v22))
 										m.t0[uint(v26)].(func(int32))(v4 + i32(176))
-										v22 = i32(69452)
+										v22 = i32(69596)
 										goto l80
 									}
 								l79:
@@ -6951,7 +6959,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 									m.memory[int64(uint32(v4))+560] = byte(i32(1))
 									store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-									t239 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t239 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v22 = t239
 									t240 := int32(load32(m.memory, int64(uint32(v22))+20))
 									v25 = t240
@@ -6964,7 +6972,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 									store32(m.memory, int64(uint32(v4))+168, uint32(v22))
 									store32(m.memory, int64(uint32(v4))+572, uint32(v22))
 									m.t0[uint(v25)].(func(int32))(v4 + i32(152))
-									v22 = i32(69412)
+									v22 = i32(69556)
 									goto l84
 								}
 							l83:
@@ -6992,7 +7000,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 										m.memory[int64(uint32(v4))+560] = byte(i32(1))
 										store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-										t246 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t246 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v22 = t246
 										t247 := int32(load32(m.memory, int64(uint32(v22))+20))
 										v25 = t247
@@ -7005,7 +7013,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 										store32(m.memory, int64(uint32(v4))+144, uint32(v22))
 										store32(m.memory, int64(uint32(v4))+572, uint32(v22))
 										m.t0[uint(v25)].(func(int32))(v4 + i32(128))
-										v22 = i32(69452)
+										v22 = i32(69596)
 										goto l87
 									}
 								l86:
@@ -7068,7 +7076,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 										m.memory[int64(uint32(v4))+560] = byte(i32(1))
 										store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-										t259 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t259 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v18 = t259
 										t260 := int32(load32(m.memory, int64(uint32(v18))+20))
 										v26 = t260
@@ -7153,7 +7161,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 							m.memory[int64(uint32(v4))+560] = byte(i32(1))
 							store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-							t268 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t268 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v22 = t268
 							t269 := int32(load32(m.memory, int64(uint32(v22))+20))
 							v26 = t269
@@ -7166,7 +7174,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 							store32(m.memory, int64(uint32(v4))+96, uint32(v22))
 							store32(m.memory, int64(uint32(v4))+572, uint32(v22))
 							m.t0[uint(v26)].(func(int32))(v4 + i32(80))
-							v22 = i32(69452)
+							v22 = i32(69596)
 							goto l98
 						}
 					l97:
@@ -7248,7 +7256,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 						m.memory[int64(uint32(v4))+560] = byte(i32(1))
 						store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-						t289 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t289 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v22 = t289
 						t290 := int32(load32(m.memory, int64(uint32(v22))+20))
 						v25 = t290
@@ -7261,7 +7269,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 						store32(m.memory, int64(uint32(v4))+72, uint32(v22))
 						store32(m.memory, int64(uint32(v4))+572, uint32(v22))
 						m.t0[uint(v25)].(func(int32))(v4 + i32(56))
-						v22 = i32(69412)
+						v22 = i32(69556)
 						goto l102
 					}
 				l101:
@@ -7289,7 +7297,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 							m.memory[int64(uint32(v4))+560] = byte(i32(1))
 							store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-							t296 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t296 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v22 = t296
 							t297 := int32(load32(m.memory, int64(uint32(v22))+20))
 							v25 = t297
@@ -7302,7 +7310,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 							store32(m.memory, int64(uint32(v4))+48, uint32(v22))
 							store32(m.memory, int64(uint32(v4))+572, uint32(v22))
 							m.t0[uint(v25)].(func(int32))(v4 + i32(32))
-							v22 = i32(69452)
+							v22 = i32(69596)
 							goto l105
 						}
 					l104:
@@ -7357,7 +7365,7 @@ func (m *Module) _Clay__SizeContainersAlongAxis(v0 int32, v1 float32, v2, v3 int
 							m.memory[int64(uint32(v4))+560] = byte(i32(1))
 							store32(m.memory, int64(uint32(v4))+568, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v4))+564, uint32(i32(100)))
-							t308 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t308 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v18 = t308
 							t309 := int32(load32(m.memory, int64(uint32(v18))+20))
 							v26 = t309
@@ -7425,7 +7433,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 	t0 := m.___stack_pointer
 	v3 = t0 - i32(1392)
 	m.___stack_pointer = v3
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	t2 := v3
 	v4 = t1
 	t3 := int64(load64(m.memory, int64(uint32(v4))+360))
@@ -7475,7 +7483,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t11
 					t12 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v13 = t12
@@ -7488,7 +7496,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 					store32(m.memory, int64(uint32(v3))+1112, uint32(v12))
 					store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 					m.t0[uint(v13)].(func(int32))(v3 + i32(1096))
-					v14 = i32(69452)
+					v14 = i32(69596)
 					goto l3
 				}
 			l2:
@@ -7524,7 +7532,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t21 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t21 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t21
 					t22 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v11 = t22
@@ -7537,7 +7545,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 					store32(m.memory, int64(uint32(v3))+1088, uint32(v12))
 					store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 					m.t0[uint(v11)].(func(int32))(v3 + i32(1072))
-					v15 = i32(69452)
+					v15 = i32(69596)
 					goto l6
 				}
 			l5:
@@ -7597,7 +7605,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 							m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 							store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-							t39 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t39 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v12 = t39
 							t40 := int32(load32(m.memory, int64(uint32(v12))+20))
 							v13 = t40
@@ -7629,7 +7637,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 				}
 			l9:
 				store32(m.memory, int64(uint32(v3))+1276, uint32(i32(1)))
-				t48 := int32(load32(m.memory, int64(uint32(i32(0)))+69204))
+				t48 := int32(load32(m.memory, int64(uint32(i32(0)))+69344))
 				t49 := v3
 				v13 = t48
 				store32(m.memory, int64(uint32(t49))+1280, uint32(v13))
@@ -7639,7 +7647,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 				store32(m.memory, int64(uint32(v3))+1040, uint32(v13))
 				t51 := int64(load64(m.memory, int64(uint32(v3))+1276))
 				store64(m.memory, int64(uint32(v3))+1032, uint64(t51))
-				t52 := int32(load32(m.memory, int64(uint32(i32(0)))+70172))
+				t52 := int32(load32(m.memory, int64(uint32(i32(0)))+70316))
 				m.t0[uint(t52)].(func(int32, int32, int32, int32))(v3+i32(1372), v3+i32(1032), v11, v16)
 				{
 					{
@@ -7681,7 +7689,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 										m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 										store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-										t58 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t58 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v12 = t58
 										t59 := int32(load32(m.memory, int64(uint32(v12))+20))
 										v16 = t59
@@ -7694,7 +7702,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 										store32(m.memory, int64(uint32(v3))+1024, uint32(v12))
 										store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 										m.t0[uint(v16)].(func(int32))(v3 + i32(1008))
-										v12 = i32(70100)
+										v12 = i32(70244)
 										goto l17
 									}
 								l16:
@@ -7730,7 +7738,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 												m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 												store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-												t69 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t69 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v13 = t69
 												t70 := int32(load32(m.memory, int64(uint32(v13))+20))
 												v11 = t70
@@ -7807,7 +7815,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 												m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 												store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-												t88 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t88 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v16 = t88
 												t89 := int32(load32(m.memory, int64(uint32(v16))+20))
 												v20 = t89
@@ -7920,7 +7928,7 @@ func (m *Module) _Clay__CalculateFinalLayout(v0 float32, v1, v2 int32) {
 							m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 							store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-							t113 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t113 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v12 = t113
 							t114 := int32(load32(m.memory, int64(uint32(v12))+20))
 							v13 = t114
@@ -8003,7 +8011,7 @@ l0:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t127 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t127 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t127
 					t128 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v8 = t128
@@ -8016,7 +8024,7 @@ l0:
 					store32(m.memory, int64(uint32(v3))+928, uint32(v12))
 					store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 					m.t0[uint(v8)].(func(int32))(v3 + i32(912))
-					v12 = i32(69452)
+					v12 = i32(69596)
 					goto l37
 				}
 			l36:
@@ -8079,7 +8087,7 @@ l34:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t143 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t143 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v11 = t143
 					t144 := int32(load32(m.memory, int64(uint32(v11))+20))
 					v16 = t144
@@ -8092,7 +8100,7 @@ l34:
 					store32(m.memory, int64(uint32(v3))+904, uint32(v11))
 					store32(m.memory, int64(uint32(v3))+1388, uint32(v11))
 					m.t0[uint(v16)].(func(int32))(v3 + i32(888))
-					v16 = i32(69452)
+					v16 = i32(69596)
 					goto l42
 				}
 			l41:
@@ -8112,7 +8120,7 @@ l34:
 				m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 				store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 				store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-				t149 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t149 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v11 = t149
 				t150 := int32(load32(m.memory, int64(uint32(v11))+20))
 				v16 = t150
@@ -8200,7 +8208,7 @@ l34:
 							m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 							store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-							t165 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t165 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v8 = t165
 							t166 := int32(load32(m.memory, int64(uint32(v8))+20))
 							v15 = t166
@@ -8213,7 +8221,7 @@ l34:
 							store32(m.memory, int64(uint32(v3))+856, uint32(v8))
 							store32(m.memory, int64(uint32(v3))+1388, uint32(v8))
 							m.t0[uint(v15)].(func(int32))(v3 + i32(840))
-							v15 = i32(69452)
+							v15 = i32(69596)
 							goto l50
 						}
 					l49:
@@ -8233,7 +8241,7 @@ l34:
 						m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 						store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-						t171 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t171 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v8 = t171
 						t172 := int32(load32(m.memory, int64(uint32(v8))+20))
 						v15 = t172
@@ -8304,7 +8312,7 @@ l34:
 								m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 								store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-								t182 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t182 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v8 = t182
 								t183 := int32(load32(m.memory, int64(uint32(v8))+20))
 								v15 = t183
@@ -8319,7 +8327,7 @@ l34:
 								m.t0[uint(v15)].(func(int32))(v3 + i32(768))
 								t187 := int32(load16(m.memory, int64(uint32(v12))+4))
 								v15 = t187
-								v8 = i32(69452)
+								v8 = i32(69596)
 								goto l58
 							}
 						l57:
@@ -8405,7 +8413,7 @@ l34:
 									m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 									store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-									t208 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t208 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v8 = t208
 									t209 := int32(load32(m.memory, int64(uint32(v8))+20))
 									v15 = t209
@@ -8420,7 +8428,7 @@ l34:
 									m.t0[uint(v15)].(func(int32))(v3 + i32(792))
 									t213 := int32(load16(m.memory, int64(uint32(v12))+4))
 									v15 = t213
-									v8 = i32(69452)
+									v8 = i32(69596)
 									goto l64
 								}
 							l63:
@@ -8506,7 +8514,7 @@ l39:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t229 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t229 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t229
 					t230 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v7 = t230
@@ -8519,7 +8527,7 @@ l39:
 					store32(m.memory, int64(uint32(v3))+760, uint32(v12))
 					store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 					m.t0[uint(v7)].(func(int32))(v3 + i32(744))
-					v12 = i32(69452)
+					v12 = i32(69596)
 					goto l70
 				}
 			l69:
@@ -8570,7 +8578,7 @@ l67:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t240 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t240 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t240
 					t241 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v8 = t241
@@ -8585,7 +8593,7 @@ l67:
 					m.t0[uint(v8)].(func(int32))(v3 + i32(720))
 					t245 := int32(load32(m.memory, int64(uint32(v4))+256))
 					v8 = t245
-					v12 = i32(70148)
+					v12 = i32(70292)
 					goto l74
 				}
 			l73:
@@ -8616,7 +8624,7 @@ l67:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t252 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t252 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t252
 					t253 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v8 = t253
@@ -8629,7 +8637,7 @@ l67:
 					store32(m.memory, int64(uint32(v3))+712, uint32(v12))
 					store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 					m.t0[uint(v8)].(func(int32))(v3 + i32(696))
-					v12 = i32(70148)
+					v12 = i32(70292)
 					goto l76
 				}
 			l75:
@@ -8661,7 +8669,7 @@ l67:
 						m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 						store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-						t262 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t262 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v12 = t262
 						t263 := int32(load32(m.memory, int64(uint32(v12))+20))
 						v8 = t263
@@ -8712,7 +8720,7 @@ l67:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t276 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t276 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t276
 					t277 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v8 = t277
@@ -8799,7 +8807,7 @@ l72:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t294 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t294 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t294
 					t295 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v13 = t295
@@ -8812,7 +8820,7 @@ l72:
 					store32(m.memory, int64(uint32(v3))+640, uint32(v12))
 					store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 					m.t0[uint(v13)].(func(int32))(v3 + i32(624))
-					v31 = i32(70148)
+					v31 = i32(70292)
 					goto l85
 				}
 			l84:
@@ -8842,7 +8850,7 @@ l72:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t302 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t302 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t302
 					t303 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v13 = t303
@@ -8855,7 +8863,7 @@ l72:
 					store32(m.memory, int64(uint32(v3))+616, uint32(v12))
 					store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 					m.t0[uint(v13)].(func(int32))(v3 + i32(600))
-					v32 = i32(69452)
+					v32 = i32(69596)
 					goto l88
 				}
 			l87:
@@ -8863,9 +8871,9 @@ l72:
 				v32 = t307 + v12*i32(236)
 			}
 		l88:
-			v16 = i32(70036)
+			v16 = i32(70180)
 			{
-				t308 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t308 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v13 = t308
 				t309 := int32(load32(m.memory, int64(uint32(v13))+284))
 				t310 := int32(load32(m.memory, int64(uint32(v31))+4))
@@ -8899,7 +8907,7 @@ l72:
 							m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 							store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-							t315 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t315 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v12 = t315
 							t316 := int32(load32(m.memory, int64(uint32(v12))+20))
 							v8 = t316
@@ -8912,7 +8920,7 @@ l72:
 							store32(m.memory, int64(uint32(v3))+592, uint32(v12))
 							store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 							m.t0[uint(v8)].(func(int32))(v3 + i32(576))
-							v12 = i32(70036)
+							v12 = i32(70180)
 							goto l92
 						}
 					l91:
@@ -9054,7 +9062,7 @@ l72:
 				}
 				{
 					{
-						t336 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t336 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v13 = t336
 						t337 := int32(load32(m.memory, int64(uint32(v13))+284))
 						t338 := int32(load32(m.memory, int64(uint32(v13))+276))
@@ -9064,7 +9072,7 @@ l72:
 						if v12 != i32(-1) {
 							goto l115
 						}
-						v12 = i32(70036)
+						v12 = i32(70180)
 						goto l110
 					}
 				l115:
@@ -9089,7 +9097,7 @@ l72:
 								m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 								store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-								t342 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t342 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v12 = t342
 								t343 := int32(load32(m.memory, int64(uint32(v12))+20))
 								v8 = t343
@@ -9102,7 +9110,7 @@ l72:
 								store32(m.memory, int64(uint32(v3))+568, uint32(v12))
 								store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 								m.t0[uint(v8)].(func(int32))(v3 + i32(552))
-								v12 = i32(70036)
+								v12 = i32(70180)
 								goto l113
 							}
 						l112:
@@ -9120,9 +9128,9 @@ l72:
 							goto l115
 						}
 					}
-					v12 = i32(70036)
+					v12 = i32(70180)
 				l114:
-					t350 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t350 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v13 = t350
 				}
 			l110:
@@ -9274,7 +9282,7 @@ l72:
 					m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-					t387 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t387 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t387
 					t388 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v13 = t388
@@ -9320,7 +9328,7 @@ l72:
 					v12 = t398
 					p400 := t399
 					if v12 != 0 {
-						p400 = i32(69344)
+						p400 = i32(69488)
 					}
 					v20 = p400
 					{
@@ -9334,9 +9342,9 @@ l72:
 							if v12 != 0 {
 								goto l123
 							}
-							v15 = i32(70036)
+							v15 = i32(70180)
 							{
-								t403 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t403 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v13 = t403
 								t404 := int32(load32(m.memory, int64(uint32(v13))+284))
 								t405 := int32(load32(m.memory, int64(uint32(v16))+228))
@@ -9370,7 +9378,7 @@ l72:
 											m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 											store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-											t410 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t410 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v12 = t410
 											t411 := int32(load32(m.memory, int64(uint32(v12))+20))
 											v8 = t411
@@ -9383,7 +9391,7 @@ l72:
 											store32(m.memory, int64(uint32(v3))+232, uint32(v12))
 											store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 											m.t0[uint(v8)].(func(int32))(v3 + i32(216))
-											v12 = i32(70036)
+											v12 = i32(70180)
 											goto l127
 										}
 									l126:
@@ -9412,7 +9420,7 @@ l72:
 								goto l123
 							}
 							{
-								t418 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t418 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v12 = t418
 								t419 := int32(m.memory[int64(uint32(v12))+97])
 								if t419 != 0 {
@@ -9549,7 +9557,7 @@ l72:
 								store64(m.memory, int64(uint32(v3))+1320, uint64(t451))
 								{
 									{
-										t452 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t452 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v12 = t452
 										t453 := int32(load32(m.memory, int64(uint32(v12))+148))
 										v13 = t453
@@ -9670,7 +9678,7 @@ l72:
 												m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 												store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-												t481 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t481 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v12 = t481
 												t482 := int32(load32(m.memory, int64(uint32(v12))+20))
 												v13 = t482
@@ -9685,7 +9693,7 @@ l72:
 												m.t0[uint(v13)].(func(int32))(v3 + i32(120))
 												t486 := int32(load16(m.memory, int64(uint32(v16))+4))
 												v13 = t486
-												v22 = i32(69452)
+												v22 = i32(69596)
 												goto l143
 											}
 										l142:
@@ -9707,7 +9715,7 @@ l72:
 											store64(m.memory, int64(uint32(v3))+1352, uint64(t491))
 											{
 												{
-													t492 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t492 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v12 = t492
 													t493 := int32(load32(m.memory, int64(uint32(v12))+148))
 													v23 = t493
@@ -9820,7 +9828,7 @@ l72:
 											m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 											store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-											t514 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t514 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v12 = t514
 											t515 := int32(load32(m.memory, int64(uint32(v12))+20))
 											v13 = t515
@@ -9835,7 +9843,7 @@ l72:
 											m.t0[uint(v13)].(func(int32))(v3 + i32(168))
 											t519 := int32(load16(m.memory, int64(uint32(v16))+4))
 											v13 = t519
-											v22 = i32(69452)
+											v22 = i32(69596)
 											goto l150
 										}
 									l149:
@@ -9857,7 +9865,7 @@ l72:
 										store64(m.memory, int64(uint32(v3))+1352, uint64(t524))
 										{
 											{
-												t525 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t525 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v12 = t525
 												t526 := int32(load32(m.memory, int64(uint32(v12))+148))
 												v23 = t526
@@ -9942,7 +9950,7 @@ l72:
 									goto l155
 								}
 								{
-									t544 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t544 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v12 = t544
 									t545 := int32(load32(m.memory, int64(uint32(v12))+148))
 									v13 = t545
@@ -10005,7 +10013,7 @@ l72:
 								goto l123
 							}
 							{
-								t557 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t557 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v12 = t557
 								t558 := int32(load32(m.memory, int64(uint32(v12))+148))
 								v13 = t558
@@ -10230,7 +10238,7 @@ l72:
 					l170:
 						{
 							{
-								t604 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t604 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v12 = t604
 								t605 := int32(m.memory[int64(uint32(v12))+97])
 								if t605 != 0 {
@@ -10311,7 +10319,7 @@ l72:
 										store64(m.memory, int64(uint32(v3))+1352, uint64(t623))
 										{
 											{
-												t624 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t624 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v12 = t624
 												t625 := int32(load32(m.memory, int64(uint32(v12))+148))
 												v10 = t625
@@ -10519,7 +10527,7 @@ l72:
 								t679 := int64(load64(m.memory, int64(uint32(v16))+96))
 								store64(m.memory, int64(uint32(v3))+1336, uint64(t679))
 								{
-									t680 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t680 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v12 = t680
 									t681 := int32(load32(m.memory, int64(uint32(v12))+148))
 									v8 = t681
@@ -10599,7 +10607,7 @@ l72:
 								t701 := int64(load64(m.memory, int64(uint32(v16))+96))
 								store64(m.memory, int64(uint32(v3))+1336, uint64(t701))
 								{
-									t702 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t702 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v12 = t702
 									t703 := int32(load32(m.memory, int64(uint32(v12))+148))
 									v8 = t703
@@ -10683,7 +10691,7 @@ l72:
 								}
 							l186:
 								{
-									t721 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t721 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v12 = t721
 									t722 := int32(load32(m.memory, int64(uint32(v12))+148))
 									v13 = t722
@@ -10759,7 +10767,7 @@ l72:
 							t738 := int64(load64(m.memory, int64(uint32(v16))+96))
 							store64(m.memory, int64(uint32(v3))+1336, uint64(t738))
 							{
-								t739 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t739 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v12 = t739
 								t740 := int32(load32(m.memory, int64(uint32(v12))+148))
 								v13 = t740
@@ -10824,9 +10832,9 @@ l72:
 							m.t0[uint(v13)].(func(int32))(v3 + i32(384))
 						}
 					l172:
-						v23 = i32(70036)
+						v23 = i32(70180)
 						{
-							t756 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t756 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v13 = t756
 							t757 := int32(load32(m.memory, int64(uint32(v13))+284))
 							t758 := int32(load32(m.memory, int64(uint32(v16))+228))
@@ -10860,7 +10868,7 @@ l72:
 										m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 										store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-										t763 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t763 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v12 = t763
 										t764 := int32(load32(m.memory, int64(uint32(v12))+20))
 										v15 = t764
@@ -10873,7 +10881,7 @@ l72:
 										store32(m.memory, int64(uint32(v3))+352, uint32(v12))
 										store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 										m.t0[uint(v15)].(func(int32))(v3 + i32(336))
-										v12 = i32(70036)
+										v12 = i32(70180)
 										goto l193
 									}
 								l192:
@@ -10964,7 +10972,7 @@ l72:
 																	m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 																	store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 																	store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-																	t778 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+																	t778 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 																	v13 = t778
 																	t779 := int32(load32(m.memory, int64(uint32(v13))+20))
 																	v15 = t779
@@ -10977,7 +10985,7 @@ l72:
 																	store32(m.memory, int64(uint32(v3))+304, uint32(v13))
 																	store32(m.memory, int64(uint32(v3))+1388, uint32(v13))
 																	m.t0[uint(v15)].(func(int32))(v3 + i32(288))
-																	v13 = i32(69452)
+																	v13 = i32(69596)
 																	goto l206
 																}
 															l205:
@@ -11049,7 +11057,7 @@ l72:
 														m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 														store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 														store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-														t794 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+														t794 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 														v13 = t794
 														t795 := int32(load32(m.memory, int64(uint32(v13))+20))
 														v15 = t795
@@ -11062,7 +11070,7 @@ l72:
 														store32(m.memory, int64(uint32(v3))+328, uint32(v13))
 														store32(m.memory, int64(uint32(v3))+1388, uint32(v13))
 														m.t0[uint(v15)].(func(int32))(v3 + i32(312))
-														v13 = i32(69452)
+														v13 = i32(69596)
 														goto l212
 													}
 												l211:
@@ -11211,7 +11219,7 @@ l72:
 									m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 									store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-									t833 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t833 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v12 = t833
 									t834 := int32(load32(m.memory, int64(uint32(v12))+20))
 									v13 = t834
@@ -11224,7 +11232,7 @@ l72:
 									store32(m.memory, int64(uint32(v3))+280, uint32(v12))
 									store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 									m.t0[uint(v13)].(func(int32))(v3 + i32(264))
-									v15 = i32(69452)
+									v15 = i32(69596)
 									goto l222
 								}
 							l221:
@@ -11233,7 +11241,7 @@ l72:
 							}
 						l222:
 							{
-								t839 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t839 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v13 = t839
 								t840 := int32(load32(m.memory, int64(uint32(v13))+284))
 								t841 := int32(load32(m.memory, int64(uint32(v15))+228))
@@ -11267,7 +11275,7 @@ l72:
 											m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 											store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-											t846 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t846 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v12 = t846
 											t847 := int32(load32(m.memory, int64(uint32(v12))+20))
 											v8 = t847
@@ -11280,7 +11288,7 @@ l72:
 											store32(m.memory, int64(uint32(v3))+256, uint32(v12))
 											store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 											m.t0[uint(v8)].(func(int32))(v3 + i32(240))
-											v12 = i32(70036)
+											v12 = i32(70180)
 											goto l226
 										}
 									l225:
@@ -11419,7 +11427,7 @@ l72:
 				}
 				{
 					{
-						t884 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t884 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v13 = t884
 						t885 := int32(load32(m.memory, int64(uint32(v13))+284))
 						t886 := int32(load32(m.memory, int64(uint32(v13))+276))
@@ -11429,7 +11437,7 @@ l72:
 						if v12 != i32(-1) {
 							goto l245
 						}
-						v12 = i32(70036)
+						v12 = i32(70180)
 						goto l240
 					}
 				l245:
@@ -11454,7 +11462,7 @@ l72:
 								m.memory[int64(uint32(v3))+1376] = byte(i32(1))
 								store32(m.memory, int64(uint32(v3))+1384, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v3))+1380, uint32(i32(100)))
-								t890 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t890 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v12 = t890
 								t891 := int32(load32(m.memory, int64(uint32(v12))+20))
 								v8 = t891
@@ -11467,7 +11475,7 @@ l72:
 								store32(m.memory, int64(uint32(v3))+40, uint32(v12))
 								store32(m.memory, int64(uint32(v3))+1388, uint32(v12))
 								m.t0[uint(v8)].(func(int32))(v3 + i32(24))
-								v12 = i32(70036)
+								v12 = i32(70180)
 								goto l243
 							}
 						l242:
@@ -11485,9 +11493,9 @@ l72:
 							goto l245
 						}
 					}
-					v12 = i32(70036)
+					v12 = i32(70180)
 				l244:
-					t898 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t898 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v13 = t898
 				}
 			l240:
@@ -11588,7 +11596,7 @@ l83:
 }
 func (m *Module) _Clay_GetPointerOverIds(v0 int32) {
 	var v1 int32
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	t1 := v0
 	v1 = t0
 	t2 := int64(load64(m.memory, int64(uint32(v1))+372))
@@ -11635,7 +11643,7 @@ func (m *Module) _Clay__RenderElementConfigTypeLabel(v0, v1, v2 int32) {
 	t4 := int64(load64(m.memory, uint32(v1)))
 	store64(m.memory, int64(uint32(v3))+220, uint64(t4))
 	m._Clay__ConfigureOpenElementPtr(v3 + i32(80))
-	m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+	m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 	v1 = v3 + i32(52)
 l2:
 	{
@@ -11645,16 +11653,16 @@ l2:
 				if v2 == 0 {
 					goto l0
 				}
-				t5 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+				t5 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 				store64(m.memory, int64(uint32(v1))+8, uint64(t5))
-				t6 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+				t6 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 				store64(m.memory, uint32(v1), uint64(t6))
 				goto l1
 			}
 		l0:
-			t7 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+			t7 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 			store64(m.memory, int64(uint32(v1))+8, uint64(t7))
-			t8 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+			t8 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 			store64(m.memory, uint32(v1), uint64(t8))
 		}
 	l1:
@@ -11672,9 +11680,9 @@ l2:
 		store64(m.memory, int64(uint32(v3))+16, uint64(t13))
 		store64(m.memory, int64(uint32(v3))+24, uint64(i64(0)))
 		m._Clay__OpenTextElement(v3+i32(32), v3)
-		m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+		m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 		m._Clay__CloseElement()
-		t14 := int32(m.memory[int64(uint32(i32(0)))+70220])
+		t14 := int32(m.memory[int64(uint32(i32(0)))+70364])
 		if t14 == 0 {
 			goto l2
 		}
@@ -11691,17 +11699,17 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 	v3 = t0 - i32(2672)
 	m.___stack_pointer = v3
 	v4 = i32(0)
-	store64(m.memory, int64(uint32(i32(0)))+70180, uint64(i64(0)))
-	store64(m.memory, int64(uint32(i32(0)))+70201, uint64(i64(0)))
-	m.memory[int64(uint32(i32(0)))+70200] = byte(i32(3))
-	store64(m.memory, int64(uint32(i32(0)))+70192, uint64(i64(0x41f0000041f00000)))
-	store64(m.memory, int64(uint32(i32(0)))+70208, uint64(i64(0x200000600000000)))
+	store64(m.memory, int64(uint32(i32(0)))+70324, uint64(i64(0)))
+	store64(m.memory, int64(uint32(i32(0)))+70345, uint64(i64(0)))
+	m.memory[int64(uint32(i32(0)))+70344] = byte(i32(3))
+	store64(m.memory, int64(uint32(i32(0)))+70336, uint64(i64(0x41f0000041f00000)))
+	store64(m.memory, int64(uint32(i32(0)))+70352, uint64(i64(0x200000600000000)))
 	store64(m.memory, uint32(v0), uint64(i64(0)))
-	store32(m.memory, int64(uint32(i32(0)))+70188, uint32(i32(0)))
-	store16(m.memory, int64(uint32(i32(0)))+70217, uint16(i32(0)))
-	m.memory[int64(uint32(i32(0)))+70216] = byte(i32(0))
-	m.memory[int64(uint32(i32(0)))+70219] = byte(i32(0))
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	store32(m.memory, int64(uint32(i32(0)))+70332, uint32(i32(0)))
+	store16(m.memory, int64(uint32(i32(0)))+70361, uint16(i32(0)))
+	m.memory[int64(uint32(i32(0)))+70360] = byte(i32(0))
+	m.memory[int64(uint32(i32(0)))+70363] = byte(i32(0))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	v5 = t1
 	{
 		if v1 < i32(1) {
@@ -11777,7 +11785,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					m.memory[int64(uint32(v3))+2468] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+2476, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+2472, uint32(i32(100)))
-					t5 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t5 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v57 = t5
 					t6 := int32(load32(m.memory, int64(uint32(v57))+20))
 					v58 = t6
@@ -11790,7 +11798,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					store32(m.memory, int64(uint32(v3))+1160, uint32(v57))
 					store32(m.memory, int64(uint32(v3))+2480, uint32(v57))
 					m.t0[uint(v58)].(func(int32))(v3 + i32(1144))
-					v57 = i32(70148)
+					v57 = i32(70292)
 					goto l2
 				}
 			l1:
@@ -11812,7 +11820,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					m.memory[int64(uint32(v3))+2468] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+2476, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+2472, uint32(i32(100)))
-					t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v57 = t11
 					t12 := int32(load32(m.memory, int64(uint32(v57))+20))
 					v58 = t12
@@ -11865,7 +11873,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 				m.memory[int64(uint32(v3))+2472] = byte(i32(1))
 				store64(m.memory, int64(uint32(v3))+2464, uint64(i64(0)))
 				m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 				v57 = v57 + i32(-1226190823)
 				v57 = (int32(uint32(v57)>>6) ^ v57) * i32(9)
 				v57 = (int32(uint32(v57)>>11)^v57)*i32(32769) + i32(1)
@@ -11895,9 +11903,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					store64(m.memory, int64(uint32(v52))+16, uint64(i64(0)))
 					store64(m.memory, int64(uint32(v52))+8, uint64(i64(0)))
 					store64(m.memory, uint32(v52), uint64(i64(0)))
-					t25 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+					t25 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 					store64(m.memory, uint32(v53), uint64(t25))
-					t26 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+					t26 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 					store64(m.memory, int64(uint32(v53))+8, uint64(t26))
 					m.memory[int64(uint32(v3))+2484] = byte(i32(3))
 					store64(m.memory, int64(uint32(v3))+2476, uint64(i64(0x41f0000041f00000)))
@@ -11909,16 +11917,16 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
 				l6:
 					{
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 						m._Clay__CloseElement()
-						t27 := int32(m.memory[int64(uint32(i32(0)))+70220])
+						t27 := int32(m.memory[int64(uint32(i32(0)))+70364])
 						if t27 == 0 {
 							goto l6
 						}
 					}
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 					m._Clay__CloseElement()
-					t28 := int32(m.memory[int64(uint32(i32(0)))+70220])
+					t28 := int32(m.memory[int64(uint32(i32(0)))+70364])
 					if t28 == 0 {
 						goto l7
 					}
@@ -11955,7 +11963,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					m.memory[int64(uint32(v3))+2468] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+2476, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+2472, uint32(i32(100)))
-					t33 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t33 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v57 = t33
 					t34 := int32(load32(m.memory, int64(uint32(v57))+20))
 					v60 = t34
@@ -11968,7 +11976,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					store32(m.memory, int64(uint32(v3))+1064, uint32(v57))
 					store32(m.memory, int64(uint32(v3))+2480, uint32(v57))
 					m.t0[uint(v60)].(func(int32))(v3 + i32(1048))
-					v61 = i32(69452)
+					v61 = i32(69596)
 					goto l11
 				}
 			l10:
@@ -12041,7 +12049,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 				m.memory[uint32(v57)] = byte(i32(1))
 				{
 					{
-						t49 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t49 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v58 = t49
 						t50 := int32(load32(m.memory, int64(uint32(v58))+284))
 						t51 := int32(load32(m.memory, int64(uint32(v58))+276))
@@ -12051,7 +12059,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						if v57 != i32(-1) {
 							goto l26
 						}
-						v63 = i32(70036)
+						v63 = i32(70180)
 						goto l21
 					}
 				l26:
@@ -12076,7 +12084,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 								m.memory[int64(uint32(v3))+2468] = byte(i32(1))
 								store32(m.memory, int64(uint32(v3))+2476, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v3))+2472, uint32(i32(100)))
-								t55 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t55 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v57 = t55
 								t56 := int32(load32(m.memory, int64(uint32(v57))+20))
 								v64 = t56
@@ -12089,7 +12097,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 								store32(m.memory, int64(uint32(v3))+1040, uint32(v57))
 								store32(m.memory, int64(uint32(v3))+2480, uint32(v57))
 								m.t0[uint(v64)].(func(int32))(v3 + i32(1024))
-								v63 = i32(70036)
+								v63 = i32(70180)
 								goto l24
 							}
 						l23:
@@ -12107,9 +12115,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 							goto l26
 						}
 					}
-					v63 = i32(70036)
+					v63 = i32(70180)
 				l25:
-					t63 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t63 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v58 = t63
 				}
 			l21:
@@ -12173,18 +12181,18 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 				store64(m.memory, int64(uint32(v3))+1000, uint64(t77))
 				m._Clay__OpenElementWithId(v3 + i32(1000))
 				memory_zero(m.memory, uint32(v8), uint32(i32(164)))
-				t78 := int64(load64(m.memory, int64(uint32(i32(0)))+70212))
+				t78 := int64(load64(m.memory, int64(uint32(i32(0)))+70356))
 				store64(m.memory, int64(uint32(v3))+2080, uint64(t78))
-				t79 := int64(load64(m.memory, int64(uint32(i32(0)))+70204))
+				t79 := int64(load64(m.memory, int64(uint32(i32(0)))+70348))
 				store64(m.memory, int64(uint32(v3))+2072, uint64(t79))
-				t80 := int64(load64(m.memory, int64(uint32(i32(0)))+70196))
+				t80 := int64(load64(m.memory, int64(uint32(i32(0)))+70340))
 				store64(m.memory, int64(uint32(v3))+2064, uint64(t80))
-				t81 := int64(load64(m.memory, int64(uint32(i32(0)))+70188))
+				t81 := int64(load64(m.memory, int64(uint32(i32(0)))+70332))
 				store64(m.memory, int64(uint32(v3))+2056, uint64(t81))
-				t82 := int64(load64(m.memory, int64(uint32(i32(0)))+70180))
+				t82 := int64(load64(m.memory, int64(uint32(i32(0)))+70324))
 				store64(m.memory, int64(uint32(v3))+2048, uint64(t82))
 				m._Clay__ConfigureOpenElementPtr(v3 + i32(2048))
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 				v68 = v63 + i32(28)
 			l64:
 				{
@@ -12237,9 +12245,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						store64(m.memory, int64(uint32(v42))+8, uint64(i64(0)))
 						store64(m.memory, int64(uint32(v42))+16, uint64(i64(0)))
 						store64(m.memory, int64(uint32(v42))+24, uint64(i64(0)))
-						t91 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+						t91 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 						store64(m.memory, uint32(v43), uint64(t91))
-						t92 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+						t92 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 						store64(m.memory, int64(uint32(v43))+8, uint64(t92))
 						store32(m.memory, int64(uint32(v3))+2588, uint32(i32(0)))
 						store64(m.memory, int64(uint32(v3))+2552, uint64(i64(0)))
@@ -12256,7 +12264,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						store64(m.memory, int64(uint32(v3))+2620, uint64(i64(0x1000100010001)))
 						store32(m.memory, int64(uint32(v3))+2628, uint32(i32(0)))
 						m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 					l32:
 						{
 							{
@@ -12274,9 +12282,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						l31:
 							m.memory[int64(uint32(v49))+2] = byte(i32(0))
 							store16(m.memory, uint32(v49), uint16(i32(0)))
-							t94 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+							t94 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 							store64(m.memory, int64(uint32(v48))+8, uint64(t94))
-							t95 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+							t95 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 							store64(m.memory, uint32(v48), uint64(t95))
 							store32(m.memory, int64(uint32(v3))+2000, uint32(i32(0x100000)))
 							store32(m.memory, int64(uint32(v3))+1980, uint32(i32(0)))
@@ -12295,9 +12303,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 							t99 := int64(load64(m.memory, int64(uint32(v3))+2012))
 							store64(m.memory, int64(uint32(v3))+960, uint64(t99))
 							m._Clay__OpenTextElement(v3+i32(960), v3+i32(928))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							m._Clay__CloseElement()
-							t100 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t100 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t100 == 0 {
 								goto l32
 							}
@@ -12317,7 +12325,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					m.memory[int64(uint32(v3))+2472] = byte(i32(3))
 					store64(m.memory, int64(uint32(v3))+2464, uint64(i64(0x4180000041800000)))
 					m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 				l35:
 					{
 						m._Clay__OpenElement()
@@ -12327,9 +12335,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						m.memory[int64(uint32(v21))+2] = byte(i32(0))
 						store16(m.memory, uint32(v22), uint16(i32(0)))
 						m.memory[int64(uint32(v22))+2] = byte(i32(0))
-						t101 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+						t101 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 						store64(m.memory, uint32(v47), uint64(t101))
-						t102 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+						t102 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 						store64(m.memory, int64(uint32(v47))+8, uint64(t102))
 						store64(m.memory, uint32(v46), uint64(i64(0)))
 						store64(m.memory, int64(uint32(v46))+8, uint64(i64(0)))
@@ -12362,16 +12370,16 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
 					l34:
 						{
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							m._Clay__CloseElement()
-							t103 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t103 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t103 == 0 {
 								goto l34
 							}
 						}
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 						m._Clay__CloseElement()
-						t104 := int32(m.memory[int64(uint32(i32(0)))+70220])
+						t104 := int32(m.memory[int64(uint32(i32(0)))+70364])
 						if t104 == 0 {
 							goto l35
 						}
@@ -12401,14 +12409,14 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 							store64(m.memory, int64(uint32(v3))+2604, uint64(i64(0x4313000043310000)))
 							store64(m.memory, int64(uint32(v3))+2488, uint64(i64(0x2000200080008)))
 							m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 						l38:
 							{
 								m.memory[int64(uint32(v41))+2] = byte(i32(0))
 								store16(m.memory, uint32(v41), uint16(i32(0)))
-								t106 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+								t106 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 								store64(m.memory, int64(uint32(v40))+8, uint64(t106))
-								t107 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+								t107 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 								store64(m.memory, uint32(v40), uint64(t107))
 								store32(m.memory, int64(uint32(v3))+1956, uint32(i32(0x100000)))
 								store32(m.memory, int64(uint32(v3))+1936, uint32(i32(0)))
@@ -12427,9 +12435,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 								t111 := int64(load64(m.memory, int64(uint32(v3))+1968))
 								store64(m.memory, int64(uint32(v3))+912, uint64(t111))
 								m._Clay__OpenTextElement(v3+i32(912), v3+i32(880))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 								m._Clay__CloseElement()
-								t112 := int32(m.memory[int64(uint32(i32(0)))+70220])
+								t112 := int32(m.memory[int64(uint32(i32(0)))+70364])
 								if t112 == 0 {
 									goto l38
 								}
@@ -12449,22 +12457,22 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						store64(m.memory, int64(uint32(v37))+16, uint64(i64(0)))
 						store64(m.memory, int64(uint32(v37))+8, uint64(i64(0)))
 						store64(m.memory, uint32(v37), uint64(i64(0)))
-						t113 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+						t113 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 						store64(m.memory, uint32(v39), uint64(t113))
-						t114 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+						t114 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 						store64(m.memory, int64(uint32(v39))+8, uint64(t114))
 						store64(m.memory, int64(uint32(v3))+2488, uint64(i64(0x2000200080008)))
 						memory_copy(m.memory, uint32(v38), uint32(v3+i32(1812)), uint32(i32(124)))
 						store64(m.memory, int64(uint32(v3))+2620, uint64(i64(0x1000100010001)))
 						m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 					l39:
 						{
 							m.memory[int64(uint32(v36))+2] = byte(i32(0))
 							store16(m.memory, uint32(v36), uint16(i32(0)))
-							t115 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+							t115 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 							store64(m.memory, int64(uint32(v35))+8, uint64(t115))
-							t116 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+							t116 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 							store64(m.memory, uint32(v35), uint64(t116))
 							store32(m.memory, int64(uint32(v3))+1788, uint32(i32(0x100000)))
 							store32(m.memory, int64(uint32(v3))+1768, uint32(i32(0)))
@@ -12483,9 +12491,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 							t120 := int64(load64(m.memory, int64(uint32(v3))+1800))
 							store64(m.memory, int64(uint32(v3))+864, uint64(t120))
 							m._Clay__OpenTextElement(v3+i32(864), v3+i32(832))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							m._Clay__CloseElement()
-							t121 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t121 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t121 == 0 {
 								goto l39
 							}
@@ -12500,7 +12508,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						m._Clay__OpenElement()
 						memory_zero(m.memory, uint32(v3+i32(2464)), uint32(i32(204)))
 						m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 					l50:
 						{
 							{
@@ -12509,9 +12517,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 										goto l41
 									}
 									v69 = i32(0)
-									t123 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+									t123 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 									store64(m.memory, int64(uint32(v3))+2472, uint64(t123))
-									t124 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+									t124 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 									store64(m.memory, int64(uint32(v3))+2464, uint64(t124))
 									v70 = i32(16)
 									v71 = i32(0)
@@ -12523,25 +12531,25 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 									goto l42
 								}
 							l41:
-								t125 := int64(load64(m.memory, int64(uint32(i32(0)))+69292))
+								t125 := int64(load64(m.memory, int64(uint32(i32(0)))+69432))
 								store64(m.memory, int64(uint32(v3))+2464, uint64(t125))
-								t126 := int64(load64(m.memory, int64(uint32(i32(0)))+69300))
+								t126 := int64(load64(m.memory, int64(uint32(i32(0)))+69440))
 								store64(m.memory, int64(uint32(v3))+2472, uint64(t126))
-								t127 := int32(load16(m.memory, int64(uint32(i32(0)))+69318))
+								t127 := int32(load16(m.memory, int64(uint32(i32(0)))+69458))
 								v69 = t127
-								t128 := int32(m.memory[int64(uint32(i32(0)))+69317])
+								t128 := int32(m.memory[int64(uint32(i32(0)))+69457])
 								v71 = t128
-								t129 := int32(m.memory[int64(uint32(i32(0)))+69316])
+								t129 := int32(m.memory[int64(uint32(i32(0)))+69456])
 								v72 = t129
-								t130 := int32(load16(m.memory, int64(uint32(i32(0)))+69314))
+								t130 := int32(load16(m.memory, int64(uint32(i32(0)))+69454))
 								v73 = t130
-								t131 := int32(load16(m.memory, int64(uint32(i32(0)))+69312))
+								t131 := int32(load16(m.memory, int64(uint32(i32(0)))+69452))
 								v74 = t131
-								t132 := int32(load16(m.memory, int64(uint32(i32(0)))+69310))
+								t132 := int32(load16(m.memory, int64(uint32(i32(0)))+69450))
 								v70 = t132
-								t133 := int32(load16(m.memory, int64(uint32(i32(0)))+69308))
+								t133 := int32(load16(m.memory, int64(uint32(i32(0)))+69448))
 								v75 = t133
-								t134 := int32(load32(m.memory, int64(uint32(i32(0)))+69288))
+								t134 := int32(load32(m.memory, int64(uint32(i32(0)))+69428))
 								v76 = t134
 							}
 						l42:
@@ -12622,7 +12630,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 									v57 = v78 >> 31
 									v57 = t152 ^ v57 - v57
 									v58 = i32(0)
-									t153 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t153 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v79 = t153
 									t154 := int32(load32(m.memory, int64(uint32(v79))+428))
 									t155 := int32(load32(m.memory, int64(uint32(v79))+424))
@@ -12743,9 +12751,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 								m._Clay__OpenTextElement(v3+i32(672), v3+i32(640))
 							}
 						l43:
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							m._Clay__CloseElement()
-							t180 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t180 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t180 == 0 {
 								goto l50
 							}
@@ -12821,82 +12829,82 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						{
 							{
 								t191 := int32(m.memory[int64(uint32(v61))+96])
-								t192 := int32(m.memory[int64(uint32(i32(0)))+69384])
+								t192 := int32(m.memory[int64(uint32(i32(0)))+69528])
 								if t191 != t192 {
 									goto l55
 								}
 								t193 := int32(m.memory[int64(uint32(v61))+97])
-								t194 := int32(m.memory[int64(uint32(i32(0)))+69385])
+								t194 := int32(m.memory[int64(uint32(i32(0)))+69529])
 								if t193 != t194 {
 									goto l55
 								}
 								t195 := int32(m.memory[int64(uint32(v61))+98])
-								t196 := int32(m.memory[int64(uint32(i32(0)))+69386])
+								t196 := int32(m.memory[int64(uint32(i32(0)))+69530])
 								if t195 != t196 {
 									goto l55
 								}
 								t197 := int32(m.memory[int64(uint32(v61))+99])
-								t198 := int32(m.memory[int64(uint32(i32(0)))+69387])
+								t198 := int32(m.memory[int64(uint32(i32(0)))+69531])
 								if t197 != t198 {
 									goto l55
 								}
 								t199 := int32(m.memory[int64(uint32(v61))+100])
-								t200 := int32(m.memory[int64(uint32(i32(0)))+69388])
+								t200 := int32(m.memory[int64(uint32(i32(0)))+69532])
 								if t199 != t200 {
 									goto l55
 								}
 								t201 := int32(m.memory[int64(uint32(v61))+101])
-								t202 := int32(m.memory[int64(uint32(i32(0)))+69389])
+								t202 := int32(m.memory[int64(uint32(i32(0)))+69533])
 								if t201 != t202 {
 									goto l55
 								}
 								t203 := int32(m.memory[int64(uint32(v61))+102])
-								t204 := int32(m.memory[int64(uint32(i32(0)))+69390])
+								t204 := int32(m.memory[int64(uint32(i32(0)))+69534])
 								if t203 != t204 {
 									goto l55
 								}
 								t205 := int32(m.memory[int64(uint32(v61))+103])
-								t206 := int32(m.memory[int64(uint32(i32(0)))+69391])
+								t206 := int32(m.memory[int64(uint32(i32(0)))+69535])
 								if t205 != t206 {
 									goto l55
 								}
 								t207 := int32(m.memory[int64(uint32(v61))+104])
-								t208 := int32(m.memory[int64(uint32(i32(0)))+69392])
+								t208 := int32(m.memory[int64(uint32(i32(0)))+69536])
 								if t207 != t208 {
 									goto l55
 								}
 								t209 := int32(m.memory[int64(uint32(v61))+105])
-								t210 := int32(m.memory[int64(uint32(i32(0)))+69393])
+								t210 := int32(m.memory[int64(uint32(i32(0)))+69537])
 								if t209 != t210 {
 									goto l55
 								}
 								t211 := int32(m.memory[int64(uint32(v61))+106])
-								t212 := int32(m.memory[int64(uint32(i32(0)))+69394])
+								t212 := int32(m.memory[int64(uint32(i32(0)))+69538])
 								if t211 != t212 {
 									goto l55
 								}
 								t213 := int32(m.memory[int64(uint32(v61))+107])
-								t214 := int32(m.memory[int64(uint32(i32(0)))+69395])
+								t214 := int32(m.memory[int64(uint32(i32(0)))+69539])
 								if t213 != t214 {
 									goto l55
 								}
 								t215 := int32(m.memory[int64(uint32(v61))+108])
-								t216 := int32(m.memory[int64(uint32(i32(0)))+69396])
+								t216 := int32(m.memory[int64(uint32(i32(0)))+69540])
 								if t215 != t216 {
 									goto l55
 								}
 								t217 := int32(m.memory[int64(uint32(v61))+109])
-								t218 := int32(m.memory[int64(uint32(i32(0)))+69397])
+								t218 := int32(m.memory[int64(uint32(i32(0)))+69541])
 								if t217 != t218 {
 									goto l55
 								}
 								t219 := int32(m.memory[int64(uint32(v61))+110])
-								t220 := int32(m.memory[int64(uint32(i32(0)))+69398])
+								t220 := int32(m.memory[int64(uint32(i32(0)))+69542])
 								if t219 != t220 {
 									goto l55
 								}
 								t221 := int32(m.memory[int64(uint32(v61))+111])
-								t222 := int32(m.memory[int64(uint32(i32(0)))+69399])
+								t222 := int32(m.memory[int64(uint32(i32(0)))+69543])
 								if t221 == t222 {
 									goto l56
 								}
@@ -13076,9 +13084,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						m._Clay__RenderElementConfigTypeLabel(v3+i32(368), v3+i32(352), v65)
 					}
 				l52:
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 					m._Clay__CloseElement()
-					t255 := int32(m.memory[int64(uint32(i32(0)))+70220])
+					t255 := int32(m.memory[int64(uint32(i32(0)))+70364])
 					if t255 == 0 {
 						goto l64
 					}
@@ -13098,9 +13106,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 									goto l66
 								}
 								v57 = i32(0)
-								t258 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+								t258 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 								store64(m.memory, int64(uint32(v3))+1568, uint64(t258))
-								t259 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+								t259 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 								store64(m.memory, int64(uint32(v3))+1560, uint64(t259))
 								v58 = i32(16)
 								v60 = i32(0)
@@ -13112,25 +13120,25 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 								goto l67
 							}
 						l66:
-							t260 := int64(load64(m.memory, int64(uint32(i32(0)))+69292))
+							t260 := int64(load64(m.memory, int64(uint32(i32(0)))+69432))
 							store64(m.memory, int64(uint32(v3))+1560, uint64(t260))
-							t261 := int64(load64(m.memory, int64(uint32(i32(0)))+69300))
+							t261 := int64(load64(m.memory, int64(uint32(i32(0)))+69440))
 							store64(m.memory, int64(uint32(v3))+1568, uint64(t261))
-							t262 := int32(load16(m.memory, int64(uint32(i32(0)))+69318))
+							t262 := int32(load16(m.memory, int64(uint32(i32(0)))+69458))
 							v57 = t262
-							t263 := int32(m.memory[int64(uint32(i32(0)))+69317])
+							t263 := int32(m.memory[int64(uint32(i32(0)))+69457])
 							v60 = t263
-							t264 := int32(m.memory[int64(uint32(i32(0)))+69316])
+							t264 := int32(m.memory[int64(uint32(i32(0)))+69456])
 							v64 = t264
-							t265 := int32(load16(m.memory, int64(uint32(i32(0)))+69314))
+							t265 := int32(load16(m.memory, int64(uint32(i32(0)))+69454))
 							v80 = t265
-							t266 := int32(load16(m.memory, int64(uint32(i32(0)))+69312))
+							t266 := int32(load16(m.memory, int64(uint32(i32(0)))+69452))
 							v78 = t266
-							t267 := int32(load16(m.memory, int64(uint32(i32(0)))+69310))
+							t267 := int32(load16(m.memory, int64(uint32(i32(0)))+69450))
 							v58 = t267
-							t268 := int32(load16(m.memory, int64(uint32(i32(0)))+69308))
+							t268 := int32(load16(m.memory, int64(uint32(i32(0)))+69448))
 							v81 = t268
-							t269 := int32(load32(m.memory, int64(uint32(i32(0)))+69288))
+							t269 := int32(load32(m.memory, int64(uint32(i32(0)))+69428))
 							v69 = t269
 						}
 					l67:
@@ -13145,7 +13153,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 						m.memory[int64(uint32(v3))+2484] = byte(i32(3))
 						store64(m.memory, int64(uint32(v3))+2476, uint64(i64(0x41f0000041f00000)))
 						m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 					l72:
 						{
 							m._Clay__OpenElement()
@@ -13155,9 +13163,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 							m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
 						l68:
 							{
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 								m._Clay__CloseElement()
-								t270 := int32(m.memory[int64(uint32(i32(0)))+70220])
+								t270 := int32(m.memory[int64(uint32(i32(0)))+70364])
 								if t270 == 0 {
 									goto l68
 								}
@@ -13302,9 +13310,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 							t304 := int64(load64(m.memory, int64(uint32(v3))+1416))
 							store64(m.memory, int64(uint32(v3))+160, uint64(t304))
 							m._Clay__OpenTextElement(v3+i32(160), v3+i32(128))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							m._Clay__CloseElement()
-							t305 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t305 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t305 == 0 {
 								goto l72
 							}
@@ -13334,9 +13342,9 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 					store64(m.memory, int64(uint32(v23))+16, uint64(i64(0)))
 					store64(m.memory, int64(uint32(v23))+8, uint64(i64(0)))
 					store64(m.memory, uint32(v23), uint64(i64(0)))
-					t307 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+					t307 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 					store64(m.memory, uint32(v25), uint64(t307))
-					t308 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+					t308 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 					store64(m.memory, int64(uint32(v25))+8, uint64(t308))
 					store16(m.memory, int64(uint32(v3))+2488, uint16(i32(16)))
 					memory_copy(m.memory, uint32(v24), uint32(v3+i32(1254)), uint32(i32(130)))
@@ -13390,7 +13398,7 @@ func (m *Module) _Clay__RenderDebugLayoutElementsList(v0, v1, v2 int32) {
 							m.memory[int64(uint32(v3))+2468] = byte(i32(1))
 							store32(m.memory, int64(uint32(v3))+2476, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v3))+2472, uint32(i32(100)))
-							t312 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t312 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v60 = t312
 							t313 := int32(load32(m.memory, int64(uint32(v60))+20))
 							v64 = t313
@@ -13462,7 +13470,7 @@ l0:
 					m.memory[int64(uint32(v3))+2468] = byte(i32(1))
 					store32(m.memory, int64(uint32(v3))+2476, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v3))+2472, uint32(i32(100)))
-					t323 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t323 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v60 = t323
 					t324 := int32(load32(m.memory, int64(uint32(v60))+20))
 					v78 = t324
@@ -13475,7 +13483,7 @@ l0:
 					store32(m.memory, int64(uint32(v3))+96, uint32(v60))
 					store32(m.memory, int64(uint32(v3))+2480, uint32(v60))
 					m.t0[uint(v78)].(func(int32))(v3 + i32(80))
-					v60 = i32(69416)
+					v60 = i32(69560)
 					goto l82
 				}
 			l81:
@@ -13490,9 +13498,9 @@ l0:
 				goto l83
 			}
 		}
-		v81 = i32(70036)
+		v81 = i32(70180)
 		{
-			t330 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t330 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v58 = t330
 			t331 := int32(load32(m.memory, int64(uint32(v58))+284))
 			t332 := int32(load32(m.memory, int64(uint32(v60))+4))
@@ -13528,7 +13536,7 @@ l0:
 						m.memory[int64(uint32(v3))+2468] = byte(i32(1))
 						store32(m.memory, int64(uint32(v3))+2476, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v3))+2472, uint32(i32(100)))
-						t337 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t337 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v57 = t337
 						t338 := int32(load32(m.memory, int64(uint32(v57))+20))
 						v78 = t338
@@ -13541,7 +13549,7 @@ l0:
 						store32(m.memory, int64(uint32(v3))+72, uint32(v57))
 						store32(m.memory, int64(uint32(v3))+2480, uint32(v57))
 						m.t0[uint(v78)].(func(int32))(v3 + i32(56))
-						v57 = i32(70036)
+						v57 = i32(70180)
 						goto l87
 					}
 				l86:
@@ -13599,7 +13607,7 @@ l80:
 		m.memory[int64(uint32(v3))+2472] = byte(i32(1))
 		store64(m.memory, int64(uint32(v3))+2464, uint64(i64(0)))
 		m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
-		m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+		m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 		v80 = v3 + i32(2520)
 		v58 = v3 + i32(2473)
 		v60 = v3 + i32(1187)
@@ -13625,9 +13633,9 @@ l80:
 			store64(m.memory, int64(uint32(v3))+1176, uint64(i64(0)))
 			store32(m.memory, int64(uint32(v3))+1183, uint32(i32(0)))
 			memory_zero(m.memory, uint32(v80), uint32(i32(148)))
-			t350 := int64(load64(m.memory, int64(uint32(i32(0)))+69320))
+			t350 := int64(load64(m.memory, int64(uint32(i32(0)))+69460))
 			store64(m.memory, uint32(v60), uint64(t350))
-			t351 := int64(load64(m.memory, int64(uint32(i32(0)))+69328))
+			t351 := int64(load64(m.memory, int64(uint32(i32(0)))+69468))
 			store64(m.memory, int64(uint32(v60))+8, uint64(t351))
 			t352 := int64(load64(m.memory, int64(uint32(v3))+1168))
 			store64(m.memory, uint32(v57), uint64(t352))
@@ -13645,16 +13653,16 @@ l80:
 			m._Clay__ConfigureOpenElementPtr(v3 + i32(2464))
 		l91:
 			{
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 				m._Clay__CloseElement()
-				t357 := int32(m.memory[int64(uint32(i32(0)))+70220])
+				t357 := int32(m.memory[int64(uint32(i32(0)))+70364])
 				if t357 == 0 {
 					goto l91
 				}
 			}
-			m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+			m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 			m._Clay__CloseElement()
-			t358 := int32(m.memory[int64(uint32(i32(0)))+70220])
+			t358 := int32(m.memory[int64(uint32(i32(0)))+70364])
 			if t358 == 0 {
 				goto l92
 			}
@@ -13834,7 +13842,7 @@ func (m *Module) _Clay__RenderDebugLayoutSizing(v0, v1 int32) {
 							v5 = v9 >> 31
 							v5 = t38 ^ v5 - v5
 							v3 = i32(0)
-							t39 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t39 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v10 = t39
 							t40 := int32(load32(m.memory, int64(uint32(v10))+428))
 							t41 := int32(load32(m.memory, int64(uint32(v10))+424))
@@ -13972,7 +13980,7 @@ func (m *Module) _Clay__RenderDebugLayoutSizing(v0, v1 int32) {
 							t68 := v11
 							v5 = v11 >> 31
 							v3 = t68 ^ v5 - v5
-							t69 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t69 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v12 = t69
 							t70 := int32(load32(m.memory, int64(uint32(v12))+428))
 							t71 := int32(load32(m.memory, int64(uint32(v12))+424))
@@ -14051,7 +14059,7 @@ func (m *Module) _Clay__RenderDebugLayoutSizing(v0, v1 int32) {
 				v5 = v11 >> 31
 				v3 = t82 ^ v5 - v5
 				v4 = i32(0)
-				t83 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t83 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v15 = t83
 				t84 := int32(load32(m.memory, int64(uint32(v15))+428))
 				t85 := int32(load32(m.memory, int64(uint32(v15))+424))
@@ -14176,15 +14184,15 @@ func (m *Module) _Clay__DebugViewRenderElementConfigHeader(v0, v1 int32) {
 		goto l1
 	l0:
 		v1 = v1 << 2
-		t1 := math.Float32frombits(load32(m.memory, int64(uint32(v1))+69060))
+		t1 := math.Float32frombits(load32(m.memory, int64(uint32(v1))+69200))
 		v6 = t1
-		t2 := math.Float32frombits(load32(m.memory, int64(uint32(v1))+69020))
+		t2 := math.Float32frombits(load32(m.memory, int64(uint32(v1))+69160))
 		v5 = t2
-		t3 := math.Float32frombits(load32(m.memory, int64(uint32(v1))+68980))
+		t3 := math.Float32frombits(load32(m.memory, int64(uint32(v1))+69120))
 		v3 = t3
-		t4 := int32(load32(m.memory, int64(uint32(v1))+68940))
+		t4 := int32(load32(m.memory, int64(uint32(v1))+69080))
 		v4 = t4
-		t5 := int32(load32(m.memory, int64(uint32(v1))+68900))
+		t5 := int32(load32(m.memory, int64(uint32(v1))+69040))
 		v1 = t5
 	}
 l1:
@@ -14228,13 +14236,13 @@ l1:
 	t9 := int64(load64(m.memory, int64(uint32(v2))+96))
 	store64(m.memory, int64(uint32(v2))+252, uint64(t9))
 	m._Clay__ConfigureOpenElementPtr(v2 + i32(112))
-	m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+	m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 	v1 = v2 + i32(56)
 l2:
 	{
-		t10 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+		t10 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 		store64(m.memory, int64(uint32(v1))+8, uint64(t10))
-		t11 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+		t11 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 		store64(m.memory, uint32(v1), uint64(t11))
 		store32(m.memory, int64(uint32(v2))+52, uint32(i32(0)))
 		store32(m.memory, int64(uint32(v2))+72, uint32(i32(0x100000)))
@@ -14251,9 +14259,9 @@ l2:
 		t16 := int64(load64(m.memory, int64(uint32(v2))+68))
 		store64(m.memory, int64(uint32(v2))+24, uint64(t16))
 		m._Clay__OpenTextElement(v2+i32(40), v2+i32(8))
-		m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+		m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 		m._Clay__CloseElement()
-		t17 := int32(m.memory[int64(uint32(i32(0)))+70220])
+		t17 := int32(m.memory[int64(uint32(i32(0)))+70364])
 		if t17 == 0 {
 			goto l2
 		}
@@ -14274,7 +14282,7 @@ func (m *Module) _Clay__RenderDebugViewColor(v0, v1 int32) {
 	memory_zero(m.memory, uint32(v2+i32(580)), uint32(i32(168)))
 	m.memory[int64(uint32(v2))+579] = byte(i32(2))
 	m._Clay__ConfigureOpenElementPtr(v2 + i32(544))
-	m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+	m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 	t1 := math.Float32frombits(load32(m.memory, uint32(v0)))
 	v3 = i32_trunc_sat_f32_s(t1)
 	t2 := v3
@@ -14325,7 +14333,7 @@ l22:
 				goto l0
 			}
 			v25 = i32(0)
-			t8 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t8 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v27 = t8
 			t9 := int32(load32(m.memory, int64(uint32(v27))+428))
 			t10 := int32(load32(m.memory, int64(uint32(v27))+424))
@@ -14433,7 +14441,7 @@ l22:
 			v4 = v30 >> 31
 			v4 = t32 ^ v4 - v4
 			v26 = i32(0)
-			t33 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t33 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v27 = t33
 			t34 := int32(load32(m.memory, int64(uint32(v27))+428))
 			t35 := int32(load32(m.memory, int64(uint32(v27))+424))
@@ -14540,7 +14548,7 @@ l22:
 			v4 = v30 >> 31
 			v4 = t57 ^ v4 - v4
 			v25 = i32(0)
-			t58 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t58 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v27 = t58
 			t59 := int32(load32(m.memory, int64(uint32(v27))+428))
 			t60 := int32(load32(m.memory, int64(uint32(v27))+424))
@@ -14646,7 +14654,7 @@ l22:
 			v4 = v29 >> 31
 			v4 = t82 ^ v4 - v4
 			v25 = i32(0)
-			t83 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t83 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v31 = t83
 			t84 := int32(load32(m.memory, int64(uint32(v31))+428))
 			t85 := int32(load32(m.memory, int64(uint32(v31))+424))
@@ -14748,9 +14756,9 @@ l22:
 		m._Clay__ConfigureOpenElementPtr(v2 + i32(544))
 	l20:
 		{
-			m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+			m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 			m._Clay__CloseElement()
-			t106 := int32(m.memory[int64(uint32(i32(0)))+70220])
+			t106 := int32(m.memory[int64(uint32(i32(0)))+70364])
 			if t106 == 0 {
 				goto l20
 			}
@@ -14778,9 +14786,9 @@ l22:
 		store64(m.memory, int64(uint32(v6))+16, uint64(i64(0)))
 		store64(m.memory, int64(uint32(v6))+8, uint64(i64(0)))
 		store64(m.memory, uint32(v6), uint64(i64(0)))
-		t109 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+		t109 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 		store64(m.memory, uint32(v7), uint64(t109))
-		t110 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+		t110 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 		store64(m.memory, int64(uint32(v7))+8, uint64(t110))
 		store64(m.memory, int64(uint32(v2))+568, uint64(i64(0)))
 		store32(m.memory, int64(uint32(v2))+668, uint32(i32(0)))
@@ -14799,16 +14807,16 @@ l22:
 		m._Clay__ConfigureOpenElementPtr(v2 + i32(544))
 	l21:
 		{
-			m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+			m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 			m._Clay__CloseElement()
-			t111 := int32(m.memory[int64(uint32(i32(0)))+70220])
+			t111 := int32(m.memory[int64(uint32(i32(0)))+70364])
 			if t111 == 0 {
 				goto l21
 			}
 		}
-		m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+		m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 		m._Clay__CloseElement()
-		t112 := int32(m.memory[int64(uint32(i32(0)))+70220])
+		t112 := int32(m.memory[int64(uint32(i32(0)))+70364])
 		if t112 == 0 {
 			goto l22
 		}
@@ -14829,7 +14837,7 @@ func (m *Module) _Clay__RenderDebugViewCornerRadius(v0, v1 int32) {
 	memory_zero(m.memory, uint32(v2+i32(580)), uint32(i32(168)))
 	m.memory[int64(uint32(v2))+579] = byte(i32(2))
 	m._Clay__ConfigureOpenElementPtr(v2 + i32(544))
-	m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+	m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 	t1 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+12))
 	v3 = i32_trunc_sat_f32_s(t1)
 	t2 := v3
@@ -14891,7 +14899,7 @@ l20:
 				goto l0
 			}
 			v4 = i32(0)
-			t15 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t15 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v24 = t15
 			t16 := int32(load32(m.memory, int64(uint32(v24))+428))
 			t17 := int32(load32(m.memory, int64(uint32(v24))+424))
@@ -14994,7 +15002,7 @@ l20:
 				goto l5
 			}
 			v23 = i32(0)
-			t38 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t38 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v24 = t38
 			t39 := int32(load32(m.memory, int64(uint32(v24))+428))
 			t40 := int32(load32(m.memory, int64(uint32(v24))+424))
@@ -15097,7 +15105,7 @@ l20:
 				goto l10
 			}
 			v4 = i32(0)
-			t61 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t61 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v24 = t61
 			t62 := int32(load32(m.memory, int64(uint32(v24))+428))
 			t63 := int32(load32(m.memory, int64(uint32(v24))+424))
@@ -15199,7 +15207,7 @@ l20:
 				goto l15
 			}
 			v4 = i32(0)
-			t84 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t84 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v28 = t84
 			t85 := int32(load32(m.memory, int64(uint32(v28))+428))
 			t86 := int32(load32(m.memory, int64(uint32(v28))+424))
@@ -15295,9 +15303,9 @@ l20:
 		t106 := int64(load64(m.memory, int64(uint32(v1))+24))
 		store64(m.memory, int64(uint32(v2))+32, uint64(t106))
 		m._Clay__OpenTextElement(v2+i32(40), v2+i32(8))
-		m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+		m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 		m._Clay__CloseElement()
-		t107 := int32(m.memory[int64(uint32(i32(0)))+70220])
+		t107 := int32(m.memory[int64(uint32(i32(0)))+70364])
 		if t107 == 0 {
 			goto l20
 		}
@@ -15309,7 +15317,7 @@ func (m *Module) _HandleDebugViewCloseButtonInteraction(v0, v1, v2 int32) {
 	if t0 != 0 {
 		return
 	}
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	m.memory[int64(uint32(t1))+96] = byte(i32(0))
 }
 func (m *Module) _Clay__RenderDebugView() {
@@ -15327,7 +15335,7 @@ func (m *Module) _Clay__RenderDebugView() {
 	m.___stack_pointer = v0
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v1 = t1
 			t2 := int32(m.memory[int64(uint32(v1))+56])
 			if t2 != 0 {
@@ -15362,15 +15370,15 @@ func (m *Module) _Clay__RenderDebugView() {
 		t8 := int32(load32(m.memory, int64(uint32(v1))+256))
 		v5 = t8
 		store32(m.memory, int64(uint32(v0))+9680, uint32(i32(0)))
-		t9 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+		t9 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 		store64(m.memory, int64(uint32(v0))+9684, uint64(t9))
-		t10 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+		t10 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 		store64(m.memory, int64(uint32(v0))+9692, uint64(t10))
 		store32(m.memory, int64(uint32(v0))+9708, uint32(i32(2)))
 		store64(m.memory, int64(uint32(v0))+9700, uint64(i64(0x100000)))
-		t11 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+		t11 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 		store64(m.memory, int64(uint32(v0))+9672, uint64(t11))
-		t12 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+		t12 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 		store64(m.memory, int64(uint32(v0))+9664, uint64(t12))
 		m.memory[int64(uint32(v0))+9655] = byte(i32(0))
 		store16(m.memory, int64(uint32(v0))+9653, uint16(i32(0)))
@@ -15453,7 +15461,7 @@ func (m *Module) _Clay__RenderDebugView() {
 		store64(m.memory, int64(uint32(v0))+6088, uint64(t27))
 		t28 := int64(load64(m.memory, int64(uint32(v0))+9632))
 		store64(m.memory, int64(uint32(v0))+6096, uint64(t28))
-		t29 := int32(load32(m.memory, int64(uint32(i32(0)))+69336))
+		t29 := int32(load32(m.memory, int64(uint32(i32(0)))+69476))
 		v3 = t29
 		m._Clay__OpenElementWithId(v0 + i32(6080))
 		m.memory[int64(uint32(v0))+9723] = byte(i32(0))
@@ -15478,16 +15486,16 @@ func (m *Module) _Clay__RenderDebugView() {
 		m.memory[int64(uint32(v0))+9748] = byte(i32(1))
 		m.memory[int64(uint32(v0))+9732] = byte(i32(3))
 		m.memory[int64(uint32(v0))+9720] = byte(i32(3))
-		t30 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+		t30 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 		store64(m.memory, int64(uint32(v0))+9593, uint64(t30))
-		t31 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+		t31 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 		store64(m.memory, int64(uint32(v0))+9601, uint64(t31))
 		t32 := math.Float32frombits(load32(m.memory, int64(uint32(v1))+64))
 		t33 := v0
 		v9 = t32
 		store32(m.memory, int64(uint32(t33))+9728, math.Float32bits(v9))
 		store32(m.memory, int64(uint32(v0))+9724, math.Float32bits(v9))
-		t34 := int32(load32(m.memory, int64(uint32(i32(0)))+69336))
+		t34 := int32(load32(m.memory, int64(uint32(i32(0)))+69476))
 		t35 := v0
 		v9 = float32(uint32(t34))
 		store32(m.memory, int64(uint32(t35))+9716, math.Float32bits(v9))
@@ -15504,7 +15512,7 @@ func (m *Module) _Clay__RenderDebugView() {
 		t40 := int64(load64(m.memory, int64(uint32(v0))+9576))
 		store64(m.memory, int64(uint32(v0))+9835, uint64(t40))
 		m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-		m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+		m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 		p41 := v2
 		if v6 < float32(v7-float32(uint32(v3))) {
 			p41 = i32(-1)
@@ -15703,11 +15711,11 @@ func (m *Module) _Clay__RenderDebugView() {
 			store32(m.memory, uint32(v176), uint32(i32(0)))
 			store32(m.memory, int64(uint32(v176))+3, uint32(i32(0)))
 			memory_zero(m.memory, uint32(v19), uint32(i32(148)))
-			t42 := int64(load64(m.memory, int64(uint32(i32(0)))+69224))
+			t42 := int64(load64(m.memory, int64(uint32(i32(0)))+69364))
 			t43 := v12
 			v194 = t42
 			store64(m.memory, uint32(t43), uint64(v194))
-			t44 := int64(load64(m.memory, int64(uint32(i32(0)))+69232))
+			t44 := int64(load64(m.memory, int64(uint32(i32(0)))+69372))
 			t45 := v12
 			v195 = t44
 			store64(m.memory, int64(uint32(t45))+8, uint64(v195))
@@ -15721,7 +15729,7 @@ func (m *Module) _Clay__RenderDebugView() {
 			store64(m.memory, int64(uint32(v0))+9560, uint64(v194))
 			store64(m.memory, int64(uint32(v0))+9568, uint64(v195))
 			m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-			m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+			m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 		l14:
 			{
 				store16(m.memory, uint32(v193), uint16(i32(0)))
@@ -15748,9 +15756,9 @@ func (m *Module) _Clay__RenderDebugView() {
 				m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
 			l12:
 				{
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 					m._Clay__CloseElement()
-					t51 := int32(m.memory[int64(uint32(i32(0)))+70220])
+					t51 := int32(m.memory[int64(uint32(i32(0)))+70364])
 					if t51 == 0 {
 						goto l12
 					}
@@ -15793,15 +15801,15 @@ func (m *Module) _Clay__RenderDebugView() {
 				m.memory[int64(uint32(v0))+9720] = byte(i32(3))
 				store64(m.memory, int64(uint32(v0))+9712, uint64(i64(0x41a0000041a00000)))
 				m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 			l13:
 				{
 					m._Clay_OnHover(i32(1), i32(0))
 					m.memory[int64(uint32(v192))+2] = byte(i32(0))
 					store16(m.memory, uint32(v192), uint16(i32(0)))
-					t52 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+					t52 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 					store64(m.memory, int64(uint32(v191))+8, uint64(t52))
-					t53 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+					t53 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 					store64(m.memory, uint32(v191), uint64(t53))
 					store64(m.memory, int64(uint32(v0))+9528, uint64(i64(0)))
 					store32(m.memory, int64(uint32(v0))+9524, uint32(i32(0x100000)))
@@ -15821,16 +15829,16 @@ func (m *Module) _Clay__RenderDebugView() {
 					t58 := int64(load64(m.memory, int64(uint32(v0))+9536))
 					store64(m.memory, int64(uint32(v0))+6016, uint64(t58))
 					m._Clay__OpenTextElement(v0+i32(6016), v0+i32(5984))
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 					m._Clay__CloseElement()
-					t59 := int32(m.memory[int64(uint32(i32(0)))+70220])
+					t59 := int32(m.memory[int64(uint32(i32(0)))+70364])
 					if t59 == 0 {
 						goto l13
 					}
 				}
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 				m._Clay__CloseElement()
-				t60 := int32(m.memory[int64(uint32(i32(0)))+70220])
+				t60 := int32(m.memory[int64(uint32(i32(0)))+70364])
 				if t60 == 0 {
 					goto l14
 				}
@@ -15842,9 +15850,9 @@ func (m *Module) _Clay__RenderDebugView() {
 			store64(m.memory, int64(uint32(v0))+9472, uint64(i64(0)))
 			store32(m.memory, int64(uint32(v0))+9479, uint32(i32(0)))
 			memory_zero(m.memory, uint32(v19), uint32(i32(148)))
-			t61 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+			t61 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 			store64(m.memory, uint32(v190), uint64(t61))
-			t62 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+			t62 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 			store64(m.memory, int64(uint32(v190))+8, uint64(t62))
 			t63 := int64(load64(m.memory, int64(uint32(v0))+9464))
 			store64(m.memory, uint32(v17), uint64(t63))
@@ -15863,9 +15871,9 @@ func (m *Module) _Clay__RenderDebugView() {
 			m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
 		l15:
 			{
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 				m._Clay__CloseElement()
-				t68 := int32(m.memory[int64(uint32(i32(0)))+70220])
+				t68 := int32(m.memory[int64(uint32(i32(0)))+70364])
 				if t68 == 0 {
 					goto l15
 				}
@@ -15883,7 +15891,7 @@ func (m *Module) _Clay__RenderDebugView() {
 			m.memory[int64(uint32(v0))+9264] = byte(i32(1))
 			m._Clay_GetScrollOffset(v189)
 			m._Clay__ConfigureOpenElementPtr(v0 + i32(9256))
-			m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+			m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 		l33:
 			{
 				m._Clay__OpenElement()
@@ -15895,16 +15903,16 @@ func (m *Module) _Clay__RenderDebugView() {
 						if v11 != 0 {
 							goto l16
 						}
-						t72 := int64(load64(m.memory, int64(uint32(i32(0)))+69232))
+						t72 := int64(load64(m.memory, int64(uint32(i32(0)))+69372))
 						store64(m.memory, int64(uint32(v188))+8, uint64(t72))
-						t73 := int64(load64(m.memory, int64(uint32(i32(0)))+69224))
+						t73 := int64(load64(m.memory, int64(uint32(i32(0)))+69364))
 						store64(m.memory, uint32(v188), uint64(t73))
 						goto l17
 					}
 				l16:
-					t74 := int64(load64(m.memory, int64(uint32(i32(0)))+69216))
+					t74 := int64(load64(m.memory, int64(uint32(i32(0)))+69356))
 					store64(m.memory, int64(uint32(v188))+8, uint64(t74))
-					t75 := int64(load64(m.memory, int64(uint32(i32(0)))+69208))
+					t75 := int64(load64(m.memory, int64(uint32(i32(0)))+69348))
 					store64(m.memory, uint32(v188), uint64(t75))
 				}
 			l17:
@@ -15924,7 +15932,7 @@ func (m *Module) _Clay__RenderDebugView() {
 				m.memory[int64(uint32(v0))+9748] = byte(i32(1))
 				memory_zero(m.memory, uint32(v19), uint32(i32(148)))
 				m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 			l32:
 				{
 					m.memory[int64(uint32(v187))+2] = byte(i32(0))
@@ -15952,7 +15960,7 @@ func (m *Module) _Clay__RenderDebugView() {
 					m.memory[int64(uint32(v0))+9720] = byte(i32(1))
 					store64(m.memory, int64(uint32(v0))+9712, uint64(i64(0)))
 					m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 				l19:
 					{
 						m._Clay__OpenElement()
@@ -15968,31 +15976,31 @@ func (m *Module) _Clay__RenderDebugView() {
 						m.memory[int64(uint32(v0))+9720] = byte(i32(1))
 						store64(m.memory, int64(uint32(v0))+9712, uint64(i64(0)))
 						m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 					l18:
 						{
 							m._Clay__RenderDebugLayoutElementsList(v0+i32(9712), v5, v10)
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							t82 := int32(load32(m.memory, int64(uint32(v0))+9716))
 							v3 = t82
 							t83 := int32(load32(m.memory, int64(uint32(v0))+9712))
 							v2 = t83
 							m._Clay__CloseElement()
-							t84 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t84 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t84 == 0 {
 								goto l18
 							}
 						}
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 						m._Clay__CloseElement()
-						t85 := int32(m.memory[int64(uint32(i32(0)))+70220])
+						t85 := int32(m.memory[int64(uint32(i32(0)))+70364])
 						if t85 == 0 {
 							goto l19
 						}
 					}
-					v196 = i32(70036)
+					v196 = i32(70180)
 					{
-						t86 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t86 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v197 = t86
 						t87 := int32(load32(m.memory, int64(uint32(v197))+284))
 						t88 := int32(load32(m.memory, int64(uint32(v197))+276))
@@ -16024,7 +16032,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									m.memory[int64(uint32(v0))+9716] = byte(i32(1))
 									store32(m.memory, int64(uint32(v0))+9724, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v0))+9720, uint32(i32(100)))
-									t92 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t92 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v4 = t92
 									t93 := int32(load32(m.memory, int64(uint32(v4))+20))
 									v198 = t93
@@ -16037,7 +16045,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									store32(m.memory, int64(uint32(v0))+5928, uint32(v4))
 									store32(m.memory, int64(uint32(v0))+9728, uint32(v4))
 									m.t0[uint(v198)].(func(int32))(v0 + i32(5912))
-									v4 = i32(70036)
+									v4 = i32(70180)
 									goto l23
 								}
 							l22:
@@ -16078,9 +16086,9 @@ func (m *Module) _Clay__RenderDebugView() {
 					m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
 				l26:
 					{
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 						m._Clay__CloseElement()
-						t102 := int32(m.memory[int64(uint32(i32(0)))+70220])
+						t102 := int32(m.memory[int64(uint32(i32(0)))+70364])
 						if t102 == 0 {
 							goto l26
 						}
@@ -16096,33 +16104,33 @@ func (m *Module) _Clay__RenderDebugView() {
 								goto l28
 							}
 							v197 = v4 & i32(1)
-							p103 := i32(69236)
+							p103 := i32(69376)
 							if v197 != 0 {
-								p103 = i32(69220)
+								p103 = i32(69360)
 							}
 							v198 = p103
-							p104 := i32(69232)
+							p104 := i32(69372)
 							if v197 != 0 {
-								p104 = i32(69216)
+								p104 = i32(69356)
 							}
 							v196 = p104
-							p105 := i32(69228)
+							p105 := i32(69368)
 							if v197 != 0 {
-								p105 = i32(69212)
+								p105 = i32(69352)
 							}
 							v199 = p105
-							p106 := i32(69224)
+							p106 := i32(69364)
 							if v197 != 0 {
-								p106 = i32(69208)
+								p106 = i32(69348)
 							}
 							v197 = p106
 							goto l29
 						}
 					l28:
-						v198 = i32(69284)
-						v196 = i32(69280)
-						v199 = i32(69276)
-						v197 = i32(69272)
+						v198 = i32(69424)
+						v196 = i32(69420)
+						v199 = i32(69416)
+						v197 = i32(69412)
 					l29:
 						t107 := math.Float32frombits(load32(m.memory, uint32(v197)))
 						v6 = t107
@@ -16174,9 +16182,9 @@ func (m *Module) _Clay__RenderDebugView() {
 						m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
 					l30:
 						{
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							m._Clay__CloseElement()
-							t120 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t120 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t120 == 0 {
 								goto l30
 							}
@@ -16187,16 +16195,16 @@ func (m *Module) _Clay__RenderDebugView() {
 						}
 					}
 				l27:
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 					m._Clay__CloseElement()
-					t121 := int32(m.memory[int64(uint32(i32(0)))+70220])
+					t121 := int32(m.memory[int64(uint32(i32(0)))+70364])
 					if t121 == 0 {
 						goto l32
 					}
 				}
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 				m._Clay__CloseElement()
-				t122 := int32(m.memory[int64(uint32(i32(0)))+70220])
+				t122 := int32(m.memory[int64(uint32(i32(0)))+70364])
 				if t122 == 0 {
 					goto l33
 				}
@@ -16208,9 +16216,9 @@ func (m *Module) _Clay__RenderDebugView() {
 			store64(m.memory, int64(uint32(v0))+9176, uint64(i64(0)))
 			store32(m.memory, int64(uint32(v0))+9183, uint32(i32(0)))
 			memory_zero(m.memory, uint32(v19), uint32(i32(148)))
-			t123 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+			t123 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 			store64(m.memory, uint32(v185), uint64(t123))
-			t124 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+			t124 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 			store64(m.memory, int64(uint32(v185))+8, uint64(t124))
 			t125 := int64(load64(m.memory, int64(uint32(v0))+9168))
 			store64(m.memory, uint32(v17), uint64(t125))
@@ -16229,16 +16237,16 @@ func (m *Module) _Clay__RenderDebugView() {
 			m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
 		l34:
 			{
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 				m._Clay__CloseElement()
-				t130 := int32(m.memory[int64(uint32(i32(0)))+70220])
+				t130 := int32(m.memory[int64(uint32(i32(0)))+70364])
 				if t130 == 0 {
 					goto l34
 				}
 			}
-			v201 = i32(70036)
+			v201 = i32(70180)
 			{
-				t131 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t131 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t131
 				t132 := int32(load32(m.memory, int64(uint32(v3))+284))
 				t133 := int32(load32(m.memory, int64(uint32(v1))+100))
@@ -16272,7 +16280,7 @@ func (m *Module) _Clay__RenderDebugView() {
 							m.memory[int64(uint32(v0))+9716] = byte(i32(1))
 							store32(m.memory, int64(uint32(v0))+9724, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v0))+9720, uint32(i32(100)))
-							t138 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t138 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v2 = t138
 							t139 := int32(load32(m.memory, int64(uint32(v2))+20))
 							v197 = t139
@@ -16285,7 +16293,7 @@ func (m *Module) _Clay__RenderDebugView() {
 							store32(m.memory, int64(uint32(v0))+5904, uint32(v2))
 							store32(m.memory, int64(uint32(v0))+9728, uint32(v2))
 							m.t0[uint(v197)].(func(int32))(v0 + i32(5888))
-							v2 = i32(70036)
+							v2 = i32(70180)
 							goto l38
 						}
 					l37:
@@ -16323,9 +16331,9 @@ func (m *Module) _Clay__RenderDebugView() {
 					store64(m.memory, int64(uint32(v183))+7, uint64(i64(0)))
 					store16(m.memory, uint32(v182), uint16(i32(0)))
 					m.memory[int64(uint32(v182))+2] = byte(i32(0))
-					t147 := int64(load64(m.memory, int64(uint32(i32(0)))+69224))
+					t147 := int64(load64(m.memory, int64(uint32(i32(0)))+69364))
 					store64(m.memory, uint32(v181), uint64(t147))
-					t148 := int64(load64(m.memory, int64(uint32(i32(0)))+69232))
+					t148 := int64(load64(m.memory, int64(uint32(i32(0)))+69372))
 					store64(m.memory, int64(uint32(v181))+8, uint64(t148))
 					m.memory[int64(uint32(v0))+8968] = byte(i32(1))
 					store64(m.memory, int64(uint32(v0))+8960, uint64(i64(0)))
@@ -16341,14 +16349,14 @@ func (m *Module) _Clay__RenderDebugView() {
 					store64(m.memory, int64(uint32(v177))+16, uint64(i64(0)))
 					store64(m.memory, int64(uint32(v177))+24, uint64(i64(0)))
 					store32(m.memory, int64(uint32(v177))+32, uint32(i32(0)))
-					t149 := int64(load64(m.memory, int64(uint32(i32(0)))+69248))
+					t149 := int64(load64(m.memory, int64(uint32(i32(0)))+69388))
 					store64(m.memory, int64(uint32(v178))+8, uint64(t149))
-					t150 := int64(load64(m.memory, int64(uint32(i32(0)))+69240))
+					t150 := int64(load64(m.memory, int64(uint32(i32(0)))+69380))
 					store64(m.memory, uint32(v178), uint64(t150))
 					store32(m.memory, int64(uint32(v0))+9124, uint32(i32(1)))
 					store64(m.memory, int64(uint32(v0))+9116, uint64(i64(0)))
 					m._Clay__ConfigureOpenElementPtr(v0 + i32(8960))
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 					v202 = v201 + i32(28)
 				l221:
 					{
@@ -16367,7 +16375,7 @@ func (m *Module) _Clay__RenderDebugView() {
 						m.memory[int64(uint32(v0))+9720] = byte(i32(1))
 						store64(m.memory, int64(uint32(v0))+9712, uint64(i64(0)))
 						m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 					l50:
 						{
 							store16(m.memory, uint32(v175), uint16(i32(0)))
@@ -16394,9 +16402,9 @@ func (m *Module) _Clay__RenderDebugView() {
 							m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
 						l42:
 							{
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 								m._Clay__CloseElement()
-								t156 := int32(m.memory[int64(uint32(i32(0)))+70220])
+								t156 := int32(m.memory[int64(uint32(i32(0)))+70364])
 								if t156 == 0 {
 									goto l42
 								}
@@ -16470,7 +16478,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									v2 = v196 >> 31
 									v2 = t173 ^ v2 - v2
 									v3 = i32(0)
-									t174 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t174 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v203 = t174
 									t175 := int32(load32(m.memory, int64(uint32(v203))+428))
 									t176 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -16580,9 +16588,9 @@ func (m *Module) _Clay__RenderDebugView() {
 								m._Clay__OpenTextElement(v0+i32(5680), v0+i32(5648))
 							}
 						l43:
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							m._Clay__CloseElement()
-							t200 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t200 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t200 == 0 {
 								goto l50
 							}
@@ -16596,7 +16604,7 @@ func (m *Module) _Clay__RenderDebugView() {
 						store32(m.memory, int64(uint32(v0))+9744, uint32(i32(8)))
 						store64(m.memory, int64(uint32(v0))+9736, uint64(i64(0x80008000a000a)))
 						m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 					l105:
 						{
 							m._Clay__OpenElement()
@@ -16629,14 +16637,14 @@ func (m *Module) _Clay__RenderDebugView() {
 							store32(m.memory, int64(uint32(v0))+9836, uint32(i32(0)))
 							store64(m.memory, int64(uint32(v0))+9744, uint64(i64(0)))
 							m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 						l51:
 							{
 								m.memory[int64(uint32(v167))+2] = byte(i32(0))
 								store16(m.memory, uint32(v167), uint16(i32(0)))
-								t201 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+								t201 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 								store64(m.memory, int64(uint32(v166))+8, uint64(t201))
-								t202 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+								t202 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 								store64(m.memory, uint32(v166), uint64(t202))
 								store32(m.memory, int64(uint32(v0))+8760, uint32(i32(0x100000)))
 								store32(m.memory, int64(uint32(v0))+8740, uint32(i32(0)))
@@ -16655,9 +16663,9 @@ func (m *Module) _Clay__RenderDebugView() {
 								t206 := int64(load64(m.memory, int64(uint32(v0))+8772))
 								store64(m.memory, int64(uint32(v0))+5632, uint64(t206))
 								m._Clay__OpenTextElement(v0+i32(5632), v0+i32(5600))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 								m._Clay__CloseElement()
-								t207 := int32(m.memory[int64(uint32(i32(0)))+70220])
+								t207 := int32(m.memory[int64(uint32(i32(0)))+70364])
 								if t207 == 0 {
 									goto l51
 								}
@@ -16688,7 +16696,7 @@ func (m *Module) _Clay__RenderDebugView() {
 							m._Clay__OpenElement()
 							memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 							m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 						l72:
 							{
 								store16(m.memory, uint32(v163), uint16(i32(0)))
@@ -16722,7 +16730,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									v2 = v203 >> 31
 									v2 = t220 ^ v2 - v2
 									v4 = i32(0)
-									t221 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t221 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v204 = t221
 									t222 := int32(load32(m.memory, int64(uint32(v204))+428))
 									t223 := int32(load32(m.memory, int64(uint32(v204))+424))
@@ -16827,7 +16835,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									v2 = v196 >> 31
 									v2 = t245 ^ v2 - v2
 									v3 = i32(0)
-									t246 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t246 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v203 = t246
 									t247 := int32(load32(m.memory, int64(uint32(v203))+428))
 									t248 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -16936,7 +16944,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									v2 = v203 >> 31
 									v2 = t270 ^ v2 - v2
 									v4 = i32(0)
-									t271 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t271 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v204 = t271
 									t272 := int32(load32(m.memory, int64(uint32(v204))+428))
 									t273 := int32(load32(m.memory, int64(uint32(v204))+424))
@@ -17041,7 +17049,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									v2 = v196 >> 31
 									v2 = t295 ^ v2 - v2
 									v3 = i32(0)
-									t296 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t296 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v203 = t296
 									t297 := int32(load32(m.memory, int64(uint32(v203))+428))
 									t298 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -17136,9 +17144,9 @@ func (m *Module) _Clay__RenderDebugView() {
 								t318 := int64(load64(m.memory, int64(uint32(v0))+9704))
 								store64(m.memory, int64(uint32(v0))+5144, uint64(t318))
 								m._Clay__OpenTextElement(v0+i32(5152), v0+i32(5120))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 								m._Clay__CloseElement()
-								t319 := int32(m.memory[int64(uint32(i32(0)))+70220])
+								t319 := int32(m.memory[int64(uint32(i32(0)))+70364])
 								if t319 == 0 {
 									goto l72
 								}
@@ -17226,7 +17234,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								m._Clay__OpenElement()
 								memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 								v2 = v204 + i32(24)
 							l74:
 								{
@@ -17260,9 +17268,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									t354 := int64(load64(m.memory, int64(uint32(v0))+9704))
 									store64(m.memory, int64(uint32(v0))+4904, uint64(t354))
 									m._Clay__RenderDebugLayoutSizing(v0+i32(4912), v0+i32(4880))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t355 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t355 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t355 == 0 {
 										goto l74
 									}
@@ -17270,7 +17278,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								m._Clay__OpenElement()
 								memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 								v2 = v204 + i32(36)
 							l75:
 								{
@@ -17304,9 +17312,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									t366 := int64(load64(m.memory, int64(uint32(v0))+9704))
 									store64(m.memory, int64(uint32(v0))+4808, uint64(t366))
 									m._Clay__RenderDebugLayoutSizing(v0+i32(4816), v0+i32(4784))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t367 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t367 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t367 == 0 {
 										goto l75
 									}
@@ -17350,7 +17358,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								m._Clay__OpenElementWithId(v0 + i32(4712))
 								memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 							l92:
 								{
 									store16(m.memory, uint32(v144), uint16(i32(0)))
@@ -17381,7 +17389,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l76
 										}
 										v4 = i32(0)
-										t383 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t383 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v206 = t383
 										t384 := int32(load32(m.memory, int64(uint32(v206))+428))
 										t385 := int32(load32(m.memory, int64(uint32(v206))+424))
@@ -17477,7 +17485,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l80
 										}
 										v3 = i32(0)
-										t407 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t407 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v203 = t407
 										t408 := int32(load32(m.memory, int64(uint32(v203))+428))
 										t409 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -17577,7 +17585,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l84
 										}
 										v4 = i32(0)
-										t431 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t431 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v206 = t431
 										t432 := int32(load32(m.memory, int64(uint32(v206))+428))
 										t433 := int32(load32(m.memory, int64(uint32(v206))+424))
@@ -17673,7 +17681,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l88
 										}
 										v3 = i32(0)
-										t455 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t455 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v203 = t455
 										t456 := int32(load32(m.memory, int64(uint32(v203))+428))
 										t457 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -17762,9 +17770,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									t477 := int64(load64(m.memory, int64(uint32(v0))+9704))
 									store64(m.memory, int64(uint32(v0))+4304, uint64(t477))
 									m._Clay__OpenTextElement(v0+i32(4312), v0+i32(4280))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t478 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t478 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t478 == 0 {
 										goto l92
 									}
@@ -17805,7 +17813,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									}
 								l93:
 									v3 = i32(0)
-									t486 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t486 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v203 = t486
 									t487 := int32(load32(m.memory, int64(uint32(v203))+428))
 									t488 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -17904,7 +17912,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								m._Clay__OpenElement()
 								memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 							l104:
 								{
 									store16(m.memory, uint32(v130), uint16(i32(0)))
@@ -18024,9 +18032,9 @@ func (m *Module) _Clay__RenderDebugView() {
 													t543 := int64(load64(m.memory, int64(uint32(v0))+9704))
 													store64(m.memory, int64(uint32(v0))+3920, uint64(t543))
 													m._Clay__OpenTextElement(v0+i32(3928), v0+i32(3896))
-													m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+													m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 													m._Clay__CloseElement()
-													t544 := int32(m.memory[int64(uint32(i32(0)))+70220])
+													t544 := int32(m.memory[int64(uint32(i32(0)))+70364])
 													if t544 == 0 {
 														goto l104
 													}
@@ -18037,9 +18045,9 @@ func (m *Module) _Clay__RenderDebugView() {
 								}
 							}
 						l73:
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 							m._Clay__CloseElement()
-							t545 := int32(m.memory[int64(uint32(i32(0)))+70220])
+							t545 := int32(m.memory[int64(uint32(i32(0)))+70364])
 							if t545 == 0 {
 								goto l105
 							}
@@ -18061,7 +18069,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								store32(m.memory, int64(uint32(v0))+9744, uint32(i32(8)))
 								store64(m.memory, int64(uint32(v0))+9736, uint64(i64(0x80008000a000a)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 								v207 = v204 + i32(28)
 							l131:
 								{
@@ -18105,7 +18113,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l107
 										}
 										v4 = i32(0)
-										t558 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t558 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v206 = t558
 										t559 := int32(load32(m.memory, int64(uint32(v206))+428))
 										t560 := int32(load32(m.memory, int64(uint32(v206))+424))
@@ -18208,7 +18216,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l111
 										}
 										v3 = i32(0)
-										t584 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t584 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v203 = t584
 										t585 := int32(load32(m.memory, int64(uint32(v203))+428))
 										t586 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -18319,7 +18327,7 @@ func (m *Module) _Clay__RenderDebugView() {
 										}
 									l115:
 										v4 = i32(0)
-										t610 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t610 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v205 = t610
 										t611 := int32(load32(m.memory, int64(uint32(v205))+428))
 										t612 := int32(load32(m.memory, int64(uint32(v205))+424))
@@ -18428,7 +18436,7 @@ func (m *Module) _Clay__RenderDebugView() {
 										}
 									l120:
 										v3 = i32(0)
-										t636 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t636 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v203 = t636
 										t637 := int32(load32(m.memory, int64(uint32(v203))+428))
 										t638 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -18653,9 +18661,9 @@ func (m *Module) _Clay__RenderDebugView() {
 													t698 := int64(load64(m.memory, int64(uint32(v0))+9704))
 													store64(m.memory, int64(uint32(v0))+272, uint64(t698))
 													m._Clay__RenderDebugViewColor(v0+i32(280), v0+i32(248))
-													m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+													m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 													m._Clay__CloseElement()
-													t699 := int32(m.memory[int64(uint32(i32(0)))+70220])
+													t699 := int32(m.memory[int64(uint32(i32(0)))+70364])
 													if t699 == 0 {
 														goto l131
 													}
@@ -18688,7 +18696,7 @@ func (m *Module) _Clay__RenderDebugView() {
 							store32(m.memory, int64(uint32(v0))+9744, uint32(i32(8)))
 							store64(m.memory, int64(uint32(v0))+9736, uint64(i64(0x80008000a000a)))
 							m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 						l138:
 							{
 								m._Clay__OpenElement()
@@ -18721,14 +18729,14 @@ func (m *Module) _Clay__RenderDebugView() {
 								store32(m.memory, int64(uint32(v0))+9836, uint32(i32(0)))
 								store64(m.memory, int64(uint32(v0))+9744, uint64(i64(0)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 							l133:
 								{
 									m.memory[int64(uint32(v124))+2] = byte(i32(0))
 									store16(m.memory, uint32(v124), uint16(i32(0)))
-									t702 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+									t702 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 									store64(m.memory, int64(uint32(v123))+8, uint64(t702))
-									t703 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+									t703 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 									store64(m.memory, uint32(v123), uint64(t703))
 									store32(m.memory, int64(uint32(v0))+7748, uint32(i32(0x100000)))
 									store32(m.memory, int64(uint32(v0))+7728, uint32(i32(0)))
@@ -18747,9 +18755,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									t707 := int64(load64(m.memory, int64(uint32(v0))+7760))
 									store64(m.memory, int64(uint32(v0))+3856, uint64(t707))
 									m._Clay__OpenTextElement(v0+i32(3856), v0+i32(3824))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t708 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t708 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t708 == 0 {
 										goto l133
 									}
@@ -18807,82 +18815,82 @@ func (m *Module) _Clay__RenderDebugView() {
 								{
 									{
 										t726 := int32(m.memory[int64(uint32(v2))+96])
-										t727 := int32(m.memory[int64(uint32(i32(0)))+69384])
+										t727 := int32(m.memory[int64(uint32(i32(0)))+69528])
 										if t726 != t727 {
 											goto l135
 										}
 										t728 := int32(m.memory[int64(uint32(v2))+97])
-										t729 := int32(m.memory[int64(uint32(i32(0)))+69385])
+										t729 := int32(m.memory[int64(uint32(i32(0)))+69529])
 										if t728 != t729 {
 											goto l135
 										}
 										t730 := int32(m.memory[int64(uint32(v2))+98])
-										t731 := int32(m.memory[int64(uint32(i32(0)))+69386])
+										t731 := int32(m.memory[int64(uint32(i32(0)))+69530])
 										if t730 != t731 {
 											goto l135
 										}
 										t732 := int32(m.memory[int64(uint32(v2))+99])
-										t733 := int32(m.memory[int64(uint32(i32(0)))+69387])
+										t733 := int32(m.memory[int64(uint32(i32(0)))+69531])
 										if t732 != t733 {
 											goto l135
 										}
 										t734 := int32(m.memory[int64(uint32(v2))+100])
-										t735 := int32(m.memory[int64(uint32(i32(0)))+69388])
+										t735 := int32(m.memory[int64(uint32(i32(0)))+69532])
 										if t734 != t735 {
 											goto l135
 										}
 										t736 := int32(m.memory[int64(uint32(v2))+101])
-										t737 := int32(m.memory[int64(uint32(i32(0)))+69389])
+										t737 := int32(m.memory[int64(uint32(i32(0)))+69533])
 										if t736 != t737 {
 											goto l135
 										}
 										t738 := int32(m.memory[int64(uint32(v2))+102])
-										t739 := int32(m.memory[int64(uint32(i32(0)))+69390])
+										t739 := int32(m.memory[int64(uint32(i32(0)))+69534])
 										if t738 != t739 {
 											goto l135
 										}
 										t740 := int32(m.memory[int64(uint32(v2))+103])
-										t741 := int32(m.memory[int64(uint32(i32(0)))+69391])
+										t741 := int32(m.memory[int64(uint32(i32(0)))+69535])
 										if t740 != t741 {
 											goto l135
 										}
 										t742 := int32(m.memory[int64(uint32(v2))+104])
-										t743 := int32(m.memory[int64(uint32(i32(0)))+69392])
+										t743 := int32(m.memory[int64(uint32(i32(0)))+69536])
 										if t742 != t743 {
 											goto l135
 										}
 										t744 := int32(m.memory[int64(uint32(v2))+105])
-										t745 := int32(m.memory[int64(uint32(i32(0)))+69393])
+										t745 := int32(m.memory[int64(uint32(i32(0)))+69537])
 										if t744 != t745 {
 											goto l135
 										}
 										t746 := int32(m.memory[int64(uint32(v2))+106])
-										t747 := int32(m.memory[int64(uint32(i32(0)))+69394])
+										t747 := int32(m.memory[int64(uint32(i32(0)))+69538])
 										if t746 != t747 {
 											goto l135
 										}
 										t748 := int32(m.memory[int64(uint32(v2))+107])
-										t749 := int32(m.memory[int64(uint32(i32(0)))+69395])
+										t749 := int32(m.memory[int64(uint32(i32(0)))+69539])
 										if t748 != t749 {
 											goto l135
 										}
 										t750 := int32(m.memory[int64(uint32(v2))+108])
-										t751 := int32(m.memory[int64(uint32(i32(0)))+69396])
+										t751 := int32(m.memory[int64(uint32(i32(0)))+69540])
 										if t750 != t751 {
 											goto l135
 										}
 										t752 := int32(m.memory[int64(uint32(v2))+109])
-										t753 := int32(m.memory[int64(uint32(i32(0)))+69397])
+										t753 := int32(m.memory[int64(uint32(i32(0)))+69541])
 										if t752 != t753 {
 											goto l135
 										}
 										t754 := int32(m.memory[int64(uint32(v2))+110])
-										t755 := int32(m.memory[int64(uint32(i32(0)))+69398])
+										t755 := int32(m.memory[int64(uint32(i32(0)))+69542])
 										if t754 != t755 {
 											goto l135
 										}
 										t756 := int32(m.memory[int64(uint32(v2))+111])
-										t757 := int32(m.memory[int64(uint32(i32(0)))+69399])
+										t757 := int32(m.memory[int64(uint32(i32(0)))+69543])
 										if t756 == t757 {
 											goto l136
 										}
@@ -18977,9 +18985,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									m._Clay__RenderDebugViewColor(v0+i32(3568), v0+i32(3536))
 								}
 							l137:
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 								m._Clay__CloseElement()
-								t788 := int32(m.memory[int64(uint32(i32(0)))+70220])
+								t788 := int32(m.memory[int64(uint32(i32(0)))+70364])
 								if t788 == 0 {
 									goto l138
 								}
@@ -19012,7 +19020,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								store32(m.memory, int64(uint32(v0))+9744, uint32(i32(8)))
 								store64(m.memory, int64(uint32(v0))+9736, uint64(i64(0x80008000a000a)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 							l153:
 								{
 									t793 := int32(load32(m.memory, int64(uint32(v202))+8))
@@ -19060,7 +19068,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									m._Clay__OpenElementWithId(v0 + i32(3424))
 									memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 									m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 								l152:
 									{
 										{
@@ -19079,7 +19087,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											v2 = v196 >> 31
 											v2 = t806 ^ v2 - v2
 											v3 = i32(0)
-											t807 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t807 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v203 = t807
 											t808 := int32(load32(m.memory, int64(uint32(v203))+428))
 											t809 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -19210,7 +19218,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											v2 = v196 >> 31
 											v2 = t836 ^ v2 - v2
 											v3 = i32(0)
-											t837 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t837 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v203 = t837
 											t838 := int32(load32(m.memory, int64(uint32(v203))+428))
 											t839 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -19288,16 +19296,16 @@ func (m *Module) _Clay__RenderDebugView() {
 										t854 := int64(load64(m.memory, int64(uint32(v0))+9704))
 										store64(m.memory, int64(uint32(v0))+3256, uint64(t854))
 										m._Clay__OpenTextElement(v0+i32(3264), v0+i32(3232))
-										m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+										m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 										m._Clay__CloseElement()
-										t855 := int32(m.memory[int64(uint32(i32(0)))+70220])
+										t855 := int32(m.memory[int64(uint32(i32(0)))+70364])
 										if t855 == 0 {
 											goto l152
 										}
 									}
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t856 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t856 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t856 == 0 {
 										goto l153
 									}
@@ -19334,7 +19342,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								store32(m.memory, int64(uint32(v0))+9744, uint32(i32(8)))
 								store64(m.memory, int64(uint32(v0))+9736, uint64(i64(0x80008000a000a)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 								p862 := float32(1)
 								if v6 > float32(0) {
 									p862 = v6
@@ -19386,16 +19394,16 @@ func (m *Module) _Clay__RenderDebugView() {
 									m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
 								l155:
 									{
-										m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+										m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 										m._Clay__CloseElement()
-										t873 := int32(m.memory[int64(uint32(i32(0)))+70220])
+										t873 := int32(m.memory[int64(uint32(i32(0)))+70364])
 										if t873 == 0 {
 											goto l155
 										}
 									}
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t874 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t874 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t874 == 0 {
 										goto l156
 									}
@@ -19418,7 +19426,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								store32(m.memory, int64(uint32(v0))+9744, uint32(i32(8)))
 								store64(m.memory, int64(uint32(v0))+9736, uint64(i64(0x80008000a000a)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 							l198:
 								{
 									t877 := int32(load32(m.memory, int64(uint32(v202))+8))
@@ -19453,7 +19461,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									m._Clay__OpenElement()
 									memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 									m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 								l168:
 									{
 										store16(m.memory, uint32(v102), uint16(i32(0)))
@@ -19487,7 +19495,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											v2 = v203 >> 31
 											v2 = t892 ^ v2 - v2
 											v4 = i32(0)
-											t893 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t893 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v206 = t893
 											t894 := int32(load32(m.memory, int64(uint32(v206))+428))
 											t895 := int32(load32(m.memory, int64(uint32(v206))+424))
@@ -19592,7 +19600,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											v2 = v196 >> 31
 											v2 = t917 ^ v2 - v2
 											v3 = i32(0)
-											t918 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t918 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v203 = t918
 											t919 := int32(load32(m.memory, int64(uint32(v203))+428))
 											t920 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -19687,9 +19695,9 @@ func (m *Module) _Clay__RenderDebugView() {
 										t940 := int64(load64(m.memory, int64(uint32(v0))+9704))
 										store64(m.memory, int64(uint32(v0))+2864, uint64(t940))
 										m._Clay__OpenTextElement(v0+i32(2872), v0+i32(2840))
-										m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+										m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 										m._Clay__CloseElement()
-										t941 := int32(m.memory[int64(uint32(i32(0)))+70220])
+										t941 := int32(m.memory[int64(uint32(i32(0)))+70364])
 										if t941 == 0 {
 											goto l168
 										}
@@ -19720,7 +19728,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									m._Clay__OpenElement()
 									memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 									m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 								l179:
 									{
 										store16(m.memory, uint32(v95), uint16(i32(0)))
@@ -19754,7 +19762,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											v2 = v203 >> 31
 											v2 = t954 ^ v2 - v2
 											v4 = i32(0)
-											t955 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t955 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v206 = t955
 											t956 := int32(load32(m.memory, int64(uint32(v206))+428))
 											t957 := int32(load32(m.memory, int64(uint32(v206))+424))
@@ -19859,7 +19867,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											v2 = v196 >> 31
 											v2 = t979 ^ v2 - v2
 											v3 = i32(0)
-											t980 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t980 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v203 = t980
 											t981 := int32(load32(m.memory, int64(uint32(v203))+428))
 											t982 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -19954,9 +19962,9 @@ func (m *Module) _Clay__RenderDebugView() {
 										t1002 := int64(load64(m.memory, int64(uint32(v0))+9704))
 										store64(m.memory, int64(uint32(v0))+2576, uint64(t1002))
 										m._Clay__OpenTextElement(v0+i32(2584), v0+i32(2552))
-										m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+										m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 										m._Clay__CloseElement()
-										t1003 := int32(m.memory[int64(uint32(i32(0)))+70220])
+										t1003 := int32(m.memory[int64(uint32(i32(0)))+70364])
 										if t1003 == 0 {
 											goto l179
 										}
@@ -20000,7 +20008,7 @@ func (m *Module) _Clay__RenderDebugView() {
 										v2 = v196 >> 31
 										v2 = t1011 ^ v2 - v2
 										v3 = i32(0)
-										t1012 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t1012 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v203 = t1012
 										t1013 := int32(load32(m.memory, int64(uint32(v203))+428))
 										t1014 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -20102,9 +20110,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									t1036 := int64(load64(m.memory, int64(uint32(v0))+7112))
 									store64(m.memory, int64(uint32(v0))+2440, uint64(t1036))
 									m._Clay__OpenTextElement(v0+i32(2440), v0+i32(2408))
-									v198 = i32(70036)
+									v198 = i32(70180)
 									{
-										t1037 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t1037 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v3 = t1037
 										t1038 := int32(load32(m.memory, int64(uint32(v3))+284))
 										t1039 := int32(load32(m.memory, int64(uint32(v204))+136))
@@ -20138,7 +20146,7 @@ func (m *Module) _Clay__RenderDebugView() {
 													m.memory[int64(uint32(v0))+9716] = byte(i32(1))
 													store32(m.memory, int64(uint32(v0))+9724, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v0))+9720, uint32(i32(100)))
-													t1044 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t1044 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v2 = t1044
 													t1045 := int32(load32(m.memory, int64(uint32(v2))+20))
 													v197 = t1045
@@ -20151,7 +20159,7 @@ func (m *Module) _Clay__RenderDebugView() {
 													store32(m.memory, int64(uint32(v0))+2400, uint32(v2))
 													store32(m.memory, int64(uint32(v0))+9728, uint32(v2))
 													m.t0[uint(v197)].(func(int32))(v0 + i32(2384))
-													v2 = i32(70036)
+													v2 = i32(70180)
 													goto l189
 												}
 											l188:
@@ -20216,7 +20224,7 @@ func (m *Module) _Clay__RenderDebugView() {
 									m._Clay__OpenElement()
 									memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 									m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 								l194:
 									{
 										store16(m.memory, uint32(v82), uint16(i32(0)))
@@ -20255,9 +20263,9 @@ func (m *Module) _Clay__RenderDebugView() {
 											m.memory[int64(uint32(v0))+9712] = byte(i32(1))
 											t1075 := v0
 											v3 = v3 << 2 & i32(1020)
-											t1076 := int32(load32(m.memory, int64(uint32(v3))+69132))
+											t1076 := int32(load32(m.memory, int64(uint32(v3))+69272))
 											store32(m.memory, int64(uint32(t1075))+9720, uint32(t1076))
-											t1077 := int32(load32(m.memory, int64(uint32(v3))+69100))
+											t1077 := int32(load32(m.memory, int64(uint32(v3))+69240))
 											store32(m.memory, int64(uint32(v0))+9716, uint32(t1077))
 										}
 									l192:
@@ -20287,9 +20295,9 @@ func (m *Module) _Clay__RenderDebugView() {
 											m.memory[int64(uint32(v0))+9208] = byte(i32(1))
 											t1085 := v0
 											v2 = v2 << 2 & i32(1020)
-											t1086 := int32(load32(m.memory, int64(uint32(v2))+69132))
+											t1086 := int32(load32(m.memory, int64(uint32(v2))+69272))
 											store32(m.memory, int64(uint32(t1085))+9216, uint32(t1086))
-											t1087 := int32(load32(m.memory, int64(uint32(v2))+69100))
+											t1087 := int32(load32(m.memory, int64(uint32(v2))+69240))
 											store32(m.memory, int64(uint32(v0))+9212, uint32(t1087))
 										}
 									l193:
@@ -20340,9 +20348,9 @@ func (m *Module) _Clay__RenderDebugView() {
 										t1103 := int64(load64(m.memory, int64(uint32(v0))+9704))
 										store64(m.memory, int64(uint32(v0))+2072, uint64(t1103))
 										m._Clay__OpenTextElement(v0+i32(2080), v0+i32(2048))
-										m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+										m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 										m._Clay__CloseElement()
-										t1104 := int32(m.memory[int64(uint32(i32(0)))+70220])
+										t1104 := int32(m.memory[int64(uint32(i32(0)))+70364])
 										if t1104 == 0 {
 											goto l194
 										}
@@ -20440,9 +20448,9 @@ func (m *Module) _Clay__RenderDebugView() {
 										m.memory[int64(uint32(v0))+9208] = byte(i32(1))
 										t1130 := v0
 										v2 = v2 << 2 & i32(1020)
-										t1131 := int32(load32(m.memory, int64(uint32(v2))+69176))
+										t1131 := int32(load32(m.memory, int64(uint32(v2))+69316))
 										store32(m.memory, int64(uint32(t1130))+9216, uint32(t1131))
-										t1132 := int32(load32(m.memory, int64(uint32(v2))+69164))
+										t1132 := int32(load32(m.memory, int64(uint32(v2))+69304))
 										store32(m.memory, int64(uint32(v0))+9212, uint32(t1132))
 									}
 								l196:
@@ -20512,9 +20520,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									t1154 := int64(load64(m.memory, int64(uint32(v0))+9704))
 									store64(m.memory, int64(uint32(v0))+1784, uint64(t1154))
 									m._Clay__OpenTextElement(v0+i32(1792), v0+i32(1760))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t1155 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t1155 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t1155 == 0 {
 										goto l198
 									}
@@ -20544,7 +20552,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								store32(m.memory, int64(uint32(v0))+9744, uint32(i32(8)))
 								store64(m.memory, int64(uint32(v0))+9736, uint64(i64(0x80008000a000a)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 							l201:
 								{
 									t1159 := int32(load32(m.memory, int64(uint32(v202))+8))
@@ -20660,9 +20668,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									t1194 := int64(load64(m.memory, int64(uint32(v0))+6756))
 									store64(m.memory, int64(uint32(v0))+1584, uint64(t1194))
 									m._Clay__OpenTextElement(v0+i32(1584), v0+i32(1552))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t1195 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t1195 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t1195 == 0 {
 										goto l201
 									}
@@ -20716,7 +20724,7 @@ func (m *Module) _Clay__RenderDebugView() {
 							store32(m.memory, int64(uint32(v0))+9744, uint32(i32(8)))
 							store64(m.memory, int64(uint32(v0))+9736, uint64(i64(0x80008000a000a)))
 							m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 						l220:
 							{
 								t1204 := int32(load32(m.memory, int64(uint32(v202))+8))
@@ -20751,7 +20759,7 @@ func (m *Module) _Clay__RenderDebugView() {
 								m._Clay__OpenElement()
 								memory_zero(m.memory, uint32(v0+i32(9712)), uint32(i32(204)))
 								m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 							l219:
 								{
 									store16(m.memory, uint32(v63), uint16(i32(0)))
@@ -20782,7 +20790,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l203
 										}
 										v4 = i32(0)
-										t1219 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t1219 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v206 = t1219
 										t1220 := int32(load32(m.memory, int64(uint32(v206))+428))
 										t1221 := int32(load32(m.memory, int64(uint32(v206))+424))
@@ -20878,7 +20886,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l207
 										}
 										v3 = i32(0)
-										t1243 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t1243 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v203 = t1243
 										t1244 := int32(load32(m.memory, int64(uint32(v203))+428))
 										t1245 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -20978,7 +20986,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l211
 										}
 										v4 = i32(0)
-										t1267 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t1267 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v206 = t1267
 										t1268 := int32(load32(m.memory, int64(uint32(v206))+428))
 										t1269 := int32(load32(m.memory, int64(uint32(v206))+424))
@@ -21074,7 +21082,7 @@ func (m *Module) _Clay__RenderDebugView() {
 											goto l215
 										}
 										v3 = i32(0)
-										t1291 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t1291 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v203 = t1291
 										t1292 := int32(load32(m.memory, int64(uint32(v203))+428))
 										t1293 := int32(load32(m.memory, int64(uint32(v203))+424))
@@ -21163,9 +21171,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									t1313 := int64(load64(m.memory, int64(uint32(v0))+9704))
 									store64(m.memory, int64(uint32(v0))+1056, uint64(t1313))
 									m._Clay__OpenTextElement(v0+i32(1064), v0+i32(1032))
-									m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+									m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 									m._Clay__CloseElement()
-									t1314 := int32(m.memory[int64(uint32(i32(0)))+70220])
+									t1314 := int32(m.memory[int64(uint32(i32(0)))+70364])
 									if t1314 == 0 {
 										goto l219
 									}
@@ -21206,18 +21214,18 @@ func (m *Module) _Clay__RenderDebugView() {
 								t1326 := int64(load64(m.memory, int64(uint32(v0))+9704))
 								store64(m.memory, int64(uint32(v0))+960, uint64(t1326))
 								m._Clay__RenderDebugViewColor(v0+i32(968), v0+i32(936))
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 								m._Clay__CloseElement()
-								t1327 := int32(m.memory[int64(uint32(i32(0)))+70220])
+								t1327 := int32(m.memory[int64(uint32(i32(0)))+70364])
 								if t1327 == 0 {
 									goto l220
 								}
 							}
 						}
 					l132:
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 						m._Clay__CloseElement()
-						t1328 := int32(m.memory[int64(uint32(i32(0)))+70220])
+						t1328 := int32(m.memory[int64(uint32(i32(0)))+70364])
 						if t1328 == 0 {
 							goto l221
 						}
@@ -21244,9 +21252,9 @@ func (m *Module) _Clay__RenderDebugView() {
 				store32(m.memory, int64(uint32(v30))+7, uint32(i32(0)))
 				store16(m.memory, uint32(v29), uint16(i32(0)))
 				m.memory[int64(uint32(v29))+2] = byte(i32(0))
-				t1331 := int64(load64(m.memory, int64(uint32(i32(0)))+69224))
+				t1331 := int64(load64(m.memory, int64(uint32(i32(0)))+69364))
 				store64(m.memory, uint32(v28), uint64(t1331))
-				t1332 := int64(load64(m.memory, int64(uint32(i32(0)))+69232))
+				t1332 := int64(load64(m.memory, int64(uint32(i32(0)))+69372))
 				store64(m.memory, int64(uint32(v28))+8, uint64(t1332))
 				m.memory[int64(uint32(v0))+6312] = byte(i32(1))
 				store64(m.memory, int64(uint32(v0))+6304, uint64(i64(0)))
@@ -21266,7 +21274,7 @@ func (m *Module) _Clay__RenderDebugView() {
 				store64(m.memory, int64(uint32(v25))+8, uint64(i64(0)))
 				store64(m.memory, uint32(v25), uint64(i64(0)))
 				m._Clay__ConfigureOpenElementPtr(v0 + i32(6304))
-				m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+				m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 			l229:
 				{
 					m.memory[int64(uint32(v24))+2] = byte(i32(0))
@@ -21276,9 +21284,9 @@ func (m *Module) _Clay__RenderDebugView() {
 					m.memory[int64(uint32(v0))+6276] = byte(i32(1))
 					store32(m.memory, int64(uint32(v0))+6272, uint32(i32(1755760805)))
 					store64(m.memory, int64(uint32(v0))+6264, uint64(i64(1755760805)))
-					t1333 := int64(load64(m.memory, int64(uint32(i32(0)))+69264))
+					t1333 := int64(load64(m.memory, int64(uint32(i32(0)))+69404))
 					store64(m.memory, int64(uint32(v0))+6296, uint64(t1333))
-					t1334 := int64(load64(m.memory, int64(uint32(i32(0)))+69256))
+					t1334 := int64(load64(m.memory, int64(uint32(i32(0)))+69396))
 					store64(m.memory, int64(uint32(v0))+6288, uint64(t1334))
 					store64(m.memory, int64(uint32(v0))+200, uint64(i64(1755760805)))
 					t1335 := int64(load64(m.memory, int64(uint32(v0))+6280))
@@ -21296,7 +21304,7 @@ func (m *Module) _Clay__RenderDebugView() {
 					m.memory[int64(uint32(v0))+9732] = byte(i32(3))
 					store64(m.memory, int64(uint32(v0))+9724, uint64(i64(0x41f0000041f00000)))
 					m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 				l223:
 					{
 						t1337 := int64(load64(m.memory, int64(uint32(v0))+6296))
@@ -21322,9 +21330,9 @@ func (m *Module) _Clay__RenderDebugView() {
 						t1342 := int64(load64(m.memory, int64(uint32(v0))+6252))
 						store64(m.memory, int64(uint32(v0))+184, uint64(t1342))
 						m._Clay__OpenTextElement(v0+i32(184), v0+i32(152))
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 						m._Clay__CloseElement()
-						t1343 := int32(m.memory[int64(uint32(i32(0)))+70220])
+						t1343 := int32(m.memory[int64(uint32(i32(0)))+70364])
 						if t1343 == 0 {
 							goto l223
 						}
@@ -21357,9 +21365,9 @@ func (m *Module) _Clay__RenderDebugView() {
 					m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
 				l224:
 					{
-						m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+						m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 						m._Clay__CloseElement()
-						t1346 := int32(m.memory[int64(uint32(i32(0)))+70220])
+						t1346 := int32(m.memory[int64(uint32(i32(0)))+70364])
 						if t1346 == 0 {
 							goto l224
 						}
@@ -21410,7 +21418,7 @@ func (m *Module) _Clay__RenderDebugView() {
 							m.memory[int64(uint32(v0))+9732] = byte(i32(3))
 							store64(m.memory, int64(uint32(v0))+9724, uint64(i64(0x41f0000041f00000)))
 							m._Clay__ConfigureOpenElementPtr(v0 + i32(9712))
-							m.memory[int64(uint32(i32(0)))+70220] = byte(i32(0))
+							m.memory[int64(uint32(i32(0)))+70364] = byte(i32(0))
 							t1357 := int32(load32(m.memory, int64(uint32(v0))+9224))
 							var p1358 int32
 							if t1357 < i32(1) {
@@ -21465,9 +21473,9 @@ func (m *Module) _Clay__RenderDebugView() {
 									m._Clay__OpenTextElement(v0+i32(40), v0+i32(8))
 								}
 							l226:
-								m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+								m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 								m._Clay__CloseElement()
-								t1373 := int32(m.memory[int64(uint32(i32(0)))+70220])
+								t1373 := int32(m.memory[int64(uint32(i32(0)))+70364])
 								if t1373 == 0 {
 									goto l227
 								}
@@ -21479,18 +21487,18 @@ func (m *Module) _Clay__RenderDebugView() {
 						}
 					}
 				l225:
-					m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+					m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 					m._Clay__CloseElement()
-					t1374 := int32(m.memory[int64(uint32(i32(0)))+70220])
+					t1374 := int32(m.memory[int64(uint32(i32(0)))+70364])
 					if t1374 == 0 {
 						goto l229
 					}
 				}
 			}
 		l222:
-			m.memory[int64(uint32(i32(0)))+70220] = byte(i32(1))
+			m.memory[int64(uint32(i32(0)))+70364] = byte(i32(1))
 			m._Clay__CloseElement()
-			t1375 := int32(m.memory[int64(uint32(i32(0)))+70220])
+			t1375 := int32(m.memory[int64(uint32(i32(0)))+70364])
 			if t1375 == 0 {
 				goto l230
 			}
@@ -21505,7 +21513,7 @@ func (m *Module) _Clay_OnHover(v0, v1 int32) {
 	v2 = t0 - i32(96)
 	m.___stack_pointer = v2
 	{
-		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v3 = t1
 		t2 := int32(m.memory[int64(uint32(v3))+28])
 		if t2 != 0 {
@@ -21536,7 +21544,7 @@ func (m *Module) _Clay_OnHover(v0, v1 int32) {
 				t8 := int64(load64(m.memory, int64(uint32(v2))+76))
 				store64(m.memory, int64(uint32(v2))+56, uint64(t8))
 				m.t0[uint(v4)].(func(int32))(v2 + i32(56))
-				v4 = i32(69412)
+				v4 = i32(69556)
 				goto l2
 			}
 		l1:
@@ -21564,7 +21572,7 @@ func (m *Module) _Clay_OnHover(v0, v1 int32) {
 				m.memory[int64(uint32(v2))+76] = byte(i32(7))
 				store32(m.memory, int64(uint32(v2))+79, uint32(i32(256)))
 				m.memory[int64(uint32(v2))+83] = byte(i32(0))
-				t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t12
 				t13 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v4 = t13
@@ -21578,7 +21586,7 @@ func (m *Module) _Clay_OnHover(v0, v1 int32) {
 				store64(m.memory, int64(uint32(v2))+32, uint64(t17))
 				store32(m.memory, int64(uint32(v2))+92, uint32(v3))
 				m.t0[uint(v4)].(func(int32))(v2 + i32(32))
-				v3 = i32(69452)
+				v3 = i32(69596)
 				goto l5
 			}
 		l4:
@@ -21586,9 +21594,9 @@ func (m *Module) _Clay_OnHover(v0, v1 int32) {
 			v3 = t18 + v4*i32(236)
 		}
 	l5:
-		v6 = i32(70036)
+		v6 = i32(70180)
 		{
-			t19 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t19 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v4 = t19
 			t20 := int32(load32(m.memory, int64(uint32(v4))+284))
 			t21 := int32(load32(m.memory, int64(uint32(v3))+228))
@@ -21624,7 +21632,7 @@ func (m *Module) _Clay_OnHover(v0, v1 int32) {
 						m.memory[int64(uint32(v2))+80] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+88, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+84, uint32(i32(100)))
-						t26 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t26 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v3 = t26
 						t27 := int32(load32(m.memory, int64(uint32(v3))+20))
 						v9 = t27
@@ -21637,7 +21645,7 @@ func (m *Module) _Clay_OnHover(v0, v1 int32) {
 						store32(m.memory, int64(uint32(v2))+24, uint32(v3))
 						store32(m.memory, int64(uint32(v2))+92, uint32(v3))
 						m.t0[uint(v9)].(func(int32))(v2 + i32(8))
-						v3 = i32(70036)
+						v3 = i32(70180)
 						goto l9
 					}
 				l8:
@@ -21674,7 +21682,7 @@ func (m *Module) _Clay_GetScrollOffset(v0 int32) {
 	v1 = t0 - i32(64)
 	m.___stack_pointer = v1
 	{
-		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v2 = t1
 		t2 := int32(m.memory[int64(uint32(v2))+28])
 		if t2 != i32(1) {
@@ -21709,7 +21717,7 @@ l0:
 			t8 := int64(load64(m.memory, int64(uint32(v1))+44))
 			store64(m.memory, int64(uint32(v1))+24, uint64(t8))
 			m.t0[uint(v3)].(func(int32))(v1 + i32(24))
-			v3 = i32(69412)
+			v3 = i32(69556)
 			goto l3
 		}
 	l2:
@@ -21737,7 +21745,7 @@ l3:
 			m.memory[int64(uint32(v1))+44] = byte(i32(7))
 			store32(m.memory, int64(uint32(v1))+47, uint32(i32(256)))
 			m.memory[int64(uint32(v1))+51] = byte(i32(0))
-			t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v3 = t12
 			t13 := int32(load32(m.memory, int64(uint32(v3))+20))
 			v4 = t13
@@ -21751,7 +21759,7 @@ l3:
 			store64(m.memory, uint32(v1), uint64(t17))
 			store32(m.memory, int64(uint32(v1))+60, uint32(v3))
 			m.t0[uint(v4)].(func(int32))(v1)
-			v4 = i32(69452)
+			v4 = i32(69596)
 			goto l6
 		}
 	l5:
@@ -21798,12 +21806,12 @@ func (m *Module) _Clay_MinMemorySize() int32 {
 	m.___stack_pointer = v0
 	memory_zero(m.memory, uint32(v0+i32(8)), uint32(i32(424)))
 	store32(m.memory, int64(uint32(v0))+124, uint32(i32(-1)))
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+69188))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+69328))
 	store32(m.memory, uint32(v0), uint32(t1))
-	t2 := int32(load32(m.memory, int64(uint32(i32(0)))+69192))
+	t2 := int32(load32(m.memory, int64(uint32(i32(0)))+69332))
 	store32(m.memory, int64(uint32(v0))+4, uint32(t2))
 	{
-		t3 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t3 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v1 = t3
 		if v1 == 0 {
 			goto l0
@@ -21824,7 +21832,7 @@ func (m *Module) _Clay_SetLayoutDimensions(v0 int32) {
 	var v1, v2 int32
 	v1 = i32(1)
 	{
-		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v2 = t0
 		t1 := math.Float32frombits(load32(m.memory, int64(uint32(v2))+60))
 		t2 := math.Float32frombits(load32(m.memory, uint32(v0)))
@@ -21845,7 +21853,7 @@ l0:
 	store64(m.memory, int64(uint32(v2))+60, uint64(t6))
 }
 func (m *Module) _Clay_GetLayoutDimensions(v0 int32) {
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	t1 := int64(load64(m.memory, int64(uint32(t0))+60))
 	store64(m.memory, uint32(v0), uint64(t1))
 }
@@ -21862,7 +21870,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 	v2 = t0 - i32(304)
 	m.___stack_pointer = v2
 	{
-		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v3 = t1
 		t2 := int32(m.memory[int64(uint32(v3))+28])
 		if t2 != 0 {
@@ -21908,7 +21916,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 						m.memory[int64(uint32(v2))+260] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+268, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+264, uint32(i32(100)))
-						t8 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t8 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v0 = t8
 						t9 := int32(load32(m.memory, int64(uint32(v0))+20))
 						v17 = t9
@@ -21921,7 +21929,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 						store32(m.memory, int64(uint32(v2))+248, uint32(v0))
 						store32(m.memory, int64(uint32(v2))+272, uint32(v0))
 						m.t0[uint(v17)].(func(int32))(v2 + i32(232))
-						v18 = i32(70148)
+						v18 = i32(70292)
 						goto l3
 					}
 				l2:
@@ -21943,7 +21951,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 						m.memory[int64(uint32(v2))+260] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+268, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+264, uint32(i32(100)))
-						t14 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t14 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v0 = t14
 						t15 := int32(load32(m.memory, int64(uint32(v0))+20))
 						v17 = t15
@@ -22017,7 +22025,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 								m.memory[int64(uint32(v2))+260] = byte(i32(1))
 								store32(m.memory, int64(uint32(v2))+268, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v2))+264, uint32(i32(100)))
-								t27 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t27 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v17 = t27
 								t28 := int32(load32(m.memory, int64(uint32(v17))+20))
 								v23 = t28
@@ -22030,7 +22038,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 								store32(m.memory, int64(uint32(v2))+200, uint32(v17))
 								store32(m.memory, int64(uint32(v2))+272, uint32(v17))
 								m.t0[uint(v23)].(func(int32))(v2 + i32(184))
-								v25 = i32(69452)
+								v25 = i32(69596)
 								goto l10
 							}
 						l9:
@@ -22038,9 +22046,9 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 							v25 = t32 + v17*i32(236)
 						}
 					l10:
-						v26 = i32(70036)
+						v26 = i32(70180)
 						{
-							t33 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t33 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v23 = t33
 							t34 := int32(load32(m.memory, int64(uint32(v23))+284))
 							t35 := int32(load32(m.memory, int64(uint32(v25))+228))
@@ -22074,7 +22082,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 										m.memory[int64(uint32(v2))+260] = byte(i32(1))
 										store32(m.memory, int64(uint32(v2))+268, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v2))+264, uint32(i32(100)))
-										t40 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t40 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v17 = t40
 										t41 := int32(load32(m.memory, int64(uint32(v17))+20))
 										v21 = t41
@@ -22087,7 +22095,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 										store32(m.memory, int64(uint32(v2))+176, uint32(v17))
 										store32(m.memory, int64(uint32(v2))+272, uint32(v17))
 										m.t0[uint(v21)].(func(int32))(v2 + i32(160))
-										v17 = i32(70036)
+										v17 = i32(70180)
 										goto l14
 									}
 								l13:
@@ -22135,7 +22143,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 								m.memory[int64(uint32(v2))+260] = byte(i32(1))
 								store32(m.memory, int64(uint32(v2))+268, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v2))+264, uint32(i32(100)))
-								t50 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t50 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v17 = t50
 								t51 := int32(load32(m.memory, int64(uint32(v17))+20))
 								v23 = t51
@@ -22148,7 +22156,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 								store32(m.memory, int64(uint32(v2))+152, uint32(v17))
 								store32(m.memory, int64(uint32(v2))+272, uint32(v17))
 								m.t0[uint(v23)].(func(int32))(v2 + i32(136))
-								v17 = i32(69412)
+								v17 = i32(69556)
 								goto l19
 							}
 						l18:
@@ -22156,9 +22164,9 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 							v17 = t55 + v17<<2
 						}
 					l19:
-						v27 = i32(70036)
+						v27 = i32(70180)
 						{
-							t56 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t56 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v23 = t56
 							t57 := int32(load32(m.memory, int64(uint32(v23))+284))
 							t58 := int32(load32(m.memory, uint32(v17)))
@@ -22192,7 +22200,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 										m.memory[int64(uint32(v2))+260] = byte(i32(1))
 										store32(m.memory, int64(uint32(v2))+268, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v2))+264, uint32(i32(100)))
-										t63 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t63 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v17 = t63
 										t64 := int32(load32(m.memory, int64(uint32(v17))+20))
 										v21 = t64
@@ -22205,7 +22213,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 										store32(m.memory, int64(uint32(v2))+128, uint32(v17))
 										store32(m.memory, int64(uint32(v2))+272, uint32(v17))
 										m.t0[uint(v21)].(func(int32))(v2 + i32(112))
-										v17 = i32(70036)
+										v17 = i32(70180)
 										goto l23
 									}
 								l22:
@@ -22414,7 +22422,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 									m.memory[int64(uint32(v2))+288] = byte(i32(1))
 									store32(m.memory, int64(uint32(v2))+296, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v2))+292, uint32(i32(100)))
-									t108 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t108 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v17 = t108
 									t109 := int32(load32(m.memory, int64(uint32(v17))+20))
 									v23 = t109
@@ -22471,7 +22479,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 									m.memory[int64(uint32(v2))+260] = byte(i32(1))
 									store32(m.memory, int64(uint32(v2))+268, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v2))+264, uint32(i32(100)))
-									t118 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t118 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v22 = t118
 									t119 := int32(load32(m.memory, int64(uint32(v22))+20))
 									v21 = t119
@@ -22531,7 +22539,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 						m.memory[int64(uint32(v2))+260] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+268, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+264, uint32(i32(100)))
-						t128 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t128 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v0 = t128
 						t129 := int32(load32(m.memory, int64(uint32(v0))+20))
 						v17 = t129
@@ -22544,7 +22552,7 @@ func (m *Module) _Clay_SetPointerState(v0, v1 int32) {
 						store32(m.memory, int64(uint32(v2))+16, uint32(v0))
 						store32(m.memory, int64(uint32(v2))+272, uint32(v0))
 						m.t0[uint(v17)].(func(int32))(v2)
-						v0 = i32(69452)
+						v0 = i32(69596)
 						goto l50
 					}
 				l49:
@@ -22614,7 +22622,7 @@ l0:
 }
 func (m *Module) _Clay_GetPointerState(v0 int32) {
 	var v1 int32
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	t1 := v0
 	v1 = t0
 	t2 := int64(load64(m.memory, int64(uint32(v1))+48))
@@ -22651,16 +22659,16 @@ func (m *Module) _Clay_Initialize(v0, v1, v2 int32) int32 {
 			goto l0
 		}
 		v5 = i32(0)
-		t7 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t7 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v4 = t7
-		p8 := i32(69192)
+		p8 := i32(69332)
 		if v4 != 0 {
 			p8 = v4 + i32(4)
 		}
 		t9 := int32(load32(m.memory, uint32(p8)))
 		v7 = t9
 		t11 := v6
-		p10 := i32(69188)
+		p10 := i32(69328)
 		if v4 != 0 {
 			p10 = v4
 		}
@@ -22719,7 +22727,7 @@ func (m *Module) _Clay_Initialize(v0, v1, v2 int32) int32 {
 		t29 := int64(load64(m.memory, int64(uint32(v3))+56))
 		store64(m.memory, int64(uint32(v6))+124, uint64(t29))
 		memory_zero(m.memory, uint32(v6+i32(132)), uint32(i32(300)))
-		store32(m.memory, int64(uint32(i32(0)))+70224, uint32(v6))
+		store32(m.memory, int64(uint32(i32(0)))+70368, uint32(v6))
 		m._Clay__InitializePersistentMemory(v6)
 		m._Clay__InitializeEphemeralMemory(v6)
 		{
@@ -22770,7 +22778,7 @@ l0:
 	return v4
 }
 func (m *Module) _Clay_SetCurrentContext(v0 int32) {
-	store32(m.memory, int64(uint32(i32(0)))+70224, uint32(v0))
+	store32(m.memory, int64(uint32(i32(0)))+70368, uint32(v0))
 }
 func (m *Module) _Clay_UpdateScrollContainers(v0, v1 int32, v2 float32) {
 	var v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15 int32
@@ -22780,7 +22788,7 @@ func (m *Module) _Clay_UpdateScrollContainers(v0, v1 int32, v2 float32) {
 	v3 = t0 - i32(96)
 	m.___stack_pointer = v3
 	v4 = i32(0)
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	v5 = t1
 	{
 		if v0 == 0 {
@@ -22839,7 +22847,7 @@ l0:
 							m.memory[int64(uint32(v3))+80] = byte(i32(1))
 							store32(m.memory, int64(uint32(v3))+88, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v3))+84, uint32(i32(100)))
-							t15 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t15 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v0 = t15
 							t16 := int32(load32(m.memory, int64(uint32(v0))+20))
 							v12 = t16
@@ -22866,7 +22874,7 @@ l0:
 			l2:
 				m.memory[int64(uint32(v12))+76] = byte(i32(0))
 				{
-					t20 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t20 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v13 = t20
 					t21 := int32(load32(m.memory, int64(uint32(v13))+284))
 					t22 := int32(load32(m.memory, int64(uint32(v12))+72))
@@ -22900,7 +22908,7 @@ l0:
 								m.memory[int64(uint32(v3))+80] = byte(i32(1))
 								store32(m.memory, int64(uint32(v3))+88, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v3))+84, uint32(i32(100)))
-								t27 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t27 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v0 = t27
 								t28 := int32(load32(m.memory, int64(uint32(v0))+20))
 								v15 = t28
@@ -22913,7 +22921,7 @@ l0:
 								store32(m.memory, int64(uint32(v3))+48, uint32(v0))
 								store32(m.memory, int64(uint32(v3))+92, uint32(v0))
 								m.t0[uint(v15)].(func(int32))(v3 + i32(32))
-								v0 = i32(70036)
+								v0 = i32(70180)
 								goto l8
 							}
 						l7:
@@ -23106,7 +23114,7 @@ l0:
 							m.memory[int64(uint32(v3))+80] = byte(i32(1))
 							store32(m.memory, int64(uint32(v3))+88, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v3))+84, uint32(i32(100)))
-							t62 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t62 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v13 = t62
 							t63 := int32(load32(m.memory, int64(uint32(v13))+20))
 							v19 = t63
@@ -23121,7 +23129,7 @@ l0:
 							m.t0[uint(v19)].(func(int32))(v3 + i32(8))
 							t67 := int32(load32(m.memory, int64(uint32(v5))+376))
 							v13 = t67
-							v19 = i32(69416)
+							v19 = i32(69560)
 							goto l24
 						}
 					l23:
@@ -23377,7 +23385,7 @@ func (m *Module) _Clay_BeginLayout() {
 	t0 := m.___stack_pointer
 	v0 = t0 - i32(304)
 	m.___stack_pointer = v0
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	v1 = t1
 	m._Clay__InitializeEphemeralMemory(v1)
 	store32(m.memory, int64(uint32(v1))+92, uint32(i32(0)))
@@ -23404,7 +23412,7 @@ func (m *Module) _Clay_BeginLayout() {
 	store64(m.memory, int64(uint32(v0))+64, uint64(t7))
 	t8 := int64(load64(m.memory, int64(uint32(v0))+72))
 	store64(m.memory, int64(uint32(v0))+48, uint64(t8))
-	t9 := int32(load32(m.memory, int64(uint32(i32(0)))+69336))
+	t9 := int32(load32(m.memory, int64(uint32(i32(0)))+69476))
 	v5 = t9
 	m._Clay__OpenElementWithId(v0 + i32(48))
 	m.memory[int64(uint32(v0))+107] = byte(i32(0))
@@ -23437,7 +23445,7 @@ func (m *Module) _Clay_BeginLayout() {
 			m.memory[int64(uint32(v0))+96] = byte(i32(7))
 			store32(m.memory, int64(uint32(v0))+99, uint32(i32(256)))
 			m.memory[int64(uint32(v0))+103] = byte(i32(0))
-			t14 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t14 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v2 = t14
 			t15 := int32(load32(m.memory, int64(uint32(v2))+20))
 			v5 = t15
@@ -23473,7 +23481,7 @@ l1:
 			m.memory[int64(uint32(v0))+96] = byte(i32(7))
 			store32(m.memory, int64(uint32(v0))+99, uint32(i32(256)))
 			m.memory[int64(uint32(v0))+103] = byte(i32(0))
-			t23 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t23 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v1 = t23
 			t24 := int32(load32(m.memory, int64(uint32(v1))+20))
 			v2 = t24
@@ -23508,7 +23516,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 	v0 = t0 - i32(288)
 	m.___stack_pointer = v0
 	{
-		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v1 = t1
 		t2 := int32(load32(m.memory, int64(uint32(v1))+400))
 		if t2 < i32(1) {
@@ -23560,7 +23568,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 						m.memory[int64(uint32(v0))+272] = byte(i32(1))
 						store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-						t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v12 = t11
 						t12 := int32(load32(m.memory, int64(uint32(v12))+20))
 						v13 = t12
@@ -23612,7 +23620,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 						m.memory[int64(uint32(v0))+272] = byte(i32(1))
 						store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-						t23 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t23 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v12 = t23
 						t24 := int32(load32(m.memory, int64(uint32(v12))+20))
 						v13 = t24
@@ -23627,7 +23635,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 						m.t0[uint(v13)].(func(int32))(v0 + i32(224))
 						t28 := int32(load32(m.memory, int64(uint32(v1))+216))
 						v13 = t28
-						v12 = i32(69440)
+						v12 = i32(69584)
 						goto l7
 					}
 				l6:
@@ -23652,7 +23660,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 						m.memory[int64(uint32(v0))+272] = byte(i32(1))
 						store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-						t30 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t30 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v12 = t30
 						t31 := int32(load32(m.memory, int64(uint32(v12))+20))
 						v10 = t31
@@ -23689,7 +23697,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 					m.memory[int64(uint32(v0))+272] = byte(i32(1))
 					store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-					t38 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t38 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v12 = t38
 					t39 := int32(load32(m.memory, int64(uint32(v12))+20))
 					v10 = t39
@@ -23736,7 +23744,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 							m.memory[int64(uint32(v0))+272] = byte(i32(1))
 							store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-							t45 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t45 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v7 = t45
 							t46 := int32(load32(m.memory, int64(uint32(v7))+20))
 							v10 = t46
@@ -23749,7 +23757,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 							store32(m.memory, int64(uint32(v0))+168, uint32(v7))
 							store32(m.memory, int64(uint32(v0))+284, uint32(v7))
 							m.t0[uint(v10)].(func(int32))(v0 + i32(152))
-							v16 = i32(69452)
+							v16 = i32(69596)
 							goto l14
 						}
 					l13:
@@ -23793,7 +23801,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 									m.memory[int64(uint32(v0))+272] = byte(i32(1))
 									store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-									t55 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t55 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v18 = t55
 									t56 := int32(load32(m.memory, int64(uint32(v18))+20))
 									v19 = t56
@@ -23806,7 +23814,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 									store32(m.memory, int64(uint32(v0))+144, uint32(v18))
 									store32(m.memory, int64(uint32(v0))+284, uint32(v18))
 									m.t0[uint(v19)].(func(int32))(v0 + i32(128))
-									v18 = i32(69452)
+									v18 = i32(69596)
 									goto l18
 								}
 							l17:
@@ -23826,7 +23834,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 								m.memory[int64(uint32(v0))+272] = byte(i32(1))
 								store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-								t61 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t61 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v19 = t61
 								t62 := int32(load32(m.memory, int64(uint32(v19))+20))
 								v20 = t62
@@ -23870,7 +23878,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 									m.memory[int64(uint32(v0))+272] = byte(i32(1))
 									store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-									t68 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t68 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v20 = t68
 									t69 := int32(load32(m.memory, int64(uint32(v20))+20))
 									v21 = t69
@@ -23915,7 +23923,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 									m.memory[int64(uint32(v0))+272] = byte(i32(1))
 									store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-									t77 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t77 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v18 = t77
 									t78 := int32(load32(m.memory, int64(uint32(v18))+20))
 									v20 = t78
@@ -23930,7 +23938,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 									m.t0[uint(v20)].(func(int32))(v0 + i32(56))
 									t82 := int32(load32(m.memory, int64(uint32(v1))+216))
 									v20 = t82
-									v18 = i32(69440)
+									v18 = i32(69584)
 									goto l26
 								}
 							l25:
@@ -23955,7 +23963,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 									m.memory[int64(uint32(v0))+272] = byte(i32(1))
 									store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-									t84 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t84 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v18 = t84
 									t85 := int32(load32(m.memory, int64(uint32(v18))+20))
 									v19 = t85
@@ -24000,7 +24008,7 @@ func (m *Module) _Clay__CloneElementsWithExitTransition() {
 									m.memory[int64(uint32(v0))+272] = byte(i32(1))
 									store32(m.memory, int64(uint32(v0))+280, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v0))+276, uint32(i32(100)))
-									t93 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t93 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v18 = t93
 									t94 := int32(load32(m.memory, int64(uint32(v18))+20))
 									v19 = t94
@@ -24063,7 +24071,7 @@ func (m *Module) _Clay_EndLayout(v0 int32, v1 float32) {
 	t0 := m.___stack_pointer
 	v2 = t0 - i32(1888)
 	m.___stack_pointer = v2
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	v3 = t1
 	m._Clay__CloseElement()
 	{
@@ -24114,7 +24122,7 @@ l0:
 					m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 					store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-					t9 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t9 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v4 = t9
 					t10 := int32(load32(m.memory, int64(uint32(v4))+20))
 					v5 = t10
@@ -24127,7 +24135,7 @@ l0:
 					store32(m.memory, int64(uint32(v2))+1344, uint32(v4))
 					store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 					m.t0[uint(v5)].(func(int32))(v2 + i32(1328))
-					v9 = i32(69768)
+					v9 = i32(69912)
 					goto l3
 				}
 			l2:
@@ -24135,9 +24143,9 @@ l0:
 				v9 = t14 + v8*i32(268)
 			}
 		l3:
-			v10 = i32(70036)
+			v10 = i32(70180)
 			{
-				t15 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t15 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v5 = t15
 				t16 := int32(load32(m.memory, int64(uint32(v5))+284))
 				t17 := int32(load32(m.memory, int64(uint32(v9))+240))
@@ -24171,7 +24179,7 @@ l0:
 							m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-							t22 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t22 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t22
 							t23 := int32(load32(m.memory, int64(uint32(v4))+20))
 							v12 = t23
@@ -24184,7 +24192,7 @@ l0:
 							store32(m.memory, int64(uint32(v2))+1320, uint32(v4))
 							store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 							m.t0[uint(v12)].(func(int32))(v2 + i32(1304))
-							v4 = i32(70036)
+							v4 = i32(70180)
 							goto l7
 						}
 					l6:
@@ -24254,7 +24262,7 @@ l0:
 				m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 				store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 				store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-				t39 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t39 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v4 = t39
 				t40 := int32(load32(m.memory, int64(uint32(v4))+20))
 				v5 = t40
@@ -24325,7 +24333,7 @@ l0:
 					m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 					store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-					t51 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t51 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v4 = t51
 					t52 := int32(load32(m.memory, int64(uint32(v4))+20))
 					v7 = t52
@@ -24338,7 +24346,7 @@ l0:
 					store32(m.memory, int64(uint32(v2))+1272, uint32(v4))
 					store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 					m.t0[uint(v7)].(func(int32))(v2 + i32(1256))
-					v20 = i32(69768)
+					v20 = i32(69912)
 					goto l17
 				}
 			l16:
@@ -24346,9 +24354,9 @@ l0:
 				v20 = t56 + v18*i32(268)
 			}
 		l17:
-			v21 = i32(70036)
+			v21 = i32(70180)
 			{
-				t57 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t57 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v7 = t57
 				t58 := int32(load32(m.memory, int64(uint32(v7))+284))
 				t59 := int32(load32(m.memory, int64(uint32(v20))+240))
@@ -24382,7 +24390,7 @@ l0:
 							m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-							t64 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t64 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t64
 							t65 := int32(load32(m.memory, int64(uint32(v4))+20))
 							v12 = t65
@@ -24395,7 +24403,7 @@ l0:
 							store32(m.memory, int64(uint32(v2))+1248, uint32(v4))
 							store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 							m.t0[uint(v12)].(func(int32))(v2 + i32(1232))
-							v4 = i32(70036)
+							v4 = i32(70180)
 							goto l21
 						}
 					l20:
@@ -24432,9 +24440,9 @@ l0:
 				}
 				t75 := int32(load32(m.memory, int64(uint32(v20))+228))
 				v22 = t75
-				v23 = i32(70036)
+				v23 = i32(70180)
 				{
-					t76 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t76 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v7 = t76
 					t77 := int32(load32(m.memory, int64(uint32(v7))+284))
 					t78 := int32(load32(m.memory, int64(uint32(v20))+244))
@@ -24468,7 +24476,7 @@ l0:
 								m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 								store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-								t83 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t83 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v4 = t83
 								t84 := int32(load32(m.memory, int64(uint32(v4))+20))
 								v12 = t84
@@ -24481,7 +24489,7 @@ l0:
 								store32(m.memory, int64(uint32(v2))+1224, uint32(v4))
 								store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 								m.t0[uint(v12)].(func(int32))(v2 + i32(1208))
-								v4 = i32(70036)
+								v4 = i32(70180)
 								goto l28
 							}
 						l27:
@@ -24543,7 +24551,7 @@ l0:
 								m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 								store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-								t303 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t303 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v4 = t303
 								t304 := int32(load32(m.memory, int64(uint32(v4))+20))
 								v7 = t304
@@ -24644,7 +24652,7 @@ l0:
 							m.memory[int64(uint32(v2))+1836] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1844, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1840, uint32(i32(100)))
-							t115 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t115 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t115
 							t116 := int32(load32(m.memory, int64(uint32(v4))+20))
 							v7 = t116
@@ -24659,7 +24667,7 @@ l0:
 							m.t0[uint(v7)].(func(int32))(v2 + i32(1088))
 							t120 := int32(load32(m.memory, int64(uint32(v3))+140))
 							v7 = t120
-							v4 = i32(69452)
+							v4 = i32(69596)
 							goto l36
 						}
 					l35:
@@ -24702,7 +24710,7 @@ l0:
 							m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-							t127 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t127 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t127
 							t128 := int32(load32(m.memory, int64(uint32(v4))+20))
 							v7 = t128
@@ -24717,7 +24725,7 @@ l0:
 							m.t0[uint(v7)].(func(int32))(v2 + i32(1064))
 							t132 := int32(load32(m.memory, int64(uint32(v3))+216))
 							v7 = t132
-							v4 = i32(69440)
+							v4 = i32(69584)
 							goto l39
 						}
 					l38:
@@ -24744,7 +24752,7 @@ l0:
 							m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-							t137 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t137 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t137
 							t138 := int32(load32(m.memory, int64(uint32(v4))+20))
 							v7 = t138
@@ -24791,7 +24799,7 @@ l0:
 							m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-							t147 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t147 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t147
 							t148 := int32(load32(m.memory, int64(uint32(v4))+20))
 							v7 = t148
@@ -24806,7 +24814,7 @@ l0:
 							m.t0[uint(v7)].(func(int32))(v2 + i32(1016))
 							t152 := int32(load32(m.memory, int64(uint32(v3))+204))
 							v4 = t152
-							v11 = i32(69412)
+							v11 = i32(69556)
 							goto l44
 						}
 					l43:
@@ -24829,7 +24837,7 @@ l0:
 							m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-							t155 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t155 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t155
 							t156 := int32(load32(m.memory, int64(uint32(v4))+20))
 							v7 = t156
@@ -24880,7 +24888,7 @@ l0:
 									m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 									store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 									store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-									t169 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+									t169 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 									v4 = t169
 									t170 := int32(load32(m.memory, int64(uint32(v4))+20))
 									v7 = t170
@@ -24893,7 +24901,7 @@ l0:
 									store32(m.memory, int64(uint32(v2))+960, uint32(v4))
 									store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 									m.t0[uint(v7)].(func(int32))(v2 + i32(944))
-									v10 = i32(69452)
+									v10 = i32(69596)
 									goto l51
 								}
 							l50:
@@ -24901,9 +24909,9 @@ l0:
 								v10 = t174 + v4*i32(236)
 							}
 						l51:
-							v8 = i32(70036)
+							v8 = i32(70180)
 							{
-								t175 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t175 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v7 = t175
 								t176 := int32(load32(m.memory, int64(uint32(v7))+284))
 								t177 := int32(load32(m.memory, int64(uint32(v10))+228))
@@ -24937,7 +24945,7 @@ l0:
 											m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 											store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-											t182 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t182 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v4 = t182
 											t183 := int32(load32(m.memory, int64(uint32(v4))+20))
 											v12 = t183
@@ -24950,7 +24958,7 @@ l0:
 											store32(m.memory, int64(uint32(v2))+936, uint32(v4))
 											store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 											m.t0[uint(v12)].(func(int32))(v2 + i32(920))
-											v4 = i32(70036)
+											v4 = i32(70180)
 											goto l55
 										}
 									l54:
@@ -25031,7 +25039,7 @@ l0:
 											m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 											store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-											t202 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t202 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v4 = t202
 											t203 := int32(load32(m.memory, int64(uint32(v4))+20))
 											v7 = t203
@@ -25044,7 +25052,7 @@ l0:
 											store32(m.memory, int64(uint32(v2))+888, uint32(v4))
 											store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 											m.t0[uint(v7)].(func(int32))(v2 + i32(872))
-											v8 = i32(69452)
+											v8 = i32(69596)
 											goto l63
 										}
 									l62:
@@ -25052,9 +25060,9 @@ l0:
 										v8 = t207 + v4*i32(236)
 									}
 								l63:
-									v33 = i32(70036)
+									v33 = i32(70180)
 									{
-										t208 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t208 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v7 = t208
 										t209 := int32(load32(m.memory, int64(uint32(v7))+284))
 										t210 := int32(load32(m.memory, int64(uint32(v8))+228))
@@ -25088,7 +25096,7 @@ l0:
 													m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 													store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 													store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-													t215 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+													t215 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 													v4 = t215
 													t216 := int32(load32(m.memory, int64(uint32(v4))+20))
 													v12 = t216
@@ -25101,7 +25109,7 @@ l0:
 													store32(m.memory, int64(uint32(v2))+864, uint32(v4))
 													store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 													m.t0[uint(v12)].(func(int32))(v2 + i32(848))
-													v4 = i32(70036)
+													v4 = i32(70180)
 													goto l67
 												}
 											l66:
@@ -25153,7 +25161,7 @@ l0:
 												m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 												store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-												t227 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t227 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v4 = t227
 												t228 := int32(load32(m.memory, int64(uint32(v4))+20))
 												v7 = t228
@@ -25195,7 +25203,7 @@ l0:
 												m.memory[int64(uint32(v2))+1836] = byte(i32(1))
 												store32(m.memory, int64(uint32(v2))+1844, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v2))+1840, uint32(i32(100)))
-												t236 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t236 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v7 = t236
 												t237 := int32(load32(m.memory, int64(uint32(v7))+20))
 												v11 = t237
@@ -25208,7 +25216,7 @@ l0:
 												store32(m.memory, int64(uint32(v2))+816, uint32(v7))
 												store32(m.memory, int64(uint32(v2))+1848, uint32(v7))
 												m.t0[uint(v11)].(func(int32))(v2 + i32(800))
-												v11 = i32(69452)
+												v11 = i32(69596)
 												goto l74
 											}
 										l73:
@@ -25246,7 +25254,7 @@ l0:
 												m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 												store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-												t246 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t246 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v7 = t246
 												t247 := int32(load32(m.memory, int64(uint32(v7))+20))
 												v12 = t247
@@ -25261,7 +25269,7 @@ l0:
 												m.t0[uint(v12)].(func(int32))(v2 + i32(776))
 												t251 := int32(load32(m.memory, int64(uint32(v3))+216))
 												v12 = t251
-												v7 = i32(69440)
+												v7 = i32(69584)
 												goto l77
 											}
 										l76:
@@ -25288,7 +25296,7 @@ l0:
 												m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 												store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-												t256 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t256 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v7 = t256
 												t257 := int32(load32(m.memory, int64(uint32(v7))+20))
 												v12 = t257
@@ -25335,7 +25343,7 @@ l0:
 												m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 												store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-												t266 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t266 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v4 = t266
 												t267 := int32(load32(m.memory, int64(uint32(v4))+20))
 												v7 = t267
@@ -25350,7 +25358,7 @@ l0:
 												m.t0[uint(v7)].(func(int32))(v2 + i32(728))
 												t271 := int32(load32(m.memory, int64(uint32(v3))+204))
 												v7 = t271
-												v12 = i32(69412)
+												v12 = i32(69556)
 												goto l82
 											}
 										l81:
@@ -25373,7 +25381,7 @@ l0:
 												m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 												store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-												t274 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t274 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v4 = t274
 												t275 := int32(load32(m.memory, int64(uint32(v4))+20))
 												v7 = t275
@@ -25409,7 +25417,7 @@ l0:
 												m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 												store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 												store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-												t281 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+												t281 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 												v4 = t281
 												t282 := int32(load32(m.memory, int64(uint32(v4))+20))
 												v7 = t282
@@ -25458,7 +25466,7 @@ l0:
 											m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 											store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 											store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-											t290 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+											t290 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 											v4 = t290
 											t291 := int32(load32(m.memory, int64(uint32(v4))+20))
 											v7 = t291
@@ -25505,7 +25513,7 @@ l0:
 						m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-						t162 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t162 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v4 = t162
 						t163 := int32(load32(m.memory, int64(uint32(v4))+20))
 						v7 = t163
@@ -25559,7 +25567,7 @@ l0:
 							m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-							t317 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t317 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v7 = t317
 							t318 := int32(load32(m.memory, int64(uint32(v7))+20))
 							v11 = t318
@@ -25618,7 +25626,7 @@ l0:
 										m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 										store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-										t329 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t329 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v11 = t329
 										t330 := int32(load32(m.memory, int64(uint32(v11))+20))
 										v8 = t330
@@ -25656,7 +25664,7 @@ l0:
 										m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 										store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-										t337 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t337 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v11 = t337
 										t338 := int32(load32(m.memory, int64(uint32(v11))+20))
 										v8 = t338
@@ -25726,7 +25734,7 @@ l0:
 					m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 					store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-					t349 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t349 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v4 = t349
 					t350 := int32(load32(m.memory, int64(uint32(v4))+20))
 					v7 = t350
@@ -25761,7 +25769,7 @@ l0:
 						m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-						t360 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t360 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v4 = t360
 						t361 := int32(load32(m.memory, int64(uint32(v4))+20))
 						v7 = t361
@@ -25834,7 +25842,7 @@ l0:
 							m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 							store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 							store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-							t377 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+							t377 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 							v4 = t377
 							t378 := int32(load32(m.memory, int64(uint32(v4))+20))
 							v5 = t378
@@ -25880,7 +25888,7 @@ l1:
 			goto l113
 		}
 		{
-			t384 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t384 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v4 = t384
 			t385 := int32(load32(m.memory, int64(uint32(v4))+148))
 			v5 = t385
@@ -25956,10 +25964,10 @@ l113:
 				v4 = t398 + v37
 				t399 := int32(load32(m.memory, int64(uint32(v4))+228))
 				v5 = t399
-				v38 = i32(70036)
+				v38 = i32(70180)
 				{
 					{
-						t400 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t400 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v11 = t400
 						t401 := int32(load32(m.memory, int64(uint32(v11))+284))
 						v10 = t401
@@ -25975,7 +25983,7 @@ l113:
 						if v6 != i32(-1) {
 							goto l124
 						}
-						v6 = i32(70036)
+						v6 = i32(70180)
 						goto l119
 					}
 				l124:
@@ -26000,7 +26008,7 @@ l113:
 								m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 								store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-								t409 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t409 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v6 = t409
 								t410 := int32(load32(m.memory, int64(uint32(v6))+20))
 								v9 = t410
@@ -26013,7 +26021,7 @@ l113:
 								store32(m.memory, int64(uint32(v2))+480, uint32(v6))
 								store32(m.memory, int64(uint32(v2))+1608, uint32(v6))
 								m.t0[uint(v9)].(func(int32))(v2 + i32(464))
-								v6 = i32(70036)
+								v6 = i32(70180)
 								goto l122
 							}
 						l121:
@@ -26031,9 +26039,9 @@ l113:
 							goto l124
 						}
 					}
-					v6 = i32(70036)
+					v6 = i32(70180)
 				l123:
-					t417 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t417 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v11 = t417
 					t418 := int32(load32(m.memory, int64(uint32(v11))+284))
 					v10 = t418
@@ -26073,7 +26081,7 @@ l113:
 								m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 								store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 								store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-								t425 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+								t425 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 								v7 = t425
 								t426 := int32(load32(m.memory, int64(uint32(v7))+20))
 								v10 = t426
@@ -26086,7 +26094,7 @@ l113:
 								store32(m.memory, int64(uint32(v2))+456, uint32(v7))
 								store32(m.memory, int64(uint32(v2))+1608, uint32(v7))
 								m.t0[uint(v10)].(func(int32))(v2 + i32(440))
-								v7 = i32(70036)
+								v7 = i32(70180)
 								goto l128
 							}
 						l127:
@@ -27286,7 +27294,7 @@ l113:
 										m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 										store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 										store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-										t757 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+										t757 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 										v4 = t757
 										t758 := int32(load32(m.memory, int64(uint32(v4))+20))
 										v5 = t758
@@ -27612,7 +27620,7 @@ l113:
 				goto l115
 			}
 			{
-				t773 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t773 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v4 = t773
 				t774 := int32(load32(m.memory, int64(uint32(v4))+148))
 				v5 = t774
@@ -27680,7 +27688,7 @@ l116:
 			goto l179
 		}
 		{
-			t787 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t787 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v4 = t787
 			t788 := int32(load32(m.memory, int64(uint32(v4))+148))
 			v5 = t788
@@ -27784,7 +27792,7 @@ l115:
 						m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-						t804 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t804 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v5 = t804
 						t805 := int32(load32(m.memory, int64(uint32(v5))+20))
 						v6 = t805
@@ -27797,7 +27805,7 @@ l115:
 						store32(m.memory, int64(uint32(v2))+120, uint32(v5))
 						store32(m.memory, int64(uint32(v2))+1608, uint32(v5))
 						m.t0[uint(v6)].(func(int32))(v2 + i32(104))
-						v6 = i32(70036)
+						v6 = i32(70180)
 						goto l185
 					}
 				l184:
@@ -27837,7 +27845,7 @@ l115:
 						m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-						t814 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t814 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v6 = t814
 						t815 := int32(load32(m.memory, int64(uint32(v6))+20))
 						v8 = t815
@@ -27891,7 +27899,7 @@ l115:
 						m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-						t826 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t826 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v4 = t826
 						t827 := int32(load32(m.memory, int64(uint32(v4))+20))
 						v6 = t827
@@ -27939,7 +27947,7 @@ l115:
 					m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 					store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 					store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-					t833 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+					t833 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 					v4 = t833
 					t834 := int32(load32(m.memory, int64(uint32(v4))+20))
 					v6 = t834
@@ -27976,7 +27984,7 @@ l115:
 						m.memory[int64(uint32(v2))+1596] = byte(i32(1))
 						store32(m.memory, int64(uint32(v2))+1604, uint32(i32(67295)))
 						store32(m.memory, int64(uint32(v2))+1600, uint32(i32(100)))
-						t843 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+						t843 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 						v4 = t843
 						t844 := int32(load32(m.memory, int64(uint32(v4))+20))
 						v6 = t844
@@ -27989,7 +27997,7 @@ l115:
 						store32(m.memory, int64(uint32(v2))+48, uint32(v4))
 						store32(m.memory, int64(uint32(v2))+1608, uint32(v4))
 						m.t0[uint(v6)].(func(int32))(v2 + i32(32))
-						v4 = i32(70036)
+						v4 = i32(70180)
 						goto l197
 					}
 				l196:
@@ -28026,7 +28034,7 @@ func (m *Module) _Clay_GetOpenElementId() int32 {
 	m.___stack_pointer = v0
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v1 = t1
 			t2 := int32(load32(m.memory, int64(uint32(v1))+160))
 			v2 = t2
@@ -28051,7 +28059,7 @@ func (m *Module) _Clay_GetOpenElementId() int32 {
 			t7 := int64(load64(m.memory, int64(uint32(v0))+44))
 			store64(m.memory, int64(uint32(v0))+24, uint64(t7))
 			m.t0[uint(v2)].(func(int32))(v0 + i32(24))
-			v2 = i32(69412)
+			v2 = i32(69556)
 			goto l1
 		}
 	l0:
@@ -28079,7 +28087,7 @@ l1:
 			m.memory[int64(uint32(v0))+44] = byte(i32(7))
 			store32(m.memory, int64(uint32(v0))+47, uint32(i32(256)))
 			m.memory[int64(uint32(v0))+51] = byte(i32(0))
-			t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+			t11 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 			v1 = t11
 			t12 := int32(load32(m.memory, int64(uint32(v1))+20))
 			v2 = t12
@@ -28093,7 +28101,7 @@ l1:
 			store64(m.memory, uint32(v0), uint64(t16))
 			store32(m.memory, int64(uint32(v0))+60, uint32(v1))
 			m.t0[uint(v2)].(func(int32))(v0)
-			v1 = i32(69452)
+			v1 = i32(69596)
 			goto l4
 		}
 	l3:
@@ -28256,7 +28264,7 @@ func (m *Module) _Clay_Hovered() int32 {
 	m.___stack_pointer = v0
 	v1 = i32(0)
 	{
-		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v2 = t1
 		t2 := int32(m.memory[int64(uint32(v2))+28])
 		if t2 != 0 {
@@ -28287,7 +28295,7 @@ func (m *Module) _Clay_Hovered() int32 {
 				t8 := int64(load64(m.memory, int64(uint32(v0))+44))
 				store64(m.memory, int64(uint32(v0))+24, uint64(t8))
 				m.t0[uint(v3)].(func(int32))(v0 + i32(24))
-				v3 = i32(69412)
+				v3 = i32(69556)
 				goto l2
 			}
 		l1:
@@ -28315,7 +28323,7 @@ func (m *Module) _Clay_Hovered() int32 {
 				m.memory[int64(uint32(v0))+44] = byte(i32(7))
 				store32(m.memory, int64(uint32(v0))+47, uint32(i32(256)))
 				m.memory[int64(uint32(v0))+51] = byte(i32(0))
-				t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v3 = t12
 				t13 := int32(load32(m.memory, int64(uint32(v3))+20))
 				v4 = t13
@@ -28329,7 +28337,7 @@ func (m *Module) _Clay_Hovered() int32 {
 				store64(m.memory, uint32(v0), uint64(t17))
 				store32(m.memory, int64(uint32(v0))+60, uint32(v3))
 				m.t0[uint(v4)].(func(int32))(v0)
-				v3 = i32(69452)
+				v3 = i32(69596)
 				goto l5
 			}
 		l4:
@@ -28379,7 +28387,7 @@ func (m *Module) _Clay_PointerOver(v0 int32) int32 {
 	var v1, v2, v3, v4, v5 int32
 	v1 = i32(0)
 	{
-		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v2 = t0
 		t1 := int32(load32(m.memory, int64(uint32(v2))+376))
 		if t1 < i32(1) {
@@ -28416,7 +28424,7 @@ l0:
 func (m *Module) _Clay_GetScrollContainerData(v0, v1 int32) {
 	var v2, v3, v4 int32
 	{
-		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v2 = t0
 		t1 := int32(load32(m.memory, int64(uint32(v2))+388))
 		if t1 < i32(1) {
@@ -28477,7 +28485,7 @@ func (m *Module) _Clay_GetElementData(v0, v1 int32) {
 	v2 = t0 - i32(48)
 	m.___stack_pointer = v2
 	{
-		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v3 = t1
 		t2 := int32(load32(m.memory, int64(uint32(v3))+284))
 		t3 := int32(load32(m.memory, uint32(v1)))
@@ -28508,7 +28516,7 @@ func (m *Module) _Clay_GetElementData(v0, v1 int32) {
 					if t9 != v4 {
 						goto l2
 					}
-					if v1 == i32(70036) {
+					if v1 == i32(70180) {
 						goto l0
 					}
 					store16(m.memory, int64(uint32(v0))+17, uint16(i32(0)))
@@ -28529,7 +28537,7 @@ func (m *Module) _Clay_GetElementData(v0, v1 int32) {
 				m.memory[int64(uint32(v2))+32] = byte(i32(1))
 				store32(m.memory, int64(uint32(v2))+40, uint32(i32(67295)))
 				store32(m.memory, int64(uint32(v2))+36, uint32(i32(100)))
-				t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+				t12 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 				v1 = t12
 				t13 := int32(load32(m.memory, int64(uint32(v1))+20))
 				v7 = t13
@@ -28542,8 +28550,8 @@ func (m *Module) _Clay_GetElementData(v0, v1 int32) {
 				store32(m.memory, int64(uint32(v2))+24, uint32(v1))
 				store32(m.memory, int64(uint32(v2))+44, uint32(v1))
 				m.t0[uint(v7)].(func(int32))(v2 + i32(8))
-				v1 = i32(70036)
-				t17 := int32(load32(m.memory, int64(uint32(i32(0)))+70052))
+				v1 = i32(70180)
+				t17 := int32(load32(m.memory, int64(uint32(i32(0)))+70196))
 				if t17 == v4 {
 					goto l0
 				}
@@ -28564,27 +28572,27 @@ l3:
 	m.___stack_pointer = v2 + i32(48)
 }
 func (m *Module) _Clay_SetDebugModeEnabled(v0 int32) {
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	m.memory[int64(uint32(t0))+96] = byte(v0)
 }
 func (m *Module) _Clay_IsDebugModeEnabled() int32 {
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	t1 := int32(m.memory[int64(uint32(t0))+96])
 	return t1
 }
 func (m *Module) _Clay_SetCullingEnabled(v0 int32) {
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	m.memory[int64(uint32(t0))+97] = byte(v0 ^ i32(1))
 }
 func (m *Module) _Clay_GetMaxElementCount() int32 {
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	t1 := int32(load32(m.memory, uint32(t0)))
 	return t1
 }
 func (m *Module) _Clay_SetMaxElementCount(v0 int32) {
 	var v1 int32
 	{
-		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v1 = t0
 		if v1 == 0 {
 			goto l0
@@ -28593,18 +28601,18 @@ func (m *Module) _Clay_SetMaxElementCount(v0 int32) {
 		return
 	}
 l0:
-	store32(m.memory, int64(uint32(i32(0)))+69188, uint32(v0))
-	store32(m.memory, int64(uint32(i32(0)))+69192, uint32(v0<<1))
+	store32(m.memory, int64(uint32(i32(0)))+69328, uint32(v0))
+	store32(m.memory, int64(uint32(i32(0)))+69332, uint32(v0<<1))
 }
 func (m *Module) _Clay_GetMaxMeasureTextCacheWordCount() int32 {
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	t1 := int32(load32(m.memory, int64(uint32(t0))+4))
 	return t1
 }
 func (m *Module) _Clay_SetMaxMeasureTextCacheWordCount(v0 int32) {
 	var v1 int32
 	{
-		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 		v1 = t0
 		if v1 == 0 {
 			goto l0
@@ -28613,11 +28621,11 @@ func (m *Module) _Clay_SetMaxMeasureTextCacheWordCount(v0 int32) {
 		return
 	}
 l0:
-	store32(m.memory, int64(uint32(i32(0)))+69192, uint32(v0))
+	store32(m.memory, int64(uint32(i32(0)))+69332, uint32(v0))
 }
 func (m *Module) _Clay_ResetMeasureTextCache() {
 	var v0, v1, v2 int32
-	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	t0 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	v0 = t0
 	store32(m.memory, int64(uint32(v0))+352, uint32(i32(0)))
 	store32(m.memory, int64(uint32(v0))+340, uint32(i32(0)))
@@ -28644,6 +28652,201 @@ func (m *Module) _Clay_ResetMeasureTextCache() {
 	}
 l0:
 	store32(m.memory, int64(uint32(v0))+304, uint32(i32(1)))
+}
+func (m *Module) _Clay_EaseOut(v0 int32) int32 {
+	var v1, v2 float32
+	var v3 int32
+	var v4, v5, v6, v7, v8, v9 float32
+	var v10 int32
+	var v11 float32
+	var v12, v13, v14, v15, v16, v17, v18 int32
+	v1 = float32(1)
+	{
+		t0 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+164))
+		v2 = t0
+		if !(v2 > float32(0)) {
+			goto l0
+		}
+		t1 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+160))
+		v2 = float32(t1 / v2)
+		p2 := float32(1)
+		if v2 < float32(1) {
+			p2 = v2
+		}
+		v1 = p2
+	}
+l0:
+	v2 = float32(float32(1) - v1)
+	v2 = float32(float32(1) - float32(float32(v2*v2)*v2))
+	{
+		t3 := int32(load32(m.memory, int64(uint32(v0))+168))
+		v3 = t3
+		if v3&i32(1) == 0 {
+			goto l1
+		}
+		t4 := int32(load32(m.memory, int64(uint32(v0))+80))
+		t5 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+84))
+		t6 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+4))
+		v4 = t6
+		store32(m.memory, uint32(t4), math.Float32bits(float32(float32(float32(t5-v4)*v2)+v4)))
+	}
+l1:
+	{
+		if v3&i32(2) == 0 {
+			goto l2
+		}
+		t7 := int32(load32(m.memory, int64(uint32(v0))+80))
+		t8 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+88))
+		t9 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+8))
+		v4 = t9
+		store32(m.memory, int64(uint32(t7))+4, math.Float32bits(float32(float32(float32(t8-v4)*v2)+v4)))
+	}
+l2:
+	{
+		if v3&i32(4) == 0 {
+			goto l3
+		}
+		t10 := int32(load32(m.memory, int64(uint32(v0))+80))
+		t11 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+92))
+		t12 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+12))
+		v4 = t12
+		store32(m.memory, int64(uint32(t10))+8, math.Float32bits(float32(float32(float32(t11-v4)*v2)+v4)))
+	}
+l3:
+	{
+		if v3&i32(8) == 0 {
+			goto l4
+		}
+		t13 := int32(load32(m.memory, int64(uint32(v0))+80))
+		t14 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+96))
+		t15 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+16))
+		v4 = t15
+		store32(m.memory, int64(uint32(t13))+12, math.Float32bits(float32(float32(float32(t14-v4)*v2)+v4)))
+	}
+l4:
+	{
+		if v3&i32(16) == 0 {
+			goto l5
+		}
+		t16 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+100))
+		v5 = t16
+		t17 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+20))
+		v4 = t17
+		t18 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+104))
+		v6 = t18
+		t19 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+24))
+		v7 = t19
+		t20 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+108))
+		v8 = t20
+		t21 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+28))
+		v9 = t21
+		t22 := int32(load32(m.memory, int64(uint32(v0))+80))
+		v10 = t22
+		t23 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+112))
+		t24 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+32))
+		t25 := v10
+		v11 = t24
+		store32(m.memory, int64(uint32(t25))+28, math.Float32bits(float32(float32(float32(t23-v11)*v2)+v11)))
+		store32(m.memory, int64(uint32(v10))+24, math.Float32bits(float32(v9+float32(float32(v8-v9)*v2))))
+		store32(m.memory, int64(uint32(v10))+20, math.Float32bits(float32(v7+float32(float32(v6-v7)*v2))))
+		store32(m.memory, int64(uint32(v10))+16, math.Float32bits(float32(v4+float32(float32(v5-v4)*v2))))
+	}
+l5:
+	{
+		if v3&i32(32) == 0 {
+			goto l6
+		}
+		t26 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+116))
+		v5 = t26
+		t27 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+36))
+		v4 = t27
+		t28 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+120))
+		v6 = t28
+		t29 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+40))
+		v7 = t29
+		t30 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+124))
+		v8 = t30
+		t31 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+44))
+		v9 = t31
+		t32 := int32(load32(m.memory, int64(uint32(v0))+80))
+		v10 = t32
+		t33 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+128))
+		t34 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+48))
+		t35 := v10
+		v11 = t34
+		store32(m.memory, int64(uint32(t35))+44, math.Float32bits(float32(float32(float32(t33-v11)*v2)+v11)))
+		store32(m.memory, int64(uint32(v10))+40, math.Float32bits(float32(v9+float32(float32(v8-v9)*v2))))
+		store32(m.memory, int64(uint32(v10))+36, math.Float32bits(float32(v7+float32(float32(v6-v7)*v2))))
+		store32(m.memory, int64(uint32(v10))+32, math.Float32bits(float32(v4+float32(float32(v5-v4)*v2))))
+	}
+l6:
+	{
+		if v3&i32(128) == 0 {
+			goto l7
+		}
+		t36 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+132))
+		v5 = t36
+		t37 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+52))
+		v4 = t37
+		t38 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+136))
+		v6 = t38
+		t39 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+56))
+		v7 = t39
+		t40 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+140))
+		v8 = t40
+		t41 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+60))
+		v9 = t41
+		t42 := int32(load32(m.memory, int64(uint32(v0))+80))
+		v10 = t42
+		t43 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+144))
+		t44 := math.Float32frombits(load32(m.memory, int64(uint32(v0))+64))
+		t45 := v10
+		v11 = t44
+		store32(m.memory, int64(uint32(t45))+60, math.Float32bits(float32(float32(float32(t43-v11)*v2)+v11)))
+		store32(m.memory, int64(uint32(v10))+56, math.Float32bits(float32(v9+float32(float32(v8-v9)*v2))))
+		store32(m.memory, int64(uint32(v10))+52, math.Float32bits(float32(v7+float32(float32(v6-v7)*v2))))
+		store32(m.memory, int64(uint32(v10))+48, math.Float32bits(float32(v4+float32(float32(v5-v4)*v2))))
+	}
+l7:
+	{
+		if v3&i32(256) == 0 {
+			goto l8
+		}
+		t46 := int32(load16(m.memory, int64(uint32(v0))+148))
+		v12 = t46
+		t47 := int32(load16(m.memory, int64(uint32(v0))+68))
+		v10 = t47
+		t48 := int32(load16(m.memory, int64(uint32(v0))+150))
+		v13 = t48
+		t49 := int32(load16(m.memory, int64(uint32(v0))+70))
+		v14 = t49
+		t50 := int32(load16(m.memory, int64(uint32(v0))+152))
+		v15 = t50
+		t51 := int32(load16(m.memory, int64(uint32(v0))+72))
+		v16 = t51
+		t52 := int32(load16(m.memory, int64(uint32(v0))+154))
+		v17 = t52
+		t53 := int32(load16(m.memory, int64(uint32(v0))+74))
+		v18 = t53
+		t54 := int32(load32(m.memory, int64(uint32(v0))+80))
+		v3 = t54
+		t55 := int32(load16(m.memory, int64(uint32(v0))+156))
+		t56 := int32(load16(m.memory, int64(uint32(v0))+76))
+		t57 := v3
+		v0 = t56
+		store16(m.memory, int64(uint32(t57))+72, uint16(i32_trunc_sat_f32_u(float32(float32(float32(t55-v0)*v2)+float32(uint32(v0))))))
+		store16(m.memory, int64(uint32(v3))+70, uint16(i32_trunc_sat_f32_u(float32(float32(float32(v17-v18)*v2)+float32(uint32(v18))))))
+		store16(m.memory, int64(uint32(v3))+68, uint16(i32_trunc_sat_f32_u(float32(float32(float32(v15-v16)*v2)+float32(uint32(v16))))))
+		store16(m.memory, int64(uint32(v3))+66, uint16(i32_trunc_sat_f32_u(float32(float32(float32(v13-v14)*v2)+float32(uint32(v14))))))
+		store16(m.memory, int64(uint32(v3))+64, uint16(i32_trunc_sat_f32_u(float32(float32(float32(v12-v10)*v2)+float32(uint32(v10))))))
+	}
+l8:
+	;
+	var p58 int32
+	if v1 >= float32(1) {
+		p58 = 1
+	}
+	return p58
 }
 func (m *Module) Xgo_malloc(v0 int32) int32 {
 	t0 := m._calloc(i32(1), v0)
@@ -28684,8 +28887,8 @@ func (m *Module) Xgo_set_measure_text_function(v0, v1 int32) {
 	if v0 != 0 {
 		p0 = i32(4)
 	}
-	store32(m.memory, int64(uint32(i32(0)))+70172, uint32(p0))
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	store32(m.memory, int64(uint32(i32(0)))+70316, uint32(p0))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	store32(m.memory, int64(uint32(t1))+112, uint32(v1))
 }
 func (m *Module) _measure_text(v0, v1, v2, v3 int32) {
@@ -28697,8 +28900,8 @@ func (m *Module) Xgo_set_query_scroll_offset_function(v0, v1 int32) {
 	if v0 != 0 {
 		p0 = i32(5)
 	}
-	store32(m.memory, int64(uint32(i32(0)))+70176, uint32(p0))
-	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70224))
+	store32(m.memory, int64(uint32(i32(0)))+70320, uint32(p0))
+	t1 := int32(load32(m.memory, int64(uint32(i32(0)))+70368))
 	store32(m.memory, int64(uint32(t1))+116, uint32(v1))
 }
 func (m *Module) _query_scroll_offset(v0, v1, v2 int32) {
@@ -28730,6 +28933,163 @@ func (m *Module) Xgo_open_text_element(v0, v1 int32) {
 	store64(m.memory, int64(uint32(v2))+24, uint64(t6))
 	m._Clay__OpenTextElement(v2+i32(32), v2)
 	m.___stack_pointer = v2 + i32(48)
+}
+func (m *Module) Xgo_transition_handler_ptr(v0 int32) int32 {
+	var v1 int32
+	v1 = i32(0)
+	{
+		if uint32(v0) > uint32(i32(15)) {
+			goto l0
+		}
+		t0 := int32(load32(m.memory, int64(uint32(v0<<2))+68912))
+		v1 = t0
+	}
+l0:
+	return v1
+}
+func (m *Module) Xgo_transition_state_ptr(v0 int32) int32 {
+	var v1 int32
+	v1 = i32(0)
+	{
+		if uint32(v0) > uint32(i32(15)) {
+			goto l0
+		}
+		t0 := int32(load32(m.memory, int64(uint32(v0<<2))+68976))
+		v1 = t0
+	}
+l0:
+	return v1
+}
+func (m *Module) Xgo_ease_out_ptr() int32 {
+	return i32(7)
+}
+func (m *Module) _go_handler_0(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(0), v0)
+	return t0
+}
+func (m *Module) _go_handler_1(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(1), v0)
+	return t0
+}
+func (m *Module) _go_handler_2(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(2), v0)
+	return t0
+}
+func (m *Module) _go_handler_3(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(3), v0)
+	return t0
+}
+func (m *Module) _go_handler_4(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(4), v0)
+	return t0
+}
+func (m *Module) _go_handler_5(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(5), v0)
+	return t0
+}
+func (m *Module) _go_handler_6(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(6), v0)
+	return t0
+}
+func (m *Module) _go_handler_7(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(7), v0)
+	return t0
+}
+func (m *Module) _go_handler_8(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(8), v0)
+	return t0
+}
+func (m *Module) _go_handler_9(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(9), v0)
+	return t0
+}
+func (m *Module) _go_handler_10(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(10), v0)
+	return t0
+}
+func (m *Module) _go_handler_11(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(11), v0)
+	return t0
+}
+func (m *Module) _go_handler_12(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(12), v0)
+	return t0
+}
+func (m *Module) _go_handler_13(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(13), v0)
+	return t0
+}
+func (m *Module) _go_handler_14(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(14), v0)
+	return t0
+}
+func (m *Module) _go_handler_15(v0 int32) int32 {
+	t0 := m._go_transition_handler(i32(15), v0)
+	return t0
+}
+func (m *Module) _go_state_0(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(0), v0, v1, v2)
+}
+func (m *Module) _go_state_1(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(1), v0, v1, v2)
+}
+func (m *Module) _go_state_2(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(2), v0, v1, v2)
+}
+func (m *Module) _go_state_3(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(3), v0, v1, v2)
+}
+func (m *Module) _go_state_4(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(4), v0, v1, v2)
+}
+func (m *Module) _go_state_5(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(5), v0, v1, v2)
+}
+func (m *Module) _go_state_6(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(6), v0, v1, v2)
+}
+func (m *Module) _go_state_7(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(7), v0, v1, v2)
+}
+func (m *Module) _go_state_8(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(8), v0, v1, v2)
+}
+func (m *Module) _go_state_9(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(9), v0, v1, v2)
+}
+func (m *Module) _go_state_10(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(10), v0, v1, v2)
+}
+func (m *Module) _go_state_11(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(11), v0, v1, v2)
+}
+func (m *Module) _go_state_12(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(12), v0, v1, v2)
+}
+func (m *Module) _go_state_13(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(13), v0, v1, v2)
+}
+func (m *Module) _go_state_14(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(14), v0, v1, v2)
+}
+func (m *Module) _go_state_15(v0, v1, v2 int32) {
+	memory_zero(m.memory, uint32(v0), uint32(i32(76)))
+	m._go_transition_state(i32(15), v0, v1, v2)
 }
 func (m *Module) Xgo_Clay_MinMemorySize() int32 {
 	t0 := m._Clay_MinMemorySize()
@@ -29040,7 +29400,7 @@ func (m *Module) Xgo_Clay__HashStringWithOffset(v0, v1, v2, v3 int32) {
 	m.___stack_pointer = v4 + i32(48)
 }
 func (m *Module) Xgo_scratch() int32 {
-	return i32(70240)
+	return i32(70384)
 }
 func (m *Module) _malloc(v0 int32) int32 {
 	var v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12 int32
@@ -29055,7 +29415,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 			}
 			v4 = v0 + i32(19)
 			v3 = v4 & i32(-16)
-			t57 := int32(load32(m.memory, int64(uint32(i32(0)))+74340))
+			t57 := int32(load32(m.memory, int64(uint32(i32(0)))+74484))
 			v9 = t57
 			if v9 == 0 {
 				goto l6
@@ -29081,7 +29441,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 			v4 = i32(0) - v3
 			{
 				{
-					t61 := int32(load32(m.memory, int64(uint32(v7<<2))+74640))
+					t61 := int32(load32(m.memory, int64(uint32(v7<<2))+74784))
 					v6 = t61
 					if v6 != 0 {
 						goto l34
@@ -29156,7 +29516,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 				if v0&(i32(0)-v0) != 0 {
 					p72 = int32(bits.TrailingZeros32(uint32(v0)))
 				}
-				t73 := int32(load32(m.memory, int64(uint32(p72<<2))+74640))
+				t73 := int32(load32(m.memory, int64(uint32(p72<<2))+74784))
 				v0 = t73
 			}
 		l39:
@@ -29201,11 +29561,11 @@ func (m *Module) _malloc(v0 int32) int32 {
 			if v8 == 0 {
 				goto l6
 			}
-			t80 := int32(load32(m.memory, int64(uint32(i32(0)))+74344))
+			t80 := int32(load32(m.memory, int64(uint32(i32(0)))+74488))
 			if uint32(v4) >= uint32(t80-v3) {
 				goto l6
 			}
-			t81 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+			t81 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 			t82 := v8
 			v12 = t81
 			if uint32(t82) < uint32(v12) {
@@ -29289,16 +29649,16 @@ func (m *Module) _malloc(v0 int32) int32 {
 					t93 := v8
 					v5 = t92
 					v6 = v5 << 2
-					t94 := int32(load32(m.memory, int64(uint32(v6))+74640))
+					t94 := int32(load32(m.memory, int64(uint32(v6))+74784))
 					if t93 != t94 {
 						goto l50
 					}
-					store32(m.memory, uint32(v6+i32(74640)), uint32(v0))
+					store32(m.memory, uint32(v6+i32(74784)), uint32(v0))
 					if v0 != 0 {
 						goto l51
 					}
 					v9 = v9 & i32_rotl(i32(-2), v5)
-					store32(m.memory, int64(uint32(i32(0)))+74340, uint32(v9))
+					store32(m.memory, int64(uint32(i32(0)))+74484, uint32(v9))
 					goto l49
 				}
 			l50:
@@ -29370,17 +29730,17 @@ func (m *Module) _malloc(v0 int32) int32 {
 				if uint32(v4) > uint32(i32(255)) {
 					goto l57
 				}
-				v0 = v4&i32(248) + i32(74376)
+				v0 = v4&i32(248) + i32(74520)
 				{
 					{
-						t100 := int32(load32(m.memory, int64(uint32(i32(0)))+74336))
+						t100 := int32(load32(m.memory, int64(uint32(i32(0)))+74480))
 						v3 = t100
 						t101 := v3
 						v4 = i32_shl(i32(1), int32(uint32(v4)>>3))
 						if t101&v4 != 0 {
 							goto l58
 						}
-						store32(m.memory, int64(uint32(i32(0)))+74336, uint32(v3|v4))
+						store32(m.memory, int64(uint32(i32(0)))+74480, uint32(v3|v4))
 						v4 = v0
 						goto l59
 					}
@@ -29418,7 +29778,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 			l60:
 				store32(m.memory, int64(uint32(v5))+28, uint32(v0))
 				store64(m.memory, int64(uint32(v5))+16, uint64(i64(0)))
-				v3 = v0<<2 + i32(74640)
+				v3 = v0<<2 + i32(74784)
 				{
 					t106 := v9
 					v6 = i32_shl(i32(1), v0)
@@ -29426,7 +29786,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 						goto l61
 					}
 					store32(m.memory, uint32(v3), uint32(v5))
-					store32(m.memory, int64(uint32(i32(0)))+74340, uint32(v9|v6))
+					store32(m.memory, int64(uint32(i32(0)))+74484, uint32(v9|v6))
 					store32(m.memory, int64(uint32(v5))+24, uint32(v3))
 					store32(m.memory, int64(uint32(v5))+8, uint32(v5))
 					store32(m.memory, int64(uint32(v5))+12, uint32(v5))
@@ -29486,7 +29846,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 			goto l5
 		}
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+74336))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+74480))
 			v2 = t1
 			t3 := v2
 			p2 := (v0 + i32(19)) & i32(496)
@@ -29497,7 +29857,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 			v4 = int32(uint32(v3) >> 3)
 			v0 = i32_shr_u(t3, v4)
 			if v0&i32(3) == 0 {
-				t10 := int32(load32(m.memory, int64(uint32(i32(0)))+74344))
+				t10 := int32(load32(m.memory, int64(uint32(i32(0)))+74488))
 				t11 := v3
 				v7 = t10
 				if uint32(t11) <= uint32(v7) {
@@ -29505,7 +29865,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 				}
 				{
 					if v0 == 0 {
-						t24 := int32(load32(m.memory, int64(uint32(i32(0)))+74340))
+						t24 := int32(load32(m.memory, int64(uint32(i32(0)))+74484))
 						v9 = t24
 						if v9 == 0 {
 							goto l6
@@ -29514,7 +29874,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 						if v9&(i32(0)-v9) != 0 {
 							p25 = int32(bits.TrailingZeros32(uint32(v9)))
 						}
-						t26 := int32(load32(m.memory, int64(uint32(p25<<2))+74640))
+						t26 := int32(load32(m.memory, int64(uint32(p25<<2))+74784))
 						v6 = t26
 						t27 := int32(load32(m.memory, int64(uint32(v6))+4))
 						v4 = t27&i32(-8) - v3
@@ -29530,7 +29890,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 								t29 := int32(load32(m.memory, int64(uint32(v6))+20))
 								v0 = t29
 								if v0 == 0 {
-									t36 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+									t36 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 									t37 := v5
 									v10 = t36
 									if uint32(t37) < uint32(v10) {
@@ -29614,15 +29974,15 @@ func (m *Module) _malloc(v0 int32) int32 {
 											t48 := v5
 											v8 = t47
 											v6 = v8 << 2
-											t49 := int32(load32(m.memory, int64(uint32(v6))+74640))
+											t49 := int32(load32(m.memory, int64(uint32(v6))+74784))
 											if t48 != t49 {
 												goto l23
 											}
-											store32(m.memory, uint32(v6+i32(74640)), uint32(v0))
+											store32(m.memory, uint32(v6+i32(74784)), uint32(v0))
 											if v0 != 0 {
 												goto l24
 											}
-											store32(m.memory, int64(uint32(i32(0)))+74340, uint32(v9&i32_rotl(i32(-2), v8)))
+											store32(m.memory, int64(uint32(i32(0)))+74484, uint32(v9&i32_rotl(i32(-2), v8)))
 											goto l22
 										}
 									l23:
@@ -29694,15 +30054,15 @@ func (m *Module) _malloc(v0 int32) int32 {
 										if v7 == 0 {
 											goto l30
 										}
-										v3 = v7&i32(-8) + i32(74376)
-										t55 := int32(load32(m.memory, int64(uint32(i32(0)))+74356))
+										v3 = v7&i32(-8) + i32(74520)
+										t55 := int32(load32(m.memory, int64(uint32(i32(0)))+74500))
 										v0 = t55
 										{
 											v8 = i32_shl(i32(1), int32(uint32(v7)>>3))
 											if v8&v2 != 0 {
 												goto l31
 											}
-											store32(m.memory, int64(uint32(i32(0)))+74336, uint32(v8|v2))
+											store32(m.memory, int64(uint32(i32(0)))+74480, uint32(v8|v2))
 											v8 = v3
 											goto l32
 										l31:
@@ -29719,8 +30079,8 @@ func (m *Module) _malloc(v0 int32) int32 {
 										store32(m.memory, int64(uint32(v0))+8, uint32(v8))
 									}
 								l30:
-									store32(m.memory, int64(uint32(i32(0)))+74356, uint32(v6))
-									store32(m.memory, int64(uint32(i32(0)))+74344, uint32(v4))
+									store32(m.memory, int64(uint32(i32(0)))+74500, uint32(v6))
+									store32(m.memory, int64(uint32(i32(0)))+74488, uint32(v4))
 								l29:
 									v0 = v5 + i32(8)
 									goto l5
@@ -29761,8 +30121,8 @@ func (m *Module) _malloc(v0 int32) int32 {
 							}
 							v8 = p13
 							v4 = v8 << 3
-							v5 = v4 + i32(74376)
-							t14 := int32(load32(m.memory, int64(uint32(v4))+74384))
+							v5 = v4 + i32(74520)
+							t14 := int32(load32(m.memory, int64(uint32(v4))+74528))
 							t15 := v5
 							v0 = t14
 							t16 := int32(load32(m.memory, int64(uint32(v0))+8))
@@ -29771,11 +30131,11 @@ func (m *Module) _malloc(v0 int32) int32 {
 								goto l8
 							}
 							v2 = v2 & i32_rotl(i32(-2), v8)
-							store32(m.memory, int64(uint32(i32(0)))+74336, uint32(v2))
+							store32(m.memory, int64(uint32(i32(0)))+74480, uint32(v2))
 							goto l9
 						}
 					l8:
-						t17 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+						t17 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 						if uint32(v6) < uint32(t17) {
 							goto l4
 						}
@@ -29797,8 +30157,8 @@ func (m *Module) _malloc(v0 int32) int32 {
 						if v7 == 0 {
 							goto l10
 						}
-						v3 = v7&i32(-8) + i32(74376)
-						t20 := int32(load32(m.memory, int64(uint32(i32(0)))+74356))
+						v3 = v7&i32(-8) + i32(74520)
+						t20 := int32(load32(m.memory, int64(uint32(i32(0)))+74500))
 						v4 = t20
 						{
 							{
@@ -29807,14 +30167,14 @@ func (m *Module) _malloc(v0 int32) int32 {
 								if t21&v8 != 0 {
 									goto l11
 								}
-								store32(m.memory, int64(uint32(i32(0)))+74336, uint32(v2|v8))
+								store32(m.memory, int64(uint32(i32(0)))+74480, uint32(v2|v8))
 								v8 = v3
 								goto l12
 							}
 						l11:
 							t22 := int32(load32(m.memory, int64(uint32(v3))+8))
 							v8 = t22
-							t23 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+							t23 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 							if uint32(v8) < uint32(t23) {
 								goto l4
 							}
@@ -29827,8 +30187,8 @@ func (m *Module) _malloc(v0 int32) int32 {
 					}
 				l10:
 					v0 = v0 + i32(8)
-					store32(m.memory, int64(uint32(i32(0)))+74356, uint32(v5))
-					store32(m.memory, int64(uint32(i32(0)))+74344, uint32(v6))
+					store32(m.memory, int64(uint32(i32(0)))+74500, uint32(v5))
+					store32(m.memory, int64(uint32(i32(0)))+74488, uint32(v6))
 					goto l5
 				}
 			}
@@ -29836,8 +30196,8 @@ func (m *Module) _malloc(v0 int32) int32 {
 				{
 					v5 = v0&i32(1) | v4 ^ i32(1)
 					v3 = v5 << 3
-					v6 = v3 + i32(74376)
-					t4 := int32(load32(m.memory, int64(uint32(v3))+74384))
+					v6 = v3 + i32(74520)
+					t4 := int32(load32(m.memory, int64(uint32(v3))+74528))
 					t5 := v6
 					v4 = t4
 					t6 := int32(load32(m.memory, int64(uint32(v4))+8))
@@ -29845,11 +30205,11 @@ func (m *Module) _malloc(v0 int32) int32 {
 					if t5 != v0 {
 						goto l2
 					}
-					store32(m.memory, int64(uint32(i32(0)))+74336, uint32(v2&i32_rotl(i32(-2), v5)))
+					store32(m.memory, int64(uint32(i32(0)))+74480, uint32(v2&i32_rotl(i32(-2), v5)))
 					goto l3
 				}
 			l2:
-				t7 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+				t7 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 				if uint32(v0) < uint32(t7) {
 					goto l4
 				}
@@ -29870,27 +30230,27 @@ func (m *Module) _malloc(v0 int32) int32 {
 		}
 	l6:
 		{
-			t113 := int32(load32(m.memory, int64(uint32(i32(0)))+74344))
+			t113 := int32(load32(m.memory, int64(uint32(i32(0)))+74488))
 			v0 = t113
 			if uint32(v0) < uint32(v3) {
-				t116 := int32(load32(m.memory, int64(uint32(i32(0)))+74348))
+				t116 := int32(load32(m.memory, int64(uint32(i32(0)))+74492))
 				v8 = t116
 				if uint32(v8) <= uint32(v3) {
 					{
-						t119 := int32(load32(m.memory, int64(uint32(i32(0)))+74808))
+						t119 := int32(load32(m.memory, int64(uint32(i32(0)))+74952))
 						if t119 == 0 {
 							goto l68
 						}
-						t120 := int32(load32(m.memory, int64(uint32(i32(0)))+74816))
+						t120 := int32(load32(m.memory, int64(uint32(i32(0)))+74960))
 						v4 = t120
 						goto l69
 					}
 				l68:
-					store64(m.memory, int64(uint32(i32(0)))+74820, uint64(i64(-1)))
-					store64(m.memory, int64(uint32(i32(0)))+74812, uint64(i64(0x1000000010000)))
-					store32(m.memory, int64(uint32(i32(0)))+74808, uint32((v1+i32(12))&i32(-16)^i32(0x55555558)))
-					store32(m.memory, int64(uint32(i32(0)))+74828, uint32(i32(0)))
-					store32(m.memory, int64(uint32(i32(0)))+74780, uint32(i32(0)))
+					store64(m.memory, int64(uint32(i32(0)))+74964, uint64(i64(-1)))
+					store64(m.memory, int64(uint32(i32(0)))+74956, uint64(i64(0x1000000010000)))
+					store32(m.memory, int64(uint32(i32(0)))+74952, uint32((v1+i32(12))&i32(-16)^i32(0x55555558)))
+					store32(m.memory, int64(uint32(i32(0)))+74972, uint32(i32(0)))
+					store32(m.memory, int64(uint32(i32(0)))+74924, uint32(i32(0)))
 					v4 = i32(65536)
 				l69:
 					v0 = i32(0)
@@ -29905,12 +30265,12 @@ func (m *Module) _malloc(v0 int32) int32 {
 					}
 					v0 = i32(0)
 					{
-						t123 := int32(load32(m.memory, int64(uint32(i32(0)))+74776))
+						t123 := int32(load32(m.memory, int64(uint32(i32(0)))+74920))
 						v4 = t123
 						if v4 == 0 {
 							goto l70
 						}
-						t124 := int32(load32(m.memory, int64(uint32(i32(0)))+74768))
+						t124 := int32(load32(m.memory, int64(uint32(i32(0)))+74912))
 						v6 = t124
 						v5 = v6 + v2
 						if uint32(v5) <= uint32(v6) {
@@ -29924,19 +30284,19 @@ func (m *Module) _malloc(v0 int32) int32 {
 					v0 = i32(0)
 					{
 						{
-							t125 := int32(m.memory[int64(uint32(i32(0)))+74780])
+							t125 := int32(m.memory[int64(uint32(i32(0)))+74924])
 							if t125&i32(4) != 0 {
 								goto l71
 							}
 							{
 								{
 									{
-										t126 := int32(load32(m.memory, int64(uint32(i32(0)))+74360))
+										t126 := int32(load32(m.memory, int64(uint32(i32(0)))+74504))
 										v6 = t126
 										if v6 == 0 {
 											goto l72
 										}
-										v4 = i32(74784)
+										v4 = i32(74928)
 									l75:
 										{
 											{
@@ -29967,7 +30327,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 									}
 									v8 = v2
 									{
-										t132 := int32(load32(m.memory, int64(uint32(i32(0)))+74812))
+										t132 := int32(load32(m.memory, int64(uint32(i32(0)))+74956))
 										v4 = t132
 										v6 = v4 + i32(-1)
 										if v6&v5 == 0 {
@@ -29983,12 +30343,12 @@ func (m *Module) _malloc(v0 int32) int32 {
 										goto l76
 									}
 									{
-										t133 := int32(load32(m.memory, int64(uint32(i32(0)))+74776))
+										t133 := int32(load32(m.memory, int64(uint32(i32(0)))+74920))
 										v4 = t133
 										if v4 == 0 {
 											goto l78
 										}
-										t134 := int32(load32(m.memory, int64(uint32(i32(0)))+74768))
+										t134 := int32(load32(m.memory, int64(uint32(i32(0)))+74912))
 										v6 = t134
 										v12 = v6 + v8
 										if uint32(v12) <= uint32(v6) {
@@ -30028,7 +30388,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 								goto l82
 							}
 							{
-								t139 := int32(load32(m.memory, int64(uint32(i32(0)))+74816))
+								t139 := int32(load32(m.memory, int64(uint32(i32(0)))+74960))
 								t140 := v9 - v8
 								v6 = t139
 								v6 = (t140 + v6) & (i32(0) - v6)
@@ -30056,8 +30416,8 @@ func (m *Module) _malloc(v0 int32) int32 {
 								goto l80
 							}
 						l76:
-							t143 := int32(load32(m.memory, int64(uint32(i32(0)))+74780))
-							store32(m.memory, int64(uint32(i32(0)))+74780, uint32(t143|i32(4)))
+							t143 := int32(load32(m.memory, int64(uint32(i32(0)))+74924))
+							store32(m.memory, int64(uint32(i32(0)))+74924, uint32(t143|i32(4)))
 						}
 					l71:
 						if uint32(v2) > uint32(i32(0x7ffffffe)) {
@@ -30083,24 +30443,24 @@ func (m *Module) _malloc(v0 int32) int32 {
 						}
 					}
 				l80:
-					t146 := int32(load32(m.memory, int64(uint32(i32(0)))+74768))
+					t146 := int32(load32(m.memory, int64(uint32(i32(0)))+74912))
 					v0 = t146 + v8
-					store32(m.memory, int64(uint32(i32(0)))+74768, uint32(v0))
+					store32(m.memory, int64(uint32(i32(0)))+74912, uint32(v0))
 					{
-						t147 := int32(load32(m.memory, int64(uint32(i32(0)))+74772))
+						t147 := int32(load32(m.memory, int64(uint32(i32(0)))+74916))
 						if uint32(v0) <= uint32(t147) {
 							goto l85
 						}
-						store32(m.memory, int64(uint32(i32(0)))+74772, uint32(v0))
+						store32(m.memory, int64(uint32(i32(0)))+74916, uint32(v0))
 					}
 				l85:
 					{
 						{
-							t148 := int32(load32(m.memory, int64(uint32(i32(0)))+74360))
+							t148 := int32(load32(m.memory, int64(uint32(i32(0)))+74504))
 							v4 = t148
 							if v4 == 0 {
 								{
-									t154 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+									t154 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 									v0 = t154
 									if v0 == 0 {
 										goto l90
@@ -30110,33 +30470,33 @@ func (m *Module) _malloc(v0 int32) int32 {
 									}
 								}
 							l90:
-								store32(m.memory, int64(uint32(i32(0)))+74352, uint32(v5))
+								store32(m.memory, int64(uint32(i32(0)))+74496, uint32(v5))
 							l91:
-								store32(m.memory, int64(uint32(i32(0)))+74788, uint32(v8))
-								store32(m.memory, int64(uint32(i32(0)))+74784, uint32(v5))
-								store32(m.memory, int64(uint32(i32(0)))+74368, uint32(i32(-1)))
-								t155 := int32(load32(m.memory, int64(uint32(i32(0)))+74808))
-								store32(m.memory, int64(uint32(i32(0)))+74372, uint32(t155))
-								store32(m.memory, int64(uint32(i32(0)))+74796, uint32(i32(0)))
+								store32(m.memory, int64(uint32(i32(0)))+74932, uint32(v8))
+								store32(m.memory, int64(uint32(i32(0)))+74928, uint32(v5))
+								store32(m.memory, int64(uint32(i32(0)))+74512, uint32(i32(-1)))
+								t155 := int32(load32(m.memory, int64(uint32(i32(0)))+74952))
+								store32(m.memory, int64(uint32(i32(0)))+74516, uint32(t155))
+								store32(m.memory, int64(uint32(i32(0)))+74940, uint32(i32(0)))
 								v0 = i32(-256)
 							l92:
 								{
-									t156 := v0 + i32(74652)
-									v4 = v0 + i32(74640)
+									t156 := v0 + i32(74796)
+									v4 = v0 + i32(74784)
 									store32(m.memory, uint32(t156), uint32(v4))
 									t157 := v4
-									v6 = v0 + i32(74632)
+									v6 = v0 + i32(74776)
 									store32(m.memory, uint32(t157), uint32(v6))
-									store32(m.memory, uint32(v0+i32(74644)), uint32(v6))
-									t158 := v0 + i32(74660)
-									v6 = v0 + i32(74648)
+									store32(m.memory, uint32(v0+i32(74788)), uint32(v6))
+									t158 := v0 + i32(74804)
+									v6 = v0 + i32(74792)
 									store32(m.memory, uint32(t158), uint32(v6))
 									store32(m.memory, uint32(v6), uint32(v4))
-									t159 := v0 + i32(74668)
-									v4 = v0 + i32(74656)
+									t159 := v0 + i32(74812)
+									v4 = v0 + i32(74800)
 									store32(m.memory, uint32(t159), uint32(v4))
 									store32(m.memory, uint32(v4), uint32(v6))
-									store32(m.memory, uint32(v0+i32(74664)), uint32(v4))
+									store32(m.memory, uint32(v0+i32(74808)), uint32(v4))
 									v0 = v0 + i32(32)
 									if v0 != 0 {
 										goto l92
@@ -30149,14 +30509,14 @@ func (m *Module) _malloc(v0 int32) int32 {
 								v6 = v8 + i32(-56)
 								v0 = v6 - v0
 								store32(m.memory, int64(uint32(t161))+4, uint32(v0|i32(1)))
-								t162 := int32(load32(m.memory, int64(uint32(i32(0)))+74824))
-								store32(m.memory, int64(uint32(i32(0)))+74364, uint32(t162))
-								store32(m.memory, int64(uint32(i32(0)))+74348, uint32(v0))
-								store32(m.memory, int64(uint32(i32(0)))+74360, uint32(v4))
+								t162 := int32(load32(m.memory, int64(uint32(i32(0)))+74968))
+								store32(m.memory, int64(uint32(i32(0)))+74508, uint32(t162))
+								store32(m.memory, int64(uint32(i32(0)))+74492, uint32(v0))
+								store32(m.memory, int64(uint32(i32(0)))+74504, uint32(v4))
 								store32(m.memory, int64(uint32(v5+v6))+4, uint32(i32(56)))
 								goto l93
 							}
-							v0 = i32(74784)
+							v0 = i32(74928)
 						l88:
 							{
 								t149 := int32(load32(m.memory, uint32(v0)))
@@ -30179,16 +30539,16 @@ func (m *Module) _malloc(v0 int32) int32 {
 									t164 := v4
 									v6 = (i32(-8) - v4) & i32(15)
 									v5 = t164 + v6
-									t165 := int32(load32(m.memory, int64(uint32(i32(0)))+74348))
+									t165 := int32(load32(m.memory, int64(uint32(i32(0)))+74492))
 									t166 := v5
 									v12 = t165 + v8
 									v6 = v12 - v6
 									store32(m.memory, int64(uint32(t166))+4, uint32(v6|i32(1)))
 									store32(m.memory, int64(uint32(v0))+4, uint32(v2+v8))
-									t167 := int32(load32(m.memory, int64(uint32(i32(0)))+74824))
-									store32(m.memory, int64(uint32(i32(0)))+74364, uint32(t167))
-									store32(m.memory, int64(uint32(i32(0)))+74348, uint32(v6))
-									store32(m.memory, int64(uint32(i32(0)))+74360, uint32(v5))
+									t167 := int32(load32(m.memory, int64(uint32(i32(0)))+74968))
+									store32(m.memory, int64(uint32(i32(0)))+74508, uint32(t167))
+									store32(m.memory, int64(uint32(i32(0)))+74492, uint32(v6))
+									store32(m.memory, int64(uint32(i32(0)))+74504, uint32(v5))
 									store32(m.memory, int64(uint32(v4+v12))+4, uint32(i32(56)))
 									goto l93
 								}
@@ -30202,15 +30562,15 @@ func (m *Module) _malloc(v0 int32) int32 {
 						}
 					l89:
 						{
-							t168 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+							t168 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 							if uint32(v5) >= uint32(t168) {
 								goto l94
 							}
-							store32(m.memory, int64(uint32(i32(0)))+74352, uint32(v5))
+							store32(m.memory, int64(uint32(i32(0)))+74496, uint32(v5))
 						}
 					l94:
 						v6 = v5 + v8
-						v0 = i32(74784)
+						v0 = i32(74928)
 						{
 						l96:
 							{
@@ -30233,7 +30593,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 							}
 						}
 					l97:
-						v0 = i32(74784)
+						v0 = i32(74928)
 					l101:
 						{
 							{
@@ -30272,18 +30632,18 @@ func (m *Module) _malloc(v0 int32) int32 {
 						}
 						v2 = p180
 						store32(m.memory, int64(uint32(v2))+4, uint32(i32(35)))
-						t181 := int32(load32(m.memory, int64(uint32(i32(0)))+74824))
-						store32(m.memory, int64(uint32(i32(0)))+74364, uint32(t181))
-						store32(m.memory, int64(uint32(i32(0)))+74348, uint32(v0))
-						store32(m.memory, int64(uint32(i32(0)))+74360, uint32(v12))
-						t182 := int64(load64(m.memory, int64(uint32(i32(0)))+74792))
+						t181 := int32(load32(m.memory, int64(uint32(i32(0)))+74968))
+						store32(m.memory, int64(uint32(i32(0)))+74508, uint32(t181))
+						store32(m.memory, int64(uint32(i32(0)))+74492, uint32(v0))
+						store32(m.memory, int64(uint32(i32(0)))+74504, uint32(v12))
+						t182 := int64(load64(m.memory, int64(uint32(i32(0)))+74936))
 						store64(m.memory, int64(uint32(v2))+16, uint64(t182))
-						t183 := int64(load64(m.memory, int64(uint32(i32(0)))+74784))
+						t183 := int64(load64(m.memory, int64(uint32(i32(0)))+74928))
 						store64(m.memory, int64(uint32(v2))+8, uint64(t183))
-						store32(m.memory, int64(uint32(i32(0)))+74792, uint32(v2+i32(8)))
-						store32(m.memory, int64(uint32(i32(0)))+74788, uint32(v8))
-						store32(m.memory, int64(uint32(i32(0)))+74784, uint32(v5))
-						store32(m.memory, int64(uint32(i32(0)))+74796, uint32(i32(0)))
+						store32(m.memory, int64(uint32(i32(0)))+74936, uint32(v2+i32(8)))
+						store32(m.memory, int64(uint32(i32(0)))+74932, uint32(v8))
+						store32(m.memory, int64(uint32(i32(0)))+74928, uint32(v5))
+						store32(m.memory, int64(uint32(i32(0)))+74940, uint32(i32(0)))
 						v0 = v2 + i32(36)
 					l102:
 						store32(m.memory, uint32(v0), uint32(i32(7)))
@@ -30304,24 +30664,24 @@ func (m *Module) _malloc(v0 int32) int32 {
 							if uint32(v5) > uint32(i32(255)) {
 								goto l103
 							}
-							v0 = v5&i32(248) + i32(74376)
+							v0 = v5&i32(248) + i32(74520)
 							{
 								{
-									t186 := int32(load32(m.memory, int64(uint32(i32(0)))+74336))
+									t186 := int32(load32(m.memory, int64(uint32(i32(0)))+74480))
 									v6 = t186
 									t187 := v6
 									v5 = i32_shl(i32(1), int32(uint32(v5)>>3))
 									if t187&v5 != 0 {
 										goto l104
 									}
-									store32(m.memory, int64(uint32(i32(0)))+74336, uint32(v6|v5))
+									store32(m.memory, int64(uint32(i32(0)))+74480, uint32(v6|v5))
 									v6 = v0
 									goto l105
 								}
 							l104:
 								t188 := int32(load32(m.memory, int64(uint32(v0))+8))
 								v6 = t188
-								t189 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+								t189 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 								if uint32(v6) < uint32(t189) {
 									goto l4
 								}
@@ -30353,10 +30713,10 @@ func (m *Module) _malloc(v0 int32) int32 {
 						l107:
 							store32(m.memory, int64(uint32(v4))+28, uint32(v0))
 							store64(m.memory, int64(uint32(v4))+16, uint64(i64(0)))
-							v6 = v0<<2 + i32(74640)
+							v6 = v0<<2 + i32(74784)
 							{
 								{
-									t193 := int32(load32(m.memory, int64(uint32(i32(0)))+74340))
+									t193 := int32(load32(m.memory, int64(uint32(i32(0)))+74484))
 									v8 = t193
 									t194 := v8
 									v2 = i32_shl(i32(1), v0)
@@ -30364,7 +30724,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 										goto l108
 									}
 									store32(m.memory, uint32(v6), uint32(v4))
-									store32(m.memory, int64(uint32(i32(0)))+74340, uint32(v8|v2))
+									store32(m.memory, int64(uint32(i32(0)))+74484, uint32(v8|v2))
 									store32(m.memory, int64(uint32(v4))+24, uint32(v6))
 									goto l109
 								}
@@ -30394,7 +30754,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 									}
 								}
 								v0 = v2 + i32(16)
-								t200 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+								t200 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 								if uint32(v0) < uint32(t200) {
 									goto l4
 								}
@@ -30408,7 +30768,7 @@ func (m *Module) _malloc(v0 int32) int32 {
 							v0 = v4
 							goto l106
 						l110:
-							t201 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+							t201 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 							t202 := v6
 							v5 = t201
 							if uint32(t202) < uint32(v5) {
@@ -30432,36 +30792,36 @@ func (m *Module) _malloc(v0 int32) int32 {
 					}
 				l93:
 					v0 = i32(0)
-					t204 := int32(load32(m.memory, int64(uint32(i32(0)))+74348))
+					t204 := int32(load32(m.memory, int64(uint32(i32(0)))+74492))
 					v4 = t204
 					if uint32(v4) <= uint32(v3) {
 						goto l5
 					}
-					t205 := int32(load32(m.memory, int64(uint32(i32(0)))+74360))
+					t205 := int32(load32(m.memory, int64(uint32(i32(0)))+74504))
 					v0 = t205
 					v6 = v0 + v3
 					t206 := v6
 					v4 = v4 - v3
 					store32(m.memory, int64(uint32(t206))+4, uint32(v4|i32(1)))
-					store32(m.memory, int64(uint32(i32(0)))+74348, uint32(v4))
-					store32(m.memory, int64(uint32(i32(0)))+74360, uint32(v6))
+					store32(m.memory, int64(uint32(i32(0)))+74492, uint32(v4))
+					store32(m.memory, int64(uint32(i32(0)))+74504, uint32(v6))
 					store32(m.memory, int64(uint32(v0))+4, uint32(v3|i32(3)))
 					v0 = v0 + i32(8)
 					goto l5
 				}
-				t117 := int32(load32(m.memory, int64(uint32(i32(0)))+74360))
+				t117 := int32(load32(m.memory, int64(uint32(i32(0)))+74504))
 				v0 = t117
 				v4 = v0 + v3
 				t118 := v4
 				v6 = v8 - v3
 				store32(m.memory, int64(uint32(t118))+4, uint32(v6|i32(1)))
-				store32(m.memory, int64(uint32(i32(0)))+74348, uint32(v6))
-				store32(m.memory, int64(uint32(i32(0)))+74360, uint32(v4))
+				store32(m.memory, int64(uint32(i32(0)))+74492, uint32(v6))
+				store32(m.memory, int64(uint32(i32(0)))+74504, uint32(v4))
 				store32(m.memory, int64(uint32(v0))+4, uint32(v3|i32(3)))
 				v0 = v0 + i32(8)
 				goto l5
 			}
-			t114 := int32(load32(m.memory, int64(uint32(i32(0)))+74356))
+			t114 := int32(load32(m.memory, int64(uint32(i32(0)))+74500))
 			v4 = t114
 			{
 				v6 = v0 - v3
@@ -30482,8 +30842,8 @@ func (m *Module) _malloc(v0 int32) int32 {
 				v5 = i32(0)
 			}
 		l66:
-			store32(m.memory, int64(uint32(i32(0)))+74344, uint32(v6))
-			store32(m.memory, int64(uint32(i32(0)))+74356, uint32(v5))
+			store32(m.memory, int64(uint32(i32(0)))+74488, uint32(v6))
+			store32(m.memory, int64(uint32(i32(0)))+74500, uint32(v5))
 			v0 = v4 + i32(8)
 			goto l5
 		}
@@ -30511,27 +30871,27 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 	v0 = t0 - v5
 	{
 		{
-			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+74360))
+			t1 := int32(load32(m.memory, int64(uint32(i32(0)))+74504))
 			if v4 != t1 {
 				goto l0
 			}
-			store32(m.memory, int64(uint32(i32(0)))+74360, uint32(v5))
-			t2 := int32(load32(m.memory, int64(uint32(i32(0)))+74348))
+			store32(m.memory, int64(uint32(i32(0)))+74504, uint32(v5))
+			t2 := int32(load32(m.memory, int64(uint32(i32(0)))+74492))
 			v2 = t2 + v0
-			store32(m.memory, int64(uint32(i32(0)))+74348, uint32(v2))
+			store32(m.memory, int64(uint32(i32(0)))+74492, uint32(v2))
 			store32(m.memory, int64(uint32(v5))+4, uint32(v2|i32(1)))
 			goto l1
 		}
 	l0:
 		{
-			t3 := int32(load32(m.memory, int64(uint32(i32(0)))+74356))
+			t3 := int32(load32(m.memory, int64(uint32(i32(0)))+74500))
 			if v4 != t3 {
 				goto l2
 			}
-			store32(m.memory, int64(uint32(i32(0)))+74356, uint32(v5))
-			t4 := int32(load32(m.memory, int64(uint32(i32(0)))+74344))
+			store32(m.memory, int64(uint32(i32(0)))+74500, uint32(v5))
+			t4 := int32(load32(m.memory, int64(uint32(i32(0)))+74488))
 			v2 = t4 + v0
-			store32(m.memory, int64(uint32(i32(0)))+74344, uint32(v2))
+			store32(m.memory, int64(uint32(i32(0)))+74488, uint32(v2))
 			store32(m.memory, int64(uint32(v5))+4, uint32(v2|i32(1)))
 			store32(m.memory, uint32(v5+v2), uint32(v2))
 			goto l1
@@ -30553,11 +30913,11 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 					t7 := int32(load32(m.memory, int64(uint32(v4))+8))
 					v1 = t7
 					t8 := v1
-					v7 = v6&i32(248) + i32(74376)
+					v7 = v6&i32(248) + i32(74520)
 					if t8 == v7 {
 						goto l5
 					}
-					t9 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+					t9 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 					if uint32(v1) < uint32(t9) {
 						goto l6
 					}
@@ -30573,7 +30933,7 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 							if v2 == v7 {
 								goto l9
 							}
-							t12 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+							t12 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 							if uint32(v2) < uint32(t12) {
 								goto l6
 							}
@@ -30587,8 +30947,8 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 						store32(m.memory, int64(uint32(v1))+12, uint32(v2))
 						goto l8
 					}
-					t11 := int32(load32(m.memory, int64(uint32(i32(0)))+74336))
-					store32(m.memory, int64(uint32(i32(0)))+74336, uint32(t11&i32_rotl(i32(-2), int32(uint32(v6)>>3))))
+					t11 := int32(load32(m.memory, int64(uint32(i32(0)))+74480))
+					store32(m.memory, int64(uint32(i32(0)))+74480, uint32(t11&i32_rotl(i32(-2), int32(uint32(v6)>>3))))
 					goto l8
 				}
 			l4:
@@ -30600,7 +30960,7 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 					}
 					t15 := int32(load32(m.memory, int64(uint32(v4))+8))
 					v1 = t15
-					t16 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+					t16 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 					if uint32(v1) < uint32(t16) {
 						goto l6
 					}
@@ -30653,7 +31013,7 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 							goto l15
 						}
 					}
-					t23 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+					t23 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 					if uint32(v9) < uint32(t23) {
 						goto l6
 					}
@@ -30672,20 +31032,20 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 						t25 := v4
 						v7 = t24
 						v1 = v7 << 2
-						t26 := int32(load32(m.memory, int64(uint32(v1))+74640))
+						t26 := int32(load32(m.memory, int64(uint32(v1))+74784))
 						if t25 != t26 {
 							goto l16
 						}
-						store32(m.memory, uint32(v1+i32(74640)), uint32(v2))
+						store32(m.memory, uint32(v1+i32(74784)), uint32(v2))
 						if v2 != 0 {
 							goto l17
 						}
-						t27 := int32(load32(m.memory, int64(uint32(i32(0)))+74340))
-						store32(m.memory, int64(uint32(i32(0)))+74340, uint32(t27&i32_rotl(i32(-2), v7)))
+						t27 := int32(load32(m.memory, int64(uint32(i32(0)))+74484))
+						store32(m.memory, int64(uint32(i32(0)))+74484, uint32(t27&i32_rotl(i32(-2), v7)))
 						goto l8
 					}
 				l16:
-					t28 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+					t28 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 					if uint32(v8) < uint32(t28) {
 						goto l6
 					}
@@ -30705,7 +31065,7 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 					}
 				}
 			l17:
-				t30 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+				t30 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 				t31 := v2
 				v7 = t30
 				if uint32(t31) < uint32(v7) {
@@ -30750,24 +31110,24 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 		if uint32(v0) > uint32(i32(255)) {
 			goto l21
 		}
-		v2 = v0&i32(248) + i32(74376)
+		v2 = v0&i32(248) + i32(74520)
 		{
 			{
-				t35 := int32(load32(m.memory, int64(uint32(i32(0)))+74336))
+				t35 := int32(load32(m.memory, int64(uint32(i32(0)))+74480))
 				v1 = t35
 				t36 := v1
 				v0 = i32_shl(i32(1), int32(uint32(v0)>>3))
 				if t36&v0 != 0 {
 					goto l22
 				}
-				store32(m.memory, int64(uint32(i32(0)))+74336, uint32(v1|v0))
+				store32(m.memory, int64(uint32(i32(0)))+74480, uint32(v1|v0))
 				v0 = v2
 				goto l23
 			}
 		l22:
 			t37 := int32(load32(m.memory, int64(uint32(v2))+8))
 			v0 = t37
-			t38 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+			t38 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 			if uint32(v0) < uint32(t38) {
 				goto l6
 			}
@@ -30799,9 +31159,9 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 	l24:
 		store32(m.memory, int64(uint32(v5))+28, uint32(v2))
 		store64(m.memory, int64(uint32(v5))+16, uint64(i64(0)))
-		v1 = v2<<2 + i32(74640)
+		v1 = v2<<2 + i32(74784)
 		{
-			t42 := int32(load32(m.memory, int64(uint32(i32(0)))+74340))
+			t42 := int32(load32(m.memory, int64(uint32(i32(0)))+74484))
 			v7 = t42
 			t43 := v7
 			v4 = i32_shl(i32(1), v2)
@@ -30809,7 +31169,7 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 				goto l25
 			}
 			store32(m.memory, uint32(v1), uint32(v5))
-			store32(m.memory, int64(uint32(i32(0)))+74340, uint32(v7|v4))
+			store32(m.memory, int64(uint32(i32(0)))+74484, uint32(v7|v4))
 			store32(m.memory, int64(uint32(v5))+24, uint32(v1))
 			store32(m.memory, int64(uint32(v5))+8, uint32(v5))
 			store32(m.memory, int64(uint32(v5))+12, uint32(v5))
@@ -30842,7 +31202,7 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 				}
 			}
 			v2 = v4 + i32(16)
-			t49 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+			t49 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 			if uint32(v2) < uint32(t49) {
 				goto l6
 			}
@@ -30853,7 +31213,7 @@ func (m *Module) _prepend_alloc(v0, v1, v2 int32) int32 {
 			goto l1
 		}
 	l26:
-		t50 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+		t50 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 		t51 := v1
 		v0 = t50
 		if uint32(t51) < uint32(v0) {
@@ -30883,7 +31243,7 @@ func (m *Module) _free(v0 int32) {
 			return
 		}
 		v1 = v0 + i32(-8)
-		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+74352))
+		t0 := int32(load32(m.memory, int64(uint32(i32(0)))+74496))
 		t1 := v1
 		v2 = t0
 		if uint32(t1) < uint32(v2) {
@@ -30913,7 +31273,7 @@ func (m *Module) _free(v0 int32) {
 			}
 			v0 = v5 + v0
 			{
-				t6 := int32(load32(m.memory, int64(uint32(i32(0)))+74356))
+				t6 := int32(load32(m.memory, int64(uint32(i32(0)))+74500))
 				if v1 == t6 {
 					t28 := int32(load32(m.memory, int64(uint32(v4))+4))
 					v3 = t28
@@ -30921,7 +31281,7 @@ func (m *Module) _free(v0 int32) {
 						goto l2
 					}
 					store32(m.memory, int64(uint32(v4))+4, uint32(v3&i32(-2)))
-					store32(m.memory, int64(uint32(i32(0)))+74344, uint32(v0))
+					store32(m.memory, int64(uint32(i32(0)))+74488, uint32(v0))
 					store32(m.memory, uint32(v4), uint32(v0))
 					store32(m.memory, int64(uint32(v1))+4, uint32(v0|i32(1)))
 					return
@@ -31004,16 +31364,16 @@ func (m *Module) _free(v0 int32) {
 						t22 := v1
 						v6 = t21
 						v5 = v6 << 2
-						t23 := int32(load32(m.memory, int64(uint32(v5))+74640))
+						t23 := int32(load32(m.memory, int64(uint32(v5))+74784))
 						if t22 != t23 {
 							goto l14
 						}
-						store32(m.memory, uint32(v5+i32(74640)), uint32(v3))
+						store32(m.memory, uint32(v5+i32(74784)), uint32(v3))
 						if v3 != 0 {
 							goto l15
 						}
-						t24 := int32(load32(m.memory, int64(uint32(i32(0)))+74340))
-						store32(m.memory, int64(uint32(i32(0)))+74340, uint32(t24&i32_rotl(i32(-2), v6)))
+						t24 := int32(load32(m.memory, int64(uint32(i32(0)))+74484))
+						store32(m.memory, int64(uint32(i32(0)))+74484, uint32(t24&i32_rotl(i32(-2), v6)))
 						goto l2
 					}
 				l14:
@@ -31068,7 +31428,7 @@ func (m *Module) _free(v0 int32) {
 					t8 := int32(load32(m.memory, int64(uint32(v1))+8))
 					v6 = t8
 					t9 := v6
-					v7 = v5&i32(248) + i32(74376)
+					v7 = v5&i32(248) + i32(74520)
 					if t9 == v7 {
 						goto l5
 					}
@@ -31100,8 +31460,8 @@ func (m *Module) _free(v0 int32) {
 						store32(m.memory, int64(uint32(v6))+12, uint32(v3))
 						goto l2
 					}
-					t11 := int32(load32(m.memory, int64(uint32(i32(0)))+74336))
-					store32(m.memory, int64(uint32(i32(0)))+74336, uint32(t11&i32_rotl(i32(-2), int32(uint32(v5)>>3))))
+					t11 := int32(load32(m.memory, int64(uint32(i32(0)))+74480))
+					store32(m.memory, int64(uint32(i32(0)))+74480, uint32(t11&i32_rotl(i32(-2), int32(uint32(v5)>>3))))
 					goto l2
 				}
 			}
@@ -31119,9 +31479,9 @@ func (m *Module) _free(v0 int32) {
 			goto l19
 		}
 		{
-			t30 := int32(load32(m.memory, int64(uint32(i32(0)))+74360))
+			t30 := int32(load32(m.memory, int64(uint32(i32(0)))+74504))
 			if v4 != t30 {
-				t33 := int32(load32(m.memory, int64(uint32(i32(0)))+74356))
+				t33 := int32(load32(m.memory, int64(uint32(i32(0)))+74500))
 				t34 := v4
 				v9 = t33
 				if t34 != v9 {
@@ -31135,7 +31495,7 @@ func (m *Module) _free(v0 int32) {
 							t37 := int32(load32(m.memory, int64(uint32(v4))+8))
 							v5 = t37
 							t38 := v5
-							v6 = v7&i32(248) + i32(74376)
+							v6 = v7&i32(248) + i32(74520)
 							if t38 == v6 {
 								goto l23
 							}
@@ -31167,8 +31527,8 @@ func (m *Module) _free(v0 int32) {
 								store32(m.memory, int64(uint32(v5))+12, uint32(v3))
 								goto l25
 							}
-							t40 := int32(load32(m.memory, int64(uint32(i32(0)))+74336))
-							store32(m.memory, int64(uint32(i32(0)))+74336, uint32(t40&i32_rotl(i32(-2), int32(uint32(v7)>>3))))
+							t40 := int32(load32(m.memory, int64(uint32(i32(0)))+74480))
+							store32(m.memory, int64(uint32(i32(0)))+74480, uint32(t40&i32_rotl(i32(-2), int32(uint32(v7)>>3))))
 							goto l25
 						}
 					l22:
@@ -31247,16 +31607,16 @@ func (m *Module) _free(v0 int32) {
 							t51 := v4
 							v6 = t50
 							v5 = v6 << 2
-							t52 := int32(load32(m.memory, int64(uint32(v5))+74640))
+							t52 := int32(load32(m.memory, int64(uint32(v5))+74784))
 							if t51 != t52 {
 								goto l33
 							}
-							store32(m.memory, uint32(v5+i32(74640)), uint32(v3))
+							store32(m.memory, uint32(v5+i32(74784)), uint32(v3))
 							if v3 != 0 {
 								goto l34
 							}
-							t53 := int32(load32(m.memory, int64(uint32(i32(0)))+74340))
-							store32(m.memory, int64(uint32(i32(0)))+74340, uint32(t53&i32_rotl(i32(-2), v6)))
+							t53 := int32(load32(m.memory, int64(uint32(i32(0)))+74484))
+							store32(m.memory, int64(uint32(i32(0)))+74484, uint32(t53&i32_rotl(i32(-2), v6)))
 							goto l25
 						}
 					l33:
@@ -31314,28 +31674,28 @@ func (m *Module) _free(v0 int32) {
 					if v1 != v9 {
 						goto l38
 					}
-					store32(m.memory, int64(uint32(i32(0)))+74344, uint32(v0))
+					store32(m.memory, int64(uint32(i32(0)))+74488, uint32(v0))
 					return
 				}
-				store32(m.memory, int64(uint32(i32(0)))+74356, uint32(v1))
-				t35 := int32(load32(m.memory, int64(uint32(i32(0)))+74344))
+				store32(m.memory, int64(uint32(i32(0)))+74500, uint32(v1))
+				t35 := int32(load32(m.memory, int64(uint32(i32(0)))+74488))
 				v0 = t35 + v0
-				store32(m.memory, int64(uint32(i32(0)))+74344, uint32(v0))
+				store32(m.memory, int64(uint32(i32(0)))+74488, uint32(v0))
 				store32(m.memory, int64(uint32(v1))+4, uint32(v0|i32(1)))
 				store32(m.memory, uint32(v1+v0), uint32(v0))
 				return
 			}
-			store32(m.memory, int64(uint32(i32(0)))+74360, uint32(v1))
-			t31 := int32(load32(m.memory, int64(uint32(i32(0)))+74348))
+			store32(m.memory, int64(uint32(i32(0)))+74504, uint32(v1))
+			t31 := int32(load32(m.memory, int64(uint32(i32(0)))+74492))
 			v0 = t31 + v0
-			store32(m.memory, int64(uint32(i32(0)))+74348, uint32(v0))
+			store32(m.memory, int64(uint32(i32(0)))+74492, uint32(v0))
 			store32(m.memory, int64(uint32(v1))+4, uint32(v0|i32(1)))
-			t32 := int32(load32(m.memory, int64(uint32(i32(0)))+74356))
+			t32 := int32(load32(m.memory, int64(uint32(i32(0)))+74500))
 			if v1 != t32 {
 				return
 			}
-			store32(m.memory, int64(uint32(i32(0)))+74344, uint32(i32(0)))
-			store32(m.memory, int64(uint32(i32(0)))+74356, uint32(i32(0)))
+			store32(m.memory, int64(uint32(i32(0)))+74488, uint32(i32(0)))
+			store32(m.memory, int64(uint32(i32(0)))+74500, uint32(i32(0)))
 			return
 		}
 	l19:
@@ -31346,17 +31706,17 @@ func (m *Module) _free(v0 int32) {
 		if uint32(v0) > uint32(i32(255)) {
 			goto l39
 		}
-		v3 = v0&i32(248) + i32(74376)
+		v3 = v0&i32(248) + i32(74520)
 		{
 			{
-				t58 := int32(load32(m.memory, int64(uint32(i32(0)))+74336))
+				t58 := int32(load32(m.memory, int64(uint32(i32(0)))+74480))
 				v5 = t58
 				t59 := v5
 				v0 = i32_shl(i32(1), int32(uint32(v0)>>3))
 				if t59&v0 != 0 {
 					goto l40
 				}
-				store32(m.memory, int64(uint32(i32(0)))+74336, uint32(v5|v0))
+				store32(m.memory, int64(uint32(i32(0)))+74480, uint32(v5|v0))
 				v0 = v3
 				goto l41
 			}
@@ -31394,11 +31754,11 @@ func (m *Module) _free(v0 int32) {
 	l42:
 		store32(m.memory, int64(uint32(v1))+28, uint32(v3))
 		store64(m.memory, int64(uint32(v1))+16, uint64(i64(0)))
-		v6 = v3<<2 + i32(74640)
+		v6 = v3<<2 + i32(74784)
 		{
 			{
 				{
-					t64 := int32(load32(m.memory, int64(uint32(i32(0)))+74340))
+					t64 := int32(load32(m.memory, int64(uint32(i32(0)))+74484))
 					v5 = t64
 					t65 := v5
 					v4 = i32_shl(i32(1), v3)
@@ -31406,7 +31766,7 @@ func (m *Module) _free(v0 int32) {
 						goto l43
 					}
 					store32(m.memory, uint32(v6), uint32(v1))
-					store32(m.memory, int64(uint32(i32(0)))+74340, uint32(v5|v4))
+					store32(m.memory, int64(uint32(i32(0)))+74484, uint32(v5|v4))
 					v0 = i32(8)
 					v3 = i32(24)
 					goto l44
@@ -31468,13 +31828,13 @@ func (m *Module) _free(v0 int32) {
 		store32(m.memory, uint32(v1+v3), uint32(v6))
 		store32(m.memory, int64(uint32(v1))+12, uint32(v5))
 		store32(m.memory, uint32(v1+v0), uint32(v4))
-		t72 := int32(load32(m.memory, int64(uint32(i32(0)))+74368))
+		t72 := int32(load32(m.memory, int64(uint32(i32(0)))+74512))
 		v1 = t72 + i32(-1)
 		p73 := i32(-1)
 		if v1 != 0 {
 			p73 = v1
 		}
-		store32(m.memory, int64(uint32(i32(0)))+74368, uint32(p73))
+		store32(m.memory, int64(uint32(i32(0)))+74512, uint32(p73))
 	}
 	return
 l1:
@@ -31684,6 +32044,20 @@ func i32_trunc_sat_f32_s(f float32) int32 {
 	return int32(f)
 }
 
+//go:nosplit
+func i32_trunc_sat_f32_u(f float32) int32 {
+	var i uint32
+	switch {
+	case f <= 0 || f != f:
+		i = 0
+	case f >= math.MaxUint32:
+		i = math.MaxUint32
+	default:
+		i = uint32(f)
+	}
+	return int32(i)
+}
+
 func memory_grow(mem *[]byte, delta, max int64) int64 {
 	buf := *mem
 	len := int64(len(buf))
@@ -31731,4 +32105,4 @@ func table_init[T1, T2, T3 int | int32 | int64](tab, elems []any, dest T1, src T
 	copy(tab[x:y], elems[z:w])
 }
 
-const data0 = " }\x00Clay__DebugViewElementInfoBorderBody\x00Clay__DebugViewElementInfoAspectRatioBody\x00Clay__DebugViewElementInfoImageBody\x00Clay__DebugViewElementInfoSharedBody\x00Overlay\x00Bounding Box\x00z-index\x00Clay__DebugView_EmptyRow\x00Preview\x00Clay__DebugView\x00Text\x00Layout\x00Clay Error: Debug view caused layout element count to exceed Clay__maxElementCount\x00Clay Error: Layout elements exceeded Clay__maxElementCount\x00Parent\x00Text Alignment\x00Child Alignment\x00Clay__DebugView_CollapseElement\x00Clay__DebugView_ElementHighlight\x00Line Height\x00Offset\x00Aspect\x00Corner Radius\x00Color & Radius\x00Attach Points\x00Clay Debug Tools\x00Border Widths\x00Warnings\x00Error\x00Overlay Color\x00Text Color\x00Border Color\x00Background Color\x00Clay__DebugView_EmptyRowOuter\x00Clay__DebugView_ElementOuter\x00Clay__DebugViewPaneOuter\x00Clay__RootContainer\x00Clay__DebugViewWarningsTopBorder\x00Clay__DebugViewWarningItemHeader\x00Child Gap\x00auto\x00Clay__DebugViewElementInfoAspectRatio\x00Aspect Ratio\x00Clip To\x00Attach To\x00Layout Direction\x00Element Configuration\x00Offscreen\x00Custom\x00Clay__DebugViewWarningItem\x00Scroll\x00Horizontal\x00Vertical\x00Sizing\x00Floating\x00Clay__DebugViewElementInfoPadding\x00Letter Spacing\x00Font Size\x00true\x00false\x00Clay__DebugViewWarningsScrollPane\x00Clay__DebugViewOuterScrollPane\x00Clay__DebugView_ElementHighlightRectangle\x00Image\x00Wrap Mode\x00Pointer Capture Mode\x00Background\x00Expand\x00GROW\x00ROOT\x00ATTACHED_PARENT\x00PERCENT\x00FIT\x00LEFT_TO_RIGHT\x00LEFT\x00NEWLINES\x00WORDS\x00RIGHT_CENTER\x00LEFT_CENTER\x00CENTER_CENTER\x00RIGHT_TOP\x00LEFT_TOP\x00CENTER_TOP\x00RIGHT_BOTTOM\x00LEFT_BOTTOM\x00CENTER_BOTTOM\x00TOP_TO_BOTTOM\x00PASSTHROUGH\x00NONE\x00ELEMENT_WITH_ID\x00Font ID\x00Duplicate ID\x00FIXED\x000\x00An element with this ID was already previously declared during this layout.\x00There were still open layout elements when EndLayout was called. This results from an unequal number of calls to Clay__OpenElement and Clay__CloseElement.\x00Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.\x00Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using Clay_SetMaxElementCount() with a higher value.\x00Clay ran out of capacity while attempting to measure text elements. Try using Clay_SetMaxElementCount() with a higher value.\x00Clay has run out of space in it's internal element ID hashmap.  Try using Clay_SetMaxElementCount() with a higher value.\x00Clay's internal MeasureText function is null. You may have forgotten to call Clay_SetMeasureTextFunction(), or passed a NULL function pointer by mistake.\x00A floating element was declared with a parentId, but no element with that ID was found.\x00An element was configured with CLAY_SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.\x00...\x00Clay has run out of space in it's internal text measurement cache. Try using Clay_SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).\x00-\x00+\x00Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Clay_Initialize()\x00%)\x00 (\x00\"\x00, y: \x00max: \x00{ x: \x00, parent: \x00{ element: \x00, right: \x00, height: \x00, topRight: \x00, bottomRight: \x00{ left: \x00{ topLeft: \x00, bottomLeft: \x00{ r: \x00, top: \x00min: \x00, bottom: \x00{ width: \x00, width: \x00, g: \x00, b: \x00, a: \x00, \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x01\x00\x00\x00\x04\x00\x00\x00\xf8\x04\x01\x00\x01\x00\x00\x00\x03\x00\x00\x00\x81\x05\x01\x00\x01\x00\x00\x00\x05\x00\x00\x00:\x05\x01\x00\x01\x00\x00\x00\x04\x00\x00\x00,\x05\x01\x00\x01\x00\x00\x00\b\x00\x00\x00q\x05\x01\x00\x01\x00\x00\x00\x04\x00\x00\x00\xc6\x05\x01\x00\x01\x00\x00\x00\x0f\x00\x00\x00\x02\x05\x01\x00\n\x00\x00\x00\a\x00\x00\x00\x06\x00\x00\x00\x04\x00\x00\x00\x06\x00\x00\x00\x05\x00\x00\x00\b\x00\x00\x00\x06\x00\x00\x00\x06\x00\x00\x00\x06\x00\x00\x00\xe6\x04\x01\x00\x9b\x00\x01\x00\x1a\x02\x01\x00\xe9\x00\x01\x00\xfd\x01\x01\x00\xc1\x04\x01\x00\a\x04\x01\x00\xe5\x03\x01\x00\x16\x03\x01\x00\xc3\x03\x01\x00\x00\x00sC\x00\x00\x0eC\x00\x00oC\x00\x00\xd2B\x00\x00\xcaB\x00\x00\xf2B\x00\x00zC\x00\x00rC\x00\x00\xd8B\x00\x000A\x00\x00\x06C\x00\x00\x01C\x00\x00\x14C\x00\x00RC\x00\x00\x15C\x00\x00=C\x00\x00\xd2B\x00\x00DC\x00\x00\xb6B\x00\x00\x90B\x00\x00@B\x00\x00NC\x00\x00\x1dC\x00\x00gC\x00\x00BC\x00\x00\x1aC\x00\x00\x00\x00\x00\x00\xb4B\x00\x00\xf6B\x00\x00\xd6B\v\x00\x00\x00\v\x00\x00\x00\n\x00\x00\x00\r\x00\x00\x00\r\x00\x00\x00\t\x00\x00\x00\f\x00\x00\x00\f\x00\x00\x00M\x05\x01\x00\x92\x05\x01\x00z\x05\x01\x00Y\x05\x01\x00\x9e\x05\x01\x00g\x05\x01\x00@\x05\x01\x00\x85\x05\x01\x00\x06\x00\x00\x00\x0f\x00\x00\x00\x04\x00\x00\x00\v\x05\x01\x00\xcb\x05\x01\x00\xfd\x04\x01\x00\x00 \x00\x00\x00@\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\xbe\f\x01\x00\x00\x00hB\x00\x00`B\x00\x00PB\x00\x00\x7fC\x00\x00xB\x00\x00pB\x00\x00hB\x00\x00\x7fC\x00\x00\rC\x00\x00\x05C\x00\x00\aC\x00\x00\x7fC\x00\x00nC\x00\x00bC\x00\x00gC\x00\x00\x7fC\x00\x00\xccB\x00\x00\xa0B\x00\x00\x9cB\x00\x00\x7fC\x00\x00\x00\x00\x00\x00nC\x00\x00bC\x00\x00gC\x00\x00\x7fC\x00\x00\x10\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00(C\x00\x00\x84B\x00\x00\xe0A\x00\x00\xc8B\x90\x01\x00\x00"
+const data0 = " }\x00Clay__DebugViewElementInfoBorderBody\x00Clay__DebugViewElementInfoAspectRatioBody\x00Clay__DebugViewElementInfoImageBody\x00Clay__DebugViewElementInfoSharedBody\x00Overlay\x00Bounding Box\x00z-index\x00Clay__DebugView_EmptyRow\x00Preview\x00Clay__DebugView\x00Text\x00Layout\x00Clay Error: Debug view caused layout element count to exceed Clay__maxElementCount\x00Clay Error: Layout elements exceeded Clay__maxElementCount\x00Parent\x00Text Alignment\x00Child Alignment\x00Clay__DebugView_CollapseElement\x00Clay__DebugView_ElementHighlight\x00Line Height\x00Offset\x00Aspect\x00Corner Radius\x00Color & Radius\x00Attach Points\x00Clay Debug Tools\x00Border Widths\x00Warnings\x00Error\x00Overlay Color\x00Text Color\x00Border Color\x00Background Color\x00Clay__DebugView_EmptyRowOuter\x00Clay__DebugView_ElementOuter\x00Clay__DebugViewPaneOuter\x00Clay__RootContainer\x00Clay__DebugViewWarningsTopBorder\x00Clay__DebugViewWarningItemHeader\x00Child Gap\x00auto\x00Clay__DebugViewElementInfoAspectRatio\x00Aspect Ratio\x00Clip To\x00Attach To\x00Layout Direction\x00Element Configuration\x00Offscreen\x00Custom\x00Clay__DebugViewWarningItem\x00Scroll\x00Horizontal\x00Vertical\x00Sizing\x00Floating\x00Clay__DebugViewElementInfoPadding\x00Letter Spacing\x00Font Size\x00true\x00false\x00Clay__DebugViewWarningsScrollPane\x00Clay__DebugViewOuterScrollPane\x00Clay__DebugView_ElementHighlightRectangle\x00Image\x00Wrap Mode\x00Pointer Capture Mode\x00Background\x00Expand\x00GROW\x00ROOT\x00ATTACHED_PARENT\x00PERCENT\x00FIT\x00LEFT_TO_RIGHT\x00LEFT\x00NEWLINES\x00WORDS\x00RIGHT_CENTER\x00LEFT_CENTER\x00CENTER_CENTER\x00RIGHT_TOP\x00LEFT_TOP\x00CENTER_TOP\x00RIGHT_BOTTOM\x00LEFT_BOTTOM\x00CENTER_BOTTOM\x00TOP_TO_BOTTOM\x00PASSTHROUGH\x00NONE\x00ELEMENT_WITH_ID\x00Font ID\x00Duplicate ID\x00FIXED\x000\x00An element with this ID was already previously declared during this layout.\x00There were still open layout elements when EndLayout was called. This results from an unequal number of calls to Clay__OpenElement and Clay__CloseElement.\x00Clay attempted to make an out of bounds array access. This is an internal error and is likely a bug.\x00Clay ran out of capacity while attempting to create render commands. This is usually caused by a large amount of wrapping text elements while close to the max element capacity. Try using Clay_SetMaxElementCount() with a higher value.\x00Clay ran out of capacity while attempting to measure text elements. Try using Clay_SetMaxElementCount() with a higher value.\x00Clay has run out of space in it's internal element ID hashmap.  Try using Clay_SetMaxElementCount() with a higher value.\x00Clay's internal MeasureText function is null. You may have forgotten to call Clay_SetMeasureTextFunction(), or passed a NULL function pointer by mistake.\x00A floating element was declared with a parentId, but no element with that ID was found.\x00An element was configured with CLAY_SIZING_PERCENT, but the provided percentage value was over 1.0. Clay expects a value between 0 and 1, i.e. 20% is 0.2.\x00...\x00Clay has run out of space in it's internal text measurement cache. Try using Clay_SetMaxMeasureTextCacheWordCount() (default 16384, with 1 unit storing 1 measured word).\x00-\x00+\x00Clay attempted to allocate memory in its arena, but ran out of capacity. Try increasing the capacity of the arena passed to Clay_Initialize()\x00%)\x00 (\x00\"\x00, y: \x00max: \x00{ x: \x00, parent: \x00{ element: \x00, right: \x00, height: \x00, topRight: \x00, bottomRight: \x00{ left: \x00{ topLeft: \x00, bottomLeft: \x00{ r: \x00, top: \x00min: \x00, bottom: \x00{ width: \x00, width: \x00, g: \x00, b: \x00, a: \x00, \x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\xff\xff\x01\x00\x00\x00\x04\x00\x00\x00\xf8\x04\x01\x00\x01\x00\x00\x00\x03\x00\x00\x00\x81\x05\x01\x00\x01\x00\x00\x00\x05\x00\x00\x00:\x05\x01\x00\x01\x00\x00\x00\x04\x00\x00\x00,\x05\x01\x00\x01\x00\x00\x00\b\x00\x00\x00q\x05\x01\x00\x01\x00\x00\x00\x04\x00\x00\x00\xc6\x05\x01\x00\x01\x00\x00\x00\x0f\x00\x00\x00\x02\x05\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\b\x00\x00\x00\t\x00\x00\x00\n\x00\x00\x00\v\x00\x00\x00\f\x00\x00\x00\r\x00\x00\x00\x0e\x00\x00\x00\x0f\x00\x00\x00\x10\x00\x00\x00\x11\x00\x00\x00\x12\x00\x00\x00\x13\x00\x00\x00\x14\x00\x00\x00\x15\x00\x00\x00\x16\x00\x00\x00\x17\x00\x00\x00\x18\x00\x00\x00\x19\x00\x00\x00\x1a\x00\x00\x00\x1b\x00\x00\x00\x1c\x00\x00\x00\x1d\x00\x00\x00\x1e\x00\x00\x00\x1f\x00\x00\x00 \x00\x00\x00!\x00\x00\x00\"\x00\x00\x00#\x00\x00\x00$\x00\x00\x00%\x00\x00\x00&\x00\x00\x00'\x00\x00\x00\n\x00\x00\x00\a\x00\x00\x00\x06\x00\x00\x00\x04\x00\x00\x00\x06\x00\x00\x00\x05\x00\x00\x00\b\x00\x00\x00\x06\x00\x00\x00\x06\x00\x00\x00\x06\x00\x00\x00\xe6\x04\x01\x00\x9b\x00\x01\x00\x1a\x02\x01\x00\xe9\x00\x01\x00\xfd\x01\x01\x00\xc1\x04\x01\x00\a\x04\x01\x00\xe5\x03\x01\x00\x16\x03\x01\x00\xc3\x03\x01\x00\x00\x00sC\x00\x00\x0eC\x00\x00oC\x00\x00\xd2B\x00\x00\xcaB\x00\x00\xf2B\x00\x00zC\x00\x00rC\x00\x00\xd8B\x00\x000A\x00\x00\x06C\x00\x00\x01C\x00\x00\x14C\x00\x00RC\x00\x00\x15C\x00\x00=C\x00\x00\xd2B\x00\x00DC\x00\x00\xb6B\x00\x00\x90B\x00\x00@B\x00\x00NC\x00\x00\x1dC\x00\x00gC\x00\x00BC\x00\x00\x1aC\x00\x00\x00\x00\x00\x00\xb4B\x00\x00\xf6B\x00\x00\xd6B\v\x00\x00\x00\v\x00\x00\x00\n\x00\x00\x00\r\x00\x00\x00\r\x00\x00\x00\t\x00\x00\x00\f\x00\x00\x00\f\x00\x00\x00M\x05\x01\x00\x92\x05\x01\x00z\x05\x01\x00Y\x05\x01\x00\x9e\x05\x01\x00g\x05\x01\x00@\x05\x01\x00\x85\x05\x01\x00\x06\x00\x00\x00\x0f\x00\x00\x00\x04\x00\x00\x00\v\x05\x01\x00\xcb\x05\x01\x00\xfd\x04\x01\x00\x00 \x00\x00\x00@\x00\x00\x00\x00\x00\x00\x01\x00\x00\x00\xbe\f\x01\x00\x00\x00hB\x00\x00`B\x00\x00PB\x00\x00\x7fC\x00\x00xB\x00\x00pB\x00\x00hB\x00\x00\x7fC\x00\x00\rC\x00\x00\x05C\x00\x00\aC\x00\x00\x7fC\x00\x00nC\x00\x00bC\x00\x00gC\x00\x00\x7fC\x00\x00\xccB\x00\x00\xa0B\x00\x00\x9cB\x00\x00\x7fC\x00\x00\x00\x00\x00\x00nC\x00\x00bC\x00\x00gC\x00\x00\x7fC\x00\x00\x10\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x00(C\x00\x00\x84B\x00\x00\xe0A\x00\x00\xc8B\x90\x01\x00\x00"

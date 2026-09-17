@@ -456,3 +456,116 @@ func TestElementIdStrings(t *testing.T) {
 		t.Error("IDI returns the same id for different indexes")
 	}
 }
+
+// layoutWithWidth lays out a single element of the given width with a transition on it,
+// and returns the width it was drawn at after deltaTime has passed.
+func layoutWithWidth(t *testing.T, width float32, transition TransitionElementConfig, deltaTime float32) float32 {
+	t.Helper()
+	BeginLayout()
+	UI(ID("Box"))(ElementDeclaration{
+		Layout:          LayoutConfig{Sizing: Sizing{Width: SizingFixed(width), Height: SizingFixed(100)}},
+		BackgroundColor: Color{R: 255, A: 255},
+		Transition:      transition,
+	}, nil)
+	for _, c := range EndLayout(deltaTime) {
+		if c.CommandType == RENDER_COMMAND_TYPE_RECTANGLE {
+			return c.BoundingBox.Width
+		}
+	}
+	t.Fatal("no rectangle was drawn")
+	return 0
+}
+
+// TestTransitionEaseOut checks that clay's built in handler animates an element over
+// several frames instead of snapping it to its new size.
+func TestTransitionEaseOut(t *testing.T) {
+	newContext(t)
+	transition := TransitionElementConfig{
+		Handler:    EaseOut,
+		Duration:   1,
+		Properties: TRANSITION_PROPERTY_BOUNDING_BOX,
+	}
+
+	if got := layoutWithWidth(t, 100, transition, 0); got != 100 {
+		t.Fatalf("first frame drawn at %v, want the declared width 100", got)
+	}
+
+	// The element is now declared three times as wide, so it eases towards that over the
+	// following frames instead of jumping to it. The frame the transition starts on is
+	// still drawn at the old width, as no time has passed in it yet.
+	widths := []float32{layoutWithWidth(t, 300, transition, 0.2)}
+	if widths[0] != 100 {
+		t.Errorf("the frame the transition starts on was drawn at %v, want 100", widths[0])
+	}
+	for range 4 {
+		widths = append(widths, layoutWithWidth(t, 300, transition, 0.2))
+	}
+	for i := 1; i < len(widths); i++ {
+		if widths[i] <= widths[i-1] || widths[i] > 300 {
+			t.Fatalf("widths %v do not ease towards 300", widths)
+		}
+	}
+	if widths[1] >= 300 {
+		t.Errorf("the element reached its new width in one frame: %v", widths)
+	}
+	// Once the duration has passed it settles on the target and stays there.
+	for range 2 {
+		if got := layoutWithWidth(t, 300, transition, 0.2); got != 300 {
+			t.Errorf("width after the transition = %v, want 300", got)
+		}
+	}
+}
+
+// TestTransitionCallbacks checks that a handler and state function written in Go are
+// called by clay, with the arguments of the running transition.
+func TestTransitionCallbacks(t *testing.T) {
+	newContext(t)
+
+	var handlerCalls int
+	var sawProperties TransitionProperty
+	var sawTarget BoundingBox
+	handler := NewTransitionHandler(func(arguments TransitionCallbackArguments) bool {
+		handlerCalls++
+		sawProperties = arguments.Properties
+		sawTarget = arguments.Target.BoundingBox
+		// Jump straight to the target, and report the transition as complete.
+		current := arguments.Current.Get()
+		current.BoundingBox = arguments.Target.BoundingBox
+		arguments.Current.Set(current)
+		return true
+	})
+
+	var initialCalls int
+	initialState := NewTransitionStateFunc(func(state TransitionData, properties TransitionProperty) TransitionData {
+		initialCalls++
+		state.BoundingBox.Width = 7 // the element enters from this width
+		return state
+	})
+
+	transition := TransitionElementConfig{
+		Handler:    handler,
+		Duration:   1,
+		Properties: TRANSITION_PROPERTY_BOUNDING_BOX,
+	}
+	transition.Enter.SetInitialState = initialState
+	transition.Enter.Trigger = TRANSITION_ENTER_TRIGGER_ON_FIRST_PARENT_FRAME
+
+	layoutWithWidth(t, 100, transition, 0)
+	layoutWithWidth(t, 300, transition, 0.1)
+	if handlerCalls == 0 {
+		t.Fatal("the transition handler was never called")
+	}
+	if sawProperties != TRANSITION_PROPERTY_BOUNDING_BOX {
+		t.Errorf("handler called with properties %v", sawProperties)
+	}
+	if sawTarget.Width != 300 {
+		t.Errorf("handler called with target width %v, want 300", sawTarget.Width)
+	}
+	// The handler wrote the target through Current, so the element is drawn at it.
+	if got := layoutWithWidth(t, 300, transition, 0.1); got != 300 {
+		t.Errorf("width = %v, want the target 300 the handler wrote", got)
+	}
+	if initialCalls == 0 {
+		t.Error("the enter state function was never called")
+	}
+}

@@ -213,6 +213,56 @@ func contextOf(addr uint32) *Context {
 	return c
 }
 
+// Clay calls transition functions through function pointers that carry no user data,
+// so each Go function registered gets a slot, and with it one of the trampolines in the
+// module that calls back into Go with that slot. There is a limited number of them, and a
+// registration lasts for the lifetime of the program, so they are meant to be made once,
+// not per frame or per element.
+
+// TransitionHandler advances a transition, and is called once a frame while one is running.
+// Use [EaseOut], or [NewTransitionHandler] to write your own.
+type TransitionHandler struct {
+	ptr uint32
+}
+
+// EaseOut is clay's built in transition handler, which eases towards the target state.
+var EaseOut = TransitionHandler{ptr: uint32(module.Xgo_ease_out_ptr())}
+
+// NewTransitionHandler registers fn as a transition handler, which is called with the state
+// of a running transition and writes the current state of it through arguments.Current.
+// It returns whether the transition is complete.
+//
+// It panics if there are no transition slots left.
+func NewTransitionHandler(fn func(arguments TransitionCallbackArguments) bool) TransitionHandler {
+	slot := len(transitionHandlers)
+	ptr := uint32(module.Xgo_transition_handler_ptr(int32(slot)))
+	if ptr == 0 {
+		panic("clay: too many transition handlers")
+	}
+	transitionHandlers = append(transitionHandlers, fn)
+	return TransitionHandler{ptr: ptr}
+}
+
+// TransitionStateFunc returns the state a transition starts from, or ends at.
+// Use [NewTransitionStateFunc] to make one.
+type TransitionStateFunc struct {
+	ptr uint32
+}
+
+// NewTransitionStateFunc registers fn as the function that gives an entering element the
+// state it transitions from, or an exiting element the state it transitions to.
+//
+// It panics if there are no transition slots left.
+func NewTransitionStateFunc(fn func(state TransitionData, properties TransitionProperty) TransitionData) TransitionStateFunc {
+	slot := len(transitionStateFuncs)
+	ptr := uint32(module.Xgo_transition_state_ptr(int32(slot)))
+	if ptr == 0 {
+		panic("clay: too many transition state functions")
+	}
+	transitionStateFuncs = append(transitionStateFuncs, fn)
+	return TransitionStateFunc{ptr: ptr}
+}
+
 // currentContextAddr returns the address of the context the callbacks are set on.
 func currentContextAddr() uint32 {
 	return uint32(GetCurrentContext().wasmAddr())
