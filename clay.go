@@ -1615,6 +1615,9 @@ func __HashStringWithOffset(key string, offset uint32, seed uint32) ElementId {
 	return ret
 }
 
+// maxPointerSize is the size of the largest type that a Pointer can point to.
+const maxPointerSize = 76
+
 func decodeValue(m []byte, p uint32, v any) {
 	switch v := v.(type) {
 	case *Vector2:

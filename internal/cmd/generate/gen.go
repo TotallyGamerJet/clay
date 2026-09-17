@@ -890,6 +890,13 @@ func (g *gen) cScalar(t *ctype) string {
 }
 
 func (g *gen) emitPointers() {
+	// The buffer Pointer.Set encodes into has to fit every type it can point to.
+	var maxSize uint32
+	for _, r := range g.pointers {
+		maxSize = max(maxSize, r.size)
+	}
+	fmt.Fprintf(&g.goOut, "// maxPointerSize is the size of the largest type that a Pointer can point to.\nconst maxPointerSize = %d\n\n", maxSize)
+
 	g.goOut.WriteString("func decodeValue(m []byte, p uint32, v any) {\nswitch v := v.(type) {\n")
 	for _, r := range g.pointers {
 		fmt.Fprintf(&g.goOut, "case *%s:\ndec%s(m, p, v)\n", r.goName, r.goName)

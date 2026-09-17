@@ -188,7 +188,7 @@ func (p Pointer[T]) Set(v T) {
 	if p.addr == 0 {
 		panic("clay: Set on nil Pointer")
 	}
-	var buf [64]byte
+	var buf [maxPointerSize]byte
 	n := encodeValue(buf[:], 0, &v)
 	copy(wasmMemory()[p.addr:], buf[:n])
 }
