@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/examples/fonts"
 	"github.com/TotallyGamerJet/clay/examples/videodemo"
@@ -88,7 +90,10 @@ func main() {
 
 	demoData := videodemo.Initialize(surface)
 
+	lastFrame := time.Now()
 	_ = sdl.RunLoop(func() error {
+		deltaTime := float32(time.Since(lastFrame).Seconds())
+		lastFrame = time.Now()
 		scrollDelta := clay.Vector2{}
 		var event sdl.Event
 		for sdl.PollEvent(&event) {
@@ -120,9 +125,9 @@ func main() {
 			Y: y,
 		}, state&sdl.BUTTON_LEFT != 0)
 
-		clay.UpdateScrollContainers(true, scrollDelta, 0.01)
+		clay.UpdateScrollContainers(true, scrollDelta, deltaTime)
 
-		renderCommands := videodemo.CreateLayout(&demoData)
+		renderCommands := videodemo.CreateLayout(&demoData, deltaTime)
 
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()

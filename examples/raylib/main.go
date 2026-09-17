@@ -52,7 +52,7 @@ func main() {
 		clay.SetPointerState(clay.Vector2{X: mousePosition.X, Y: mousePosition.Y}, rl.IsMouseButtonDown(rl.MouseButtonLeft))
 		clay.UpdateScrollContainers(true, clay.Vector2{X: scrollDelta.X, Y: scrollDelta.Y}, rl.GetFrameTime())
 
-		renderCommands := videodemo.CreateLayout(&demoData)
+		renderCommands := videodemo.CreateLayout(&demoData, rl.GetFrameTime())
 
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.Black)

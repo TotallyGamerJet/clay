@@ -101,6 +101,14 @@ func RenderHeaderButton(text string) {
 	})
 }
 
+// sidebarButtonTransition fades the highlight of a sidebar button in and out, instead of
+// it appearing and disappearing as the pointer moves over the button.
+var sidebarButtonTransition = clay.TransitionElementConfig{
+	Handler:    clay.EaseOut,
+	Duration:   0.4,
+	Properties: clay.TRANSITION_PROPERTY_BACKGROUND_COLOR,
+}
+
 func handleSidebarInteraction(elementId clay.ElementId, pointerData clay.PointerData, userData any) {
 	clickData := userData.(*sidebarClickData)
 	// If this button was clicked
@@ -112,7 +120,9 @@ func handleSidebarInteraction(elementId clay.ElementId, pointerData clay.Pointer
 	}
 }
 
-func CreateLayout(data *Data) clay.RenderCommandArray {
+// CreateLayout declares the layout of the demo. deltaTime is the time in seconds since the
+// last call, which clay uses to advance transitions.
+func CreateLayout(data *Data, deltaTime float32) clay.RenderCommandArray {
 	clay.BeginLayout()
 
 	layoutExpand := clay.Sizing{
@@ -242,6 +252,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 								}
 							}()},
 							CornerRadius: clay.CornerRadiusAll(8),
+							Transition:   sidebarButtonTransition,
 						}, func() {
 							clay.OnHover(handleSidebarInteraction, clickData)
 							clay.Text(document.title, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 20, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
@@ -281,7 +292,7 @@ func CreateLayout(data *Data) clay.RenderCommandArray {
 		})
 	})
 
-	renderCommands := clay.EndLayout(0)
+	renderCommands := clay.EndLayout(deltaTime)
 	for i := range renderCommands {
 		renderCommands[i].BoundingBox.Y += data.yOffset
 	}

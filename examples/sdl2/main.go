@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"unsafe"
 
 	"github.com/TotallyGamerJet/clay"
@@ -120,8 +119,7 @@ loop:
 
 		LAST = NOW
 		NOW = sdl.GetPerformanceCounter()
-		deltaTime = (float64)((NOW-LAST)*1000) / (float64)(sdl.GetPerformanceFrequency())
-		fmt.Println(deltaTime)
+		deltaTime = (float64)(NOW-LAST) / (float64)(sdl.GetPerformanceFrequency())
 
 		mouseX, mouseY, mouseState := sdl.GetMouseState()
 		mousePosition := clay.Vector2{X: float32(mouseX), Y: float32(mouseY)}
@@ -136,7 +134,7 @@ loop:
 		windowWidth, windowHeight := window.GetSize()
 		clay.SetLayoutDimensions(clay.Dimensions{Width: float32(windowWidth), Height: float32(windowHeight)})
 
-		renderCommands := videodemo.CreateLayout(&demoData)
+		renderCommands := videodemo.CreateLayout(&demoData, float32(deltaTime))
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 

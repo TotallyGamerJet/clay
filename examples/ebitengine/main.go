@@ -50,7 +50,8 @@ func (a *App) Update() error {
 		Y: float32(y) / a.scaleFactor,
 	}, ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft))
 
-	a.cmds = videodemo.CreateLayout(&a.demoData)
+	// Update is called TPS times a second.
+	a.cmds = videodemo.CreateLayout(&a.demoData, 1/float32(ebiten.TPS()))
 
 	return nil
 }

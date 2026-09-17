@@ -56,7 +56,7 @@ func main() {
 	window := image.NewRGBA(image.Rect(0, 0, winWidth, winHeight))
 	draw.Draw(window, window.Bounds(), image.NewUniform(color.RGBA{A: 255}), image.Point{}, draw.Src)
 
-	cmds := videodemo.CreateLayout(&demoData)
+	cmds := videodemo.CreateLayout(&demoData, 0)
 
 	if err := software.ClayRender(window, cmds, faces); err != nil {
 		panic(err)
