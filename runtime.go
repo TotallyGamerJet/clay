@@ -9,6 +9,9 @@ import (
 	"github.com/TotallyGamerJet/clay/internal/wasm"
 )
 
+// This file is the bridge between Go and the WebAssembly module that clay runs as.
+// Nothing in it is part of the package's API.
+
 // Clay runs as a WebAssembly module translated to Go (see internal/wasm).
 // All of its state lives in the module's linear memory, so values are copied
 // in and out of that memory by the functions generated in clay.go.
@@ -260,123 +263,6 @@ func loadString(m []byte, addr, n uint32) string {
 		return ""
 	}
 	return string(m[addr : addr+n])
-}
-
-// Pointer points to a value inside clay's memory.
-type Pointer[T any] struct {
-	addr uint32
-}
-
-// IsNil reports whether the pointer is nil.
-func (p Pointer[T]) IsNil() bool {
-	return p.addr == 0
-}
-
-// Get returns the value p points to, or the zero value if p is nil.
-func (p Pointer[T]) Get() T {
-	var v T
-	if p.addr != 0 {
-		decodeValue(wasmMemory(), p.addr, &v)
-	}
-	return v
-}
-
-// Set sets the value p points to.
-func (p Pointer[T]) Set(v T) {
-	if p.addr == 0 {
-		panic("clay: Set on nil Pointer")
-	}
-	var buf [64]byte
-	n := encodeValue(buf[:], 0, &v)
-	copy(wasmMemory()[p.addr:], buf[:n])
-}
-
-// Context is clay's internal state.
-type Context struct {
-	addr uint32
-}
-
-var contexts = map[uint32]*Context{}
-
-func contextOf(addr uint32) *Context {
-	if addr == 0 {
-		return nil
-	}
-	c, ok := contexts[addr]
-	if !ok {
-		c = &Context{addr: addr}
-		contexts[addr] = c
-	}
-	return c
-}
-
-func (c *Context) wasmAddr() int32 {
-	if c == nil {
-		return 0
-	}
-	return int32(c.addr)
-}
-
-// Arena is memory inside clay's WebAssembly module used for its internal allocations.
-type Arena struct {
-	capacity, memory uint32
-}
-
-// CreateArenaWithCapacity allocates an arena of capacity bytes.
-// Use MinMemorySize to know how big it needs to be.
-func CreateArenaWithCapacity(capacity uint32) Arena {
-	return Arena{capacity: capacity, memory: wasmMalloc(capacity)}
-}
-
-type ErrorHandler struct {
-	ErrorHandlerFunction func(errorData ErrorData)
-	UserData             any
-}
-
-func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHandler) *Context {
-	h := storePersistentHandle(&errorHandler)
-	b := wasmArgs(sizeofDimensions)
-	encDimensions(b, 0, &layoutDimensions)
-	p := wasmCommit(b)
-	return contextOf(uint32(module.Xgo_initialize(int32(arena.capacity), int32(arena.memory), int32(p), int32(h))))
-}
-
-type measureTextFunction struct {
-	fn       func(text string, config *TextElementConfig, userData any) Dimensions
-	userData any
-}
-
-// SetMeasureTextFunction sets the function used to measure text for the current context.
-// The config passed to it must not be retained.
-func SetMeasureTextFunction(measureTextFunction_ func(text string, config *TextElementConfig, userData any) Dimensions, userData any) {
-	h := storePersistentHandle(&measureTextFunction{measureTextFunction_, userData})
-	module.Xgo_set_measure_text_function(b2i(measureTextFunction_ != nil), int32(h))
-}
-
-type queryScrollOffsetFunction struct {
-	fn       func(elementId uint32, userData any) Vector2
-	userData any
-}
-
-func SetQueryScrollOffsetFunction(queryScrollOffsetFunction_ func(elementId uint32, userData any) Vector2, userData any) {
-	h := storePersistentHandle(&queryScrollOffsetFunction{queryScrollOffsetFunction_, userData})
-	module.Xgo_set_query_scroll_offset_function(b2i(queryScrollOffsetFunction_ != nil), int32(h))
-}
-
-type onHoverFunction struct {
-	fn       func(elementId ElementId, pointerData PointerData, userData any)
-	userData any
-}
-
-// OnHover binds a function that will be called when the pointer position provided by SetPointerState
-// is within the current element's bounding box.
-func OnHover(onHoverFunction_ func(elementId ElementId, pointerData PointerData, userData any), userData any) {
-	module.Xgo_on_hover(int32(storeHandle(&onHoverFunction{onHoverFunction_, userData})))
-}
-
-func BeginLayout() {
-	nextFrame()
-	beginLayout()
 }
 
 func openTextElement(text string, config *TextElementConfig) {
