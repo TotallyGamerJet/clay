@@ -71,15 +71,21 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// Extract the C standard library from the version of wasm2go in go.mod.
+	libc := filepath.Join(tmp, "libc")
+	if _, err := output("go", "tool", "libc-gen", "-c-out", libc); err != nil {
+		log.Fatal(err)
+	}
+
 	// Build the Wasm module.
 	wasm := filepath.Join(tmp, "clay.wasm")
 	if _, err := output(clang, "--target=wasm32", "-std=c17", "-ffreestanding", "-nostdlib",
 		"-O2", "-g0",
 		"-mbulk-memory", "-msign-ext", "-mnontrapping-fptoint", "-mmutable-globals",
-		"-I.", "-Ilibc",
+		"-I.", "-I"+libc,
 		"-Wl,--no-entry", "-Wl,--strip-debug",
 		"-o", wasm,
-		"internal/wasm/src/clay.c", glue, "libc/malloc_sbrk.c", "libc/libc.c",
+		"internal/wasm/src/clay.c", glue, filepath.Join(libc, "malloc_sbrk.c"), filepath.Join(libc, "libc.c"),
 	); err != nil {
 		log.Fatal(err)
 	}
