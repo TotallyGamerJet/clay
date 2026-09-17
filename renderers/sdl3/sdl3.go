@@ -69,7 +69,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 	fonts := rendererData.Fonts
 	textEngine := rendererData.TextEngine
 	var overlays overlay.Stack
-	for renderCommand := range renderCommands.Iter() {
+	for _, renderCommand := range renderCommands {
 		boundingBox := renderCommand.BoundingBox
 		rect := sdl.FRect{
 			X: boundingBox.X,

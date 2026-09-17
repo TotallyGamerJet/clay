@@ -85,7 +85,7 @@ func ClayRender(renderCommands clay.RenderCommandArray, fonts []rl.Font) {
 			rl.EndShaderMode()
 		}
 	}()
-	for renderCommand := range renderCommands.Iter() {
+	for _, renderCommand := range renderCommands {
 		boundingBox := renderCommand.BoundingBox
 		rect := rl.Rectangle{X: boundingBox.X, Y: boundingBox.Y, Width: boundingBox.Width, Height: boundingBox.Height}
 		switch renderCommand.CommandType {

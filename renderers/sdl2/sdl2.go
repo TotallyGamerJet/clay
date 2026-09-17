@@ -67,7 +67,7 @@ func MeasureText(text string, config *clay.TextElementConfig, userData any) clay
 
 func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, fonts []Font) error {
 	var overlays overlay.Stack
-	for renderCommand := range renderCommands.Iter() {
+	for _, renderCommand := range renderCommands {
 		boundingBox := renderCommand.BoundingBox
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:

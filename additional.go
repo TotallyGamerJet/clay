@@ -2,7 +2,6 @@ package clay
 
 import (
 	"fmt"
-	"iter"
 )
 
 // confirm that ErrorData implements error type
@@ -130,14 +129,4 @@ func Text(text string, config *TextElementConfig) {
 		config = &TextElementConfig{}
 	}
 	openTextElement(text, config)
-}
-
-func (r RenderCommandArray) Iter() iter.Seq[RenderCommand] {
-	return func(yield func(RenderCommand) bool) {
-		for _, v := range r {
-			if !yield(v) {
-				return
-			}
-		}
-	}
 }

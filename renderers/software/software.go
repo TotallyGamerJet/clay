@@ -90,7 +90,7 @@ func toColor(c clay.Color) color.NRGBA {
 func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts []*Font) error {
 	fullScreen := screen
 	var overlays overlay.Stack
-	for renderCommand := range renderCommands.Iter() {
+	for _, renderCommand := range renderCommands {
 		boundingBox := renderCommand.BoundingBox
 		rect := image.Rect(int(boundingBox.X), int(boundingBox.Y), int(boundingBox.X+boundingBox.Width), int(boundingBox.Y+boundingBox.Height))
 		switch renderCommand.CommandType {
