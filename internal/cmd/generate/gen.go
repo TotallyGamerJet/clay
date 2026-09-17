@@ -890,6 +890,18 @@ func (g *gen) cScalar(t *ctype) string {
 }
 
 func (g *gen) emitPointers() {
+	slices.SortFunc(g.pointers, func(a, b *record) int { return strings.Compare(a.goName, b.goName) })
+
+	// The types a Pointer is allowed to point to.
+	g.goOut.WriteString("// PointerTarget is the set of types that a [Pointer] can point to.\ntype PointerTarget interface {\n")
+	for i, r := range g.pointers {
+		if i > 0 {
+			g.goOut.WriteString(" | ")
+		}
+		g.goOut.WriteString(r.goName)
+	}
+	g.goOut.WriteString("\n}\n\n")
+
 	// The buffer Pointer.Set encodes into has to fit every type it can point to.
 	var maxSize uint32
 	for _, r := range g.pointers {

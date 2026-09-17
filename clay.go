@@ -1615,15 +1615,20 @@ func __HashStringWithOffset(key string, offset uint32, seed uint32) ElementId {
 	return ret
 }
 
+// PointerTarget is the set of types that a [Pointer] can point to.
+type PointerTarget interface {
+	TransitionData | Vector2
+}
+
 // maxPointerSize is the size of the largest type that a Pointer can point to.
 const maxPointerSize = 76
 
 func decodeValue(m []byte, p uint32, v any) {
 	switch v := v.(type) {
-	case *Vector2:
-		decVector2(m, p, v)
 	case *TransitionData:
 		decTransitionData(m, p, v)
+	case *Vector2:
+		decVector2(m, p, v)
 	default:
 		panic("clay: unsupported pointer type")
 	}
@@ -1631,12 +1636,12 @@ func decodeValue(m []byte, p uint32, v any) {
 
 func encodeValue(b []byte, p uint32, v any) uint32 {
 	switch v := v.(type) {
-	case *Vector2:
-		encVector2(b, p, v)
-		return sizeofVector2
 	case *TransitionData:
 		encTransitionData(b, p, v)
 		return sizeofTransitionData
+	case *Vector2:
+		encVector2(b, p, v)
+		return sizeofVector2
 	default:
 		panic("clay: unsupported pointer type")
 	}

@@ -164,8 +164,8 @@ func Text(text string, config *TextElementConfig) {
 	openTextElement(text, config)
 }
 
-// Pointer points to a value inside clay's memory.
-type Pointer[T any] struct {
+// Pointer points to a value of one of the [PointerTarget] types inside clay's memory.
+type Pointer[T PointerTarget] struct {
 	addr uint32
 }
 
