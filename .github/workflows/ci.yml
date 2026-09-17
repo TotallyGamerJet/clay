@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # clay itself and the software renderer only need the standard library,
+  # so they are the part that is worth testing on every platform.
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - run: go build ./ ./renderers/software ./examples/software ./internal/...
+      - run: go vet ./ ./renderers/software ./examples/software ./internal/...
+      - run: go test ./ ./renderers/software ./internal/...
+
+  # The other renderers bind C libraries, which need their development packages.
+  renderers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - name: Install renderer dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libsdl2-dev libsdl2-ttf-dev libgl1-mesa-dev xorg-dev libasound2-dev
+      - run: go build ./...
+      - run: go vet ./...
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - name: Check formatting
+        run: |
+          unformatted=$(go tool gofumpt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "$unformatted"
+            exit 1
+          fi
+
+  # clay.go and internal/wasm/clay.go are generated from clay.h, so check that
+  # they still are what the generator produces, and that the result works.
+  generate:
+    runs-on: ubuntu-latest
+    env:
+      # Keep this in step with the version used to generate the committed files.
+      WASI_SDK_VERSION: "33.0"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - name: Install wasi-sdk
+        run: |
+          curl -fsSL -o wasi-sdk.tar.gz \
+            "https://github.com/WebAssembly/wasi-sdk/releases/download/wasi-sdk-${WASI_SDK_VERSION%%.*}/wasi-sdk-$WASI_SDK_VERSION-x86_64-linux.tar.gz"
+          mkdir -p tools/wasi-sdk
+          tar -xf wasi-sdk.tar.gz --strip-components=1 -C tools/wasi-sdk
+      - run: go generate
+      # The Go API is derived from clang's AST of clay.h, so it must not change.
+      - name: Check clay.go is up to date
+        run: git diff --exit-code clay.go
+      # The translated Wasm depends on the exact clang build, so only report changes to it.
+      - name: Report changes to the translated Wasm
+        run: git diff --stat internal/wasm/clay.go
+      - name: Test the regenerated code
+        run: go test ./ ./renderers/software ./internal/...
