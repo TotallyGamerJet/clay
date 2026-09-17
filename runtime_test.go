@@ -129,7 +129,7 @@ func TestHandleLifetime(t *testing.T) {
 	}
 
 	// Handles for things that outlive a frame, like the error handler, are always valid.
-	p := storePersistentHandle(value)
+	p := storePersistentHandle(persistentKey{measureTextHandle, 1}, value)
 	for range 4 {
 		BeginLayout()
 	}
@@ -145,6 +145,75 @@ func TestHandleLifetime(t *testing.T) {
 			t.Errorf("loadHandle(%d) = %v, want nil", h, got)
 		}
 	}
+}
+
+// TestPersistentHandlesAreReused checks that setting the callbacks of a context every
+// frame, which is allowed, does not grow the table of handles that outlive a frame.
+func TestPersistentHandlesAreReused(t *testing.T) {
+	newContext(t)
+	measure := func(text string, config *TextElementConfig, _ any) Dimensions { return Dimensions{} }
+	scrollOffset := func(elementId uint32, _ any) Vector2 { return Vector2{} }
+
+	SetMeasureTextFunction(measure, new(int))
+	SetQueryScrollOffsetFunction(scrollOffset, new(int))
+	before := len(persistent)
+	for range 100 {
+		SetMeasureTextFunction(measure, new(int))
+		SetQueryScrollOffsetFunction(scrollOffset, new(int))
+	}
+	if len(persistent) != before {
+		t.Errorf("setting the callbacks 100 times grew the handles from %d to %d", before, len(persistent))
+	}
+
+	// The last values set are the ones clay gets back.
+	userData := new(int)
+	SetMeasureTextFunction(measure, userData)
+	var measured bool
+	SetMeasureTextFunction(func(text string, config *TextElementConfig, u any) Dimensions {
+		measured = true
+		if u != any(userData) {
+			t.Errorf("measure text user data = %v, want the last one set", u)
+		}
+		return Dimensions{Width: 10, Height: 10}
+	}, userData)
+	BeginLayout()
+	UI(ID("Root"))(ElementDeclaration{}, func() { Text("x", nil) })
+	EndLayout(0)
+	if !measured {
+		t.Error("the measure text function set last was not called")
+	}
+}
+
+// TestArenaFree checks that arenas can be freed and their memory reused.
+func TestArenaFree(t *testing.T) {
+	arena := CreateArenaWithCapacity(MinMemorySize())
+	Initialize(arena, Dimensions{Width: 800, Height: 600}, ErrorHandler{})
+	arena.Free()
+	if arena != (Arena{}) {
+		t.Errorf("freed arena = %+v, want the zero Arena", arena)
+	}
+	arena.Free() // freeing again does nothing
+
+	// Initializing and freeing repeatedly reuses the memory instead of growing it.
+	before := len(wasmMemory())
+	handlesBefore := len(persistent)
+	for range 50 {
+		a := CreateArenaWithCapacity(MinMemorySize())
+		Initialize(a, Dimensions{Width: 800, Height: 600}, ErrorHandler{})
+		a.Free()
+	}
+	if got := len(wasmMemory()); got != before {
+		t.Errorf("memory grew from %d to %d over 50 arenas", before, got)
+	}
+	if got := len(persistent); got > handlesBefore+1 {
+		t.Errorf("handles grew from %d to %d over 50 contexts", handlesBefore, got)
+	}
+
+	if GetCurrentContext() != nil {
+		t.Error("freeing the arena of the current context left it current")
+	}
+	// Restore a usable context for the tests that follow.
+	newContext(t)
 }
 
 func TestPointer(t *testing.T) {

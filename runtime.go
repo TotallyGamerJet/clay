@@ -111,7 +111,27 @@ var (
 	frame         uint32
 	stringBuffers [2]stringBuffer
 	frameHandles  [2][]any
-	persistent    []any
+
+	// Handles that outlive a frame, like the callbacks of a context. Each one has a slot,
+	// which is reused when the same callback of the same context is set again.
+	persistent      []any
+	persistentFree  []uint32
+	persistentSlots = map[persistentKey]uint32{}
+)
+
+// persistentKey identifies what a persistent handle is for, so that setting it again
+// reuses its slot instead of leaking the old one.
+type persistentKey struct {
+	kind persistentKind
+	ctx  uint32 // the context the handle belongs to
+}
+
+type persistentKind uint8
+
+const (
+	errorHandlerHandle persistentKind = iota
+	measureTextHandle
+	queryScrollOffsetHandle
 )
 
 const (
@@ -136,10 +156,46 @@ func storeHandle(v any) uint32 {
 	return (frame&1)*frameHandleBit | uint32(len(*t))
 }
 
-// storePersistentHandle returns a handle to v that is always valid.
-func storePersistentHandle(v any) uint32 {
+// allocPersistent stores v in a free slot and returns the slot, which is 1 based.
+func allocPersistent(v any) uint32 {
+	if n := len(persistentFree); n > 0 {
+		slot := persistentFree[n-1]
+		persistentFree = persistentFree[:n-1]
+		persistent[slot-1] = v
+		return slot
+	}
 	persistent = append(persistent, v)
-	return persistentHandle | uint32(len(persistent))
+	return uint32(len(persistent))
+}
+
+// freePersistent makes the slot available to the next handle.
+func freePersistent(slot uint32) {
+	persistent[slot-1] = nil
+	persistentFree = append(persistentFree, slot)
+}
+
+// storePersistentHandle returns a handle to v that is always valid. Storing a handle for the
+// same purpose and context again reuses its slot, so that setting a callback every frame
+// doesn't grow the table.
+func storePersistentHandle(key persistentKey, v any) uint32 {
+	slot, ok := persistentSlots[key]
+	if ok {
+		persistent[slot-1] = v
+	} else {
+		slot = allocPersistent(v)
+		persistentSlots[key] = slot
+	}
+	return persistentHandle | slot
+}
+
+// takePersistentSlot gives the slot of an already stored handle the given key,
+// freeing whatever the key held before. Initialize uses it, as the context a handle
+// belongs to is only known once it has been created.
+func takePersistentSlot(key persistentKey, handle uint32) {
+	if old, ok := persistentSlots[key]; ok {
+		freePersistent(old)
+	}
+	persistentSlots[key] = handle &^ persistentHandle
 }
 
 func loadHandle(h uint32) any {

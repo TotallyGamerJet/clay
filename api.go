@@ -213,6 +213,11 @@ func contextOf(addr uint32) *Context {
 	return c
 }
 
+// currentContextAddr returns the address of the context the callbacks are set on.
+func currentContextAddr() uint32 {
+	return uint32(GetCurrentContext().wasmAddr())
+}
+
 func (c *Context) wasmAddr() int32 {
 	if c == nil {
 		return 0
@@ -231,6 +236,21 @@ func CreateArenaWithCapacity(capacity uint32) Arena {
 	return Arena{capacity: capacity, memory: wasmMalloc(capacity)}
 }
 
+// Free releases the memory of the arena, which is left empty.
+// The context created in the arena must not be used afterwards, so if it is the current
+// context, clay is left without one until the next call to Initialize or SetCurrentContext.
+func (a *Arena) Free() {
+	if a.memory == 0 {
+		return
+	}
+	if c := GetCurrentContext(); c != nil && c.addr >= a.memory && c.addr < a.memory+a.capacity {
+		SetCurrentContext(nil)
+		delete(contexts, c.addr)
+	}
+	module.Xgo_free(int32(a.memory))
+	*a = Arena{}
+}
+
 // ErrorHandler is called by clay when it encounters an error, such as running out of arena space.
 type ErrorHandler struct {
 	// ErrorHandlerFunction is called with the error, which is also a Go error.
@@ -242,11 +262,14 @@ type ErrorHandler struct {
 // Initialize creates a clay context in the arena, makes it current, and returns it.
 // The dimensions are the size of the root layout element, which SetLayoutDimensions changes later.
 func Initialize(arena Arena, layoutDimensions Dimensions, errorHandler ErrorHandler) *Context {
-	h := storePersistentHandle(&errorHandler)
+	h := persistentHandle | allocPersistent(&errorHandler)
 	b := wasmArgs(sizeofDimensions)
 	encDimensions(b, 0, &layoutDimensions)
 	p := wasmCommit(b)
-	return contextOf(uint32(module.Xgo_initialize(int32(arena.capacity), int32(arena.memory), int32(p), int32(h))))
+	ctx := contextOf(uint32(module.Xgo_initialize(int32(arena.capacity), int32(arena.memory), int32(p), int32(h))))
+	// Initializing over a context replaces its error handler, so the old one can go.
+	takePersistentSlot(persistentKey{errorHandlerHandle, ctx.addr}, h)
+	return ctx
 }
 
 type measureTextFunction struct {
@@ -259,7 +282,7 @@ type measureTextFunction struct {
 //
 // The config passed to the function must not be retained.
 func SetMeasureTextFunction(measureText func(text string, config *TextElementConfig, userData any) Dimensions, userData any) {
-	h := storePersistentHandle(&measureTextFunction{measureText, userData})
+	h := storePersistentHandle(persistentKey{measureTextHandle, currentContextAddr()}, &measureTextFunction{measureText, userData})
 	module.Xgo_set_measure_text_function(b2i(measureText != nil), int32(h))
 }
 
@@ -272,7 +295,7 @@ type queryScrollOffsetFunction struct {
 // element from an external scrolling system, passing it userData.
 // It is only used when SetExternalScrollHandlingEnabled is set.
 func SetQueryScrollOffsetFunction(queryScrollOffset func(elementId uint32, userData any) Vector2, userData any) {
-	h := storePersistentHandle(&queryScrollOffsetFunction{queryScrollOffset, userData})
+	h := storePersistentHandle(persistentKey{queryScrollOffsetHandle, currentContextAddr()}, &queryScrollOffsetFunction{queryScrollOffset, userData})
 	module.Xgo_set_query_scroll_offset_function(b2i(queryScrollOffset != nil), int32(h))
 }
 
