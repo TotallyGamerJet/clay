@@ -23,12 +23,12 @@ var handwritten = map[string]bool{
 	"Clay_OnHover":                          true,
 	"Clay_SetMeasureTextFunction":           true,
 	"Clay_SetQueryScrollOffsetFunction":     true,
-	"Clay_RenderCommandArray_Get":           true,
 	"Clay__OpenTextElement":                 true,
 	"Clay__StoreTextElementConfig":          true,
 	"Clay__ConfigureOpenElementPtr":         true,
 	// Not useful in Go.
 	"Clay__SuppressUnusedLatchDefinitionVariableWarning": true,
+	"Clay_RenderCommandArray_Get":                        true, // RenderCommandArray is a slice
 }
 
 // handwrittenTypes are types that can't be generated and are implemented by hand.

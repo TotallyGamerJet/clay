@@ -379,10 +379,6 @@ func BeginLayout() {
 	beginLayout()
 }
 
-func RenderCommandArray_Get(array *RenderCommandArray, index int32) *RenderCommand {
-	return &(*array)[index]
-}
-
 func openTextElement(text string, config *TextElementConfig) {
 	configOff := uint32(sizeofString+7) &^ 7
 	b := wasmArgs(configOff + sizeofTextElementConfig)
