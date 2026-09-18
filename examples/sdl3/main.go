@@ -72,7 +72,6 @@ func main() {
 			font,
 		},
 	}
-	defer rendererData.Close()
 	surface, err := sdl.CreateSurfaceFrom(
 		videodemo.SquirrelImage.Bounds().Dx(),
 		videodemo.SquirrelImage.Bounds().Dy(),
@@ -89,7 +88,7 @@ func main() {
 	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	defer arena.Free()
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
-	clay.SetMeasureTextFunction(sdl3.MeasureText, rendererData)
+	clay.SetMeasureTextFunction(sdl3.MeasureText, &rendererData.Fonts)
 
 	demoData := videodemo.Initialize(surface)
 
