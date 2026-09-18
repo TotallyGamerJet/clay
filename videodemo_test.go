@@ -41,7 +41,7 @@ func TestVideoDemoTransition(t *testing.T) {
 		for _, c := range commands {
 			b := c.BoundingBox
 			inButton := buttonX >= b.X && buttonX <= b.X+b.Width && buttonY >= b.Y && buttonY <= b.Y+b.Height
-			if c.CommandType != clay.RENDER_COMMAND_TYPE_RECTANGLE || !inButton {
+			if c.CommandType != clay.RenderCommandTypeRectangle || !inButton {
 				continue
 			}
 			// The sidebar buttons are the grey rectangles; the panel behind them is darker.

@@ -108,13 +108,13 @@ func RenderHeaderButton(text string) {
 var sidebarButtonTransition = clay.TransitionElementConfig{
 	Handler:    clay.EaseOut,
 	Duration:   0.4,
-	Properties: clay.TRANSITION_PROPERTY_BACKGROUND_COLOR,
+	Properties: clay.TransitionPropertyBackgroundColor,
 }
 
 func handleSidebarInteraction(elementId clay.ElementId, pointerData clay.PointerData, userData any) {
 	clickData := userData.(*sidebarClickData)
 	// If this button was clicked
-	if pointerData.State == clay.POINTER_DATA_PRESSED_THIS_FRAME {
+	if pointerData.State == clay.PointerDataPressedThisFrame {
 		if clickData.requestedDocumentIndex >= 0 && clickData.requestedDocumentIndex < clickData.documentLen {
 			// Select the corresponding document
 			*clickData.selectedDocumentIndex = clickData.requestedDocumentIndex
@@ -137,7 +137,7 @@ func CreateLayout(data *Data, deltaTime float32) clay.RenderCommandArray {
 	clay.UI(clay.ID("OuterContainer"))(clay.ElementDeclaration{
 		BackgroundColor: clay.Color{R: 43, G: 41, B: 51, A: 255},
 		Layout: clay.LayoutConfig{
-			LayoutDirection: clay.TOP_TO_BOTTOM,
+			LayoutDirection: clay.TopToBottom,
 			Sizing:          layoutExpand,
 			Padding:         clay.PaddingAll(16),
 			ChildGap:        16,
@@ -152,7 +152,7 @@ func CreateLayout(data *Data, deltaTime float32) clay.RenderCommandArray {
 				Padding:  clay.Padding{Left: 16, Right: 16},
 				ChildGap: 16,
 				ChildAlignment: clay.ChildAlignment{
-					Y: clay.ALIGN_Y_CENTER,
+					Y: clay.AlignYCenter,
 				},
 			},
 			BackgroundColor: contentBackgroundColor,
@@ -171,16 +171,16 @@ func CreateLayout(data *Data, deltaTime float32) clay.RenderCommandArray {
 				if fileMenuVisible { // Below has been changed slightly to fix the small bug where the menu would dismiss when mousing over the top gap
 					clay.UI(clay.ID("FileMenu"))(clay.ElementDeclaration{
 						Floating: clay.FloatingElementConfig{
-							AttachTo: clay.ATTACH_TO_PARENT,
+							AttachTo: clay.AttachToParent,
 							AttachPoints: clay.FloatingAttachPoints{
-								Parent: clay.ATTACH_POINT_LEFT_BOTTOM,
+								Parent: clay.AttachPointLeftBottom,
 							},
 						},
 						Layout: clay.LayoutConfig{Padding: clay.Padding{Top: 8, Bottom: 8}},
 					}, func() {
 						clay.UI()(clay.ElementDeclaration{
 							Layout: clay.LayoutConfig{
-								LayoutDirection: clay.TOP_TO_BOTTOM,
+								LayoutDirection: clay.TopToBottom,
 								Sizing: clay.Sizing{
 									Width: clay.SizingFixed(200),
 								},
@@ -215,7 +215,7 @@ func CreateLayout(data *Data, deltaTime float32) clay.RenderCommandArray {
 			clay.UI(clay.ID("SideBar"))(clay.ElementDeclaration{
 				BackgroundColor: contentBackgroundColor,
 				Layout: clay.LayoutConfig{
-					LayoutDirection: clay.TOP_TO_BOTTOM,
+					LayoutDirection: clay.TopToBottom,
 					Padding:         clay.PaddingAll(16),
 					ChildGap:        8,
 					Sizing: clay.Sizing{
@@ -266,7 +266,7 @@ func CreateLayout(data *Data, deltaTime float32) clay.RenderCommandArray {
 				BackgroundColor: contentBackgroundColor,
 				Clip:            clay.ClipElementConfig{Vertical: true, ChildOffset: clay.GetScrollOffset()},
 				Layout: clay.LayoutConfig{
-					LayoutDirection: clay.TOP_TO_BOTTOM,
+					LayoutDirection: clay.TopToBottom,
 					ChildGap:        16,
 					Padding:         clay.PaddingAll(16),
 					Sizing:          layoutExpand,

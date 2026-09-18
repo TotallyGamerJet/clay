@@ -461,6 +461,10 @@ func (g *gen) goDoc(doc []string) string {
 			if goName, ok := g.names[name]; ok {
 				return goName
 			}
+			// Clay's comments sometimes leave the CLAY_ prefix off a constant.
+			if goName, ok := g.names["CLAY_"+name]; ok {
+				return goName
+			}
 			return name
 		})
 		switch {
@@ -479,7 +483,9 @@ func (g *gen) goDoc(doc []string) string {
 	return b.String()
 }
 
-var cNames = regexp.MustCompile(`\bC[Ll][Aa][Yy]_+[A-Za-z0-9_]+\b`)
+// Names of clay's own things, as its comments write them: either with the CLAY_ prefix,
+// or, for constants, as SOMETHING_LIKE_THIS.
+var cNames = regexp.MustCompile(`\bC[Ll][Aa][Yy]_+[A-Za-z0-9_]+\b|\b[A-Z][A-Z0-9]*(_[A-Z0-9]+)+\b`)
 
 func (g *gen) emitEnum(e *enum) {
 	fmt.Fprintf(&g.goOut, "%stype %s %s\n\nconst (\n", g.goDoc(e.doc), e.goName, e.prim.goType)

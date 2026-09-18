@@ -108,7 +108,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 		boundingBox.Width *= scaleFactor
 		boundingBox.Height *= scaleFactor
 		switch renderCommand.CommandType {
-		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
+		case clay.RenderCommandTypeRectangle:
 			config := &renderCommand.RenderData.Rectangle
 			config.BackgroundColor = overlays.Apply(config.BackgroundColor)
 			if config.CornerRadius != (clay.CornerRadius{}) {
@@ -127,7 +127,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				opts.GeoM.Translate(float64(boundingBox.X), float64(boundingBox.Y))
 				screen.DrawImage(solidColorImage, opts)
 			}
-		case clay.RENDER_COMMAND_TYPE_TEXT:
+		case clay.RenderCommandTypeText:
 			config := &renderCommand.RenderData.Text
 			config.TextColor = overlays.Apply(config.TextColor)
 			font := sizedFace(fonts[config.FontId], config.FontSize, float64(scaleFactor))
@@ -140,19 +140,19 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				config.TextColor.A/255,
 			)
 			drawText(screen, config.StringContents, font, boundingBox, float32(config.LetterSpacing)*scaleFactor, colorScale)
-		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
+		case clay.RenderCommandTypeScissorStart:
 			screen = screen.SubImage(image.Rect(
 				int(boundingBox.X), int(boundingBox.Y),
 				int(boundingBox.X+boundingBox.Width),
 				int(boundingBox.Y+boundingBox.Height),
 			)).(*ebiten.Image)
-		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
+		case clay.RenderCommandTypeScissorEnd:
 			screen = fullScreen
-		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+		case clay.RenderCommandTypeOverlayColorStart:
 			overlays.Push(renderCommand.RenderData.OverlayColor.Color)
-		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+		case clay.RenderCommandTypeOverlayColorEnd:
 			overlays.Pop()
-		case clay.RENDER_COMMAND_TYPE_IMAGE:
+		case clay.RenderCommandTypeImage:
 			config := &renderCommand.RenderData.Image
 			img := config.ImageData.(*ebiten.Image)
 			bounds := img.Bounds()
@@ -171,7 +171,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				cm.Translate(float64(o.R/255)*a, float64(o.G/255)*a, float64(o.B/255)*a, 0)
 			}
 			colorm.DrawImage(screen, img, cm, opts)
-		case clay.RENDER_COMMAND_TYPE_BORDER:
+		case clay.RenderCommandTypeBorder:
 			config := &renderCommand.RenderData.Border
 			config.Color = overlays.Apply(config.Color)
 			width := clay.BorderWidth{
@@ -181,8 +181,8 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 				Bottom: uint16(float32(config.Width.Bottom) * scaleFactor),
 			}
 			drawMesh(screen, shapes.Border(boundingBox, scaleRadius(config.CornerRadius, scaleFactor), width, 0), config.Color)
-		case clay.RENDER_COMMAND_TYPE_NONE:
-		case clay.RENDER_COMMAND_TYPE_CUSTOM:
+		case clay.RenderCommandTypeNone:
+		case clay.RenderCommandTypeCustom:
 		default:
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}

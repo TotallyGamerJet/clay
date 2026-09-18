@@ -6,16 +6,16 @@ package overlay
 import "github.com/TotallyGamerJet/clay"
 
 // Stack holds the overlay colors that are active while rendering.
-// Everything drawn between RENDER_COMMAND_TYPE_OVERLAY_COLOR_START and
-// RENDER_COMMAND_TYPE_OVERLAY_COLOR_END is blended towards the overlay color by its alpha.
+// Everything drawn between RenderCommandTypeOverlayColorStart and
+// RenderCommandTypeOverlayColorEnd is blended towards the overlay color by its alpha.
 type Stack []clay.Color
 
-// Push handles RENDER_COMMAND_TYPE_OVERLAY_COLOR_START.
+// Push handles RenderCommandTypeOverlayColorStart.
 func (s *Stack) Push(c clay.Color) {
 	*s = append(*s, c)
 }
 
-// Pop handles RENDER_COMMAND_TYPE_OVERLAY_COLOR_END.
+// Pop handles RenderCommandTypeOverlayColorEnd.
 func (s *Stack) Pop() {
 	if len(*s) > 0 {
 		*s = (*s)[:len(*s)-1]

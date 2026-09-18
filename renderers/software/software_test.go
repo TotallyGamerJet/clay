@@ -46,7 +46,7 @@ func TestImageTint(t *testing.T) {
 	var img image.Image = source
 
 	command := clay.RenderCommand{
-		CommandType: clay.RENDER_COMMAND_TYPE_IMAGE,
+		CommandType: clay.RenderCommandTypeImage,
 		BoundingBox: clay.BoundingBox{X: 0, Y: 0, Width: 20, Height: 20},
 	}
 	command.RenderData.Image.ImageData = &img
@@ -66,7 +66,7 @@ func TestImageTint(t *testing.T) {
 
 func TestTextLetterSpacing(t *testing.T) {
 	command := clay.RenderCommand{
-		CommandType: clay.RENDER_COMMAND_TYPE_TEXT,
+		CommandType: clay.RenderCommandTypeText,
 		BoundingBox: clay.BoundingBox{X: 0, Y: 0, Width: 200, Height: 20},
 	}
 	command.RenderData.Text.StringContents = "iiii"
@@ -94,7 +94,7 @@ func TestTextLetterSpacing(t *testing.T) {
 
 func TestTextLineHeight(t *testing.T) {
 	command := clay.RenderCommand{
-		CommandType: clay.RENDER_COMMAND_TYPE_TEXT,
+		CommandType: clay.RenderCommandTypeText,
 		BoundingBox: clay.BoundingBox{X: 0, Y: 0, Width: 200, Height: 20},
 	}
 	command.RenderData.Text.StringContents = "Ay"
@@ -131,7 +131,7 @@ func TestTextLineHeight(t *testing.T) {
 
 func TestRectangleCornerRadius(t *testing.T) {
 	command := clay.RenderCommand{
-		CommandType: clay.RENDER_COMMAND_TYPE_RECTANGLE,
+		CommandType: clay.RenderCommandTypeRectangle,
 		BoundingBox: clay.BoundingBox{X: 0, Y: 0, Width: 100, Height: 100},
 	}
 	command.RenderData.Rectangle.BackgroundColor = clay.Color{R: 255, G: 255, B: 255, A: 255}

@@ -50,7 +50,7 @@ func SizingGrow(sz float32) SizingAxis {
 		}{
 			MinMax: SizingMinMax{sz, sz},
 		},
-		Type: __SIZING_TYPE_GROW,
+		Type: sizingTypeGrow,
 	}
 }
 
@@ -63,7 +63,7 @@ func SizingFixed(sz float32) SizingAxis {
 		}{
 			MinMax: SizingMinMax{sz, sz},
 		},
-		Type: __SIZING_TYPE_FIXED,
+		Type: sizingTypeFixed,
 	}
 }
 
@@ -77,7 +77,7 @@ func SizingFit(min, max float32) SizingAxis {
 		}{
 			MinMax: SizingMinMax{min, max},
 		},
-		Type: __SIZING_TYPE_FIT,
+		Type: sizingTypeFit,
 	}
 }
 
@@ -91,7 +91,7 @@ func SizingPercent(percentOfParent float32) SizingAxis {
 		}{
 			Percent: percentOfParent,
 		},
-		Type: __SIZING_TYPE_PERCENT,
+		Type: sizingTypePercent,
 	}
 }
 

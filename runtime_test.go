@@ -265,7 +265,7 @@ func TestRenderCommands(t *testing.T) {
 
 	BeginLayout()
 	UI(ID("Root"))(ElementDeclaration{
-		Layout:          LayoutConfig{Sizing: Sizing{Width: SizingFixed(400), Height: SizingFixed(300)}, LayoutDirection: TOP_TO_BOTTOM},
+		Layout:          LayoutConfig{Sizing: Sizing{Width: SizingFixed(400), Height: SizingFixed(300)}, LayoutDirection: TopToBottom},
 		BackgroundColor: background,
 		CornerRadius:    CornerRadiusAll(7),
 		Border:          BorderElementConfig{Color: borderColor, Width: BorderOutside(3)},
@@ -282,7 +282,7 @@ func TestRenderCommands(t *testing.T) {
 	for _, c := range commands {
 		seen = append(seen, c.CommandType)
 		switch c.CommandType {
-		case RENDER_COMMAND_TYPE_RECTANGLE:
+		case RenderCommandTypeRectangle:
 			if c.RenderData.Rectangle.BackgroundColor != background {
 				t.Errorf("rectangle color = %v, want %v", c.RenderData.Rectangle.BackgroundColor, background)
 			}
@@ -300,15 +300,15 @@ func TestRenderCommands(t *testing.T) {
 			if c.RenderData.Custom != (CustomRenderData{}) {
 				t.Errorf("rectangle decoded as custom: %+v", c.RenderData.Custom)
 			}
-		case RENDER_COMMAND_TYPE_TEXT:
+		case RenderCommandTypeText:
 			if got := c.RenderData.Text; got.StringContents != "hello" || got.FontSize != 24 || got.TextColor != background {
 				t.Errorf("text render data = %+v", got)
 			}
-		case RENDER_COMMAND_TYPE_IMAGE:
+		case RenderCommandTypeImage:
 			if c.RenderData.Image.ImageData != any(image) {
 				t.Errorf("image data = %v, want the value passed in", c.RenderData.Image.ImageData)
 			}
-		case RENDER_COMMAND_TYPE_BORDER:
+		case RenderCommandTypeBorder:
 			if got := c.RenderData.Border; got.Color != borderColor || got.Width != BorderOutside(3) {
 				t.Errorf("border render data = %+v", got)
 			}
@@ -316,8 +316,8 @@ func TestRenderCommands(t *testing.T) {
 	}
 
 	for _, want := range []RenderCommandType{
-		RENDER_COMMAND_TYPE_RECTANGLE, RENDER_COMMAND_TYPE_TEXT,
-		RENDER_COMMAND_TYPE_IMAGE, RENDER_COMMAND_TYPE_BORDER,
+		RenderCommandTypeRectangle, RenderCommandTypeText,
+		RenderCommandTypeImage, RenderCommandTypeBorder,
 	} {
 		if !contains(seen, want) {
 			t.Errorf("no %v command in %v", want, seen)
@@ -387,7 +387,7 @@ func TestErrorHandlerCallback(t *testing.T) {
 		t.Fatal("no error reported for a missing text measuring function")
 	}
 	e := errors[0]
-	if e.ErrorType != ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED {
+	if e.ErrorType != ErrorTypeTextMeasurementFunctionNotProvided {
 		t.Errorf("error type = %v", e.ErrorType)
 	}
 	if e.ErrorText == "" {
@@ -430,7 +430,7 @@ func TestOnHoverCallback(t *testing.T) {
 	if len(hovered) != 1 || hovered[0].Id != ID("Button").Id {
 		t.Errorf("hovered = %v, want the button", hovered)
 	}
-	if state != POINTER_DATA_PRESSED_THIS_FRAME {
+	if state != PointerDataPressedThisFrame {
 		t.Errorf("pointer state = %v", state)
 	}
 
@@ -470,7 +470,7 @@ func layoutWithWidth(t *testing.T, width float32, transition TransitionElementCo
 		Transition:      transition,
 	}, nil)
 	for _, c := range EndLayout(deltaTime) {
-		if c.CommandType == RENDER_COMMAND_TYPE_RECTANGLE {
+		if c.CommandType == RenderCommandTypeRectangle {
 			return c.BoundingBox.Width
 		}
 	}
@@ -485,7 +485,7 @@ func TestTransitionEaseOut(t *testing.T) {
 	transition := TransitionElementConfig{
 		Handler:    EaseOut,
 		Duration:   1,
-		Properties: TRANSITION_PROPERTY_BOUNDING_BOX,
+		Properties: TransitionPropertyBoundingBox,
 	}
 
 	if got := layoutWithWidth(t, 100, transition, 0); got != 100 {
@@ -547,17 +547,17 @@ func TestTransitionCallbacks(t *testing.T) {
 	transition := TransitionElementConfig{
 		Handler:    handler,
 		Duration:   1,
-		Properties: TRANSITION_PROPERTY_BOUNDING_BOX,
+		Properties: TransitionPropertyBoundingBox,
 	}
 	transition.Enter.SetInitialState = initialState
-	transition.Enter.Trigger = TRANSITION_ENTER_TRIGGER_ON_FIRST_PARENT_FRAME
+	transition.Enter.Trigger = TransitionEnterTriggerOnFirstParentFrame
 
 	layoutWithWidth(t, 100, transition, 0)
 	layoutWithWidth(t, 300, transition, 0.1)
 	if handlerCalls == 0 {
 		t.Fatal("the transition handler was never called")
 	}
-	if sawProperties != TRANSITION_PROPERTY_BOUNDING_BOX {
+	if sawProperties != TransitionPropertyBoundingBox {
 		t.Errorf("handler called with properties %v", sawProperties)
 	}
 	if sawTarget.Width != 300 {

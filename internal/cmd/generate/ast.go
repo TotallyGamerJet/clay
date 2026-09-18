@@ -514,11 +514,24 @@ func goName(c string) string {
 	return strings.TrimPrefix(c, "Clay_")
 }
 
+// goConstName turns a constant like CLAY_ALIGN_X_LEFT into a Go name like AlignXLeft.
+// Clay's internal constants, which are spelled CLAY__SOMETHING, are unexported.
 func goConstName(c string) string {
-	if rest, ok := strings.CutPrefix(c, "CLAY__"); ok {
-		return "__" + rest
+	name, internal := strings.CutPrefix(c, "CLAY__")
+	if !internal {
+		name = strings.TrimPrefix(c, "CLAY_")
 	}
-	return strings.TrimPrefix(c, "CLAY_")
+	var b strings.Builder
+	for _, word := range strings.Split(name, "_") {
+		if word == "" {
+			continue
+		}
+		b.WriteString(exportName(strings.ToLower(word)))
+	}
+	if internal {
+		return strings.ToLower(b.String()[:1]) + b.String()[1:]
+	}
+	return b.String()
 }
 
 func exportName(c string) string {

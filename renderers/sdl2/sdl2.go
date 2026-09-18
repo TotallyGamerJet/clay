@@ -138,7 +138,7 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 	for _, renderCommand := range renderCommands {
 		boundingBox := renderCommand.BoundingBox
 		switch renderCommand.CommandType {
-		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
+		case clay.RenderCommandTypeRectangle:
 			config := &renderCommand.RenderData.Rectangle
 			color := overlays.Apply(config.BackgroundColor)
 			if err := renderer.SetDrawColor(uint8(color.R), uint8(color.G), uint8(color.B), uint8(color.A)); err != nil {
@@ -159,7 +159,7 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 					return err
 				}
 			}
-		case clay.RENDER_COMMAND_TYPE_TEXT:
+		case clay.RenderCommandTypeText:
 			config := &renderCommand.RenderData.Text
 			font, err := fonts[config.FontId].sized(config.FontSize)
 			if err != nil {
@@ -175,7 +175,7 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			if err != nil {
 				return err
 			}
-		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
+		case clay.RenderCommandTypeScissorStart:
 			currentClippingRectangle := sdl.Rect{
 				X: int32(boundingBox.X),
 				Y: int32(boundingBox.Y),
@@ -185,15 +185,15 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			if err := renderer.SetClipRect(&currentClippingRectangle); err != nil {
 				return err
 			}
-		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
+		case clay.RenderCommandTypeScissorEnd:
 			if err := renderer.SetClipRect(nil); err != nil {
 				return err
 			}
-		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+		case clay.RenderCommandTypeOverlayColorStart:
 			overlays.Push(renderCommand.RenderData.OverlayColor.Color)
-		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+		case clay.RenderCommandTypeOverlayColorEnd:
 			overlays.Pop()
-		case clay.RENDER_COMMAND_TYPE_IMAGE:
+		case clay.RenderCommandTypeImage:
 			config := &renderCommand.RenderData.Image
 			texture, err := renderer.CreateTextureFromSurface(config.ImageData.(*sdl.Surface))
 			if err != nil {
@@ -233,14 +233,14 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 					return err
 				}
 			}
-		case clay.RENDER_COMMAND_TYPE_BORDER:
+		case clay.RenderCommandTypeBorder:
 			config := &renderCommand.RenderData.Border
 			config.Color = overlays.Apply(config.Color)
 			if err := drawMesh(renderer, shapes.Border(boundingBox, config.CornerRadius, config.Width, feather), config.Color); err != nil {
 				return err
 			}
-		case clay.RENDER_COMMAND_TYPE_NONE:
-		case clay.RENDER_COMMAND_TYPE_CUSTOM:
+		case clay.RenderCommandTypeNone:
+		case clay.RenderCommandTypeCustom:
 		default:
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}

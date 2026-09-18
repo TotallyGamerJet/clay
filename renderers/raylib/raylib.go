@@ -111,7 +111,7 @@ func ClayRender(renderCommands clay.RenderCommandArray, fonts []rl.Font) {
 		boundingBox := renderCommand.BoundingBox
 		rect := rl.Rectangle{X: boundingBox.X, Y: boundingBox.Y, Width: boundingBox.Width, Height: boundingBox.Height}
 		switch renderCommand.CommandType {
-		case clay.RENDER_COMMAND_TYPE_TEXT:
+		case clay.RenderCommandTypeText:
 			config := &renderCommand.RenderData.Text
 			// Center the line in its box, which is taller than the text when a line height is set.
 			y := boundingBox.Y
@@ -126,7 +126,7 @@ func ClayRender(renderCommands clay.RenderCommandArray, fonts []rl.Font) {
 				float32(config.LetterSpacing),
 				toColor(config.TextColor),
 			)
-		case clay.RENDER_COMMAND_TYPE_IMAGE:
+		case clay.RenderCommandTypeImage:
 			config := &renderCommand.RenderData.Image
 			texture := *config.ImageData.(*rl.Texture2D)
 			tint := config.BackgroundColor
@@ -141,33 +141,33 @@ func ClayRender(renderCommands clay.RenderCommandArray, fonts []rl.Font) {
 				0,
 				toColor(tint),
 			)
-		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
+		case clay.RenderCommandTypeScissorStart:
 			rl.BeginScissorMode(
 				int32(math.Round(float64(boundingBox.X))),
 				int32(math.Round(float64(boundingBox.Y))),
 				int32(math.Round(float64(boundingBox.Width))),
 				int32(math.Round(float64(boundingBox.Height))),
 			)
-		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
+		case clay.RenderCommandTypeScissorEnd:
 			rl.EndScissorMode()
-		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+		case clay.RenderCommandTypeOverlayColorStart:
 			overlays.Push(renderCommand.RenderData.OverlayColor.Color)
 			setOverlay(overlays)
-		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+		case clay.RenderCommandTypeOverlayColorEnd:
 			overlays.Pop()
 			setOverlay(overlays)
-		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
+		case clay.RenderCommandTypeRectangle:
 			config := &renderCommand.RenderData.Rectangle
 			if config.CornerRadius != (clay.CornerRadius{}) {
 				drawMesh(shapes.Fill(boundingBox, config.CornerRadius, 0), config.BackgroundColor)
 			} else {
 				rl.DrawRectangleRec(rect, toColor(config.BackgroundColor))
 			}
-		case clay.RENDER_COMMAND_TYPE_BORDER:
+		case clay.RenderCommandTypeBorder:
 			config := &renderCommand.RenderData.Border
 			drawMesh(shapes.Border(boundingBox, config.CornerRadius, config.Width, 0), config.Color)
-		case clay.RENDER_COMMAND_TYPE_NONE:
-		case clay.RENDER_COMMAND_TYPE_CUSTOM:
+		case clay.RenderCommandTypeNone:
+		case clay.RenderCommandTypeCustom:
 		default:
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}

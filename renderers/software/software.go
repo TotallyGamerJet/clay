@@ -99,7 +99,7 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 		boundingBox := renderCommand.BoundingBox
 		rect := image.Rect(int(boundingBox.X), int(boundingBox.Y), int(boundingBox.X+boundingBox.Width), int(boundingBox.Y+boundingBox.Height))
 		switch renderCommand.CommandType {
-		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
+		case clay.RenderCommandTypeRectangle:
 			config := &renderCommand.RenderData.Rectangle
 			src := &image.Uniform{C: toColor(overlays.Apply(config.BackgroundColor))}
 			if config.CornerRadius == (clay.CornerRadius{}) {
@@ -108,7 +108,7 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 				mask := newRoundedMask(boundingBox, config.CornerRadius, clay.BorderWidth{})
 				draw.DrawMask(screen, mask.bounds, src, image.Point{}, mask, mask.bounds.Min, draw.Over)
 			}
-		case clay.RENDER_COMMAND_TYPE_TEXT:
+		case clay.RenderCommandTypeText:
 			config := &renderCommand.RenderData.Text
 			face, err := fonts[config.FontId].Face(config.FontSize)
 			if err != nil {
@@ -135,17 +135,17 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 					d.Dot.X += fixed.I(int(config.LetterSpacing))
 				}
 			}
-		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
+		case clay.RenderCommandTypeScissorStart:
 			screen = fullScreen.(interface {
 				SubImage(r image.Rectangle) image.Image
 			}).SubImage(rect).(draw.Image)
-		case clay.RENDER_COMMAND_TYPE_SCISSOR_END:
+		case clay.RenderCommandTypeScissorEnd:
 			screen = fullScreen
-		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+		case clay.RenderCommandTypeOverlayColorStart:
 			overlays.Push(renderCommand.RenderData.OverlayColor.Color)
-		case clay.RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+		case clay.RenderCommandTypeOverlayColorEnd:
 			overlays.Pop()
-		case clay.RENDER_COMMAND_TYPE_IMAGE:
+		case clay.RenderCommandTypeImage:
 			config := &renderCommand.RenderData.Image
 			img := config.ImageData.(*image.Image)
 			if img == nil {
@@ -160,7 +160,7 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 				src = overlayImage{Image: src, overlays: overlays}
 			}
 			draw.ApproxBiLinear.Scale(screen, rect, src, src.Bounds(), draw.Over, nil)
-		case clay.RENDER_COMMAND_TYPE_BORDER:
+		case clay.RenderCommandTypeBorder:
 			config := &renderCommand.RenderData.Border
 			src := &image.Uniform{C: toColor(overlays.Apply(config.Color))}
 			if config.CornerRadius == (clay.CornerRadius{}) {
@@ -177,8 +177,8 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 				mask := newRoundedMask(boundingBox, config.CornerRadius, config.Width)
 				draw.DrawMask(screen, mask.bounds, src, image.Point{}, mask, mask.bounds.Min, draw.Over)
 			}
-		case clay.RENDER_COMMAND_TYPE_NONE:
-		case clay.RENDER_COMMAND_TYPE_CUSTOM:
+		case clay.RenderCommandTypeNone:
+		case clay.RenderCommandTypeCustom:
 		default:
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}

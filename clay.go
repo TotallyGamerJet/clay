@@ -8,13 +8,13 @@ type PointerDataInteractionState uint8
 
 const (
 	// A left mouse click, or touch occurred this frame.
-	POINTER_DATA_PRESSED_THIS_FRAME PointerDataInteractionState = 0
+	PointerDataPressedThisFrame PointerDataInteractionState = 0
 	// The left mouse button click or touch happened at some point in the past, and is still currently held down this frame.
-	POINTER_DATA_PRESSED PointerDataInteractionState = 1
+	PointerDataPressed PointerDataInteractionState = 1
 	// The left mouse button click or touch was released this frame.
-	POINTER_DATA_RELEASED_THIS_FRAME PointerDataInteractionState = 2
+	PointerDataReleasedThisFrame PointerDataInteractionState = 2
 	// The left mouse button click or touch is not currently down / was released at some point in the past.
-	POINTER_DATA_RELEASED PointerDataInteractionState = 3
+	PointerDataReleased PointerDataInteractionState = 3
 )
 
 // Used by renderers to determine specific handling for each render command.
@@ -22,53 +22,53 @@ type RenderCommandType uint8
 
 const (
 	// This command type should be skipped.
-	RENDER_COMMAND_TYPE_NONE RenderCommandType = 0
+	RenderCommandTypeNone RenderCommandType = 0
 	// The renderer should draw a solid color rectangle.
-	RENDER_COMMAND_TYPE_RECTANGLE RenderCommandType = 1
+	RenderCommandTypeRectangle RenderCommandType = 1
 	// The renderer should draw a colored border inset into the bounding box.
-	RENDER_COMMAND_TYPE_BORDER RenderCommandType = 2
+	RenderCommandTypeBorder RenderCommandType = 2
 	// The renderer should draw text.
-	RENDER_COMMAND_TYPE_TEXT RenderCommandType = 3
+	RenderCommandTypeText RenderCommandType = 3
 	// The renderer should draw an image.
-	RENDER_COMMAND_TYPE_IMAGE RenderCommandType = 4
+	RenderCommandTypeImage RenderCommandType = 4
 	// The renderer should begin clipping all future draw commands, only rendering content that falls within the provided boundingBox.
-	RENDER_COMMAND_TYPE_SCISSOR_START RenderCommandType = 5
+	RenderCommandTypeScissorStart RenderCommandType = 5
 	// The renderer should finish any previously active clipping, and begin rendering elements in full again.
-	RENDER_COMMAND_TYPE_SCISSOR_END RenderCommandType = 6
+	RenderCommandTypeScissorEnd RenderCommandType = 6
 	// The renderer should begin performing a "color overlay" on all subsequent render commands until disabled again.
-	RENDER_COMMAND_TYPE_OVERLAY_COLOR_START RenderCommandType = 7
+	RenderCommandTypeOverlayColorStart RenderCommandType = 7
 	// The renderer should disable any previously active "color overlay" and render elements with their standard colors again.
-	RENDER_COMMAND_TYPE_OVERLAY_COLOR_END RenderCommandType = 8
+	RenderCommandTypeOverlayColorEnd RenderCommandType = 8
 	// The renderer should provide a custom implementation for handling this render command based on its .customData
-	RENDER_COMMAND_TYPE_CUSTOM RenderCommandType = 9
+	RenderCommandTypeCustom RenderCommandType = 9
 )
 
 type TransitionState int32
 
 const (
-	TRANSITION_STATE_IDLE          TransitionState = 0
-	TRANSITION_STATE_ENTERING      TransitionState = 1
-	TRANSITION_STATE_TRANSITIONING TransitionState = 2
-	TRANSITION_STATE_EXITING       TransitionState = 3
+	TransitionStateIdle          TransitionState = 0
+	TransitionStateEntering      TransitionState = 1
+	TransitionStateTransitioning TransitionState = 2
+	TransitionStateExiting       TransitionState = 3
 )
 
 type TransitionProperty int32
 
 const (
-	TRANSITION_PROPERTY_NONE             TransitionProperty = 0
-	TRANSITION_PROPERTY_X                TransitionProperty = 1
-	TRANSITION_PROPERTY_Y                TransitionProperty = 2
-	TRANSITION_PROPERTY_POSITION         TransitionProperty = 3
-	TRANSITION_PROPERTY_WIDTH            TransitionProperty = 4
-	TRANSITION_PROPERTY_HEIGHT           TransitionProperty = 8
-	TRANSITION_PROPERTY_DIMENSIONS       TransitionProperty = 12
-	TRANSITION_PROPERTY_BOUNDING_BOX     TransitionProperty = 15
-	TRANSITION_PROPERTY_BACKGROUND_COLOR TransitionProperty = 16
-	TRANSITION_PROPERTY_OVERLAY_COLOR    TransitionProperty = 32
-	TRANSITION_PROPERTY_CORNER_RADIUS    TransitionProperty = 64
-	TRANSITION_PROPERTY_BORDER_COLOR     TransitionProperty = 128
-	TRANSITION_PROPERTY_BORDER_WIDTH     TransitionProperty = 256
-	TRANSITION_PROPERTY_BORDER           TransitionProperty = 384
+	TransitionPropertyNone            TransitionProperty = 0
+	TransitionPropertyX               TransitionProperty = 1
+	TransitionPropertyY               TransitionProperty = 2
+	TransitionPropertyPosition        TransitionProperty = 3
+	TransitionPropertyWidth           TransitionProperty = 4
+	TransitionPropertyHeight          TransitionProperty = 8
+	TransitionPropertyDimensions      TransitionProperty = 12
+	TransitionPropertyBoundingBox     TransitionProperty = 15
+	TransitionPropertyBackgroundColor TransitionProperty = 16
+	TransitionPropertyOverlayColor    TransitionProperty = 32
+	TransitionPropertyCornerRadius    TransitionProperty = 64
+	TransitionPropertyBorderColor     TransitionProperty = 128
+	TransitionPropertyBorderWidth     TransitionProperty = 256
+	TransitionPropertyBorder          TransitionProperty = 384
 )
 
 // Controls how the element takes up space inside its parent container.
@@ -76,13 +76,13 @@ type __SizingType uint8
 
 const (
 	// (default) Wraps tightly to the size of the element's contents.
-	__SIZING_TYPE_FIT __SizingType = 0
+	sizingTypeFit __SizingType = 0
 	// Expands along this axis to fill available space in the parent element, sharing it with other GROW elements.
-	__SIZING_TYPE_GROW __SizingType = 1
+	sizingTypeGrow __SizingType = 1
 	// Expects 0-1 range. Clamps the axis size to a percent of the parent container's axis size minus padding and child gaps.
-	__SIZING_TYPE_PERCENT __SizingType = 2
+	sizingTypePercent __SizingType = 2
 	// Clamps the axis size to an exact size in pixels.
-	__SIZING_TYPE_FIXED __SizingType = 3
+	sizingTypeFixed __SizingType = 3
 )
 
 // Controls the alignment along the x axis (horizontal) of child elements.
@@ -90,11 +90,11 @@ type LayoutAlignmentX uint8
 
 const (
 	// (Default) Aligns child elements to the left hand side of this element, offset by padding.width.left
-	ALIGN_X_LEFT LayoutAlignmentX = 0
+	AlignXLeft LayoutAlignmentX = 0
 	// Aligns child elements to the right hand side of this element, offset by padding.width.right
-	ALIGN_X_RIGHT LayoutAlignmentX = 1
+	AlignXRight LayoutAlignmentX = 1
 	// Aligns child elements horizontally to the center of this element
-	ALIGN_X_CENTER LayoutAlignmentX = 2
+	AlignXCenter LayoutAlignmentX = 2
 )
 
 // Controls the alignment along the y axis (vertical) of child elements.
@@ -102,11 +102,11 @@ type LayoutAlignmentY uint8
 
 const (
 	// (Default) Aligns child elements to the top of this element, offset by padding.width.top
-	ALIGN_Y_TOP LayoutAlignmentY = 0
+	AlignYTop LayoutAlignmentY = 0
 	// Aligns child elements to the bottom of this element, offset by padding.width.bottom
-	ALIGN_Y_BOTTOM LayoutAlignmentY = 1
+	AlignYBottom LayoutAlignmentY = 1
 	// Aligns child elements vertically to the center of this element
-	ALIGN_Y_CENTER LayoutAlignmentY = 2
+	AlignYCenter LayoutAlignmentY = 2
 )
 
 // Controls the direction in which child elements will be automatically laid out.
@@ -114,9 +114,9 @@ type LayoutDirection uint8
 
 const (
 	// (Default) Lays out child elements from left to right with increasing x.
-	LEFT_TO_RIGHT LayoutDirection = 0
+	LeftToRight LayoutDirection = 0
 	// Lays out child elements from top to bottom with increasing y.
-	TOP_TO_BOTTOM LayoutDirection = 1
+	TopToBottom LayoutDirection = 1
 )
 
 // Controls where a floating element is offset relative to its parent element.
@@ -124,15 +124,15 @@ const (
 type FloatingAttachPointType uint8
 
 const (
-	ATTACH_POINT_LEFT_TOP      FloatingAttachPointType = 0
-	ATTACH_POINT_LEFT_CENTER   FloatingAttachPointType = 1
-	ATTACH_POINT_LEFT_BOTTOM   FloatingAttachPointType = 2
-	ATTACH_POINT_CENTER_TOP    FloatingAttachPointType = 3
-	ATTACH_POINT_CENTER_CENTER FloatingAttachPointType = 4
-	ATTACH_POINT_CENTER_BOTTOM FloatingAttachPointType = 5
-	ATTACH_POINT_RIGHT_TOP     FloatingAttachPointType = 6
-	ATTACH_POINT_RIGHT_CENTER  FloatingAttachPointType = 7
-	ATTACH_POINT_RIGHT_BOTTOM  FloatingAttachPointType = 8
+	AttachPointLeftTop      FloatingAttachPointType = 0
+	AttachPointLeftCenter   FloatingAttachPointType = 1
+	AttachPointLeftBottom   FloatingAttachPointType = 2
+	AttachPointCenterTop    FloatingAttachPointType = 3
+	AttachPointCenterCenter FloatingAttachPointType = 4
+	AttachPointCenterBottom FloatingAttachPointType = 5
+	AttachPointRightTop     FloatingAttachPointType = 6
+	AttachPointRightCenter  FloatingAttachPointType = 7
+	AttachPointRightBottom  FloatingAttachPointType = 8
 )
 
 // Controls how mouse pointer events like hover and click are captured or passed through to elements underneath a floating element.
@@ -140,10 +140,10 @@ type PointerCaptureMode uint8
 
 const (
 	// (default) "Capture" the pointer event and don't allow events like hover and click to pass through to elements underneath.
-	POINTER_CAPTURE_MODE_CAPTURE PointerCaptureMode = 0
+	PointerCaptureModeCapture PointerCaptureMode = 0
 	// CLAY_POINTER_CAPTURE_MODE_PARENT, TODO pass pointer through to attached parent
 	// Transparently pass through pointer events like hover and click to elements underneath the floating element.
-	POINTER_CAPTURE_MODE_PASSTHROUGH PointerCaptureMode = 1
+	PointerCaptureModePassthrough PointerCaptureMode = 1
 )
 
 // Controls which element a floating element is "attached" to (i.e. relative offset from).
@@ -151,13 +151,13 @@ type FloatingAttachToElement uint8
 
 const (
 	// (default) Disables floating for this element.
-	ATTACH_TO_NONE FloatingAttachToElement = 0
+	AttachToNone FloatingAttachToElement = 0
 	// Attaches this floating element to its parent, positioned based on the .attachPoints and .offset fields.
-	ATTACH_TO_PARENT FloatingAttachToElement = 1
+	AttachToParent FloatingAttachToElement = 1
 	// Attaches this floating element to an element with a specific ID, specified with the .parentId field. positioned based on the .attachPoints and .offset fields.
-	ATTACH_TO_ELEMENT_WITH_ID FloatingAttachToElement = 2
+	AttachToElementWithId FloatingAttachToElement = 2
 	// Attaches this floating element to the root of the layout, which combined with the .offset field provides functionality similar to "absolute positioning".
-	ATTACH_TO_ROOT FloatingAttachToElement = 3
+	AttachToRoot FloatingAttachToElement = 3
 )
 
 // Controls whether or not a floating element is clipped to the same clipping rectangle as the element it's attached to.
@@ -165,38 +165,38 @@ type FloatingClipToElement uint8
 
 const (
 	// (default) - The floating element does not inherit clipping.
-	CLIP_TO_NONE FloatingClipToElement = 0
+	ClipToNone FloatingClipToElement = 0
 	// The floating element is clipped to the same clipping rectangle as the element it's attached to.
-	CLIP_TO_ATTACHED_PARENT FloatingClipToElement = 1
+	ClipToAttachedParent FloatingClipToElement = 1
 )
 
 type TransitionInteractionHandlingType uint8
 
 const (
-	TRANSITION_DISABLE_INTERACTIONS_WHILE_TRANSITIONING_POSITION TransitionInteractionHandlingType = 0
-	TRANSITION_ALLOW_INTERACTIONS_WHILE_TRANSITIONING_POSITION   TransitionInteractionHandlingType = 1
+	TransitionDisableInteractionsWhileTransitioningPosition TransitionInteractionHandlingType = 0
+	TransitionAllowInteractionsWhileTransitioningPosition   TransitionInteractionHandlingType = 1
 )
 
 type TransitionEnterTriggerType uint8
 
 const (
-	TRANSITION_ENTER_SKIP_ON_FIRST_PARENT_FRAME    TransitionEnterTriggerType = 0
-	TRANSITION_ENTER_TRIGGER_ON_FIRST_PARENT_FRAME TransitionEnterTriggerType = 1
+	TransitionEnterSkipOnFirstParentFrame    TransitionEnterTriggerType = 0
+	TransitionEnterTriggerOnFirstParentFrame TransitionEnterTriggerType = 1
 )
 
 type TransitionExitTriggerType uint8
 
 const (
-	TRANSITION_EXIT_SKIP_WHEN_PARENT_EXITS    TransitionExitTriggerType = 0
-	TRANSITION_EXIT_TRIGGER_WHEN_PARENT_EXITS TransitionExitTriggerType = 1
+	TransitionExitSkipWhenParentExits    TransitionExitTriggerType = 0
+	TransitionExitTriggerWhenParentExits TransitionExitTriggerType = 1
 )
 
 type ExitTransitionSiblingOrdering uint8
 
 const (
-	EXIT_TRANSITION_ORDERING_UNDERNEATH_SIBLINGS ExitTransitionSiblingOrdering = 0
-	EXIT_TRANSITION_ORDERING_NATURAL_ORDER       ExitTransitionSiblingOrdering = 1
-	EXIT_TRANSITION_ORDERING_ABOVE_SIBLINGS      ExitTransitionSiblingOrdering = 2
+	ExitTransitionOrderingUnderneathSiblings ExitTransitionSiblingOrdering = 0
+	ExitTransitionOrderingNaturalOrder       ExitTransitionSiblingOrdering = 1
+	ExitTransitionOrderingAboveSiblings      ExitTransitionSiblingOrdering = 2
 )
 
 // Controls how text "wraps", that is how it is broken into multiple lines when there is insufficient horizontal space.
@@ -204,11 +204,11 @@ type TextElementConfigWrapMode uint8
 
 const (
 	// (default) breaks on whitespace characters.
-	TEXT_WRAP_WORDS TextElementConfigWrapMode = 0
+	TextWrapWords TextElementConfigWrapMode = 0
 	// Don't break on space characters, only on newlines.
-	TEXT_WRAP_NEWLINES TextElementConfigWrapMode = 1
+	TextWrapNewlines TextElementConfigWrapMode = 1
 	// Disable text wrapping entirely.
-	TEXT_WRAP_NONE TextElementConfigWrapMode = 2
+	TextWrapNone TextElementConfigWrapMode = 2
 )
 
 // Controls how wrapped lines of text are horizontally aligned within the outer text bounding box.
@@ -216,11 +216,11 @@ type TextAlignment uint8
 
 const (
 	// (default) Horizontally aligns wrapped lines of text to the left hand side of their bounding box.
-	TEXT_ALIGN_LEFT TextAlignment = 0
+	TextAlignLeft TextAlignment = 0
 	// Horizontally aligns wrapped lines of text to the center of their bounding box.
-	TEXT_ALIGN_CENTER TextAlignment = 1
+	TextAlignCenter TextAlignment = 1
 	// Horizontally aligns wrapped lines of text to the right hand side of their bounding box.
-	TEXT_ALIGN_RIGHT TextAlignment = 2
+	TextAlignRight TextAlignment = 2
 )
 
 // Represents the type of error clay encountered while computing layout.
@@ -228,25 +228,25 @@ type ErrorType uint8
 
 const (
 	// A text measurement function wasn't provided using SetMeasureTextFunction(), or the provided function was null.
-	ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED ErrorType = 0
+	ErrorTypeTextMeasurementFunctionNotProvided ErrorType = 0
 	// Clay attempted to allocate its internal data structures but ran out of space.
 	// The arena passed to Initialize was created with a capacity smaller than that required by MinMemorySize().
-	ERROR_TYPE_ARENA_CAPACITY_EXCEEDED ErrorType = 1
+	ErrorTypeArenaCapacityExceeded ErrorType = 1
 	// Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxElementCount().
-	ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED ErrorType = 2
+	ErrorTypeElementsCapacityExceeded ErrorType = 2
 	// Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxMeasureTextCacheWordCount().
-	ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED ErrorType = 3
+	ErrorTypeTextMeasurementCapacityExceeded ErrorType = 3
 	// Two elements were declared with exactly the same ID within one layout.
-	ERROR_TYPE_DUPLICATE_ID ErrorType = 4
+	ErrorTypeDuplicateId ErrorType = 4
 	// A floating element was declared using CLAY_ATTACH_TO_ELEMENT_ID and either an invalid .parentId was provided or no element with the provided .parentId was found.
-	ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND ErrorType = 5
+	ErrorTypeFloatingContainerParentNotFound ErrorType = 5
 	// An element was declared that using CLAY_SIZING_PERCENT but the percentage value was over 1. Percentage values are expected to be in the 0-1 range.
-	ERROR_TYPE_PERCENTAGE_OVER_1 ErrorType = 6
+	ErrorTypePercentageOver1 ErrorType = 6
 	// Clay encountered an internal error. It would be wonderful if you could report this so we can fix it!
-	ERROR_TYPE_INTERNAL_ERROR ErrorType = 7
+	ErrorTypeInternalError ErrorType = 7
 	// __OpenElement was called more times than __CloseElement, so there were still remaining open elements when the layout ended.
-	ERROR_TYPE_UNBALANCED_OPEN_CLOSE      ErrorType = 8
-	ERROR_TYPE_HASH_MAP_CAPACITY_EXCEEDED ErrorType = 9
+	ErrorTypeUnbalancedOpenClose     ErrorType = 8
+	ErrorTypeHashMapCapacityExceeded ErrorType = 9
 )
 
 type Vector2 struct {
@@ -271,10 +271,10 @@ type PointerData struct {
 	// The position of the mouse / touch / pointer relative to the root of the layout.
 	Position Vector2
 	// Represents the current state of interaction with clay this frame.
-	// POINTER_DATA_PRESSED_THIS_FRAME - A left mouse click, or touch occurred this frame.
-	// POINTER_DATA_PRESSED - The left mouse button click or touch happened at some point in the past, and is still currently held down this frame.
-	// POINTER_DATA_RELEASED_THIS_FRAME - The left mouse button click or touch was released this frame.
-	// POINTER_DATA_RELEASED - The left mouse button click or touch is not currently down / was released at some point in the past.
+	// PointerDataPressedThisFrame - A left mouse click, or touch occurred this frame.
+	// PointerDataPressed - The left mouse button click or touch happened at some point in the past, and is still currently held down this frame.
+	// PointerDataReleasedThisFrame - The left mouse button click or touch was released this frame.
+	// PointerDataReleased - The left mouse button click or touch is not currently down / was released at some point in the past.
 	State PointerDataInteractionState
 }
 
@@ -379,7 +379,7 @@ func decCornerRadius(m []byte, p uint32, v *CornerRadius) {
 	v.BottomRight = getF32(m, p+12)
 }
 
-// Render command data when commandType == RENDER_COMMAND_TYPE_RECTANGLE
+// Render command data when commandType == RenderCommandTypeRectangle
 type RectangleRenderData struct {
 	// The solid background color to fill this rectangle with. Conventionally represented as 0-255 for each channel, but interpretation is up to the renderer.
 	BackgroundColor Color
@@ -413,7 +413,7 @@ func decStringSlice(m []byte, p uint32, v *string) {
 	*v = loadString(m, getU32(m, p+4), getU32(m, p+0))
 }
 
-// Render command data when commandType == RENDER_COMMAND_TYPE_TEXT
+// Render command data when commandType == RenderCommandTypeText
 type TextRenderData struct {
 	// A string slice containing the text to be rendered.
 	// Note: this is not guaranteed to be null terminated.
@@ -449,7 +449,7 @@ func decTextRenderData(m []byte, p uint32, v *TextRenderData) {
 	v.LineHeight = uint16(getU16(m, p+34))
 }
 
-// Render command data when commandType == RENDER_COMMAND_TYPE_IMAGE
+// Render command data when commandType == RenderCommandTypeImage
 type ImageRenderData struct {
 	// The tint color for this image. Note that the default value is 0,0,0,0 and should likely be interpreted
 	// as "untinted".
@@ -476,7 +476,7 @@ func decImageRenderData(m []byte, p uint32, v *ImageRenderData) {
 	v.ImageData = loadHandle(getU32(m, p+32))
 }
 
-// Render command data when commandType == RENDER_COMMAND_TYPE_CUSTOM
+// Render command data when commandType == RenderCommandTypeCustom
 type CustomRenderData struct {
 	// Passed through from .backgroundColor in the original element declaration.
 	// Conventionally represented as 0-255 for each channel, but interpretation is up to the renderer.
@@ -509,7 +509,7 @@ type BorderWidth struct {
 	Top    uint16
 	Bottom uint16
 	// Creates borders between each child element, depending on the .layoutDirection.
-	// e.g. for LEFT_TO_RIGHT, borders will be vertical lines, and for TOP_TO_BOTTOM borders will be horizontal lines.
+	// e.g. for LeftToRight, borders will be vertical lines, and for TopToBottom borders will be horizontal lines.
 	// .betweenChildren borders will result in individual RECTANGLE render commands being generated.
 	BetweenChildren uint16
 }
@@ -532,7 +532,7 @@ func decBorderWidth(m []byte, p uint32, v *BorderWidth) {
 	v.BetweenChildren = uint16(getU16(m, p+8))
 }
 
-// Render command data when commandType == RENDER_COMMAND_TYPE_BORDER
+// Render command data when commandType == RenderCommandTypeBorder
 type BorderRenderData struct {
 	// Controls a shared color for all this element's borders.
 	// Conventionally represented as 0-255 for each channel, but interpretation is up to the renderer.
@@ -558,7 +558,7 @@ func decBorderRenderData(m []byte, p uint32, v *BorderRenderData) {
 	decBorderWidth(m, p+32, &v.Width)
 }
 
-// Render command data when commandType == RENDER_COMMAND_TYPE_SCISSOR_START || commandType == RENDER_COMMAND_TYPE_SCISSOR_END
+// Render command data when commandType == RenderCommandTypeScissorStart || commandType == RenderCommandTypeScissorEnd
 type ClipRenderData struct {
 	Horizontal bool
 	Vertical   bool
@@ -576,7 +576,7 @@ func decClipRenderData(m []byte, p uint32, v *ClipRenderData) {
 	v.Vertical = getBool(m, p+1)
 }
 
-// Render command data when commandType == RENDER_COMMAND_TYPE_OVERLAY_COLOR_START || commandType == RENDER_COMMAND_TYPE_OVERLAY_COLOR_END
+// Render command data when commandType == RenderCommandTypeOverlayColorStart || commandType == RenderCommandTypeOverlayColorEnd
 type OverlayColorRenderData struct {
 	Color Color
 }
@@ -594,19 +594,19 @@ func decOverlayColorRenderData(m []byte, p uint32, v *OverlayColorRenderData) {
 // A struct union containing data specific to this command's .commandType
 type RenderData struct {
 	// union
-	// Render command data when commandType == RENDER_COMMAND_TYPE_RECTANGLE
+	// Render command data when commandType == RenderCommandTypeRectangle
 	Rectangle RectangleRenderData
-	// Render command data when commandType == RENDER_COMMAND_TYPE_TEXT
+	// Render command data when commandType == RenderCommandTypeText
 	Text TextRenderData
-	// Render command data when commandType == RENDER_COMMAND_TYPE_IMAGE
+	// Render command data when commandType == RenderCommandTypeImage
 	Image ImageRenderData
-	// Render command data when commandType == RENDER_COMMAND_TYPE_CUSTOM
+	// Render command data when commandType == RenderCommandTypeCustom
 	Custom CustomRenderData
-	// Render command data when commandType == RENDER_COMMAND_TYPE_BORDER
+	// Render command data when commandType == RenderCommandTypeBorder
 	Border BorderRenderData
-	// Render command data when commandType == RENDER_COMMAND_TYPE_SCISSOR_START|END
+	// Render command data when commandType == RenderCommandTypeScissorStart|END
 	Clip ClipRenderData
-	// Render command data when commandType == RENDER_COMMAND_TYPE_OVERLAY_COLOR_START|END
+	// Render command data when commandType == RenderCommandTypeOverlayColorStart|END
 	OverlayColor OverlayColorRenderData
 }
 
@@ -626,13 +626,13 @@ type RenderCommand struct {
 	// This field is intended for use in batching renderers for improved performance.
 	ZIndex int16
 	// Specifies how to handle rendering of this command.
-	// RENDER_COMMAND_TYPE_RECTANGLE - The renderer should draw a solid color rectangle.
-	// RENDER_COMMAND_TYPE_BORDER - The renderer should draw a colored border inset into the bounding box.
-	// RENDER_COMMAND_TYPE_TEXT - The renderer should draw text.
-	// RENDER_COMMAND_TYPE_IMAGE - The renderer should draw an image.
-	// RENDER_COMMAND_TYPE_SCISSOR_START - The renderer should begin clipping all future draw commands, only rendering content that falls within the provided boundingBox.
-	// RENDER_COMMAND_TYPE_SCISSOR_END - The renderer should finish any previously active clipping, and begin rendering elements in full again.
-	// RENDER_COMMAND_TYPE_CUSTOM - The renderer should provide a custom implementation for handling this render command based on its .customData
+	// RenderCommandTypeRectangle - The renderer should draw a solid color rectangle.
+	// RenderCommandTypeBorder - The renderer should draw a colored border inset into the bounding box.
+	// RenderCommandTypeText - The renderer should draw text.
+	// RenderCommandTypeImage - The renderer should draw an image.
+	// RenderCommandTypeScissorStart - The renderer should begin clipping all future draw commands, only rendering content that falls within the provided boundingBox.
+	// RenderCommandTypeScissorEnd - The renderer should finish any previously active clipping, and begin rendering elements in full again.
+	// RenderCommandTypeCustom - The renderer should provide a custom implementation for handling this render command based on its .customData
 	CommandType RenderCommandType
 }
 
@@ -646,23 +646,23 @@ func decRenderCommand(m []byte, p uint32, v *RenderCommand) {
 	v.CommandType = RenderCommandType(getU8(m, p+70))
 	v.RenderData = RenderData{}
 	switch v.CommandType {
-	case RENDER_COMMAND_TYPE_RECTANGLE:
+	case RenderCommandTypeRectangle:
 		decRectangleRenderData(m, p+16+0, &v.RenderData.Rectangle)
-	case RENDER_COMMAND_TYPE_BORDER:
+	case RenderCommandTypeBorder:
 		decBorderRenderData(m, p+16+0, &v.RenderData.Border)
-	case RENDER_COMMAND_TYPE_TEXT:
+	case RenderCommandTypeText:
 		decTextRenderData(m, p+16+0, &v.RenderData.Text)
-	case RENDER_COMMAND_TYPE_IMAGE:
+	case RenderCommandTypeImage:
 		decImageRenderData(m, p+16+0, &v.RenderData.Image)
-	case RENDER_COMMAND_TYPE_SCISSOR_START:
+	case RenderCommandTypeScissorStart:
 		decClipRenderData(m, p+16+0, &v.RenderData.Clip)
-	case RENDER_COMMAND_TYPE_SCISSOR_END:
+	case RenderCommandTypeScissorEnd:
 		decClipRenderData(m, p+16+0, &v.RenderData.Clip)
-	case RENDER_COMMAND_TYPE_OVERLAY_COLOR_START:
+	case RenderCommandTypeOverlayColorStart:
 		decOverlayColorRenderData(m, p+16+0, &v.RenderData.OverlayColor)
-	case RENDER_COMMAND_TYPE_OVERLAY_COLOR_END:
+	case RenderCommandTypeOverlayColorEnd:
 		decOverlayColorRenderData(m, p+16+0, &v.RenderData.OverlayColor)
-	case RENDER_COMMAND_TYPE_CUSTOM:
+	case RenderCommandTypeCustom:
 		decCustomRenderData(m, p+16+0, &v.RenderData.Custom)
 	}
 }
@@ -996,7 +996,7 @@ type LayoutConfig struct {
 	Sizing Sizing
 	// Controls "padding" in pixels, which is a gap between the bounding box of this element and where its children will be placed.
 	Padding Padding
-	// Controls the gap in pixels between child elements along the layout axis (horizontal gap for LEFT_TO_RIGHT, vertical gap for TOP_TO_BOTTOM).
+	// Controls the gap in pixels between child elements along the layout axis (horizontal gap for LeftToRight, vertical gap for TopToBottom).
 	ChildGap uint16
 	// Controls how child elements are aligned on each axis.
 	ChildAlignment ChildAlignment
@@ -1081,7 +1081,7 @@ type FloatingElementConfig struct {
 	Offset Vector2
 	// Expands the boundaries of the outer floating element without affecting its children.
 	Expand Dimensions
-	// When used in conjunction with .attachTo = ATTACH_TO_ELEMENT_WITH_ID, attaches this floating element to the element in the hierarchy with the provided ID.
+	// When used in conjunction with .attachTo = AttachToElementWithId, attaches this floating element to the element in the hierarchy with the provided ID.
 	// Hint: attach the ID to the other element with .id = CLAY_ID("yourId"), and specify the id the same way, with .parentId = CLAY_ID("yourId").id
 	ParentId uint32
 	// Controls the z index of this floating element and all its children. Floating elements are sorted in ascending z order before output.
@@ -1093,18 +1093,18 @@ type FloatingElementConfig struct {
 	// and <img src="https://github.com/user-attachments/assets/ebe75e0d-1904-46b0-982d-418f929d1516 /> for a visual explanation.
 	AttachPoints FloatingAttachPoints
 	// Controls how mouse pointer events like hover and click are captured or passed through to elements underneath a floating element.
-	// POINTER_CAPTURE_MODE_CAPTURE (default) - "Capture" the pointer event and don't allow events like hover and click to pass through to elements underneath.
-	// POINTER_CAPTURE_MODE_PASSTHROUGH - Transparently pass through pointer events like hover and click to elements underneath the floating element.
+	// PointerCaptureModeCapture (default) - "Capture" the pointer event and don't allow events like hover and click to pass through to elements underneath.
+	// PointerCaptureModePassthrough - Transparently pass through pointer events like hover and click to elements underneath the floating element.
 	PointerCaptureMode PointerCaptureMode
 	// Controls which element a floating element is "attached" to (i.e. relative offset from).
-	// ATTACH_TO_NONE (default) - Disables floating for this element.
-	// ATTACH_TO_PARENT - Attaches this floating element to its parent, positioned based on the .attachPoints and .offset fields.
-	// ATTACH_TO_ELEMENT_WITH_ID - Attaches this floating element to an element with a specific ID, specified with the .parentId field. positioned based on the .attachPoints and .offset fields.
-	// ATTACH_TO_ROOT - Attaches this floating element to the root of the layout, which combined with the .offset field provides functionality similar to "absolute positioning".
+	// AttachToNone (default) - Disables floating for this element.
+	// AttachToParent - Attaches this floating element to its parent, positioned based on the .attachPoints and .offset fields.
+	// AttachToElementWithId - Attaches this floating element to an element with a specific ID, specified with the .parentId field. positioned based on the .attachPoints and .offset fields.
+	// AttachToRoot - Attaches this floating element to the root of the layout, which combined with the .offset field provides functionality similar to "absolute positioning".
 	AttachTo FloatingAttachToElement
 	// Controls whether or not a floating element is clipped to the same clipping rectangle as the element it's attached to.
-	// CLIP_TO_NONE (default) - The floating element does not inherit clipping.
-	// CLIP_TO_ATTACHED_PARENT - The floating element is clipped to the same clipping rectangle as the element it's attached to.
+	// ClipToNone (default) - The floating element does not inherit clipping.
+	// ClipToAttachedParent - The floating element is clipped to the same clipping rectangle as the element it's attached to.
 	ClipTo FloatingClipToElement
 }
 
@@ -1294,14 +1294,14 @@ type TextElementConfig struct {
 	// Controls additional vertical space between wrapped lines of text.
 	LineHeight uint16
 	// Controls how text "wraps", that is how it is broken into multiple lines when there is insufficient horizontal space.
-	// TEXT_WRAP_WORDS (default) breaks on whitespace characters.
-	// TEXT_WRAP_NEWLINES doesn't break on space characters, only on newlines.
-	// TEXT_WRAP_NONE disables wrapping entirely.
+	// TextWrapWords (default) breaks on whitespace characters.
+	// TextWrapNewlines doesn't break on space characters, only on newlines.
+	// TextWrapNone disables wrapping entirely.
 	WrapMode TextElementConfigWrapMode
 	// Controls how wrapped lines of text are horizontally aligned within the outer text bounding box.
-	// TEXT_ALIGN_LEFT (default) - Horizontally aligns wrapped lines of text to the left hand side of their bounding box.
-	// TEXT_ALIGN_CENTER - Horizontally aligns wrapped lines of text to the center of their bounding box.
-	// TEXT_ALIGN_RIGHT - Horizontally aligns wrapped lines of text to the right hand side of their bounding box.
+	// TextAlignLeft (default) - Horizontally aligns wrapped lines of text to the left hand side of their bounding box.
+	// TextAlignCenter - Horizontally aligns wrapped lines of text to the center of their bounding box.
+	// TextAlignRight - Horizontally aligns wrapped lines of text to the right hand side of their bounding box.
 	TextAlignment TextAlignment
 }
 
@@ -1332,16 +1332,16 @@ func decTextElementConfig(m []byte, p uint32, v *TextElementConfig) {
 // Data to identify the error that clay has encountered.
 type ErrorData struct {
 	// Represents the type of error clay encountered while computing layout.
-	// ERROR_TYPE_TEXT_MEASUREMENT_FUNCTION_NOT_PROVIDED - A text measurement function wasn't provided using SetMeasureTextFunction(), or the provided function was null.
-	// ERROR_TYPE_ARENA_CAPACITY_EXCEEDED - Clay attempted to allocate its internal data structures but ran out of space. The arena passed to Initialize was created with a capacity smaller than that required by MinMemorySize().
-	// ERROR_TYPE_ELEMENTS_CAPACITY_EXCEEDED - Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxElementCount().
-	// ERROR_TYPE_TEXT_MEASUREMENT_CAPACITY_EXCEEDED - Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxMeasureTextCacheWordCount().
-	// ERROR_TYPE_DUPLICATE_ID - Two elements were declared with exactly the same ID within one layout.
-	// ERROR_TYPE_FLOATING_CONTAINER_PARENT_NOT_FOUND - A floating element was declared using CLAY_ATTACH_TO_ELEMENT_ID and either an invalid .parentId was provided or no element with the provided .parentId was found.
-	// ERROR_TYPE_PERCENTAGE_OVER_1 - An element was declared that using CLAY_SIZING_PERCENT but the percentage value was over 1. Percentage values are expected to be in the 0-1 range.
-	// ERROR_TYPE_INTERNAL_ERROR - Clay encountered an internal error. It would be wonderful if you could report this so we can fix it!
-	// ERROR_TYPE_UNBALANCED_OPEN_CLOSE - __OpenElement was called more times than __CloseElement, so there were still remaining open elements when the layout ended.
-	// ERROR_TYPE_HASH_MAP_CAPACITY_EXCEEDED - Clay ran out of capacity in its internal hash map for storing element IDs -> elements. This limit can be increased with SetMaxElementCount().
+	// ErrorTypeTextMeasurementFunctionNotProvided - A text measurement function wasn't provided using SetMeasureTextFunction(), or the provided function was null.
+	// ErrorTypeArenaCapacityExceeded - Clay attempted to allocate its internal data structures but ran out of space. The arena passed to Initialize was created with a capacity smaller than that required by MinMemorySize().
+	// ErrorTypeElementsCapacityExceeded - Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxElementCount().
+	// ErrorTypeTextMeasurementCapacityExceeded - Clay ran out of capacity in its internal array for storing elements. This limit can be increased with SetMaxMeasureTextCacheWordCount().
+	// ErrorTypeDuplicateId - Two elements were declared with exactly the same ID within one layout.
+	// ErrorTypeFloatingContainerParentNotFound - A floating element was declared using CLAY_ATTACH_TO_ELEMENT_ID and either an invalid .parentId was provided or no element with the provided .parentId was found.
+	// ErrorTypePercentageOver1 - An element was declared that using CLAY_SIZING_PERCENT but the percentage value was over 1. Percentage values are expected to be in the 0-1 range.
+	// ErrorTypeInternalError - Clay encountered an internal error. It would be wonderful if you could report this so we can fix it!
+	// ErrorTypeUnbalancedOpenClose - __OpenElement was called more times than __CloseElement, so there were still remaining open elements when the layout ended.
+	// ErrorTypeHashMapCapacityExceeded - Clay ran out of capacity in its internal hash map for storing element IDs -> elements. This limit can be increased with SetMaxElementCount().
 	ErrorType ErrorType
 	// A string containing human-readable error text that explains the error in more detail.
 	ErrorText string
