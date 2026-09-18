@@ -46,10 +46,35 @@ type document struct {
 	image    any
 }
 
+// The children of an element are declared by a function, which clay calls while the
+// element is open. A function literal that captures variables has to be allocated on the
+// heap each time it is made, which in a layout means every frame. The demo passes plain
+// functions instead, and leaves what they need in pending, which is set just before the
+// element they belong to is declared.
+var pending struct {
+	text  string
+	click *sidebarClickData
+}
+
+func renderText16() {
+	clay.Text(pending.text, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 16, TextColor: white}))
+}
+
+func renderSidebarButton() {
+	clay.Text(pending.text, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 20, TextColor: white}))
+}
+
+func renderSidebarButtonWithHover() {
+	clay.OnHover(handleSidebarInteraction, pending.click)
+	renderSidebarButton()
+}
+
 type Data struct {
 	selectedDocumentIndex int32
 	yOffset               float32
 	documents             []document
+	// One per document, as they don't change between frames.
+	clickData []sidebarClickData
 }
 
 type sidebarClickData struct {
@@ -68,21 +93,29 @@ func Initialize(squirrelImage any) Data {
 
 	data := Data{
 		documents: documents,
+		clickData: make([]sidebarClickData, len(documents)),
+	}
+	for i := range data.clickData {
+		data.clickData[i] = sidebarClickData{
+			requestedDocumentIndex: int32(i),
+			selectedDocumentIndex:  &data.selectedDocumentIndex,
+			documentLen:            int32(len(documents)),
+		}
 	}
 	return data
 }
 
 func RenderDropdownMenuItem(text string) {
+	pending.text = text
 	clay.UI()(clay.ElementDeclaration{
 		Layout: clay.LayoutConfig{
 			Padding: clay.PaddingAll(16),
 		},
-	}, func() {
-		clay.Text(text, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 16, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
-	})
+	}, renderText16)
 }
 
 func RenderHeaderButton(text string) {
+	pending.text = text
 	clay.UI()(clay.ElementDeclaration{
 		Layout: clay.LayoutConfig{
 			Padding: clay.Padding{Left: 16, Right: 16, Top: 8, Bottom: 8},
@@ -98,9 +131,7 @@ func RenderHeaderButton(text string) {
 		}(),
 		BackgroundColor: clay.Color{R: 140, G: 140, B: 140, A: 255},
 		CornerRadius:    clay.CornerRadiusAll(5),
-	}, func() {
-		clay.Text(text, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 16, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
-	})
+	}, renderText16)
 }
 
 // sidebarButtonTransition fades the highlight of a sidebar button in and out, instead of
@@ -230,20 +261,15 @@ func CreateLayout(data *Data, deltaTime float32) clay.RenderCommandArray {
 						Padding: clay.PaddingAll(16),
 					}
 
+					pending.text = document.title
 					if i == int(data.selectedDocumentIndex) {
 						clay.UI()(clay.ElementDeclaration{
 							Layout:          sidebarButtonlayout,
 							BackgroundColor: clay.Color{R: 120, G: 120, B: 120, A: 255},
 							CornerRadius:    clay.CornerRadiusAll(8),
-						}, func() {
-							clay.Text(document.title, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 20, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
-						})
+						}, renderSidebarButton)
 					} else {
-						clickData := &sidebarClickData{
-							requestedDocumentIndex: int32(i),
-							selectedDocumentIndex:  &data.selectedDocumentIndex,
-							documentLen:            int32(len(data.documents)),
-						}
+						pending.click = &data.clickData[i]
 						clay.UI()(clay.ElementDeclaration{
 							Layout: sidebarButtonlayout,
 							BackgroundColor: clay.Color{R: 120, G: 120, B: 120, A: func() float32 {
@@ -255,10 +281,7 @@ func CreateLayout(data *Data, deltaTime float32) clay.RenderCommandArray {
 							}()},
 							CornerRadius: clay.CornerRadiusAll(8),
 							Transition:   sidebarButtonTransition,
-						}, func() {
-							clay.OnHover(handleSidebarInteraction, clickData)
-							clay.Text(document.title, new(clay.TextElementConfig{FontId: FontIdBody16, FontSize: 20, TextColor: clay.Color{R: 255, G: 255, B: 255, A: 255}}))
-						})
+						}, renderSidebarButtonWithHover)
 					}
 				}
 			})
