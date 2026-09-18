@@ -34,4 +34,6 @@ It is looked up in `tools/wasi-sdk`, `$WASI_SDK_PATH`, or `PATH`; set `CLANG` to
 
 ## License
 
-This project is governed by the MIT license. See LICENSE for full description.
+This project is governed by the zlib/libpng license, the same license as
+[clay](https://github.com/nicbarker/clay), which it contains and generates code from.
+See LICENSE for full description.
