@@ -50,7 +50,12 @@ func wasmArgs(n uint32) []byte {
 
 // wasmCommit copies the arguments into the module's scratch buffer and returns its address.
 func wasmCommit(b []byte) uint32 {
-	copy(wasmMemory()[scratchAddr:], b)
+	if uint32(len(b)) > scratchSize {
+		// The scratch buffer is sized for the largest generated call, so this can only
+		// happen if a hand written call passes something bigger.
+		panic("clay: arguments are larger than the scratch buffer")
+	}
+	copy(wasmMemory()[scratchAddr:scratchAddr+scratchSize], b)
 	return scratchAddr
 }
 

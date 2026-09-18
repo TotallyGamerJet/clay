@@ -1656,3 +1656,7 @@ func encodeValue(b []byte, p uint32, v any) uint32 {
 		panic("clay: unsupported pointer type")
 	}
 }
+
+// scratchSize is the size of the buffer inside the module that arguments are
+// passed in, which is as large as the largest call needs.
+const scratchSize = 4096

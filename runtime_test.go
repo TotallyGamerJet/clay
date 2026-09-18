@@ -571,3 +571,21 @@ func TestTransitionCallbacks(t *testing.T) {
 		t.Error("the enter state function was never called")
 	}
 }
+
+// TestScratchBounds checks that arguments can't be written past the buffer they are
+// passed in, which would overwrite whatever clay keeps after it.
+func TestScratchBounds(t *testing.T) {
+	// The buffer has to fit the largest call, which passes an element declaration.
+	if scratchSize < sizeofElementDeclaration {
+		t.Errorf("the scratch buffer is %d bytes, smaller than an element declaration at %d",
+			scratchSize, sizeofElementDeclaration)
+	}
+
+	// Writing more than fits is a mistake in the package, not something to do quietly.
+	defer func() {
+		if recover() == nil {
+			t.Error("committing more arguments than the buffer holds did not panic")
+		}
+	}()
+	wasmCommit(make([]byte, scratchSize+1))
+}

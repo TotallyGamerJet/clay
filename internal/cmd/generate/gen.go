@@ -188,7 +188,9 @@ func generate(m *model) (goSrc, cSrc []byte, err error) {
 	}
 	g.emitPointers()
 
-	fmt.Fprintf(&g.cOut, "static char go_scratch[%d] __attribute__((aligned(16)));\n\n", alignUp(g.scratch, 16))
+	scratch := alignUp(g.scratch, 16)
+	fmt.Fprintf(&g.goOut, "// scratchSize is the size of the buffer inside the module that arguments are\n// passed in, which is as large as the largest call needs.\nconst scratchSize = %d\n\n", scratch)
+	fmt.Fprintf(&g.cOut, "static char go_scratch[%d] __attribute__((aligned(16)));\n\n", scratch)
 	g.cOut.WriteString("GO_EXPORT(\"go_scratch\")\nvoid *go_scratch_addr(void) {\n\treturn go_scratch;\n}\n")
 
 	goSrc, err = format.Source([]byte(g.goOut.String()))
