@@ -44,12 +44,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
-            libsdl2-dev libsdl2-ttf-dev libgl1-mesa-dev xorg-dev libasound2-dev
+            libsdl2-dev libsdl2-ttf-dev libgl1-mesa-dev xorg-dev libasound2-dev \
+            xvfb
       - run: go build ./...
       - run: go vet ./...
-      # The software and SDL renderers draw without a window, so their tests run here.
-      # The ebitengine and raylib ones need a GPU and a window on the main thread.
+      # The software and SDL renderers draw without a window. The ebitengine and raylib
+      # ones need a GPU, which xvfb provides through software rendering.
       - run: go test ./renderers/...
+      - name: Test the renderers that draw with a GPU
+        run: xvfb-run -a env CLAY_TEST_GPU=1 go test -count=1 ./renderers/...
 
   format:
     runs-on: ubuntu-latest

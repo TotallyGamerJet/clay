@@ -7,9 +7,10 @@
 // The layout is built out of fixed sizes, so that the positions the checks look at are
 // the same whichever font a renderer measures the text with.
 //
-// The software renderer and both SDL renderers are covered, as they can draw without a
-// window. The ebitengine and raylib renderers can't: they need a GPU, and a window that
-// has to be created on the main thread, which tests don't run on.
+// The software renderer and both SDL renderers draw without a window, so their tests run
+// anywhere. The ebitengine and raylib ones need a GPU, and a window that has to be made
+// on the main thread, so they draw into a hidden window from TestMain, and only run when
+// CLAY_TEST_GPU is set.
 package testlayout
 
 import (
