@@ -4,6 +4,7 @@ package sdl3_test
 
 import (
 	"image"
+	"os"
 	"testing"
 
 	"github.com/TotallyGamerJet/clay/examples/fonts"
@@ -15,11 +16,21 @@ import (
 	"github.com/Zyko0/go-sdl3/ttf"
 )
 
+// TestMain loads SDL once for the whole test binary. The bindings can't unload and load
+// the libraries again in the same process: text stops being drawn after they are, so a
+// test that loaded them itself would fail the second time it ran, as with -count=2.
+func TestMain(m *testing.M) {
+	sdlLib := binsdl.Load()
+	ttfLib := binttf.Load()
+	code := m.Run()
+	ttfLib.Unload()
+	sdlLib.Unload()
+	os.Exit(code)
+}
+
 // TestLayout draws the shared test layout with SDL's software renderer, which needs no
 // window, and checks it looks the way it should.
 func TestLayout(t *testing.T) {
-	defer binsdl.Load().Unload()
-	defer binttf.Load().Unload()
 	if err := ttf.Init(); err != nil {
 		t.Skipf("SDL_ttf is not available: %v", err)
 	}
@@ -49,7 +60,8 @@ func TestLayout(t *testing.T) {
 	defer font.Close()
 
 	data := &sdl3.RendererData{Renderer: renderer, TextEngine: engine, Fonts: []*ttf.Font{font}}
-	testlayout.Init(sdl3.MeasureText, &data.Fonts)
+	defer data.Close()
+	testlayout.Init(sdl3.MeasureText, data)
 	if err := sdl3.ClayRender(data, testlayout.Build()); err != nil {
 		t.Fatal(err)
 	}
