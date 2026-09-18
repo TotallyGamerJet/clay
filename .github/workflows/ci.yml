@@ -47,6 +47,9 @@ jobs:
             libsdl2-dev libsdl2-ttf-dev libgl1-mesa-dev xorg-dev libasound2-dev
       - run: go build ./...
       - run: go vet ./...
+      # The software and SDL renderers draw without a window, so their tests run here.
+      # The ebitengine and raylib ones need a GPU and a window on the main thread.
+      - run: go test ./renderers/...
 
   format:
     runs-on: ubuntu-latest
