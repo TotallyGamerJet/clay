@@ -7,6 +7,7 @@ import (
 	"encoding/binary"
 	"math"
 	"slices"
+	"unsafe"
 
 	"github.com/TotallyGamerJet/clay/internal/wasm"
 )
@@ -151,6 +152,9 @@ const (
 
 func nextFrame() {
 	frame++
+	if internFull {
+		flushInterned()
+	}
 	stringBuffers[frame&1].reset()
 	clear(frameHandles[frame&1])
 	frameHandles[frame&1] = frameHandles[frame&1][:0]
@@ -318,12 +322,8 @@ func (b *stringBuffer) lookup(addr, n uint32) (string, bool) {
 	return s.s[start : start+n], true
 }
 
-// storeString copies s into the module and returns its address.
-func storeString(s string) uint32 {
-	if len(s) == 0 {
-		return 0
-	}
-	b := &stringBuffers[frame&1]
+// store copies s into the buffer and returns its address.
+func (b *stringBuffer) store(s string) uint32 {
 	addr := b.alloc(uint32(len(s)))
 	copy(wasmMemory()[addr:], s)
 	if n := len(b.strings); n > 0 && b.strings[n-1].addr > addr {
@@ -333,10 +333,122 @@ func storeString(s string) uint32 {
 	return addr
 }
 
+// free releases the memory of the buffer and the strings it keeps.
+func (b *stringBuffer) free() {
+	for _, c := range b.chunks {
+		module.Xgo_free(int32(c.addr))
+	}
+	*b = stringBuffer{}
+}
+
+// storeString copies s into this frame's buffer and returns its address, which is valid
+// for this frame and the next.
+func storeString(s string) uint32 {
+	if len(s) == 0 {
+		return 0
+	}
+	return stringBuffers[frame&1].store(s)
+}
+
+// Clay looks text up in a cache of its measurements by a hash of the text, which it
+// computes every frame. For most strings it hashes their contents, which for long text
+// like the demo's article took a third of the time a layout took. But if a string says
+// its memory is statically allocated, clay hashes its address and length instead.
+//
+// So strings are interned: each distinct Go string is copied into the module once, at an
+// address that it keeps, and passed to clay as static. The table is keyed by the string's
+// data pointer and length rather than its contents, so looking a string up costs nothing
+// like hashing it. That is safe because the table keeps the string alive, so Go can't
+// reuse its memory for a different string while it is in the table.
+//
+// An address must never hold different text while any context might have it cached.
+// Clay returns a cache entry whose hash matches however old the entry is, so waiting a
+// few frames before reusing an address would not be enough. So interned strings are
+// never freed one at a time. Once the table is over its budget, new strings are copied
+// per frame instead, and at the next BeginLayout the whole table is dropped along with the
+// measurement caches of every context, so that nothing measured at a freed address can
+// be returned. The next frame measures its text again.
+//
+// Only long strings are interned. Hashing a short one costs about as much as looking it
+// up in the table would, and short strings are the ones a program is likely to format anew
+// every frame, like a score or a timer, which would fill the table for nothing. Element
+// ids gain nothing either way, as clay hashes their contents regardless.
+//
+// A program whose long strings are all different every frame
+// fills the table and drops it now and then. One whose strings don't fit in the budget
+// would drop it every frame, so the budget doubles when that happens, up to a limit.
+
+const (
+	// Strings shorter than this are copied per frame rather than interned.
+	minInternLength     = 64
+	initialInternBudget = 1 << 20
+	maxInternBudget     = 64 << 20
+	// Dropping the table again within this many frames means the strings don't fit.
+	internFlushWindow = 60
+)
+
+var (
+	internMinLength        = minInternLength // variables, so tests can change them
+	internBudget    uint32 = initialInternBudget
+	internBuffer    stringBuffer
+	interned        = map[internKey]uint32{}
+	internedBytes   uint32
+	internFull      bool // a string didn't fit, so the table is dropped at the next frame
+	lastInternDrop  uint32
+)
+
+type internKey struct {
+	data *byte
+	size int
+}
+
+// internString returns the address of s in the module and whether it is stable, which
+// is when it can be passed to clay as statically allocated.
+func internString(s string) (addr uint32, stable bool) {
+	if len(s) < internMinLength {
+		return storeString(s), false
+	}
+	key := internKey{data: unsafe.StringData(s), size: len(s)}
+	if addr, ok := interned[key]; ok {
+		return addr, true
+	}
+	if internFull || uint64(internedBytes)+uint64(len(s)) > uint64(internBudget) {
+		internFull = true
+		return storeString(s), false
+	}
+	addr = internBuffer.store(s)
+	interned[key] = addr
+	internedBytes += uint32(len(s))
+	return addr, true
+}
+
+// flushInterned drops every interned string, and every measurement clay might have
+// cached under the address of one.
+func flushInterned() {
+	if frame-lastInternDrop < internFlushWindow {
+		internBudget = min(internBudget*2, maxInternBudget)
+	}
+	lastInternDrop = frame
+	internBuffer.free()
+	clear(interned)
+	internedBytes = 0
+	internFull = false
+
+	current := GetCurrentContext()
+	for _, c := range contexts {
+		SetCurrentContext(c)
+		ResetMeasureTextCache()
+	}
+	SetCurrentContext(current)
+}
+
 // loadString returns the string at addr, avoiding a copy if it was stored by storeString.
 func loadString(m []byte, addr, n uint32) string {
 	if n == 0 {
 		return ""
+	}
+	if s, ok := internBuffer.lookup(addr, n); ok {
+		return s
 	}
 	for i := range stringBuffers {
 		if s, ok := stringBuffers[(frame-uint32(i))&1].lookup(addr, n); ok {

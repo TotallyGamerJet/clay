@@ -3,6 +3,7 @@
 package clay
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 	"unsafe"
@@ -615,5 +616,236 @@ func TestCallbacksDoNotAllocate(t *testing.T) {
 	})
 	if allocs > 0 {
 		t.Errorf("a frame allocated %v times, want none", allocs)
+	}
+}
+
+// freshInterning starts a test with an empty table of interned strings and the given
+// budget, and puts things back afterwards, as the table is shared by every test.
+// Strings of any length are interned, so the tests can use short ones.
+func freshInterning(t *testing.T, budget uint32) {
+	t.Helper()
+	old, oldMin := internBudget, internMinLength
+	flushInterned()
+	internBudget = budget
+	internMinLength = 1
+	// So that the first drop in the test doesn't count as the table not fitting.
+	lastInternDrop = frame - internFlushWindow
+	t.Cleanup(func() {
+		flushInterned()
+		internBudget, internMinLength = old, oldMin
+	})
+}
+
+// TestInternOnlyLongStrings checks that short strings are copied per frame rather than
+// interned, as hashing them costs clay little, and they are the ones most likely to be
+// formatted anew every frame.
+func TestInternOnlyLongStrings(t *testing.T) {
+	newContext(t)
+	freshInterning(t, initialInternBudget)
+	internMinLength = minInternLength
+
+	if _, stable := internString("Score: 12"); stable {
+		t.Error("a short string was interned")
+	}
+	if _, stable := internString(strings.Repeat("a long paragraph of text ", 10)); !stable {
+		t.Error("a long string was not interned")
+	}
+	if len(interned) != 1 {
+		t.Errorf("the table holds %d strings, want only the long one", len(interned))
+	}
+}
+
+func TestInternStableAddress(t *testing.T) {
+	newContext(t)
+	freshInterning(t, initialInternBudget)
+
+	const s = "a string that is laid out every frame"
+	first, stable := internString(s)
+	if !stable {
+		t.Fatal("a string that fits the budget was not interned")
+	}
+	for range 3 {
+		BeginLayout()
+		if addr, stable := internString(s); addr != first || !stable {
+			t.Fatalf("the string moved from %d to %d, or was not stable (%v)", first, addr, stable)
+		}
+	}
+	// Reading it back returns the string itself, as with the per frame buffers.
+	if got := loadString(wasmMemory(), first, uint32(len(s))); unsafe.StringData(got) != unsafe.StringData(s) {
+		t.Error("loading an interned string copied it")
+	}
+}
+
+// TestInternRoundTrip checks that strings clay hands back, like the string of an element
+// id, are found in the table when they are passed back in, rather than interned again.
+func TestInternRoundTrip(t *testing.T) {
+	newContext(t)
+	freshInterning(t, initialInternBudget)
+
+	frame := func() {
+		BeginLayout()
+		UI(ID("Button"))(ElementDeclaration{}, func() {
+			Text("label", nil)
+		})
+		EndLayout(0)
+		PointerOver(GetElementId("Button"))
+	}
+	frame()
+	entries := len(interned)
+	for range 50 {
+		frame()
+	}
+	if len(interned) != entries {
+		t.Errorf("the table grew from %d to %d strings over frames that use the same strings", entries, len(interned))
+	}
+}
+
+// TestInternBudget checks that strings stop being interned once the table is full, and
+// that the table is dropped at the next frame.
+func TestInternBudget(t *testing.T) {
+	newContext(t)
+	freshInterning(t, 16)
+
+	if _, stable := internString("0123456789"); !stable {
+		t.Fatal("a string that fits was not interned")
+	}
+	addr, stable := internString("this one does not fit")
+	if stable {
+		t.Fatal("a string over the budget was interned")
+	}
+	// It is still stored, for this frame, like strings were before interning.
+	if got := loadString(wasmMemory(), addr, uint32(len("this one does not fit"))); got != "this one does not fit" {
+		t.Errorf("the string that didn't fit reads back as %q", got)
+	}
+
+	BeginLayout()
+	if len(interned) != 0 || internedBytes != 0 {
+		t.Errorf("the table still holds %d strings, %d bytes, after the frame it filled up", len(interned), internedBytes)
+	}
+	if _, stable := internString("0123456789"); !stable {
+		t.Error("strings are not interned again after the table was dropped")
+	}
+}
+
+// TestInternDropDoesNotReuseMeasurements is the case interning has to get right. Clay
+// caches a text's measurement by a hash of its address. If the table is dropped and a
+// different text of the same length ends up at the same address, clay must measure it
+// rather than return the measurement of the text that used to be there, in every context.
+func TestInternDropDoesNotReuseMeasurements(t *testing.T) {
+	// Every W is 20 pixels wide, and anything else is 5, so the two texts below have the
+	// same length but different widths.
+	measure := func(text string, _ *TextElementConfig, _ any) Dimensions {
+		var width float32
+		for _, r := range text {
+			if r == 'W' {
+				width += 20
+			} else {
+				width += 5
+			}
+		}
+		return Dimensions{Width: width, Height: 10}
+	}
+	width := func(text string) float32 {
+		BeginLayout()
+		UI(ID("Root"))(ElementDeclaration{}, func() {
+			Text(text, &TextElementConfig{WrapMode: TextWrapNone})
+		})
+		for _, c := range EndLayout(0) {
+			if c.CommandType == RenderCommandTypeText {
+				return c.BoundingBox.Width
+			}
+		}
+		t.Fatal("no text was drawn")
+		return 0
+	}
+
+	// Two contexts, as each keeps a measurement cache of its own.
+	var contexts []*Context
+	for range 2 {
+		contexts = append(contexts, Initialize(CreateArenaWithCapacity(MinMemorySize()),
+			Dimensions{Width: 800, Height: 600}, ErrorHandler{ErrorHandlerFunction: func(e ErrorData) { t.Errorf("clay: %v", e) }}))
+		SetMeasureTextFunction(measure, nil)
+	}
+	freshInterning(t, 64)
+
+	// Both contexts measure "aaaa" at an interned address.
+	before, _ := internString("aaaa")
+	for _, c := range contexts {
+		SetCurrentContext(c)
+		if got := width("aaaa"); got != 20 {
+			t.Fatalf("aaaa measured %v wide, want 20", got)
+		}
+	}
+
+	// Fill the table, so that it is dropped at the next frame.
+	internString(strings.Repeat("x", 100))
+	BeginLayout()
+
+	// A different text of the same length. The table starts again from nothing, so it is
+	// given the address "aaaa" had.
+	after, _ := internString("WWWW")
+	if after != before {
+		t.Skipf("WWWW was interned at %d rather than %d, where aaaa was, so this doesn't test reuse", after, before)
+	}
+	for i, c := range contexts {
+		SetCurrentContext(c)
+		if got := width("WWWW"); got != 80 {
+			t.Errorf("context %d measured WWWW %v wide, want 80: it returned the measurement of the text that was at its address", i, got)
+		}
+	}
+}
+
+// TestInternBudgetGrows checks that a table that doesn't fit its strings gets a bigger
+// budget, rather than being dropped every frame, and that the budget has a limit.
+func TestInternBudgetGrows(t *testing.T) {
+	newContext(t)
+	freshInterning(t, 64)
+
+	big := strings.Repeat("y", 100)
+	internString(big) // doesn't fit
+	BeginLayout()     // dropped for the first time in a while, so the budget stays
+	if internBudget != 64 {
+		t.Fatalf("the budget changed to %d on the first drop", internBudget)
+	}
+	internString(big) // still doesn't fit
+	BeginLayout()     // dropped again right away, so the strings don't fit the budget
+	if internBudget != 128 {
+		t.Errorf("the budget is %d after the table didn't fit twice in a row, want 128", internBudget)
+	}
+	if _, stable := internString(big); !stable {
+		t.Error("the string still doesn't fit the grown budget")
+	}
+
+	internBudget = maxInternBudget
+	internString(strings.Repeat("z", maxInternBudget+1))
+	BeginLayout()
+	if internBudget != maxInternBudget {
+		t.Errorf("the budget grew to %d, past its limit of %d", internBudget, maxInternBudget)
+	}
+}
+
+// TestInternUniqueStringsStayBounded checks that a program whose text is different every
+// frame, like one that shows a timer, doesn't grow memory without limit.
+func TestInternUniqueStringsStayBounded(t *testing.T) {
+	newContext(t)
+	freshInterning(t, 4096)
+
+	var peak int
+	for i := range 2000 {
+		BeginLayout()
+		UI(ID("Root"))(ElementDeclaration{}, func() {
+			Text(fmt.Sprintf("frame %d, still going", i), nil)
+		})
+		EndLayout(0)
+		peak = max(peak, len(interned))
+	}
+	if internedBytes > internBudget {
+		t.Errorf("%d bytes are interned, over the budget of %d", internedBytes, internBudget)
+	}
+	if peak > 4096 {
+		t.Errorf("the table held up to %d strings", peak)
+	}
+	if internBudget != 4096 {
+		t.Errorf("the budget grew to %d, though the strings are small and dropped only now and then", internBudget)
 	}
 }

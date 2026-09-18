@@ -693,9 +693,10 @@ func decRenderCommandArray(m []byte, p uint32, v *RenderCommandArray) {
 const sizeofString = 12
 
 func encString(b []byte, p uint32, v *string) {
-	addr := storeString(*v)
+	addr, stable := internString(*v)
 	putU32(b, p+8, addr)
 	putU32(b, p+4, uint32(len(*v)))
+	putBool(b, p+0, stable)
 }
 
 func decString(m []byte, p uint32, v *string) {

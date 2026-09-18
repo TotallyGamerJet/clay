@@ -619,13 +619,29 @@ func (g *gen) emitString(r *record) error {
 			others = append(others, f)
 		}
 	}
+	// A string that can say its memory is statically allocated is interned, so that
+	// clay hashes its address rather than its contents. See internString.
+	var static *field
+	for _, f := range others {
+		if f.cName == "isStaticallyAllocated" && f.t.kind == kPrim && f.t.prim.goType == "bool" {
+			static = f
+		}
+	}
 	g.emitLayoutAsserts(r, r.cName, "")
 	fmt.Fprintf(&g.goOut, "const sizeof%s = %d\n\n", r.goName, r.size)
 	fmt.Fprintf(&g.goOut, "func enc%s(b []byte, p uint32, v *string) {\n", r.goName)
-	fmt.Fprintf(&g.goOut, "addr := storeString(*v)\nputU32(b, p+%d, addr)\nputU32(b, p+%d, uint32(len(*v)))\n", chars.off, length.off)
+	if static != nil {
+		g.goOut.WriteString("addr, stable := internString(*v)\n")
+	} else {
+		g.goOut.WriteString("addr := storeString(*v)\n")
+	}
+	fmt.Fprintf(&g.goOut, "putU32(b, p+%d, addr)\nputU32(b, p+%d, uint32(len(*v)))\n", chars.off, length.off)
 	for _, f := range others {
-		// Slices derived from Go strings have themselves as their base.
-		if f.t.kind == kPtr {
+		switch {
+		case f == static:
+			fmt.Fprintf(&g.goOut, "putBool(b, p+%d, stable)\n", f.off)
+		case f.t.kind == kPtr:
+			// Slices derived from Go strings have themselves as their base.
 			fmt.Fprintf(&g.goOut, "putU32(b, p+%d, addr)\n", f.off)
 		}
 	}
