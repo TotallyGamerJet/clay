@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Zlib
+
 // Package shapes builds the geometry of clay's rounded rectangles and borders,
 // so that the renderers that draw them with triangles all draw them the same way.
 //

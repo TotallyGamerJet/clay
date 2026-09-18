@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Zlib
+
 package sdl2
 
 import "github.com/ebitengine/purego/objc"

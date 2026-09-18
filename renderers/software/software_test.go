@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Zlib
+
 package software_test
 
 import (

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Zlib
+
 // This file is the entry point of the Wasm build of clay.h.
 // It is compiled together with bindings generated from clay.h by internal/cmd/generate
 // and then translated to Go by wasm2go. Run `go generate` in the repository root to rebuild.

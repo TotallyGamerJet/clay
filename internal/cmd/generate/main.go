@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Zlib
+
 // Command generate builds clay.h into Go.
 //
 // It compiles clay.h to WebAssembly with clang and translates the result to Go with wasm2go.
@@ -95,12 +97,36 @@ func main() {
 	}
 
 	// Translate it to Go.
-	if _, err := output("go", "tool", "wasm2go", "-pkg", "wasm", "-unsafe", "-o", "internal/wasm/clay.go", wasm); err != nil {
+	const translated = "internal/wasm/clay.go"
+	if _, err := output("go", "tool", "wasm2go", "-pkg", "wasm", "-unsafe", "-o", translated, wasm); err != nil {
+		log.Fatal(err)
+	}
+	if err := license(translated); err != nil {
 		log.Fatal(err)
 	}
 	if err := os.WriteFile("clay.go", goSrc, 0o644); err != nil {
 		log.Fatal(err)
 	}
+}
+
+// license adds the license of the generated file, which is clay's, below the line
+// that marks it as generated.
+func license(path string) error {
+	src, err := os.ReadFile(path)
+	if err != nil {
+		return err
+	}
+	const notice = "// SPDX-License-Identifier: Zlib\n"
+	if bytes.Contains(src, []byte(notice)) {
+		return nil
+	}
+	generated, rest, _ := bytes.Cut(src, []byte("\n"))
+	out := make([]byte, 0, len(src)+len(notice)+1)
+	out = append(out, generated...)
+	out = append(out, '\n')
+	out = append(out, notice...)
+	out = append(out, rest...)
+	return os.WriteFile(path, out, 0o644)
 }
 
 func findClang() (string, error) {

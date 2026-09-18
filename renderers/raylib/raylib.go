@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Zlib
+
 // Package raylib renders clay with raylib, using github.com/gen2brain/raylib-go.
 //
 // It is a port of clay's renderers/raylib/clay_renderer_raylib.c.

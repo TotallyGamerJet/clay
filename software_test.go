@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Zlib
+
 package clay_test
 
 import (

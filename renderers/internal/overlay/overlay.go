@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Zlib
+
 // Package overlay tracks the overlay colors set by clay's OVERLAY_COLOR render commands.
 package overlay
 
