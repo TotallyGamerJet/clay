@@ -76,8 +76,11 @@ func MeasureText(txt string, config *clay.TextElementConfig, userData any) clay.
 	if err != nil {
 		panic(fmt.Errorf("software: failed to create font face: %w", err))
 	}
-	width := font.MeasureString(face, txt).Ceil()
+	width := font.MeasureString(face, txt).Ceil() + int(config.LetterSpacing)*max(len([]rune(txt))-1, 0)
 	height := face.Metrics().Height.Ceil()
+	if config.LineHeight > 0 {
+		height = int(config.LineHeight)
+	}
 	return clay.Dimensions{
 		Width: float32(width), Height: float32(height),
 	}
@@ -109,13 +112,27 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 			if err != nil {
 				return err
 			}
+			// Center the line in its box, which is taller than the text when a line
+			// height is set, and space the characters out by the letter spacing.
+			metrics := face.Metrics()
+			y := fixed.I(int(boundingBox.Y)) + metrics.Ascent
+			if height := (metrics.Ascent + metrics.Descent).Ceil(); float32(height) < boundingBox.Height {
+				y += fixed.I(int((boundingBox.Height - float32(height)) / 2))
+			}
 			d := &font.Drawer{
 				Dst:  screen,
 				Src:  image.NewUniform(toColor(overlays.Apply(config.TextColor))),
 				Face: face,
-				Dot:  fixed.Point26_6{X: fixed.I(int(boundingBox.X)), Y: fixed.I(int(boundingBox.Y)) + face.Metrics().Ascent},
+				Dot:  fixed.Point26_6{X: fixed.I(int(boundingBox.X)), Y: y},
 			}
-			d.DrawString(config.StringContents)
+			if config.LetterSpacing == 0 {
+				d.DrawString(config.StringContents)
+			} else {
+				for _, r := range config.StringContents {
+					d.DrawString(string(r))
+					d.Dot.X += fixed.I(int(config.LetterSpacing))
+				}
+			}
 		case clay.RENDER_COMMAND_TYPE_SCISSOR_START:
 			screen = fullScreen.(interface {
 				SubImage(r image.Rectangle) image.Image
@@ -133,6 +150,10 @@ func ClayRender(screen draw.Image, renderCommands clay.RenderCommandArray, fonts
 				continue
 			}
 			src := *img
+			// The image is tinted by its background color, which is untinted when unset.
+			if tint := config.BackgroundColor; tint != (clay.Color{}) {
+				src = tintedImage{Image: src, tint: tint}
+			}
 			if overlays.Active() {
 				src = overlayImage{Image: src, overlays: overlays}
 			}
@@ -266,4 +287,22 @@ func (o overlayImage) At(x, y int) color.Color {
 		fb += (c.B*257*fa/0xffff - fb) * oa
 	}
 	return color.RGBA64{R: uint16(fr), G: uint16(fg), B: uint16(fb), A: uint16(fa)}
+}
+
+// tintedImage multiplies the colors of an image by a tint.
+type tintedImage struct {
+	image.Image
+	tint clay.Color
+}
+
+func (t tintedImage) ColorModel() color.Model { return color.RGBA64Model }
+
+func (t tintedImage) At(x, y int) color.Color {
+	r, g, b, a := t.Image.At(x, y).RGBA()
+	return color.RGBA64{
+		R: uint16(float32(r) * t.tint.R / 255),
+		G: uint16(float32(g) * t.tint.G / 255),
+		B: uint16(float32(b) * t.tint.B / 255),
+		A: uint16(float32(a) * t.tint.A / 255),
+	}
 }

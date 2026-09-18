@@ -10,6 +10,7 @@ import (
 
 	"github.com/TotallyGamerJet/clay"
 	"github.com/TotallyGamerJet/clay/renderers/internal/overlay"
+	"github.com/TotallyGamerJet/clay/renderers/internal/shapes"
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -30,9 +31,28 @@ func fontFor(fonts []rl.Font, id uint16) rl.Font {
 func MeasureText(text string, config *clay.TextElementConfig, userData any) clay.Dimensions {
 	fonts := *userData.(*[]rl.Font)
 	size := rl.MeasureTextEx(fontFor(fonts, config.FontId), text, float32(config.FontSize), float32(config.LetterSpacing))
+	height := float32(config.FontSize)
+	if config.LineHeight > 0 {
+		height = float32(config.LineHeight)
+	}
 	return clay.Dimensions{
 		Width:  size.X,
-		Height: float32(config.FontSize),
+		Height: height,
+	}
+}
+
+// drawMesh draws a shape in a single color. Raylib anti aliases with multisampling,
+// so the shapes are built without a feathered edge.
+func drawMesh(mesh shapes.Mesh, c clay.Color) {
+	col := toColor(c)
+	point := func(i uint16) rl.Vector2 {
+		v := mesh.Vertices[i]
+		return rl.Vector2{X: v.X, Y: v.Y}
+	}
+	for i := 0; i+2 < len(mesh.Indices); i += 3 {
+		// Raylib wants the vertices of a triangle counter clockwise, which is the other
+		// way around from the shapes, whose y axis points down.
+		rl.DrawTriangle(point(mesh.Indices[i+2]), point(mesh.Indices[i+1]), point(mesh.Indices[i]), col)
 	}
 }
 
@@ -91,10 +111,15 @@ func ClayRender(renderCommands clay.RenderCommandArray, fonts []rl.Font) {
 		switch renderCommand.CommandType {
 		case clay.RENDER_COMMAND_TYPE_TEXT:
 			config := &renderCommand.RenderData.Text
+			// Center the line in its box, which is taller than the text when a line height is set.
+			y := boundingBox.Y
+			if float32(config.FontSize) < boundingBox.Height {
+				y += (boundingBox.Height - float32(config.FontSize)) / 2
+			}
 			rl.DrawTextEx(
 				fontFor(fonts, config.FontId),
 				config.StringContents,
-				rl.Vector2{X: boundingBox.X, Y: boundingBox.Y},
+				rl.Vector2{X: boundingBox.X, Y: y},
 				float32(config.FontSize),
 				float32(config.LetterSpacing),
 				toColor(config.TextColor),
@@ -131,53 +156,18 @@ func ClayRender(renderCommands clay.RenderCommandArray, fonts []rl.Font) {
 			setOverlay(overlays)
 		case clay.RENDER_COMMAND_TYPE_RECTANGLE:
 			config := &renderCommand.RenderData.Rectangle
-			if config.CornerRadius.TopLeft > 0 {
-				roundness := config.CornerRadius.TopLeft * 2 / min(boundingBox.Width, boundingBox.Height)
-				rl.DrawRectangleRounded(rect, roundness, 8, toColor(config.BackgroundColor))
+			if config.CornerRadius != (clay.CornerRadius{}) {
+				drawMesh(shapes.Fill(boundingBox, config.CornerRadius, 0), config.BackgroundColor)
 			} else {
 				rl.DrawRectangleRec(rect, toColor(config.BackgroundColor))
 			}
 		case clay.RENDER_COMMAND_TYPE_BORDER:
-			renderBorder(boundingBox, &renderCommand.RenderData.Border)
+			config := &renderCommand.RenderData.Border
+			drawMesh(shapes.Border(boundingBox, config.CornerRadius, config.Width, 0), config.Color)
 		case clay.RENDER_COMMAND_TYPE_NONE:
 		case clay.RENDER_COMMAND_TYPE_CUSTOM:
 		default:
 			slog.Warn("Unknown command type", "type", renderCommand.CommandType)
 		}
 	}
-}
-
-func renderBorder(bb clay.BoundingBox, config *clay.BorderRenderData) {
-	col := toColor(config.Color)
-	r := config.CornerRadius
-	maxRadius := min(bb.Width, bb.Height) / 2
-	r.TopLeft = min(r.TopLeft, maxRadius)
-	r.TopRight = min(r.TopRight, maxRadius)
-	r.BottomLeft = min(r.BottomLeft, maxRadius)
-	r.BottomRight = min(r.BottomRight, maxRadius)
-	w := config.Width
-
-	if w.Left > 0 {
-		rl.DrawRectangleV(rl.Vector2{X: bb.X, Y: bb.Y + r.TopLeft}, rl.Vector2{X: float32(w.Left), Y: bb.Height - r.TopLeft - r.BottomLeft}, col)
-	}
-	if w.Right > 0 {
-		rl.DrawRectangleV(rl.Vector2{X: bb.X + bb.Width - float32(w.Right), Y: bb.Y + r.TopRight}, rl.Vector2{X: float32(w.Right), Y: bb.Height - r.TopRight - r.BottomRight}, col)
-	}
-	if w.Top > 0 {
-		rl.DrawRectangleV(rl.Vector2{X: bb.X + r.TopLeft, Y: bb.Y}, rl.Vector2{X: bb.Width - r.TopLeft - r.TopRight, Y: float32(w.Top)}, col)
-	}
-	if w.Bottom > 0 {
-		rl.DrawRectangleV(rl.Vector2{X: bb.X + r.BottomLeft, Y: bb.Y + bb.Height - float32(w.Bottom)}, rl.Vector2{X: bb.Width - r.BottomLeft - r.BottomRight, Y: float32(w.Bottom)}, col)
-	}
-
-	round := func(v float32) float32 { return float32(math.Round(float64(v))) }
-	corner := func(cx, cy, radius float32, width uint16, start, end float32) {
-		if radius > 0 && width > 0 {
-			rl.DrawRing(rl.Vector2{X: round(cx), Y: round(cy)}, round(max(radius-float32(width), 0)), radius, start, end, 10, col)
-		}
-	}
-	corner(bb.X+r.TopLeft, bb.Y+r.TopLeft, r.TopLeft, w.Top, 180, 270)
-	corner(bb.X+bb.Width-r.TopRight, bb.Y+r.TopRight, r.TopRight, w.Top, 270, 360)
-	corner(bb.X+r.BottomLeft, bb.Y+bb.Height-r.BottomLeft, r.BottomLeft, w.Bottom, 90, 180)
-	corner(bb.X+bb.Width-r.BottomRight, bb.Y+bb.Height-r.BottomRight, r.BottomRight, w.Bottom, 0, 90)
 }
