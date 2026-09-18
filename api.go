@@ -360,7 +360,7 @@ type onHoverFunction struct {
 // is within the currently open element's bounding box, passing it userData.
 // The function is called by SetPointerState, not by OnHover itself.
 func OnHover(onHover func(elementId ElementId, pointerData PointerData, userData any), userData any) {
-	module.Xgo_on_hover(int32(storeHandle(&onHoverFunction{onHover, userData})))
+	module.Xgo_on_hover(int32(storeHover(onHoverFunction{onHover, userData})))
 }
 
 // BeginLayout prepares clay for the declaration of a new layout, and invalidates the strings and

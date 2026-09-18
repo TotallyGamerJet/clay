@@ -118,6 +118,9 @@ var (
 	frame         uint32
 	stringBuffers [2]stringBuffer
 	frameHandles  [2][]any
+	// Hover callbacks are kept as values in a table of their own, which clay refers to
+	// by index, so that binding one to an element every frame doesn't allocate.
+	frameHovers [2][]onHoverFunction
 
 	// Handles that outlive a frame, like the callbacks of a context. Each one has a slot,
 	// which is reused when the same callback of the same context is set again.
@@ -151,6 +154,24 @@ func nextFrame() {
 	stringBuffers[frame&1].reset()
 	clear(frameHandles[frame&1])
 	frameHandles[frame&1] = frameHandles[frame&1][:0]
+	clear(frameHovers[frame&1])
+	frameHovers[frame&1] = frameHovers[frame&1][:0]
+}
+
+// storeHover returns a handle to a hover callback, valid for this and the next frame.
+func storeHover(v onHoverFunction) uint32 {
+	t := &frameHovers[frame&1]
+	*t = append(*t, v)
+	return (frame&1)*frameHandleBit | uint32(len(*t))
+}
+
+func loadHover(h uint32) onHoverFunction {
+	t := frameHovers[h/frameHandleBit&1]
+	i := h &^ frameHandleBit
+	if i == 0 || int(i) > len(t) {
+		return onHoverFunction{}
+	}
+	return t[i-1]
 }
 
 // storeHandle returns a handle to v that is valid for this and the next frame.
@@ -343,6 +364,10 @@ var (
 	transitionStateFuncs []func(state TransitionData, properties TransitionProperty) TransitionData
 )
 
+// measuredConfig is handed to the measure text function, and reused between calls so
+// that it doesn't escape to the heap on each one. Measuring is not reentrant.
+var measuredConfig TextElementConfig
+
 // host implements the functions imported by the WebAssembly module.
 type host struct{}
 
@@ -365,9 +390,8 @@ func (host) XmeasureText(ret, text, config, userData int32) {
 	m := wasmMemory()
 	var s string
 	decStringSlice(m, uint32(text), &s)
-	var c TextElementConfig
-	decTextElementConfig(m, uint32(config), &c)
-	d := f.fn(s, &c, f.userData)
+	decTextElementConfig(m, uint32(config), &measuredConfig)
+	d := f.fn(s, &measuredConfig, f.userData)
 	var buf [sizeofDimensions]byte
 	encDimensions(buf[:], 0, &d)
 	copy(wasmMemory()[ret:], buf[:])
@@ -406,8 +430,8 @@ func (host) XtransitionState(slot, ret, state int32, properties int32) {
 }
 
 func (host) XonHover(elementId, pointerData, userData int32) {
-	f, _ := loadHandle(uint32(userData)).(*onHoverFunction)
-	if f == nil || f.fn == nil {
+	f := loadHover(uint32(userData))
+	if f.fn == nil {
 		return
 	}
 	m := wasmMemory()

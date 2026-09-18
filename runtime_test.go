@@ -589,3 +589,31 @@ func TestScratchBounds(t *testing.T) {
 	}()
 	wasmCommit(make([]byte, scratchSize+1))
 }
+
+// TestCallbacksDoNotAllocate checks that laying out elements that bind a hover callback,
+// and measuring text, does not allocate. An app does both every frame.
+func TestCallbacksDoNotAllocate(t *testing.T) {
+	newContext(t)
+	userData := new(int)
+	hover := func(id ElementId, data PointerData, u any) {}
+	// The closures are made once, as making one is an allocation of the caller's own.
+	children := func() {
+		OnHover(hover, userData)
+		Text("some text to measure", &TextElementConfig{FontSize: 16})
+	}
+	id := ID("Button")
+	declaration := ElementDeclaration{
+		Layout:          LayoutConfig{Sizing: Sizing{Width: SizingFixed(200), Height: SizingFixed(100)}},
+		BackgroundColor: Color{R: 255, A: 255},
+	}
+
+	allocs := testing.AllocsPerRun(50, func() {
+		BeginLayout()
+		UI(id)(declaration, children)
+		EndLayout(0)
+		SetPointerState(Vector2{X: 50, Y: 50}, false)
+	})
+	if allocs > 0 {
+		t.Errorf("a frame allocated %v times, want none", allocs)
+	}
+}
