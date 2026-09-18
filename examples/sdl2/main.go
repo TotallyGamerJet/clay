@@ -40,7 +40,7 @@ func main() {
 		panic(err)
 	}
 
-	fonts := []sdl2.Font{
+	fontList := []sdl2.Font{
 		videodemo.FontIdBody16: {
 			FontId: videodemo.FontIdBody16,
 			Font:   font,
@@ -76,7 +76,9 @@ func main() {
 	defer arena.Free()
 	clay.Initialize(arena, clay.Dimensions{Width: screenWidth, Height: screenHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
 
-	clay.SetMeasureTextFunction(sdl2.MeasureText, &fonts)
+	rendererData := &sdl2.RendererData{Renderer: renderer, Fonts: fontList}
+	defer rendererData.Close()
+	clay.SetMeasureTextFunction(sdl2.MeasureText, rendererData)
 
 	NOW := sdl.GetPerformanceCounter()
 	var LAST uint64 = 0
@@ -140,7 +142,7 @@ loop:
 		_ = renderer.SetDrawColor(0, 0, 0, 255)
 		_ = renderer.Clear()
 
-		_ = sdl2.ClayRender(renderer, renderCommands, fonts)
+		_ = sdl2.ClayRender(rendererData, renderCommands)
 
 		renderer.Present()
 	}

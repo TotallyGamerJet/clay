@@ -95,12 +95,13 @@ func TestLayout(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	faces := []text.Face{&text.GoTextFace{Source: source, Size: 16}}
-	testlayout.Init(ebitengine.MeasureText, &faces)
+	data := &ebitengine.RendererData{Fonts: []text.Face{&text.GoTextFace{Source: source, Size: 16}}}
+	defer data.Close()
+	testlayout.Init(ebitengine.MeasureText, data)
 	commands := testlayout.Build()
 
 	screen := render(t, image.Pt(testlayout.Width, testlayout.Height), func(screen *ebiten.Image) {
-		if err := ebitengine.ClayRender(screen, 1, commands, faces); err != nil {
+		if err := ebitengine.ClayRender(screen, 1, commands, data); err != nil {
 			t.Error(err)
 		}
 	})

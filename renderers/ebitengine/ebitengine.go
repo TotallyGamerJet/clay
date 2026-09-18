@@ -32,36 +32,54 @@ func init() {
 	solidColorImage = ebiten.NewImage(1, 1)
 }
 
+// RendererData is what the renderer draws with.
+type RendererData struct {
+	Fonts []text.Face
+
+	// Fonts at the sizes text asks for, scaled for the display. They are kept here
+	// rather than for the whole program, so that Close can let them go, along with the
+	// fonts they were made from.
+	sizedFaces map[sizedFaceKey]*text.GoTextFace
+}
+
 type sizedFaceKey struct {
 	face *text.GoTextFace
 	size float64
 }
 
-var sizedFaces = map[sizedFaceKey]*text.GoTextFace{}
+// Close lets go of the fonts made at other sizes.
+func (r *RendererData) Close() {
+	r.sizedFaces = nil
+}
 
 // sizedFace returns face with the font size of the text, scaled by scaleFactor.
 // Only *text.GoTextFace can be resized; other faces and texts without a font size use face as is.
-func sizedFace(face text.Face, fontSize uint16, scaleFactor float64) text.Face {
+func (r *RendererData) sizedFace(face text.Face, fontSize uint16, scaleFactor float64) text.Face {
 	f, ok := face.(*text.GoTextFace)
 	if !ok || fontSize == 0 {
 		return face
 	}
 	key := sizedFaceKey{face: f, size: float64(fontSize) * scaleFactor}
-	sized, ok := sizedFaces[key]
+	sized, ok := r.sizedFaces[key]
 	if !ok {
 		c := *f
 		c.Size = key.size
 		sized = &c
-		sizedFaces[key] = sized
+		if r.sizedFaces == nil {
+			r.sizedFaces = map[sizedFaceKey]*text.GoTextFace{}
+		}
+		r.sizedFaces[key] = sized
 	}
 	return sized
 }
 
+// MeasureText measures text for clay. userData must be the *RendererData the text is
+// drawn with, which keeps the fonts at the sizes text asks for.
 func MeasureText(txt string, config *clay.TextElementConfig, userData any) clay.Dimensions {
-	fonts := *userData.(*[]text.Face)
+	r := userData.(*RendererData)
 
 	scaleFactor := ebiten.Monitor().DeviceScaleFactor() // should we be passing the scaleFactor like we do in the renderer?
-	font := sizedFace(fonts[config.FontId], config.FontSize, scaleFactor)
+	font := r.sizedFace(r.Fonts[config.FontId], config.FontSize, scaleFactor)
 
 	width, height := text.Measure(txt, font, font.Metrics().HLineGap)
 	width += float64(config.LetterSpacing) * float64(max(len([]rune(txt))-1, 0)) * scaleFactor
@@ -98,7 +116,7 @@ func drawText(screen *ebiten.Image, str string, face text.Face, box clay.Boundin
 	}
 }
 
-func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.RenderCommandArray, fonts []text.Face) error {
+func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.RenderCommandArray, rendererData *RendererData) error {
 	fullScreen := screen
 	var overlays overlay.Stack
 	for _, renderCommand := range renderCommands {
@@ -130,7 +148,7 @@ func ClayRender(screen *ebiten.Image, scaleFactor float32, renderCommands clay.R
 		case clay.RenderCommandTypeText:
 			config := &renderCommand.RenderData.Text
 			config.TextColor = overlays.Apply(config.TextColor)
-			font := sizedFace(fonts[config.FontId], config.FontSize, float64(scaleFactor))
+			font := rendererData.sizedFace(rendererData.Fonts[config.FontId], config.FontSize, float64(scaleFactor))
 
 			var colorScale ebiten.ColorScale
 			colorScale.Scale(

@@ -13,10 +13,33 @@ import (
 	"github.com/Zyko0/go-sdl3/ttf"
 )
 
+// RendererData is what the renderer draws with.
+//
+// It keeps copies of its fonts at the sizes text asks for, so call Close when done with it,
+// before closing the fonts or quitting SDL_ttf.
 type RendererData struct {
 	Renderer   *sdl.Renderer
 	TextEngine *ttf.TextEngine
 	Fonts      []*ttf.Font
+
+	// Copies of Fonts at other sizes. Resizing a font instead, like clay's own SDL
+	// renderer does, clears its glyph cache every time the size changes, which made
+	// drawing the demo about 16 times slower.
+	//
+	// A *ttf.Font is SDL's own pointer rather than memory Go manages, so SDL can reuse it
+	// for another font once one is closed. The copies are only valid for as long as the
+	// fonts they were made from, which is why they are kept here rather than for the
+	// whole program, and closed with Close.
+	sizedFonts map[sizedFontKey]*ttf.Font
+}
+
+// Close closes the copies of the fonts made at other sizes.
+// It doesn't close Fonts, which belong to whoever opened them.
+func (r *RendererData) Close() {
+	for _, font := range r.sizedFonts {
+		font.Close()
+	}
+	r.sizedFonts = nil
 }
 
 type sizedFontKey struct {
@@ -24,23 +47,14 @@ type sizedFontKey struct {
 	size uint16
 }
 
-// sizedFonts keeps a copy of each font at each size text asks for, for the life of the
-// program. Resizing the font instead, like clay's own SDL renderer does, clears its glyph
-// cache every time the size changes, which made drawing the demo about 16 times slower.
-//
-// The copies are keyed by the *ttf.Font they were made from, which is SDL's own pointer.
-// So fonts given to the renderer must stay open while it is in use: once a font is closed,
-// SDL can hand out its pointer again for a different font, which would then be drawn with
-// the copies of the old one.
-var sizedFonts = map[sizedFontKey]*ttf.Font{}
-
-// sizedFont returns a copy of font with the font size of the text.
-func sizedFont(font *ttf.Font, size uint16) (*ttf.Font, error) {
+// sizedFont returns font at the font size of the text.
+// Copies are kept instead of resizing font, as resizing clears its glyph cache.
+func (r *RendererData) sizedFont(font *ttf.Font, size uint16) (*ttf.Font, error) {
 	if size == 0 {
 		return font, nil
 	}
 	key := sizedFontKey{font: font, size: size}
-	if sized, ok := sizedFonts[key]; ok {
+	if sized, ok := r.sizedFonts[key]; ok {
 		return sized, nil
 	}
 	sized, err := font.Copy()
@@ -51,13 +65,18 @@ func sizedFont(font *ttf.Font, size uint16) (*ttf.Font, error) {
 		sized.Close()
 		return nil, err
 	}
-	sizedFonts[key] = sized
+	if r.sizedFonts == nil {
+		r.sizedFonts = map[sizedFontKey]*ttf.Font{}
+	}
+	r.sizedFonts[key] = sized
 	return sized, nil
 }
 
+// MeasureText measures text for clay. userData must be the *RendererData the text is
+// drawn with, which keeps the fonts at the sizes text asks for.
 func MeasureText(text string, config *clay.TextElementConfig, userData any) clay.Dimensions {
-	fonts := *userData.(*[]*ttf.Font)
-	font, err := sizedFont(fonts[config.FontId], config.FontSize)
+	r := userData.(*RendererData)
+	font, err := r.sizedFont(r.Fonts[config.FontId], config.FontSize)
 	if err != nil {
 		panic(fmt.Errorf("sdl3: failed to size font: %w", err))
 	}
@@ -174,7 +193,7 @@ func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArr
 		case clay.RenderCommandTypeText:
 			config := &renderCommand.RenderData.Text
 			config.TextColor = overlays.Apply(config.TextColor)
-			font, err := sizedFont(fonts[config.FontId], config.FontSize)
+			font, err := rendererData.sizedFont(fonts[config.FontId], config.FontSize)
 			if err != nil {
 				return err
 			}

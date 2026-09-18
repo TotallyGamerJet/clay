@@ -22,20 +22,41 @@ type Font struct {
 	Data []byte
 }
 
+// RendererData is what the renderer draws with.
+//
+// It opens its fonts at the sizes text asks for, so call Close when done with it,
+// before quitting SDL_ttf.
+type RendererData struct {
+	Renderer *sdl.Renderer
+	Fonts    []Font
+
+	// Fonts opened at other sizes. The bindings can't resize a font, so each size is
+	// opened from the font's data. They are kept here rather than for the whole program
+	// so that Close can free them.
+	sizedFonts map[sizedFontKey]*ttf.Font
+}
+
 type sizedFontKey struct {
 	data *byte
 	size uint16
 }
 
-var sizedFonts = map[sizedFontKey]*ttf.Font{}
+// Close closes the fonts opened at other sizes.
+// It doesn't close the fonts in Fonts, which belong to whoever opened them.
+func (r *RendererData) Close() {
+	for _, font := range r.sizedFonts {
+		font.Close()
+	}
+	r.sizedFonts = nil
+}
 
-// sized returns the font at the given size.
-func (f *Font) sized(size uint16) (*ttf.Font, error) {
+// sizedFont returns f at the given size.
+func (r *RendererData) sizedFont(f *Font, size uint16) (*ttf.Font, error) {
 	if size == 0 || len(f.Data) == 0 {
 		return f.Font, nil
 	}
 	key := sizedFontKey{data: &f.Data[0], size: size}
-	if font, ok := sizedFonts[key]; ok {
+	if font, ok := r.sizedFonts[key]; ok {
 		return font, nil
 	}
 	rw, err := sdl.RWFromMem(f.Data)
@@ -46,13 +67,18 @@ func (f *Font) sized(size uint16) (*ttf.Font, error) {
 	if err != nil {
 		return nil, err
 	}
-	sizedFonts[key] = font
+	if r.sizedFonts == nil {
+		r.sizedFonts = map[sizedFontKey]*ttf.Font{}
+	}
+	r.sizedFonts[key] = font
 	return font, nil
 }
 
+// MeasureText measures text for clay. userData must be the *RendererData the text is
+// drawn with, which keeps the fonts at the sizes text asks for.
 func MeasureText(text string, config *clay.TextElementConfig, userData any) clay.Dimensions {
-	fonts := *userData.(*[]Font)
-	font, err := fonts[config.FontId].sized(config.FontSize)
+	r := userData.(*RendererData)
+	font, err := r.sizedFont(&r.Fonts[config.FontId], config.FontSize)
 	if err != nil {
 		panic(fmt.Errorf("sdl2: failed to open font: %w", err))
 	}
@@ -133,7 +159,8 @@ func drawMesh(renderer *sdl.Renderer, mesh shapes.Mesh, c clay.Color) error {
 	return renderer.RenderGeometry(nil, vertices, indices)
 }
 
-func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, fonts []Font) error {
+func ClayRender(rendererData *RendererData, renderCommands clay.RenderCommandArray) error {
+	renderer := rendererData.Renderer
 	var overlays overlay.Stack
 	for _, renderCommand := range renderCommands {
 		boundingBox := renderCommand.BoundingBox
@@ -161,7 +188,7 @@ func ClayRender(renderer *sdl.Renderer, renderCommands clay.RenderCommandArray, 
 			}
 		case clay.RenderCommandTypeText:
 			config := &renderCommand.RenderData.Text
-			font, err := fonts[config.FontId].sized(config.FontSize)
+			font, err := rendererData.sizedFont(&rendererData.Fonts[config.FontId], config.FontSize)
 			if err != nil {
 				return err
 			}

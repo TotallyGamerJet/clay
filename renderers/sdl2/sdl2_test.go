@@ -30,8 +30,9 @@ func TestLayout(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer font.Close()
-	fontList := []sdl2.Font{{Font: font, Data: fonts.RobotoRegularTTF}}
-	testlayout.Init(sdl2.MeasureText, &fontList)
+	data := &sdl2.RendererData{Fonts: []sdl2.Font{{Font: font, Data: fonts.RobotoRegularTTF}}}
+	defer data.Close()
+	testlayout.Init(sdl2.MeasureText, data)
 
 	target, err := sdl.CreateRGBSurfaceWithFormat(0, testlayout.Width, testlayout.Height, 32, uint32(sdl.PIXELFORMAT_RGBA32))
 	if err != nil {
@@ -44,7 +45,8 @@ func TestLayout(t *testing.T) {
 	}
 	defer renderer.Destroy()
 
-	if err := sdl2.ClayRender(renderer, testlayout.Build(), fontList); err != nil {
+	data.Renderer = renderer
+	if err := sdl2.ClayRender(data, testlayout.Build()); err != nil {
 		t.Fatal(err)
 	}
 	renderer.Present()

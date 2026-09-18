@@ -60,7 +60,8 @@ func TestLayout(t *testing.T) {
 	defer font.Close()
 
 	data := &sdl3.RendererData{Renderer: renderer, TextEngine: engine, Fonts: []*ttf.Font{font}}
-	testlayout.Init(sdl3.MeasureText, &data.Fonts)
+	defer data.Close()
+	testlayout.Init(sdl3.MeasureText, data)
 	if err := sdl3.ClayRender(data, testlayout.Build()); err != nil {
 		t.Fatal(err)
 	}

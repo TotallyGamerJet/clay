@@ -27,11 +27,11 @@ type App struct {
 	demoData videodemo.Data
 	cmds     clay.RenderCommandArray
 
-	fonts       []text.Face
-	fontSource  *text.GoTextFaceSource
-	scaleFactor float32
-	width       float64
-	height      float64
+	rendererData *ebitengine.RendererData
+	fontSource   *text.GoTextFaceSource
+	scaleFactor  float32
+	width        float64
+	height       float64
 }
 
 func (a *App) Update() error {
@@ -59,7 +59,7 @@ func (a *App) Update() error {
 }
 
 func (a *App) Draw(screen *ebiten.Image) {
-	_ = ebitengine.ClayRender(screen, a.scaleFactor, a.cmds, a.fonts)
+	_ = ebitengine.ClayRender(screen, a.scaleFactor, a.cmds, a.rendererData)
 }
 
 func (a *App) Layout(_, _ int) (int, int) {
@@ -94,22 +94,25 @@ func main() {
 
 	scaleFactor := ebiten.Monitor().DeviceScaleFactor()
 	app := &App{
-		fonts: []text.Face{
-			&text.GoTextFace{
-				Source: source,
-				Size:   fontSize * scaleFactor,
+		rendererData: &ebitengine.RendererData{
+			Fonts: []text.Face{
+				&text.GoTextFace{
+					Source: source,
+					Size:   fontSize * scaleFactor,
+				},
 			},
 		},
 
 		fontSource: source,
 	}
+	defer app.rendererData.Close()
 
 	// Initialize Clay
 	totalMemorySize := clay.MinMemorySize()
 	arena := clay.CreateArenaWithCapacity(totalMemorySize)
 	defer arena.Free()
 	clay.Initialize(arena, clay.Dimensions{Width: winWidth, Height: winHeight}, clay.ErrorHandler{ErrorHandlerFunction: handleClayError})
-	clay.SetMeasureTextFunction(ebitengine.MeasureText, &app.fonts)
+	clay.SetMeasureTextFunction(ebitengine.MeasureText, app.rendererData)
 	ebImg := ebiten.NewImageFromImage(videodemo.SquirrelImage)
 	app.demoData = videodemo.Initialize(ebImg)
 
